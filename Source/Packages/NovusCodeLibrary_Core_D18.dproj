@@ -113,7 +113,7 @@
                     <VersionInfo Name="MajorVer">1</VersionInfo>
                     <VersionInfo Name="MinorVer">0</VersionInfo>
                     <VersionInfo Name="Release">0</VersionInfo>
-                    <VersionInfo Name="Build">90</VersionInfo>
+                    <VersionInfo Name="Build">93</VersionInfo>
                     <VersionInfo Name="Debug">False</VersionInfo>
                     <VersionInfo Name="PreRelease">False</VersionInfo>
                     <VersionInfo Name="Special">False</VersionInfo>
@@ -125,7 +125,7 @@
                 <VersionInfoKeys>
                     <VersionInfoKeys Name="CompanyName"/>
                     <VersionInfoKeys Name="FileDescription"/>
-                    <VersionInfoKeys Name="FileVersion">1.0.0.90</VersionInfoKeys>
+                    <VersionInfoKeys Name="FileVersion">1.0.0.93</VersionInfoKeys>
                     <VersionInfoKeys Name="InternalName"/>
                     <VersionInfoKeys Name="LegalCopyright"/>
                     <VersionInfoKeys Name="LegalTrademarks"/>
@@ -138,6 +138,11 @@
                     <Source Name="MainSource">NovusCodeLibrary_Core_D18.dpk</Source>
                 </Source>
                 <Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\11.0\Bpl\NovusDevNETVCL_RO_D18.bpl">NovusDevNET VCL Remobject SDK  (Delphi XE4) Win32</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\11.0\Bpl\NovusDevNETVCL_RODA_D18.bpl">NovusDevNET VCL Remobject Data Abstract  (Delphi XE4) Win32</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\11.0\Bpl\NovusDevNETVCL_WebApp_D18.bpl">NovusDevNET VCL WebApp (Delphi XE4) Win32</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\11.0\Bpl\NovusDevNETVCL_ROWebApp_D18.bpl">NovusDevNET VCL Remobject SDK WebApp (Delphi XE2)</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\11.0\Bpl\NovusDevNETVCL_OpenSource_D18.bpl">NovusDevNET VCL Open Source (Delphi XE4) Win32</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\bcboffice2k180.bpl">Embarcadero C++Builder Office 2000 Servers Package</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\bcbofficexp180.bpl">Embarcadero C++Builder Office XP Servers Package</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dcloffice2k180.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
@@ -159,9 +164,19 @@
         </DelphiCompile>
         <DCCReference Include="rtl.dcp"/>
         <DCCReference Include="vcl.dcp"/>
+        <DCCReference Include="DbxCommonDriver.dcp"/>
+        <DCCReference Include="dbrtl.dcp"/>
         <DCCReference Include="..\core\Utilities\NovusUtilities.pas"/>
         <DCCReference Include="..\Core\Utilities\NovusWindows.pas"/>
         <DCCReference Include="..\Core\Utilities\NovusVersionUtils.pas"/>
+        <DCCReference Include="..\Core\Utilities\NovusDateStringUtils.pas"/>
+        <DCCReference Include="..\Core\Utilities\NovusDateUtils.pas"/>
+        <DCCReference Include="..\Core\Utilities\NovusStringUtils.pas"/>
+        <DCCReference Include="..\Core\Infrastructure\NovusInfrastructre.pas"/>
+        <DCCReference Include="..\Core\Infrastructure\NovusBO.pas"/>
+        <DCCReference Include="..\Core\Infrastructure\NovusBOField.pas"/>
+        <DCCReference Include="..\Core\Infrastructure\NovusBOMap.pas"/>
+        <DCCReference Include="..\Core\Infrastructure\NovusList.pas"/>
         <BuildConfiguration Include="Debug">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

@@ -3,7 +3,8 @@ unit NovusBO;
 interface
 
 Uses NovusInfrastructre, Activex, ComObj, Classes, SysUtils,
-     NovusBOField,  NovusBOMap, NovusUtilities, DBXJson, DB;
+     NovusBOField,  NovusBOMap, NovusUtilities, DBXJson, DB, NovusDateUtils,
+     NovusStringUtils, NovusDateStringUtils;
 
 Type
 
@@ -126,7 +127,7 @@ Type
 
 implementation
 
-uses NovusStringUtils;
+//uses NovusStringUtils;
 
 constructor TNovusBO.Create;
 begin
@@ -332,7 +333,14 @@ var
   LJPair    : TJSONPair;
 
   procedure PassField(var aBOField : TNovusBOField; aLJPair: TJSONPair);
+
+
   begin
+    if aBOField is TnovusBODateTimeField then
+      begin
+        aBOField.value := TNovusDateUtils.UnixTimeToDateTime(TNovusDateSrtingUtils.JSONDateStr2UnixTime(TJSONString(aLJPair.JsonValue).Value));
+      end
+    else
     if aBOField is TNovusBOIntegerField then
        aBOField.value := TJSONNumber(aLJPair.JsonValue).AsInt
     else
@@ -392,6 +400,9 @@ begin
 
       if loBOField.ToJSON then
         begin
+          if loBOField is  TNovusBODateTimeField then
+            loJSONObject.AddPair(TJSONPair.Create(loBOField.FieldName, TJSONString.Create(DateToStr(loBOField.Value))))
+          else
           if loBOField is  TNovusBOStringField then
             loJSONObject.AddPair(TJSONPair.Create(loBOField.FieldName, TJSONString.Create(loBOField.Value)))
           else

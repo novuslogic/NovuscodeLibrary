@@ -92,6 +92,7 @@ Type
     class function VarArrayToStr(const vArray: variant): string;
     class function VarStrNull(const V:OleVariant):string; //avoid problems with null strings
     class function IsBoolean(const sValue: string): boolean;
+    class function StrToUInt64(const S: String): UInt64;
   end;
 
 implementation
@@ -1064,6 +1065,31 @@ begin
        Result:=VarArrayToStr(V)
     else
     Result:=VarToStr(V);
+  end;
+end;
+
+class function TNovusStringUtils.StrToUInt64(const S: String): UInt64;
+var c: cardinal;
+    P: PChar;
+begin
+  P := Pointer(S);
+  if P=nil then begin
+    result := 0;
+    exit;
+  end;
+  if ord(P^) in [1..32] then repeat inc(P) until not(ord(P^) in [1..32]);
+  c := ord(P^)-48;
+  if c>9 then
+    result := 0 else begin
+    result := c;
+    inc(P);
+    repeat
+      c := ord(P^)-48;
+      if c>9 then
+        break else
+        result := result*10+c;
+      inc(P);
+    until false;
   end;
 end;
 

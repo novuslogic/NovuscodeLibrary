@@ -22,8 +22,6 @@ Type
     procedure SaveXML;
     procedure LoadXML;
 
-
-
     function FindNode(aNodeList: TJvSimpleXmlElem; NodeName: String; Var Index: Integer): TJvSimpleXmlElem;
 
     function AddFieldAsString(aNodeList: TJvSimpleXmlElem;FieldName: String;PropertyName: String;Value: String): TJvSimpleXmlElem;
@@ -231,7 +229,10 @@ end;
 
 function TNovusXMLBO.FindNode(aNodeList: TJvSimpleXmlElem; NodeName: String; Var Index: Integer): TJvSimpleXmlElem;
 begin
-  Result := TNovusSimpleXML.FindNode(aNodeList, NodeName, Index);
+  Result := NIL;
+
+  if Assigned(aNodeList) then
+    Result := TNovusSimpleXML.FindNode(aNodeList, NodeName, Index);
 end;
 
 

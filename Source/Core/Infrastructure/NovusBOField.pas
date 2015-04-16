@@ -93,20 +93,20 @@ Type
     function GetAsCurrency: Currency;
     procedure SetAsCurrency(AValue: Currency);
   public
-    constructor Create; override;
-
-    property AsNumeric: extended
+    property AsNumeric: Double
       read GetAsNumeric
       write SetAsNumeric;
 
-    property AsDouble: extended
+    property AsDouble: Double
       read GetAsDouble
       write SetAsDouble;
 
-    property AsDouble: extended
-      read GetAsDouble
-      write SetAsDouble;
+    property AsCurrency: Currency
+      read GetAsCurrency
+      write SetAsCurrency;
   end;
+
+  TNovusBODoubleField = class(TNovusBONumericField);
 
   TNovusBOStringField = class(TNovusBOField)
   private
@@ -397,10 +397,10 @@ begin
   Result := FValue;
 end;
 
-procedure TNovusBOnumericField.SetAsNumeric(AValue: Double);
+procedure TNovusBOnumericField.SetAsnumeric(AValue: Double);
 begin
   FValue := AValue;
-end
+end;
 
 function TNovusBOnumericField.GetAsDouble: Double;
 begin
@@ -410,18 +410,16 @@ end;
 procedure TNovusBOnumericField.SetAsDouble(AValue: Double);
 begin
   FValue := AValue;
-end
+end;
 
-function TNovusBOnumericField.GetAsCurrency: Double;
+function TNovusBOnumericField.GetAsCurrency: Currency;
 begin
   Result := FValue;
 end;
 
-procedure TNovusBOnumericField.SetAsCurrency(AValue: Double);
+procedure TNovusBOnumericField.SetAsCurrency(AValue: Currency);
 begin
   FValue := AValue;
-end
-
-
+end;
 
 end.

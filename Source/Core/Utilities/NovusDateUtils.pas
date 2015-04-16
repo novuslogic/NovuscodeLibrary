@@ -2,7 +2,8 @@ unit NovusDateUtils;
 
 interface
 
-Uses NovusStringUtils, NovusUtilities, SysUtils, Classes, Windows;
+Uses NovusStringUtils, NovusUtilities, SysUtils, Classes, Windows, XSBuiltIns,
+     System.DateUtils ;
 
 Type
    Months = array[1..12] of Word;
@@ -36,7 +37,9 @@ type
     class function isLeapYear(year: Integer): Boolean;
     class function GetIntMonth(sStr:String):Integer;
     class function GetIntYear(sStr:String;iPos:Integer):Integer;
-    class function UnixTimeToDateTime(const UnixDate: Int64): TDateTime;
+    class function UnixTimeToDateTime(const aUnixDate: Int64): TDateTime;
+    class function DateTimeToISO8601(const aDateTime: TDateTime): string;
+  //  class function DateTimeToUnixTime(aDateTime : TDateTime): Int64;
   end;
 
 implementation
@@ -203,13 +206,56 @@ begin
     isLeapYear := FALSE;
 end;
 
-class function TNovusDateUtils.UnixTimeToDateTime(const UnixDate: Int64): TDateTime;
+
+class function TNovusDateUtils.UnixTimeToDateTime(const aUnixDate: Int64): TDateTime;
 var
   UTCTime, LocalTime: TSystemTime;
 begin
-  FileTimeToSystemTime(TFileTime(Int64(UnixDate + 11644473600000) * 10000), UTCTime);
-  SystemTimeToTzSpecificLocalTime(nil, UTCTime, LocalTime);
-  Result := SystemTimeToDateTime(LocalTime);
+  Result := 0;
+
+  if aUnixDate <> 0 then
+    begin
+      FileTimeToSystemTime(TFileTime(Int64(aUnixDate + 11644473600000) * 10000), UTCTime);
+      SystemTimeToTzSpecificLocalTime(nil, UTCTime, LocalTime);
+      Result := SystemTimeToDateTime(LocalTime);
+    end
+end;
+
+(*
+class function TNovusDateUtils.DateTimeToUnixTime(aDateTime : TDateTime): Int64;
+var
+  MyTimeZoneInformation: TTimeZoneInformation;
+begin
+  GetTimeZoneInformation(MyTimeZoneInformation);
+  Result := Int64(round(aDateTime - StrToDate('01/01/1970') + ((MyTimeZoneInformation.Bias) / (24 * 60))) * (24 * 3600));
+end;
+*)
+
+class function TNovusDateUtils.DateTimeToISO8601(const aDateTime: TDateTime): string;
+Var
+  D: TXSDateTime;
+  Year, Month, Day: Word;
+  Hour, Min, Sec, MSec: Word;
+  FDateTime: TDateTime;
+begin
+  Result := '';
+
+  if aDateTime <> 0 then
+    begin
+      DecodeDate(aDateTime, Year, Month, Day);
+      DecodeTime(aDateTime, Hour, Min, Sec, MSec);
+
+     // Hour := Hour - 1; // need to fix timezone
+
+      FDateTime := EncodeDateTime(Year, Month, Day, Hour, Min, Sec,  MSec);
+
+      D := TXSDateTime.Create;
+      D.AsDateTime := FDateTime;
+
+      Result := D.NativeToXS;
+
+      D.Free;
+    end;
 end;
 
 end.

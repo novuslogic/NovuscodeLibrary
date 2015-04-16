@@ -179,6 +179,7 @@ destructor TNovusTemplate.destroy;
 begin
   inherited destroy;
 
+  FParserStream.Free;
   FOutputDoc.Free;
   FTemplateDoc.Free;
   FTemplateTags.Free;

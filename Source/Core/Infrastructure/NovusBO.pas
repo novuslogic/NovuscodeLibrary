@@ -401,7 +401,10 @@ begin
       if loBOField.ToJSON then
         begin
           if loBOField is  TNovusBODateTimeField then
-            loJSONObject.AddPair(TJSONPair.Create(loBOField.FieldName, TJSONString.Create(DateToStr(loBOField.Value))))
+            begin
+              if loBOField.Value <> 0 then
+                loJSONObject.AddPair(TJSONPair.Create(loBOField.FieldName, TJSONString.Create(TNovusDateUtils.DateTimeToISO8601(loBOField.Value))));
+            end
           else
           if loBOField is  TNovusBOStringField then
             loJSONObject.AddPair(TJSONPair.Create(loBOField.FieldName, TJSONString.Create(loBOField.Value)))

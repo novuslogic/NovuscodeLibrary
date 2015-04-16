@@ -12,6 +12,7 @@ type
     class function InterStrToDate(sDateParam : String): TDate;
     class function GetDateOrder: String ;
     class function JSONDateStr2UnixTime(aJSONDateString: String): Int64;
+    class function UnixTimeToJSONDate(aUnixTime: Int64): String;
   end;
 
 implementation
@@ -119,6 +120,18 @@ begin
 
 end;
 
+(*
+"\"\\/Date(1335205592410)\\/\""         .NET JavaScriptSerializer
+"\"\\/Date(1335205592410-0500)\\/\""    .NET DataContractJsonSerializer
+"2012-04-23T18:25:43.511Z"              JavaScript built-in JSON object
+"2012-04-21T18:25:43-05:00"             ISO 8601
+*)
+
+class function TNovusDateSrtingUtils.UnixTimeToJSONDate(aUnixTime: Int64): String;
+begin
+  Result := Format('/Date(%d)/', [aUnixTime]);
+end;
+
 class function TNovusDateSrtingUtils.JSONDateStr2UnixTime(aJSONDateString: String): Int64;
 var
   regexpr : TRegEx;
@@ -128,7 +141,7 @@ begin
     Result := 0;
 
     aJSONDateString := Trim(aJSONDateString);
-    regexpr := TRegEx.Create('\d+',[(*roIgnoreCase,roMultiline*)]);
+    regexpr := TRegEx.Create('\d+',[]);
     match := regexpr.Match(aJSONDateString);
 
     if match.Success then

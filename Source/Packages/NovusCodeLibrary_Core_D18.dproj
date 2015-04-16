@@ -113,7 +113,7 @@
                     <VersionInfo Name="MajorVer">1</VersionInfo>
                     <VersionInfo Name="MinorVer">0</VersionInfo>
                     <VersionInfo Name="Release">0</VersionInfo>
-                    <VersionInfo Name="Build">93</VersionInfo>
+                    <VersionInfo Name="Build">98</VersionInfo>
                     <VersionInfo Name="Debug">False</VersionInfo>
                     <VersionInfo Name="PreRelease">False</VersionInfo>
                     <VersionInfo Name="Special">False</VersionInfo>
@@ -125,7 +125,7 @@
                 <VersionInfoKeys>
                     <VersionInfoKeys Name="CompanyName"/>
                     <VersionInfoKeys Name="FileDescription"/>
-                    <VersionInfoKeys Name="FileVersion">1.0.0.93</VersionInfoKeys>
+                    <VersionInfoKeys Name="FileVersion">1.0.0.98</VersionInfoKeys>
                     <VersionInfoKeys Name="InternalName"/>
                     <VersionInfoKeys Name="LegalCopyright"/>
                     <VersionInfoKeys Name="LegalTrademarks"/>
@@ -166,6 +166,9 @@
         <DCCReference Include="vcl.dcp"/>
         <DCCReference Include="DbxCommonDriver.dcp"/>
         <DCCReference Include="dbrtl.dcp"/>
+        <DCCReference Include="xmlrtl.dcp"/>
+        <DCCReference Include="soaprtl.dcp"/>
+        <DCCReference Include="inet.dcp"/>
         <DCCReference Include="..\core\Utilities\NovusUtilities.pas"/>
         <DCCReference Include="..\Core\Utilities\NovusWindows.pas"/>
         <DCCReference Include="..\Core\Utilities\NovusVersionUtils.pas"/>

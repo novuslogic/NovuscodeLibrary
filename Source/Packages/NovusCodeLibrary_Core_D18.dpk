@@ -32,7 +32,10 @@ requires
   rtl,
   vcl,
   DbxCommonDriver,
-  dbrtl;
+  dbrtl,
+  xmlrtl,
+  soaprtl,
+  inet;
 
 contains
   NovusUtilities in '..\core\Utilities\NovusUtilities.pas',

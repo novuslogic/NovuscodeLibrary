@@ -139,6 +139,7 @@
                     <Source Name="MainSource">NovusCodeLibrary_Parser_D18.dpk</Source>
                 </Source>
                 <Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\11.0\Bpl\NovusDevNETVCL_OpenSource_D18.bpl">NovusDevNET VCL Open Source (Delphi XE4) Win32</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\bcboffice2k180.bpl">Embarcadero C++Builder Office 2000 Servers Package</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\bcbofficexp180.bpl">Embarcadero C++Builder Office XP Servers Package</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dcloffice2k180.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>

@@ -83,6 +83,31 @@ Type
       write SetAsFloat;
   end;
 
+  TNovusBONumericField = class(TNovusBOFloatField)
+  private
+  protected
+    function GetAsNumeric: Double;
+    procedure SetAsNumeric(AValue: Double);
+    function GetAsDouble: Double;
+    procedure SetAsDouble(AValue: Double);
+    function GetAsCurrency: Currency;
+    procedure SetAsCurrency(AValue: Currency);
+  public
+    constructor Create; override;
+
+    property AsNumeric: extended
+      read GetAsNumeric
+      write SetAsNumeric;
+
+    property AsDouble: extended
+      read GetAsDouble
+      write SetAsDouble;
+
+    property AsDouble: extended
+      read GetAsDouble
+      write SetAsDouble;
+  end;
+
   TNovusBOStringField = class(TNovusBOField)
   private
   protected
@@ -363,6 +388,40 @@ procedure TNovusBOFloatField.SetAsFloat(AValue: extended);
 begin
   FValue := AValue;
 end;
+
+
+// TNovusBONumericField
+
+function TNovusBOnumericField.GetAsNumeric: Double;
+begin
+  Result := FValue;
+end;
+
+procedure TNovusBOnumericField.SetAsNumeric(AValue: Double);
+begin
+  FValue := AValue;
+end
+
+function TNovusBOnumericField.GetAsDouble: Double;
+begin
+  Result := FValue;
+end;
+
+procedure TNovusBOnumericField.SetAsDouble(AValue: Double);
+begin
+  FValue := AValue;
+end
+
+function TNovusBOnumericField.GetAsCurrency: Double;
+begin
+  Result := FValue;
+end;
+
+procedure TNovusBOnumericField.SetAsCurrency(AValue: Double);
+begin
+  FValue := AValue;
+end
+
 
 
 end.

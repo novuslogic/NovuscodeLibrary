@@ -12,6 +12,9 @@
         <Projects Include="NovusCodeLibrary_XML_D18.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="NovusCodeLibrary_Indy_D18.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -47,14 +50,23 @@
     <Target Name="NovusCodeLibrary_XML_D18:Make">
         <MSBuild Projects="NovusCodeLibrary_XML_D18.dproj" Targets="Make"/>
     </Target>
+    <Target Name="NovusCodeLibrary_Indy_D18">
+        <MSBuild Projects="NovusCodeLibrary_Indy_D18.dproj"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_Indy_D18:Clean">
+        <MSBuild Projects="NovusCodeLibrary_Indy_D18.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_Indy_D18:Make">
+        <MSBuild Projects="NovusCodeLibrary_Indy_D18.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="NovusCodeLibrary_Core_D18;NovusCodeLibrary_Parser_D18;NovusCodeLibrary_XML_D18"/>
+        <CallTarget Targets="NovusCodeLibrary_Core_D18;NovusCodeLibrary_Parser_D18;NovusCodeLibrary_XML_D18;NovusCodeLibrary_Indy_D18"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="NovusCodeLibrary_Core_D18:Clean;NovusCodeLibrary_Parser_D18:Clean;NovusCodeLibrary_XML_D18:Clean"/>
+        <CallTarget Targets="NovusCodeLibrary_Core_D18:Clean;NovusCodeLibrary_Parser_D18:Clean;NovusCodeLibrary_XML_D18:Clean;NovusCodeLibrary_Indy_D18:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="NovusCodeLibrary_Core_D18:Make;NovusCodeLibrary_Parser_D18:Make;NovusCodeLibrary_XML_D18:Make"/>
+        <CallTarget Targets="NovusCodeLibrary_Core_D18:Make;NovusCodeLibrary_Parser_D18:Make;NovusCodeLibrary_XML_D18:Make;NovusCodeLibrary_Indy_D18:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

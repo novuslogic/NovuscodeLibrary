@@ -94,7 +94,7 @@
         <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <DCC_Description>Novus Framework Runtime - XMLBO (Delphi XE4) Win32</DCC_Description>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <DCC_DcuOutput>..\..\..\Units\D18\Win32\</DCC_DcuOutput>
+        <DCC_DcuOutput>..\..\Units\D18\Win32\</DCC_DcuOutput>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win64)'!=''">
         <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
@@ -114,7 +114,7 @@
                     <VersionInfo Name="MajorVer">1</VersionInfo>
                     <VersionInfo Name="MinorVer">0</VersionInfo>
                     <VersionInfo Name="Release">0</VersionInfo>
-                    <VersionInfo Name="Build">64</VersionInfo>
+                    <VersionInfo Name="Build">66</VersionInfo>
                     <VersionInfo Name="Debug">False</VersionInfo>
                     <VersionInfo Name="PreRelease">False</VersionInfo>
                     <VersionInfo Name="Special">False</VersionInfo>
@@ -126,7 +126,7 @@
                 <VersionInfoKeys>
                     <VersionInfoKeys Name="CompanyName"/>
                     <VersionInfoKeys Name="FileDescription"/>
-                    <VersionInfoKeys Name="FileVersion">1.0.0.64</VersionInfoKeys>
+                    <VersionInfoKeys Name="FileVersion">1.0.0.66</VersionInfoKeys>
                     <VersionInfoKeys Name="InternalName"/>
                     <VersionInfoKeys Name="LegalCopyright"/>
                     <VersionInfoKeys Name="LegalTrademarks"/>
@@ -166,7 +166,6 @@
         <DCCReference Include="Jcl.dcp"/>
         <DCCReference Include="JvSystem.dcp"/>
         <DCCReference Include="NovusCodeLibrary_Core_D18.dcp"/>
-        <DCCReference Include="NovusCodeLibraryPlus_Core_D18.dcp"/>
         <DCCReference Include="..\Core\Utilities\jvcl\NovusSimpleXML.pas"/>
         <DCCReference Include="..\Core\Infrastructure\NovusXMLBO.pas"/>
         <BuildConfiguration Include="Debug">

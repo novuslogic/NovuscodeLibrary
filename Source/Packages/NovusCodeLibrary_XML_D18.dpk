@@ -36,8 +36,7 @@ requires
   dbrtl,
   Jcl,
   JvSystem,
-  NovusCodeLibrary_Core_D18,
-  NovusCodeLibraryPlus_Core_D18;
+  NovusCodeLibrary_Core_D18;
 
 contains
   NovusSimpleXML in '..\Core\Utilities\jvcl\NovusSimpleXML.pas',

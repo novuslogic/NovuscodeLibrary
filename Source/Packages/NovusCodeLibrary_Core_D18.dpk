@@ -48,6 +48,7 @@ contains
   NovusBO in '..\Core\Infrastructure\NovusBO.pas',
   NovusBOField in '..\Core\Infrastructure\NovusBOField.pas',
   NovusBOMap in '..\Core\Infrastructure\NovusBOMap.pas',
-  NovusList in '..\Core\Infrastructure\NovusList.pas';
+  NovusList in '..\Core\Infrastructure\NovusList.pas',
+  NovusFileUtils in '..\Core\Utilities\NovusFileUtils.pas';
 
 end.

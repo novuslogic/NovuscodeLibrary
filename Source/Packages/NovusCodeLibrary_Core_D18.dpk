@@ -50,6 +50,7 @@ contains
   NovusBOMap in '..\Core\Infrastructure\NovusBOMap.pas',
   NovusList in '..\Core\Infrastructure\NovusList.pas',
   NovusFileUtils in '..\Core\Utilities\NovusFileUtils.pas',
-  NovusNumUtils in '..\Core\Utilities\NovusNumUtils.pas';
+  NovusNumUtils in '..\Core\Utilities\NovusNumUtils.pas',
+  NovusDateDiffUtil in '..\Core\Utilities\NovusDateDiffUtil.pas';
 
 end.

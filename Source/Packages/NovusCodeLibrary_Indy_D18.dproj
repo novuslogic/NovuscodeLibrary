@@ -10,7 +10,7 @@
         <Base>True</Base>
         <AppType>Package</AppType>
         <FrameworkType>VCL</FrameworkType>
-        <Platform Condition="'$(Platform)'==''">Win32</Platform>
+        <Platform Condition="'$(Platform)'==''">Win64</Platform>
         <TargetedPlatforms>3</TargetedPlatforms>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
@@ -97,6 +97,8 @@
         <VerInfo_Locale>1033</VerInfo_Locale>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win64)'!=''">
+        <DCC_DcuOutput>..\..\Units\D18\Win64\</DCC_DcuOutput>
+        <VerInfo_Build>0</VerInfo_Build>
         <DCC_Description>NovusCodeLibrary Runtime - Core (Delphi XE2) Win64</DCC_Description>
         <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <VerInfo_Locale>1033</VerInfo_Locale>

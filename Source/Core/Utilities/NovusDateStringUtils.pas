@@ -9,14 +9,15 @@ type
   private
   protected
   public
-    class function InterStrToDate(sDateParam : String): TDate;
-    class function GetDateOrder: String ;
+//    class function InterStrToDate(sDateParam : String): TDate;
+//    class function GetDateOrder: String ;
     class function JSONDateStr2UnixTime(aJSONDateString: String): Int64;
     class function UnixTimeToJSONDate(aUnixTime: Int64): String;
   end;
 
 implementation
 
+(*
 class function TNovusDateSrtingUtils.InterStrToDate(sDateParam : String): TDate;
 var sMask : String;
     bDayFirstMonth,
@@ -90,7 +91,9 @@ begin
   end;
 
 end;
+*)
 
+(*
 class function TNovusDateSrtingUtils.GetDateOrder: String;
 var
    ShortDate : String;
@@ -119,6 +122,7 @@ begin
    end;
 
 end;
+*)
 
 (*
 "\"\\/Date(1335205592410)\\/\""         .NET JavaScriptSerializer

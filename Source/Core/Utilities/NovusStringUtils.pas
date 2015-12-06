@@ -59,11 +59,11 @@ Type
     class function IsAlpha(AChar: Char): Boolean;
     class function IsNumberStr(S : String): Boolean;
     class function IsAlphaStr(S : String): Boolean;
-    class function PosStr(const FindString, SourceString: string; StartPos: Integer = 1): Integer;
-    class function PosText(const FindString, SourceString: string; StartPos: Integer = 1): Integer;
-    class function GetValue(const AText, AName: string): string;
+//    class function PosStr(const FindString, SourceString: string; StartPos: Integer = 1): Integer;
+//    class function PosText(const FindString, SourceString: string; StartPos: Integer = 1): Integer;
+//    class function GetValue(const AText, AName: string): string;
     class procedure GetNames(AText: string; AList: TStringList);
-    class procedure TagsToCSV(Src, Dst: TStringList);
+//    class procedure TagsToCSV(Src, Dst: TStringList);
     class function SubstCharSim(P : string; OC, NC : ANSIChar) : string;
     class function RootDirectory: String;
     class function StripChar(s : String; Ch : Char) : string;
@@ -71,7 +71,7 @@ Type
     class function GetStrTokenA(const s, sDelim: string; var iPos: integer): string;
     class function GetStrRes(const Index: integer): String;
     class function StrToInt(AStr : String):Integer;
-    class function StrChPosL(const P : AnsiString; C : AnsiChar; var Pos : Cardinal) : Boolean;
+//    class function StrChPosL(const P : AnsiString; C : AnsiChar; var Pos : Cardinal) : Boolean;
     class function StrChInsertL(const S : AnsiString; C : AnsiChar; Pos : Cardinal) : AnsiString;
     class function IsIntStr(S: String):Boolean;
     class function MakeTmpFileName(AExt: string;AUseGUID: Boolean = false): String;
@@ -158,6 +158,7 @@ begin
   end;
 end;
 
+(*
 class function TNovusStringUtils.GetValue(const AText, AName: string): string;
 var
   P, P2, L: Integer;
@@ -173,6 +174,7 @@ begin
   Result := Copy(AText, P + L, P2 - (P + L));
   Result := StringReplace(Result, '~~', Cr, [rfReplaceAll]);
 end;
+*)
 
 class function TNovusStringUtils.ReplaceStrPos;
 var
@@ -207,6 +209,7 @@ begin
   end; {if}
 end;
 
+(*
 class procedure TNovusStringUtils.TagsToCSV(Src, Dst: TStringList);
 var
   I, FI, FC: Integer;
@@ -239,6 +242,7 @@ begin
     Names.Free;
   end;
 end;
+*)
 
 class procedure TNovusStringUtils.GetNames(AText: string; AList: TStringList);
 var
@@ -261,7 +265,7 @@ begin
   until P = 0;
 end;
 
-{$IFNDEF VER230}
+(*
 class function TNovusStringUtils.PosText(const FindString, SourceString: string; StartPos: Integer): Integer;
 asm
         PUSH    ESI
@@ -322,7 +326,9 @@ asm
         POP     EDI
         POP     ESI
 end;
+*)
 
+(*
 class function TNovusStringUtils.PosStr(const FindString, SourceString: string; StartPos: Integer): Integer;
 asm
         PUSH    ESI
@@ -372,8 +378,9 @@ asm
         POP     EDI
         POP     ESI
 end;
+*)
 
-
+(*
 class function TNovusStringUtils.StrChPosL(const P : AnsiString; C : AnsiChar; var Pos : Cardinal) : Boolean;
   {-Return the position of a specified character within a string.}
 asm
@@ -408,23 +415,7 @@ asm
   pop   edi             { Restore registers }
   pop   ebx
 end;
-{$ELSE}
-
-class function TNovusStringUtils.PosStr(const FindString, SourceString: string; StartPos: Integer): Integer;
-begin
-  //
-end;
-
-class function TNovusStringUtils.StrChPosL(const P : AnsiString; C : AnsiChar; var Pos : Cardinal) : Boolean;
-begin
-
-end;
-
-class function TNovusStringUtils.PosText(const FindString, SourceString: string; StartPos: Integer): Integer;
-begin
-
-end;
-{$ENDIF}
+*)
 
 class function TNovusStringUtils.StrChInsertL(const S : AnsiString; C : AnsiChar; Pos : Cardinal) : AnsiString;
   {-Insert a character into a string at a specified position.}

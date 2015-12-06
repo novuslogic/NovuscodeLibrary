@@ -30,8 +30,8 @@ type
   private
   protected
   public
-    class function MaskCharCount(const P : string; MC : ANSIChar) : Integer;
-    class function InternationalDate(ForceCentury : Boolean) : string;
+//    class function MaskCharCount(const P : string; MC : ANSIChar) : Integer;
+//    class function InternationalDate(ForceCentury : Boolean) : string;
     class function IsValidYear(sStr:String):Boolean;
     class function IsValidMonth(iMonth:Integer):Boolean;
     class function isLeapYear(year: Integer): Boolean;
@@ -44,6 +44,7 @@ type
 
 implementation
 
+(*
 class function TNovusDateUtils.MaskCharCount(const P : string; MC : ANSIChar) : Integer;   {!!.02}
 var
   I, R,
@@ -58,8 +59,9 @@ begin
       Inc(R);
   Result := R;
 end;
+*)
 
-
+(*
 class function TNovusDateUtils.InternationalDate(ForceCentury : Boolean) : string;
 
 procedure FixMask(MC : ANSIChar; DL : Integer);
@@ -102,7 +104,7 @@ begin
 
   FixMask(YearOnly, 2 shl Ord(ForceCentury));
 end;
-
+*)
 
 class function TNovusDateUtils.GetIntMonth(sStr:String):Integer;
 var

@@ -1,15 +1,2 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<BorlandProject>
-	<Transactions>
-    <Transaction>2012/06/21 22:21:40.000.761,D:\Projects\NovusCodeLibrary\Source\1.0.0\Packages\NovusCodeLibrary_Core_D15.dproj=D:\Projects\NovusCodeLibrary\Source\1.0.0\Packages\NovusCodeLibrary_Core_D16.dproj</Transaction>
-    <Transaction>2012/06/25 22:54:26.000.194,=D:\Projects\NovusCodeLibrary\Source\1.0.0\Core\Utilities\NovusFileUtils.pas</Transaction>
-    <Transaction>2013/04/01 21:09:32.000.360,=D:\Projects\NovusCodeLibrary\Source\1.0.1\Core\Utilities\NovusStreamUtils.pas</Transaction>
-    <Transaction>2013/07/17 23:45:11.000.054,=dsnap.dcp</Transaction>
-    <Transaction>2013/07/17 23:45:11.000.141,=DbxCommonDriver.dcp</Transaction>
-    <Transaction>2013/09/30 22:26:17.000.625,=D:\Projects\NovusCodeLibrary\Source\1.0.1\Packages\Unit1.pas</Transaction>
-    <Transaction>2013/09/30 22:27:12.000.090,D:\Projects\NovusCodeLibrary\Source\1.0.1\Packages\Unit1.pas=D:\Projects\NovusCodeLibrary\Source\1.0.1\Core\Utilities\NovusJSONUtils.pas</Transaction>
-    <Transaction>2014/08/05 20:06:55.000.313,D:\Projects\NovusCodeLibrary\Source\1.1.0\Packages\NovusCodeLibrary_Core_D18.dproj=D:\Projects\NovusCodeLibrary\Source\1.1.0\Packages\NovusCodeLibrary_Core_D16.dproj</Transaction>
-    <Transaction>2014/09/20 22:39:58.000.986,=D:\Projects\NovuscodeLibrary\Source\Core\Utilities\NovusWindows.pas</Transaction>
-    <Transaction>2014/09/22 20:20:39.624,=D:\Projects\NovuscodeLibrary\Source\Core\Utilities\NovusVersionUtils.pas</Transaction>
-  </Transactions>
-</BorlandProject>
+<BorlandProject/>

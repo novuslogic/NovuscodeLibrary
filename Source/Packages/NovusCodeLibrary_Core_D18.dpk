@@ -51,6 +51,7 @@ contains
   NovusList in '..\Core\Infrastructure\NovusList.pas',
   NovusFileUtils in '..\Core\Utilities\NovusFileUtils.pas',
   NovusNumUtils in '..\Core\Utilities\NovusNumUtils.pas',
-  NovusDateDiffUtil in '..\Core\Utilities\NovusDateDiffUtil.pas';
+  NovusDateDiffUtil in '..\Core\Utilities\NovusDateDiffUtil.pas',
+  NovusGUIDEx in '..\Core\Utilities\NovusGUIDEx.pas';
 
 end.

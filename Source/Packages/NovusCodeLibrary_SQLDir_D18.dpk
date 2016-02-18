@@ -32,7 +32,8 @@ requires
   rtl,
   vcl,
   NovusCodeLibrary_Core_D18,
-  vcldb;
+  vcldb,
+  SqlDir180;
 
 contains
   NovusSQLDirUtils in '..\Core\Utilities\NovusSQLDirUtils.pas';

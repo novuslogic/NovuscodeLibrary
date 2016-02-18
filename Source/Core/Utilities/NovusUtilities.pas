@@ -3,11 +3,7 @@ unit NovusUtilities;
 interface
 
 uses SysUtils, Classes, Windows, Messages, typinfo,
-     {$IFDEF VER230}
-     VCL.Graphics;
-     {$else}
      Graphics;
-     {$endif}
 
 
 Const

@@ -9,6 +9,7 @@ Type
   public
     class function IsFileInUse(fName : string) : boolean;
     class function GetSpecialFolderPath(afolder : Integer) : string;
+    class function IsFileReadonly(fName : string) : boolean;
   end;
 
 
@@ -34,7 +35,8 @@ const
      Result := '';
  end;
 
-class function TNovusFileUtils.IsFileInUse(fName : string) : boolean;
+
+class function TNovusFileUtils.IsFileReadonly(fName : string) : boolean;
 var
   HFileRes : HFILE;
   Res: string[6];
@@ -81,6 +83,30 @@ var
    if not FileExists(fName) then exit;
 
    Result := CheckAttributes(fName, 'R');
+end;
+
+class function TNovusFileUtils.IsFileInUse(fName : string) : boolean;
+var
+  HFileRes: HFILE;
+begin
+  Result := False;
+  if not FileExists(fName) then begin
+    Exit;
+  end;
+
+  HFileRes := CreateFile(PChar(fName)
+    ,GENERIC_READ or GENERIC_WRITE
+    ,0
+    ,nil
+    ,OPEN_EXISTING
+    ,FILE_ATTRIBUTE_NORMAL
+    ,0);
+
+  Result := (HFileRes = INVALID_HANDLE_VALUE);
+
+  if not(Result) then begin
+    CloseHandle(HFileRes);
+  end;
 end;
 
 

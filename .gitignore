@@ -136,3 +136,4 @@
 *.~3~
 *.~2~
 /Source/Packages
+/Samples/Shell/__history

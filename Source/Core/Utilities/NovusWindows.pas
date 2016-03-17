@@ -7,7 +7,6 @@ uses Windows, sysutils, Classes, NovusUtilities, Registry;
 
 Type
   TNovusWindows = class(TNovusUtilities)
-
   protected
   public
     class function CommonFilesDir: string;

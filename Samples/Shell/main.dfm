@@ -22,4 +22,13 @@ object Form1: TForm1
     TabOrder = 0
     OnClick = Button1Click
   end
+  object Button2: TButton
+    Left = 144
+    Top = 24
+    Width = 121
+    Height = 49
+    Caption = 'Run cmd.exe'
+    TabOrder = 1
+    OnClick = Button2Click
+  end
 end

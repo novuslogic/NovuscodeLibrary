@@ -2,12 +2,12 @@ unit NovusShell;
 
 interface
 
-Uses NovusUtilities, ShellAPI, Windows;
+Uses NovusUtilities, ShellAPI, Windows, Forms;
 
 type
   tNovusShell = class(tNovusUtilities)
   protected
-    function WinExecute(const aOperation: String;
+    function Execute(const aOperation: String;
                         const aFilename: String;
                         const aDirectory: string;
                         const aParameters: String;
@@ -59,7 +59,7 @@ function tNovusShell.RunCommand(const aFilename: String;
                         const aDirectory: string;
                         const aParameters: String): Boolean;
 begin
-  Result := WinExecute('open',
+  Result := Execute('open',
                        aFilename,
                        aDirectory,
                        aParameters,
@@ -68,27 +68,46 @@ begin
 
 end;
 
-function tNovusShell.WinExecute(const aOperation: String;
+function tNovusShell.Execute(const aOperation: String;
                         const aFilename: String;
                         const aDirectory: string;
                         const aParameters: String;
                         const aShow: Integer): Boolean;
 var
   ShellInfo: TShellExecuteInfo;
+  liExitcode: Integer;
+  fbOK: LongBool;
+  Msg: tagMSG;
 begin
   FillChar(ShellInfo, SizeOf(ShellInfo), Chr(0));
 
   ShellInfo.cbSize := SizeOf(ShellInfo);
-  ShellInfo.fMask := SEE_MASK_DOENVSUBST or SEE_MASK_FLAG_NO_UI;
+  ShellInfo.fMask := SEE_MASK_DOENVSUBST  or SEE_MASK_FLAG_NO_UI  or SEE_MASK_NOCLOSEPROCESS or
+    SEE_MASK_FLAG_DDEWAIT;
   ShellInfo.lpFile := PChar(aFileName);
   ShellInfo.lpParameters := Pointer(aParameters);
   ShellInfo.lpVerb := Pointer(aOperation);
   ShellInfo.nShow := aShow;
 
   Result := ShellExecuteEx(@ShellInfo);
+  if Result then
+    begin
+      WaitForInputIdle(ShellInfo.hProcess, INFINITE);
+      while WaitForSingleObject(ShellInfo.hProcess, 10) = WAIT_TIMEOUT do
+        repeat
+          Msg.hwnd := 0;
+          fbOK := PeekMessage(Msg, ShellInfo.Wnd, 0, 0, PM_REMOVE);
+          if fbOK then
+          begin
+            TranslateMessage(Msg);
+            DispatchMessage(Msg);
+          end;
+        until not fbOK;
 
-  if Result then GetExitCodeProcess(ShellInfo.hProcess, DWORD(Exitcode));
-
+      result := GetExitCodeProcess(ShellInfo.hProcess, DWORD(liExitcode));
+        
+      CloseHandle(ShellInfo.hProcess);
+    end;
 
 end;
 

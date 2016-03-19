@@ -9,7 +9,9 @@ uses
 type
   TForm1 = class(TForm)
     Button1: TButton;
+    Button2: TButton;
     procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -31,9 +33,10 @@ begin
     Try
       loShell := TNovusShell.Create;
 
-      if not loShell.RunCommand('notepadx.exe') then
-         ShowMessage('Error');
-
+      if not loShell.RunCommand('notepad.exe') then
+         ShowMessage('Error')
+      else
+        Showmessage('finish app');
     Except
 
 
@@ -51,6 +54,30 @@ begin
 
 
 
+end;
+
+procedure TForm1.Button2Click(Sender: TObject);
+Var
+  loShell: TNovusShell;
+begin
+  Try
+    Try
+      loShell := TNovusShell.Create;
+
+      if not loShell.RunCommand('cmd.exe') then
+         ShowMessage('Error')
+      else
+        Showmessage('finish app');
+    Except
+
+
+
+
+    End;
+  Finally
+
+    loShell.Free;
+  End;
 end;
 
 end.

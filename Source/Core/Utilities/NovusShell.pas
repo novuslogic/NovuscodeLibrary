@@ -7,7 +7,7 @@ Uses NovusUtilities, ShellAPI, Windows, Forms;
 type
   tNovusShell = class(tNovusUtilities)
   protected
-    function Execute(const aOperation: String;
+    function WindowsExecute(const aOperation: String;
                         const aFilename: String;
                         const aDirectory: string;
                         const aParameters: String;
@@ -46,7 +46,7 @@ function tNovusShell.RunCommandSilent(const aFilename: String;
                         const aDirectory: string;
                         const aParameters: String): Boolean;
 begin
-  Result := WinExecute('open',
+  Result := WindowsExecute('open',
                        aFilename,
                        aDirectory,
                        aParameters,
@@ -59,7 +59,7 @@ function tNovusShell.RunCommand(const aFilename: String;
                         const aDirectory: string;
                         const aParameters: String): Boolean;
 begin
-  Result := Execute('open',
+  Result := WindowsExecute('open',
                        aFilename,
                        aDirectory,
                        aParameters,
@@ -68,7 +68,7 @@ begin
 
 end;
 
-function tNovusShell.Execute(const aOperation: String;
+function tNovusShell.WindowsExecute(const aOperation: String;
                         const aFilename: String;
                         const aDirectory: string;
                         const aParameters: String;
@@ -104,6 +104,8 @@ begin
           end;
         until not fbOK;
 
+      liExitcode :=0;
+        
       result := GetExitCodeProcess(ShellInfo.hProcess, DWORD(liExitcode));
         
       CloseHandle(ShellInfo.hProcess);

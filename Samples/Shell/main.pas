@@ -10,8 +10,10 @@ type
   TForm1 = class(TForm)
     Button1: TButton;
     Button2: TButton;
+    Button3: TButton;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -65,6 +67,30 @@ begin
       loShell := TNovusShell.Create;
 
       if not loShell.RunCommand('cmd.exe') then
+         ShowMessage('Error')
+      else
+        Showmessage('finish app');
+    Except
+
+
+
+
+    End;
+  Finally
+
+    loShell.Free;
+  End;
+end;
+
+procedure TForm1.Button3Click(Sender: TObject);
+Var
+  loShell: TNovusShell;
+begin
+  Try
+    Try
+      loShell := TNovusShell.Create;
+
+      if not loShell.RunCommand('powershell.exe') then
          ShowMessage('Error')
       else
         Showmessage('finish app');

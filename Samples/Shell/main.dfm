@@ -31,4 +31,13 @@ object Form1: TForm1
     TabOrder = 1
     OnClick = Button2Click
   end
+  object Button3: TButton
+    Left = 279
+    Top = 24
+    Width = 121
+    Height = 49
+    Caption = 'Run Powershell'
+    TabOrder = 2
+    OnClick = Button3Click
+  end
 end

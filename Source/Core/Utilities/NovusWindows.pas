@@ -15,7 +15,7 @@ Type
     class function WindowsTempPath: String;
     class function WindowsExceptMess: String;
     class function GetLocalComputerName: String;
-    class function ExecuteApp(FileName:String; Visibility : integer): Integer;
+//    class function ExecuteApp(FileName:String; Visibility : integer): Integer;
   end;
 
 implementation
@@ -105,6 +105,10 @@ begin
   FreeMem(P);
 end;
 
+(*
+
+Moved to TNovusShell rename to TNovusWindows.WindowsRedirectedExecute
+
 class function TNovusWindows.ExecuteApp(FileName:String; Visibility : integer): Integer;
 var
   zAppName:array[0..512] of char;
@@ -144,7 +148,7 @@ begin
     Result := MyResult;
   end;
 end;
-
+*)
 
 
 end.

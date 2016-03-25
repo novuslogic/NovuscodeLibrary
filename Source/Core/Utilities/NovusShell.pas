@@ -9,12 +9,12 @@ type
   protected
     FPipe: THandle;
     FContent: TStringStream;
-    function Get_Content: String;
+    function GetContent: String;
     procedure Execute; override;
   public
     constructor Create(const aPipe: THandle);
     destructor Destroy; override;
-    property aContent: String read Get_Content;
+    property aContent: String read GetContent;
   end;
 
   TWritePipeThread = class(TThread)
@@ -126,6 +126,7 @@ var
   FReadOutputThread: TReadPipeThread;
   FReadErrorThread: TReadPipeThread;
   Fok: Integer;
+  liExitcode: Integer;
 begin
   FillChar(FSecurityAttributes, SizeOf(SECURITY_ATTRIBUTES), Chr(0));
 
@@ -177,6 +178,11 @@ begin
       Result := False;
       TerminateProcess(FProcessInfo.hProcess, UINT(ERROR_CANCELLED));
     end;
+
+    liExitcode :=0;
+
+    result := GetExitCodeProcess(FProcessInfo.hProcess, DWORD(liExitcode));
+
 
     FReadOutputThread.WaitFor;
     aOutput := FReadOutputThread.aContent;
@@ -270,7 +276,7 @@ begin
   until (iBytesRead = 0);
 end;
 
-function TReadPipeThread.Get_Content: String;
+function TReadPipeThread.GetContent: String;
 begin
   Result := FContent.DataString;
 end;

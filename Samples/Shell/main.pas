@@ -43,7 +43,7 @@ begin
     Try
       loShell := TNovusShell.Create;
 
-      if not loShell.RunRedirectCommand('Cmd.exe', '', 'Dir'+CR+'Exit'+CR, lsOutput,lsError ) then
+      if not loShell.RunRedirectCommand('Cmd.exe', 'Dir'+CR+'Exit'+CR, lsOutput,lsError ) then
         begin
           Memo.Lines.Add(lsError);
           ShowMessage('Error')

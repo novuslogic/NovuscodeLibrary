@@ -44,7 +44,6 @@ type
     destructor Destroy; override;
 
     function RunRedirectCommand(const aCommandLine: string;
-                                const aDirectory: string;
                                 const aInput: string;
                                 var aOutput,
                                 aError: string): boolean;
@@ -74,7 +73,6 @@ begin
 end;
 
 function tNovusShell.RunRedirectCommand(const aCommandLine: string;
-                                const aDirectory: string;
                                 const aInput: string;
                                 var aOutput,
                                 aError: string): boolean;

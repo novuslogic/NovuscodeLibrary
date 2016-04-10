@@ -3,7 +3,7 @@ unit NovusWindows;
 interface
 
 
-uses Windows, sysutils, Classes, NovusUtilities, Registry;
+uses Windows, sysutils, Classes, NovusUtilities, Registry, Messages;
 
 Type
   TNovusWindows = class(TNovusUtilities)
@@ -15,7 +15,7 @@ Type
     class function WindowsTempPath: String;
     class function WindowsExceptMess: String;
     class function GetLocalComputerName: String;
-//    class function ExecuteApp(FileName:String; Visibility : integer): Integer;
+    class function SetEnvironmentVariable(const aVariableName: String; const aValue: string): Integer;
   end;
 
 implementation
@@ -105,50 +105,13 @@ begin
   FreeMem(P);
 end;
 
-(*
-
-Moved to TNovusShell rename to TNovusWindows.WindowsRedirectedExecute
-
-class function TNovusWindows.ExecuteApp(FileName:String; Visibility : integer): Integer;
-var
-  zAppName:array[0..512] of char;
-  zCurDir:array[0..255] of char;
-  WorkDir:String;
-  StartupInfo:TStartupInfo;
-  ProcessInfo:TProcessInformation;
-  MyResult : Cardinal;
+class function TNovusWindows.SetEnvironmentVariable(const aVariableName: String; const aValue: string): Integer;
 begin
-  Result := -1;
-
-  StrPCopy(zAppName,FileName);
-  GetDir(0,WorkDir);
-  StrPCopy(zCurDir,WorkDir);
-  FillChar(StartupInfo,Sizeof(StartupInfo),#0);
-  StartupInfo.cb := Sizeof(StartupInfo);
-
-  StartupInfo.dwFlags := STARTF_USESHOWWINDOW;
-  StartupInfo.wShowWindow := Visibility;
-  if not CreateProcess(nil,
-    zAppName,                      { pointer to command line string }
-    nil,                           { pointer to process security attributes }
-    nil,                           { pointer to thread security attributes }
-    false,                         { handle inheritance flag }
-    CREATE_NEW_CONSOLE or          { creation flags }
-    NORMAL_PRIORITY_CLASS,
-    nil,                           { pointer to new environment block }
-    nil,                           { pointer to current directory name }
-    StartupInfo,                   { pointer to STARTUPINFO }
-    ProcessInfo) then Result := -1  { pointer to PROCESS_INF }
-
-  else begin
-    WaitforSingleObject(ProcessInfo.hProcess,INFINITE);
-
-    GetExitCodeProcess(ProcessInfo.hProcess, MyResult);
-
-    Result := MyResult;
-  end;
+ if Windows.SetEnvironmentVariable(PChar(aVariableName),
+    PChar(aValue)) then
+    Result := 0
+  else
+    Result := GetLastError;
 end;
-*)
-
 
 end.

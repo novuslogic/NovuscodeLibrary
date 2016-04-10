@@ -34,6 +34,8 @@ Type
     function GetFieldAsinteger(aNodeList: TJvSimpleXmlElem;FieldName: String): integer;
     function GetFieldAsBoolean(aNodeList: TJvSimpleXmlElem;FieldName: String): Boolean;
     function GetFieldAsString(aNodeList: TJvSimpleXmlElem; FieldName: String): String;
+    function IsFieldExists(aNodeList: TJvSimpleXmlElem; FieldName: String): Boolean;
+
 
     Property oXMLDocument: TJvSimpleXML
       read GetoXMLDocument
@@ -50,6 +52,7 @@ Type
     procedure New; override;
     function Retrieve: Boolean; override;
     function Post: Boolean; override;
+
     procedure DeleteXML(aNodeList: TJvSimpleXmlElem); virtual;
 
     property FreeObject: Boolean
@@ -218,6 +221,19 @@ begin
   If Assigned(fJvSimpleXmlElem) then
     Result := fJvSimpleXmlElem.Value;
 end;
+
+function TNovusXMLBO.IsFieldExists(aNodeList: TJvSimpleXmlElem; FieldName: String): Boolean;
+Var
+  Index: Integer;
+begin
+  Result := False;
+
+  If Not Assigned(aNodeList) then Exit;
+
+  Index := 0;
+  Result := (TNovusSimpleXML.FindNode(aNodeList, FieldName,Index) <> NIL);
+end;
+
 
 procedure TNovusXMLBO.DeleteXML(aNodeList: TJvSimpleXmlElem);
 begin

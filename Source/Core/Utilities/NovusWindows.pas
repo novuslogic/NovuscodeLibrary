@@ -1,4 +1,4 @@
-unit NovusWindows;
+﻿unit NovusWindows;
 
 interface
 
@@ -15,7 +15,8 @@ Type
     class function WindowsTempPath: String;
     class function WindowsExceptMess: String;
     class function GetLocalComputerName: String;
-    class function SetEnvironmentVariable(const aVariableName: String; const aValue: string): Integer;
+    class function SetEnvironmentVariableEx(const aVariableName: String; const aValue: string; aIsSystemVariable: Boolean): Integer;
+    class function SetSysEnvironmentVariable(const aVariableName: String; aValue: string): boolean;
   end;
 
 implementation
@@ -105,13 +106,97 @@ begin
   FreeMem(P);
 end;
 
-class function TNovusWindows.SetEnvironmentVariable(const aVariableName: String; const aValue: string): Integer;
+class function TNovusWindows.SetSysEnvironmentVariable(const aVariableName: String; aValue: string): Boolean;
+var
+  fok: Boolean;
+  reg: TRegistry;
+resourcestring
+  key = 'SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment';
+
 begin
- if Windows.SetEnvironmentVariable(PChar(aVariableName),
-    PChar(aValue)) then
-    Result := 0
-  else
-    Result := GetLastError;
+  Try
+    Result := False;
+
+
+    reg := TRegistry.Create;
+
+    reg.Access := KEY_ALL_ACCESS or KEY_WOW64_64KEY;
+
+    reg.RootKey := HKEY_LOCAL_MACHINE;
+
+    fok := reg.KeyExists(key);
+    if fok then
+      begin
+        if reg.OpenKey(key, true) then
+          begin
+            Result := True;
+
+            reg.WriteString(aVariableName, aValue);
+
+            //SetEnvironmentVariable(PChar(aVariableName), PChar(aValue));
+
+            SendMessage(HWND_BROADCAST, WM_SETTINGCHANGE, 0, Integer(PChar('Environment')));
+          end;
+      end;
+
+  Finally
+
+    reg.free;
+  End;
+
+  (*
+  with TRegistry.Create do
+    try
+      RootKey := HKEY_LOCAL_MACHINE;
+      fok  := OpenKey('SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment', true);
+
+      if fok then
+      begin
+        WriteString(aVariableName, aValue);
+
+        SetEnvironmentVariable(PChar(aVariableName), PChar(aValue));
+
+        SendMessage(HWND_BROADCAST, WM_SETTINGCHANGE, 0, Integer(PChar('Environment')));
+      end
+    else
+      Result := GetLastError;
+
+    finally
+      Free;
+    end;
+    *)
 end;
+
+class function TNovusWindows.SetEnvironmentVariableEx(const aVariableName: String; const aValue: string; aIsSystemVariable: Boolean): Integer;
+var
+  rv: DWORD;
+begin
+  if aIsSystemVariable = false then
+    begin
+      if Windows.SetEnvironmentVariable(PChar(aVariableName),
+        PChar(aValue)) then
+        Result := 0
+      else
+        begin
+          Result := GetLastError;
+
+          if Result = 0 then Result := -1;
+        end;
+
+    end
+  else
+    begin
+       Result := 0;
+
+       if Not SetSysEnvironmentVariable(aVariableName, aValue) then
+         begin
+           Result := GetLastError;
+
+           if Result = 0 then Result := -1;
+         end;
+
+    end;
+end;
+
 
 end.

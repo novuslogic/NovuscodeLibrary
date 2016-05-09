@@ -32,13 +32,13 @@ type
     function WindowsRedirectedExecute(aCommandline: String;
         const aInput: String;
         var aOutput, aError: String;
-        const Wait: DWORD = 3600000): boolean;
+        const Wait: DWORD = 3600000): Integer;
 
     function WindowsShellExecute(const aOperation: String;
                         const aCommandLine: string;
                         const aDirectory: string;
                         const aParameters: String;
-                        const aShow: Integer): Boolean;
+                        const aShow: Integer): Integer;
   public
     constructor Create; virtual;
     destructor Destroy; override;
@@ -46,15 +46,15 @@ type
     function RunRedirectCommand(const aCommandLine: string;
                                 const aInput: string;
                                 var aOutput,
-                                aError: string): boolean;
+                                aError: string): Integer;
 
     function RunCommandSilent(const aCommandLine: string;
                         const aDirectory: string;
-                        const aParameters: String ): Boolean;
+                        const aParameters: String ): Integer;
 
     function RunCommand(const aCommandLine: string;
                         const aDirectory: string;
-                        const aParameters: String): Boolean;
+                        const aParameters: String): Integer;
 
 
   end;
@@ -75,9 +75,9 @@ end;
 function tNovusShell.RunRedirectCommand(const aCommandLine: string;
                                 const aInput: string;
                                 var aOutput,
-                                aError: string): boolean;
+                                aError: string): Integer;
 begin
-  Result :=  WindowsRedirectedExecute(aCommandLine,  aInput,
+  result :=  WindowsRedirectedExecute(aCommandLine,  aInput,
                                 aOutput, aError);
 
 end;
@@ -85,7 +85,7 @@ end;
 
 function tNovusShell.RunCommandSilent(const aCommandLine: string;
                         const aDirectory: string;
-                        const aParameters: String): Boolean;
+                        const aParameters: String): Integer;
 begin
   Result := WindowsShellExecute('open',
                        aCommandLine,
@@ -98,7 +98,7 @@ end;
 
 function tNovusShell.RunCommand(const aCommandLine: String;
                         const aDirectory: string;
-                        const aParameters: String): Boolean;
+                        const aParameters: String): Integer;
 begin
   Result := WindowsShellExecute('open',
                        aCommandLine,
@@ -106,14 +106,13 @@ begin
                        aParameters,
                        SW_SHOWNORMAL);
 
-
 end;
 
 
 function tNovusShell.WindowsRedirectedExecute(aCommandline: String;
         const aInput: String;
         var aOutput, aError: String;
-        const Wait: DWORD = 3600000): Boolean;
+        const Wait: DWORD = 3600000): Integer;
 
 var
   FSecurityAttributes: SECURITY_ATTRIBUTES;
@@ -125,9 +124,14 @@ var
   FWriteInputThread: TWritePipeThread;
   FReadOutputThread: TReadPipeThread;
   FReadErrorThread: TReadPipeThread;
-  Fok: Integer;
+  Fok: Boolean;
   liExitcode: Integer;
+  liwait_timeout: Integer;
 begin
+  Result := 0;
+
+  liExitcode :=0;
+
   FillChar(FSecurityAttributes, SizeOf(SECURITY_ATTRIBUTES), Chr(0));
 
   FSecurityAttributes.nLength := SizeOf(SECURITY_ATTRIBUTES);
@@ -156,50 +160,48 @@ begin
 
   UniqueString(aCommandline);
 
-  Result := CreateProcess(nil, PChar(aCommandline), nil, nil, True,
+  FOK := CreateProcess(nil, PChar(aCommandline), nil, nil, True,
     CREATE_NEW_CONSOLE, nil, nil, FStartupInfo, FProcessInfo);
 
   CloseHandle(hPipeInputRead);
   CloseHandle(hPipeOutputWrite);
   CloseHandle(hPipeErrorWrite);
 
-  if Result then
-  begin
-    FWriteInputThread := nil;
-    if (hPipeInputWrite <> 0) then
-      FWriteInputThread := TWritePipeThread.Create(hPipeInputWrite, aInput);
-    FReadOutputThread := TReadPipeThread.Create(hPipeOutputRead);
-    FReadErrorThread := TReadPipeThread.Create(hPipeErrorRead);
-    try
-    Fok := WaitForSingleObject(FProcessInfo.hProcess, Wait);
-
-    if (Fok = WAIT_TIMEOUT) then
+  if Fok then
     begin
-      Result := False;
-      TerminateProcess(FProcessInfo.hProcess, UINT(ERROR_CANCELLED));
-    end;
+      FWriteInputThread := nil;
+      if (hPipeInputWrite <> 0) then
+        FWriteInputThread := TWritePipeThread.Create(hPipeInputWrite, aInput);
+      FReadOutputThread := TReadPipeThread.Create(hPipeOutputRead);
+      FReadErrorThread := TReadPipeThread.Create(hPipeErrorRead);
+      try
+        liwait_timeout := WaitForSingleObject(FProcessInfo.hProcess, Wait);
 
-    liExitcode :=0;
+        if (liwait_timeout = WAIT_TIMEOUT) then
+          TerminateProcess(FProcessInfo.hProcess, UINT(ERROR_CANCELLED));
 
-    result := GetExitCodeProcess(FProcessInfo.hProcess, DWORD(liExitcode));
+         fok := GetExitCodeProcess(FProcessInfo.hProcess, DWORD(liExitcode));
+         if Not fOK then liExitcode := 0;
 
-
-    FReadOutputThread.WaitFor;
-    aOutput := FReadOutputThread.aContent;
-    FReadErrorThread.WaitFor;
-    aError := FReadErrorThread.aContent;
-    finally
-      FWriteInputThread.Free;
-      FReadOutputThread.Free;
-      FReadErrorThread.Free;
-      CloseHandle(FProcessInfo.hThread);
-      CloseHandle(FProcessInfo.hProcess);
-    end;
-  end;
+         FReadOutputThread.WaitFor;
+         aOutput := FReadOutputThread.aContent;
+         FReadErrorThread.WaitFor;
+         aError := FReadErrorThread.aContent;
+      finally
+        FWriteInputThread.Free;
+        FReadOutputThread.Free;
+        FReadErrorThread.Free;
+        CloseHandle(FProcessInfo.hThread);
+        CloseHandle(FProcessInfo.hProcess);
+      end;
+    end
+  else
+    liExitcode := -1;
   // close our ends of the pipes
   CloseHandle(hPipeOutputRead);
   CloseHandle(hPipeErrorRead);
 
+  Result :=  liExitcode;
 end;
 
 
@@ -207,13 +209,17 @@ function tNovusShell.WindowsShellExecute(const aOperation: String;
                         const aCommandLine: string;
                         const aDirectory: string;
                         const aParameters: String;
-                        const aShow: Integer): Boolean;
+                        const aShow: Integer): Integer;
 var
   ShellInfo: TShellExecuteInfo;
   liExitcode: Integer;
   fbOK: LongBool;
   Msg: tagMSG;
+  fok: Boolean;
 begin
+  Result := 0;
+  liExitcode :=0;
+
   FillChar(ShellInfo, SizeOf(ShellInfo), Chr(0));
 
   ShellInfo.cbSize := SizeOf(ShellInfo);
@@ -224,8 +230,8 @@ begin
   ShellInfo.lpVerb := Pointer(aOperation);
   ShellInfo.nShow := aShow;
 
-  Result := ShellExecuteEx(@ShellInfo);
-  if Result then
+  fOK := ShellExecuteEx(@ShellInfo);
+  if fok then
     begin
       WaitForInputIdle(ShellInfo.hProcess, INFINITE);
       while WaitForSingleObject(ShellInfo.hProcess, 10) = WAIT_TIMEOUT do
@@ -239,13 +245,17 @@ begin
           end;
         until not fbOK;
 
-      liExitcode :=0;
-        
-      result := GetExitCodeProcess(ShellInfo.hProcess, DWORD(liExitcode));
-        
-      CloseHandle(ShellInfo.hProcess);
-    end;
 
+      If NOt  GetExitCodeProcess(ShellInfo.hProcess, DWORD(liExitcode)) then
+        liExitcode := 0;
+
+      CloseHandle(ShellInfo.hProcess);
+    end
+   else
+     liExitcode := -1;
+
+
+   Result := liExitcode;
 end;
 
 { TReadPipeThread }

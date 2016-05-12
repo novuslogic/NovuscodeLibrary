@@ -2,14 +2,16 @@ unit NovusFileUtils;
 
 interface
 
-uses StrUtils, NovusUtilities, Windows, SysUtils, Dialogs, SHFolder;
+uses StrUtils, NovusUtilities, Windows, SysUtils, Dialogs, SHFolder, ShellApi;
 
 Type
   TNovusFileUtils = class(tNovusUtilities)
   public
     class function IsFileInUse(fName : string) : boolean;
-    class function GetSpecialFolderPath(afolder : Integer) : string;
+   // class function GetSpecialFolderPath(afolder : Integer) : string;
     class function IsFileReadonly(fName : string) : boolean;
+    class function MoveDir(aFromDirectory, aToDirectory: String): Boolean;
+    class function CopyDir(aFromDirectory, aToDirectory: String): Boolean;
   end;
 
 
@@ -23,6 +25,7 @@ implementation
 4 = All Users\Documents - CSIDL_COMMON_DOCUMENTS;
 *)
 
+(*
 class function TNovusFileUtils.GetSpecialFolderPath(afolder : Integer) : string;
 const
    SHGFP_TYPE_CURRENT = 0;
@@ -34,7 +37,7 @@ const
    else
      Result := '';
  end;
-
+*)
 
 class function TNovusFileUtils.IsFileReadonly(fName : string) : boolean;
 var
@@ -109,5 +112,36 @@ begin
   end;
 end;
 
+
+class function TNovusFileUtils.MoveDir(aFromDirectory, aToDirectory: String): Boolean;
+var
+  fos: TSHFileOpStruct;
+begin
+  ZeroMemory(@fos, SizeOf(fos));
+  with fos do
+  begin
+    wFunc  := FO_MOVE;
+    fFlags := FOF_FILESONLY;
+    pFrom  := PChar(aFromDirectory + #0);
+    pTo    := PChar(aToDirectory)
+  end;
+  Result := (0 = ShFileOperation(fos));
+end;
+
+
+class function TNovusFileUtils.CopyDir(aFromDirectory, aToDirectory: String): Boolean;
+var
+  fos: TSHFileOpStruct;
+begin
+  ZeroMemory(@fos, SizeOf(fos));
+  with fos do
+  begin
+    wFunc  := FO_COPY;
+    fFlags := FOF_FILESONLY;
+    pFrom  := PChar(aFromDirectory + #0);
+    pTo    := PChar(aToDirectory)
+  end;
+  Result := (0 = ShFileOperation(fos));
+end;
 
 end.

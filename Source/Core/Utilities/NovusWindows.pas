@@ -1,13 +1,12 @@
-unit NovusWindows;
+﻿unit NovusWindows;
 
 interface
 
 
-uses Windows, sysutils, Classes, NovusUtilities, Registry;
+uses Windows, sysutils, Classes, NovusUtilities, Registry, Messages;
 
 Type
   TNovusWindows = class(TNovusUtilities)
-
   protected
   public
     class function CommonFilesDir: string;
@@ -16,7 +15,8 @@ Type
     class function WindowsTempPath: String;
     class function WindowsExceptMess: String;
     class function GetLocalComputerName: String;
-    class function ExecuteApp(FileName:String; Visibility : integer): Integer;
+    class function SetEnvironmentVariableEx(const aVariableName: String; const aValue: string; aIsSystemVariable: Boolean): Integer;
+    class function SetSysEnvironmentVariable(const aVariableName: String; aValue: string): boolean;
   end;
 
 implementation
@@ -106,46 +106,97 @@ begin
   FreeMem(P);
 end;
 
-class function TNovusWindows.ExecuteApp(FileName:String; Visibility : integer): Integer;
+class function TNovusWindows.SetSysEnvironmentVariable(const aVariableName: String; aValue: string): Boolean;
 var
-  zAppName:array[0..512] of char;
-  zCurDir:array[0..255] of char;
-  WorkDir:String;
-  StartupInfo:TStartupInfo;
-  ProcessInfo:TProcessInformation;
-  MyResult : Cardinal;
+  fok: Boolean;
+  reg: TRegistry;
+resourcestring
+  key = 'SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment';
+
 begin
-  Result := -1;
+  Try
+    Result := False;
 
-  StrPCopy(zAppName,FileName);
-  GetDir(0,WorkDir);
-  StrPCopy(zCurDir,WorkDir);
-  FillChar(StartupInfo,Sizeof(StartupInfo),#0);
-  StartupInfo.cb := Sizeof(StartupInfo);
 
-  StartupInfo.dwFlags := STARTF_USESHOWWINDOW;
-  StartupInfo.wShowWindow := Visibility;
-  if not CreateProcess(nil,
-    zAppName,                      { pointer to command line string }
-    nil,                           { pointer to process security attributes }
-    nil,                           { pointer to thread security attributes }
-    false,                         { handle inheritance flag }
-    CREATE_NEW_CONSOLE or          { creation flags }
-    NORMAL_PRIORITY_CLASS,
-    nil,                           { pointer to new environment block }
-    nil,                           { pointer to current directory name }
-    StartupInfo,                   { pointer to STARTUPINFO }
-    ProcessInfo) then Result := -1  { pointer to PROCESS_INF }
+    reg := TRegistry.Create;
 
-  else begin
-    WaitforSingleObject(ProcessInfo.hProcess,INFINITE);
+    reg.Access := KEY_ALL_ACCESS or KEY_WOW64_64KEY;
 
-    GetExitCodeProcess(ProcessInfo.hProcess, MyResult);
+    reg.RootKey := HKEY_LOCAL_MACHINE;
 
-    Result := MyResult;
-  end;
+    fok := reg.KeyExists(key);
+    if fok then
+      begin
+        if reg.OpenKey(key, true) then
+          begin
+            Result := True;
+
+            reg.WriteString(aVariableName, aValue);
+
+            //SetEnvironmentVariable(PChar(aVariableName), PChar(aValue));
+
+            SendMessage(HWND_BROADCAST, WM_SETTINGCHANGE, 0, Integer(PChar('Environment')));
+          end;
+      end;
+
+  Finally
+
+    reg.free;
+  End;
+
+  (*
+  with TRegistry.Create do
+    try
+      RootKey := HKEY_LOCAL_MACHINE;
+      fok  := OpenKey('SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment', true);
+
+      if fok then
+      begin
+        WriteString(aVariableName, aValue);
+
+        SetEnvironmentVariable(PChar(aVariableName), PChar(aValue));
+
+        SendMessage(HWND_BROADCAST, WM_SETTINGCHANGE, 0, Integer(PChar('Environment')));
+      end
+    else
+      Result := GetLastError;
+
+    finally
+      Free;
+    end;
+    *)
 end;
 
+class function TNovusWindows.SetEnvironmentVariableEx(const aVariableName: String; const aValue: string; aIsSystemVariable: Boolean): Integer;
+var
+  rv: DWORD;
+begin
+  if aIsSystemVariable = false then
+    begin
+      if Windows.SetEnvironmentVariable(PChar(aVariableName),
+        PChar(aValue)) then
+        Result := 0
+      else
+        begin
+          Result := GetLastError;
+
+          if Result = 0 then Result := -1;
+        end;
+
+    end
+  else
+    begin
+       Result := 0;
+
+       if Not SetSysEnvironmentVariable(aVariableName, aValue) then
+         begin
+           Result := GetLastError;
+
+           if Result = 0 then Result := -1;
+         end;
+
+    end;
+end;
 
 
 end.

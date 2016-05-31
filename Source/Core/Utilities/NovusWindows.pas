@@ -9,6 +9,7 @@ Type
   TNovusWindows = class(TNovusUtilities)
   protected
   public
+    class function IsWin64: Boolean;
     class function CommonFilesDir: string;
     class function WindowsSystemDir: String;
     class function WindowsDir: string;
@@ -20,6 +21,10 @@ Type
   end;
 
 implementation
+
+
+
+
 
 class function TNovusWindows.WindowsDir: string;
 begin
@@ -196,6 +201,20 @@ begin
          end;
 
     end;
+end;
+
+class function TNovusWindows.IsWin64: Boolean;
+var
+  IsWow64Process : function(hProcess : THandle; var Wow64Process : BOOL): BOOL; stdcall;
+  Wow64Process : BOOL;
+begin
+  Result := False;
+  IsWow64Process := GetProcAddress(GetModuleHandle(Kernel32), 'IsWow64Process');
+  if Assigned(IsWow64Process) then begin
+    if IsWow64Process(GetCurrentProcess, Wow64Process) then begin
+      Result := Wow64Process;
+    end;
+  end;
 end;
 
 

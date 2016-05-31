@@ -2,37 +2,26 @@ unit NovusShell;
 
 interface
 
-Uses NovusUtilities, ShellAPI, Windows, Forms, AnsiStrings, Classes  ;
+Uses NovusUtilities, ShellAPI, Windows, Forms, AnsiStrings, Classes, comobj, variants,
+     SysUtils, NovusWindows;
 
 type
-  TReadPipeThread = class(TThread)
-  protected
-    FPipe: THandle;
-    FContent: TStringStream;
-    function GetContent: String;
-    procedure Execute; override;
-  public
-    constructor Create(const aPipe: THandle);
-    destructor Destroy; override;
-    property aContent: String read GetContent;
+  TAceHeader = packed record
+    AceType: Byte;
+    AceFlags: Byte;
+    AceSize: Word;
   end;
 
-  TWritePipeThread = class(TThread)
-  protected
-    FPipe: THandle;
-    FContent: TStringStream;
-    procedure Execute; override;
-  public
-    constructor Create(const aPipe: THandle; const aContent: String);
-    destructor Destroy; override;
+  TAccessAllowedAce = packed record
+    Header: TAceHeader;
+    Mask: ACCESS_MASK;
+    SidStart: DWORD;
   end;
 
   tNovusShell = class(tNovusUtilities)
   protected
-    function WindowsRedirectedExecute(aCommandline: String;
-        const aInput: String;
-        var aOutput, aError: String;
-        const Wait: DWORD = 3600000): Integer;
+    function WindowsCaptureExecute(aCommandline: String;
+         var aOutput: String): Integer;
 
     function WindowsShellExecute(const aOperation: String;
                         const aCommandLine: string;
@@ -43,10 +32,8 @@ type
     constructor Create; virtual;
     destructor Destroy; override;
 
-    function RunRedirectCommand(const aCommandLine: string;
-                                const aInput: string;
-                                var aOutput,
-                                aError: string): Integer;
+    function RunCaptureCommand(const aCommandLine: string;
+                                var aOutput: string): Integer;
 
     function RunCommandSilent(const aCommandLine: string;
                         const aDirectory: string;
@@ -59,8 +46,10 @@ type
 
   end;
 
+  function WTSQueryUserToken(SessionId: DWORD; phToken: THandle):bool;stdcall;external 'wtsapi32.dll';
 
 implementation
+
 
 constructor tNovusShell.Create;
 begin
@@ -72,13 +61,11 @@ begin
   inherited;
 end;
 
-function tNovusShell.RunRedirectCommand(const aCommandLine: string;
-                                const aInput: string;
-                                var aOutput,
-                                aError: string): Integer;
+function tNovusShell.RunCaptureCommand(const aCommandLine: string;
+                               var aOutput: String): Integer;
 begin
-  result :=  WindowsRedirectedExecute(aCommandLine,  aInput,
-                                aOutput, aError);
+  result :=  WindowsCaptureExecute(aCommandLine,
+                                aOutput);
 
 end;
 
@@ -109,101 +96,129 @@ begin
 end;
 
 
-function tNovusShell.WindowsRedirectedExecute(aCommandline: String;
-        const aInput: String;
-        var aOutput, aError: String;
-        const Wait: DWORD = 3600000): Integer;
+function tNovusShell.WindowsCaptureExecute(aCommandline: String;
+             var aOutput: String): Integer;
 
+const
+  CReadBuffer = 2400;
+  SECURITY_WORLD_SID_AUTHORITY: TSidIdentifierAuthority = (Value: (0, 0, 0, 0, 0, 1));
+  HEAP_ZERO_MEMORY   = $00000008;
+  ACL_REVISION       = 2;
+  SECURITY_WORLD_RID = $00000000;
+  FILE_READ_DATA       = $0001; // file & pipe
+  FILE_LIST_DIRECTORY  = $0001; // directory
+  FILE_WRITE_DATA           = $0002; // file & pipe
+  FILE_ADD_FILE             = $0002; // directory
+  FILE_APPEND_DATA          = $0004; // file
+  FILE_ADD_SUBDIRECTORY     = $0004; // directory
+  FILE_CREATE_PIPE_INSTANCE = $0004; // named pipe
+  FILE_READ_EA              = $0008; // file & directory
+  FILE_WRITE_EA             = $0010; // file & directory
+  FILE_EXECUTE              = $0020; // file
+  FILE_TRAVERSE             = $0020; // directory
+  FILE_DELETE_CHILD         = $0040; // directory
+  FILE_READ_ATTRIBUTES      = $0080; // all
+  FILE_WRITE_ATTRIBUTES     = $0100; // all
+  FILE_ALL_ACCESS           = (STANDARD_RIGHTS_REQUIRED or Windows.SYNCHRONIZE or $1FF);
+  FILE_GENERIC_READ         = (STANDARD_RIGHTS_READ or FILE_READ_DATA or
+  FILE_READ_ATTRIBUTES or FILE_READ_EA or Windows.SYNCHRONIZE);
+  FILE_GENERIC_WRITE        = (STANDARD_RIGHTS_WRITE or FILE_WRITE_DATA or
+  FILE_WRITE_ATTRIBUTES or FILE_WRITE_EA or FILE_APPEND_DATA or Windows.SYNCHRONIZE);
+  FILE_GENERIC_EXECUTE      = (STANDARD_RIGHTS_EXECUTE or FILE_READ_ATTRIBUTES or
+  FILE_EXECUTE or Windows.SYNCHRONIZE);
 var
-  FSecurityAttributes: SECURITY_ATTRIBUTES;
-  FStartupInfo: STARTUPINFO;
-  FProcessInfo: PROCESS_INFORMATION;
-  hPipeInputRead, hPipeInputWrite: THandle;
-  hPipeOutputRead, hPipeOutputWrite: THandle;
-  hPipeErrorRead, hPipeErrorWrite: THandle;
-  FWriteInputThread: TWritePipeThread;
-  FReadOutputThread: TReadPipeThread;
-  FReadErrorThread: TReadPipeThread;
-  Fok: Boolean;
-  liExitcode: Integer;
-  liwait_timeout: Integer;
+  FSecurityAttributes: TSecurityAttributes;
+  hRead: THandle;
+  hWrite: THandle;
+  FStartupInfo: TStartupInfo;
+  FProcessInformation: TProcessInformation;
+  pBuffer:array[0..CReadBuffer] of AnsiChar;
+  dBuffer:array[0.. CReadBuffer] of AnsiChar;
+  dRead: DWORD;
+  dRunning: DWORD;
+  dAvailable: DWORD;
+  liExitCode: Integer;
+  pSD: PSecurityDescriptor;
+  psidEveryone: PSID;
+  sidAuth: TSidIdentifierAuthority;
+  lSDSize, lACLSize: Cardinal;
+  lpACL: PACL;
+  ConnSessID: Cardinal;
+  Token: THandle;
+  hProcess: THandle;
 begin
-  Result := 0;
+  liExitCode := -1;
 
-  liExitcode :=0;
+  FSecurityAttributes.nLength := SizeOf(TSecurityAttributes);
+  FSecurityAttributes.bInheritHandle :=true;
+  FSecurityAttributes.lpSecurityDescriptor := nil;
 
-  FillChar(FSecurityAttributes, SizeOf(SECURITY_ATTRIBUTES), Chr(0));
+  sidAuth := SECURITY_WORLD_SID_AUTHORITY;
+  if not AllocateAndInitializeSid(sidAuth, 1, SECURITY_WORLD_RID, 0, 0, 0, 0,
+    0, 0, 0, psidEveryone) then begin
+    Exit;
+  end;
+  lSDSize := SizeOf(TSecurityDescriptor);
+  lACLSize := GetLengthSID(psidEveryone) + SizeOf(TAccessAllowedACE) + SizeOf(TACL);
+  pSD := HeapAlloc(GetProcessHeap, HEAP_ZERO_MEMORY, lSDSize + lACLSize);
+  if pSD = nil then Exit;
 
-  FSecurityAttributes.nLength := SizeOf(SECURITY_ATTRIBUTES);
-  FSecurityAttributes.bInheritHandle := TRUE;
+  if not InitializeSecurityDescriptor(pSD, SECURITY_DESCRIPTOR_REVISION) then Exit;
 
-  hPipeInputRead := 0;
-  hPipeInputWrite := 0;
-  if (aInput <> '') then
-    CreatePipe(hPipeInputRead, hPipeInputWrite, @FSecurityAttributes, 0);
+  lpACL := PACL(PChar(pSD) + lSDSize);
+  if not InitializeAcl(lpACL^, lACLSize, ACL_REVISION) then Exit;
 
-  CreatePipe(hPipeOutputRead, hPipeOutputWrite, @FSecurityAttributes, 0);
-  CreatePipe(hPipeErrorRead, hPipeErrorWrite, @FSecurityAttributes, 0);
+  if not AddAccessAllowedAce(lpACL^, ACL_REVISION, FILE_ALL_ACCESS, psidEveryone) then Exit;
 
-  FillChar(FStartupInfo, SizeOf(STARTUPINFO), Chr(0));
+  if not SetSecurityDescriptorDacl(pSD, True, lpACL, False) then Exit;
 
-  FStartupInfo.cb := Sizeof(STARTUPINFO);
+  FSecurityAttributes.lpSecurityDescriptor := pSD;
 
-  FStartupInfo.dwFlags := STARTF_USESHOWWINDOW;
+  if CreatePipe(hRead, hWrite, @FSecurityAttributes,0) then
+    try
+      FillChar(FStartupInfo, SizeOf(TStartupInfo), #0);
+      FStartupInfo.cb := SizeOf(TStartupInfo);
+      FStartupInfo.hStdInput := hRead;
+      FStartupInfo.hStdOutput := hWrite;
+      FStartupInfo.hStdError := hWrite;
+      FStartupInfo.dwFlags := STARTF_USESTDHANDLES or STARTF_USESHOWWINDOW;
+      FStartupInfo.wShowWindow := SW_HIDE;
+      FStartupInfo.lpDesktop := nil;
 
-  FStartupInfo.wShowWindow := SW_HIDE;
+      if CreateProcess(nil,PChar(aCommandline), nil, nil,True,
+              CREATE_NEW_PROCESS_GROUP+NORMAL_PRIORITY_CLASS,
+              nil, nil, FStartupInfo, FProcessInformation) then
+        try
+          repeat
+            dRunning := WaitForSingleObject(FProcessInformation.hProcess, INFINITE);
+            PeekNamedPipe(hRead,nil,0,nil, @dAvailable,nil);
+            if (dAvailable > 0 ) then
+               repeat
+                 dRead := 0;
+                 ReadFile(hRead, pBuffer[0], CReadBuffer, dRead,nil);
+                 pBuffer[dRead] := #0;
+                 OemToCharA(pBuffer, dBuffer);
 
-  FStartupInfo.dwFlags := FStartupInfo.dwFlags or STARTF_USESTDHANDLES;
-  FStartupInfo.hStdInput := hPipeInputRead;
-  FStartupInfo.hStdOutput := hPipeOutputWrite;
-  FStartupInfo.hStdError := hPipeErrorWrite;
+                 aOutput := aOutput+ dBuffer;
 
-  UniqueString(aCommandline);
+               until (dRead < CReadBuffer);
 
-  FOK := CreateProcess(nil, PChar(aCommandline), nil, nil, True,
-    CREATE_NEW_CONSOLE, nil, nil, FStartupInfo, FProcessInfo);
+               Application.ProcessMessages;
+            until (dRunning <> WAIT_TIMEOUT);
 
-  CloseHandle(hPipeInputRead);
-  CloseHandle(hPipeOutputWrite);
-  CloseHandle(hPipeErrorWrite);
-
-  if Fok then
-    begin
-      FWriteInputThread := nil;
-      if (hPipeInputWrite <> 0) then
-        FWriteInputThread := TWritePipeThread.Create(hPipeInputWrite, aInput);
-      FReadOutputThread := TReadPipeThread.Create(hPipeOutputRead);
-      FReadErrorThread := TReadPipeThread.Create(hPipeErrorRead);
-      try
-        liwait_timeout := WaitForSingleObject(FProcessInfo.hProcess, Wait);
-
-        if (liwait_timeout = WAIT_TIMEOUT) then
-          TerminateProcess(FProcessInfo.hProcess, UINT(ERROR_CANCELLED));
-
-         fok := GetExitCodeProcess(FProcessInfo.hProcess, DWORD(liExitcode));
-         if Not fOK then liExitcode := 0;
-
-         FReadOutputThread.WaitFor;
-         aOutput := FReadOutputThread.aContent;
-         FReadErrorThread.WaitFor;
-         aError := FReadErrorThread.aContent;
+            if not GetExitCodeProcess(FProcessInformation.hProcess, DWORD(liExitcode)) then
+              liExitcode := -1;
+        finally
+          CloseHandle(FProcessInformation.hProcess);
+          CloseHandle(FProcessInformation.hThread);
+        end;
       finally
-        FWriteInputThread.Free;
-        FReadOutputThread.Free;
-        FReadErrorThread.Free;
-        CloseHandle(FProcessInfo.hThread);
-        CloseHandle(FProcessInfo.hProcess);
+        CloseHandle(hRead);
+        CloseHandle(hWrite);
       end;
-    end
-  else
-    liExitcode := -1;
-  // close our ends of the pipes
-  CloseHandle(hPipeOutputRead);
-  CloseHandle(hPipeErrorRead);
 
-  Result :=  liExitcode;
+   Result := liExitCode;
 end;
-
 
 function tNovusShell.WindowsShellExecute(const aOperation: String;
                         const aCommandLine: string;
@@ -256,77 +271,6 @@ begin
 
 
    Result := liExitcode;
-end;
-
-{ TReadPipeThread }
-
-constructor TReadPipeThread.Create(const aPipe: THandle);
-begin
-  FPipe := aPipe;
-  FContent := TStringStream.Create('');
-  inherited Create(False);
-end;
-
-destructor TReadPipeThread.Destroy;
-begin
-  FContent.Free;
-  inherited Destroy;
-end;
-
-procedure TReadPipeThread.Execute;
-const
-  BLOCK_SIZE = 4096;
-var
-  iBytesRead: DWORD;
-  myBuffer: array[0..BLOCK_SIZE-1] of Byte;
-begin
-  repeat
-    if ReadFile(FPipe, myBuffer, BLOCK_SIZE, iBytesRead, nil) then
-      FContent.Write(myBuffer, iBytesRead);
-  until (iBytesRead = 0);
-end;
-
-function TReadPipeThread.GetContent: String;
-begin
-  Result := FContent.DataString;
-end;
-
-{ TWritePipeThread }
-
-constructor TWritePipeThread.Create(const aPipe: THandle;
-  const aContent: String);
-begin
-  FPipe := aPipe;
-  FContent := TStringStream.Create(aContent);
-  inherited Create(False); // start running
-end;
-
-destructor TWritePipeThread.Destroy;
-begin
-  FContent.Free;
-  if (FPipe <> 0) then
-    CloseHandle(FPipe);
-  inherited Destroy;
-end;
-
-procedure TWritePipeThread.Execute;
-const
-  BLOCK_SIZE = 4096;
-var
-  myBuffer: array[0..BLOCK_SIZE-1] of Byte;
-  iBytesToWrite: DWORD;
-  iBytesWritten: DWORD;
-begin
-  iBytesToWrite := FContent.Read(myBuffer, BLOCK_SIZE);
-  while (iBytesToWrite > 0) do
-  begin
-    WriteFile(FPipe, myBuffer, iBytesToWrite, iBytesWritten, nil);
-    iBytesToWrite := FContent.Read(myBuffer, BLOCK_SIZE);
-  end;
-  // close our handle to let the other process know, that
-  // there won't be any more data.
-  CloseHandle(FPipe);
-  FPipe := 0;
 end;
 
 

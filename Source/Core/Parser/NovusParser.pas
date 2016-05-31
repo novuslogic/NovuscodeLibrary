@@ -102,61 +102,20 @@ begin
 
   FToken := toBOF;
   Result := True;
-
-  (*
-  Stream := TMemoryStream.Create;
-  try
-    Stream.LoadFromFile(FileName);
-    Result := LoadFromStream(Stream);
-  finally
-    Stream.Free;
-  end;
-  *)
 end;
 
 function TNovusParser.LoadFromStream(const Stream: TMemoryStream): Boolean;
-//var
-//  MemStream: TMemoryStream;
 begin
   Result := False;
   if not(assigned(Stream)) then Exit;
 
+  Stream.Seek(0, soFromBeginning);
+  FParseLines.LoadFromStream(Stream);
 
-  //MemStream := TMemoryStream.Create;
- // try
-    Stream.Seek(0, soFromBeginning);
-    FParseLines.LoadFromStream(Stream);
+  FParseString := FParseLines.Text;
 
-    FParseString := FParseLines.Text;
-
-    FToken := toBOF;
-    Result := True;
-
-
-    //FParseString := StrPas(PWideChar(MemStream.Memory));
-    //SetLength(FParseString, MemStream.Size);
-
-    //FParseString := Concat(FParseString, toEOF);
-
-//    FParseString := TNovusStringUtils.MemoryStreamToString(Stream);
-
-    (*
-    {$IFNDEF VER220}
-    FParseString := StrPas(MemStream.Memory);
-    {$ELSE}
-    FParseString := StrPas(PWideChar(MemStream.Memory));
-    {$ENDIF}
-
-    SetLength(FParseString, MemStream.Size);
-
-    FParseString := Concat(FParseString, toEOF);
-    *)
-
-   // FToken := toBOF;
-   // Result := True;
-  //finally
- //   MemStream.Free;
- // end;
+  FToken := toBOF;
+  Result := True;
 end;
 
 
@@ -410,3 +369,4 @@ end;
 
 
 end.
+

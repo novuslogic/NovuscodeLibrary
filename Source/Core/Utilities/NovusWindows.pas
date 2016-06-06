@@ -20,11 +20,10 @@ Type
     class function SetSysEnvironmentVariable(const aVariableName: String; aValue: string): boolean;
   end;
 
+  function CreateEnvironmentBlock(var lpEnvironment: Pointer; hToken: THandle; bInherit: BOOL): BOOL; stdcall; external 'userenv';
+  function DestroyEnvironmentBlock(pEnvironment: Pointer): BOOL; stdcall; external 'userenv';
+
 implementation
-
-
-
-
 
 class function TNovusWindows.WindowsDir: string;
 begin

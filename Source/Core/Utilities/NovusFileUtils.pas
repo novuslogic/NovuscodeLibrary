@@ -128,14 +128,11 @@ class function TNovusFileUtils.AbsoluteFilePath(aFilename: String): String;
 var
   lpFileName : pchar;
   lpBuffer : array[0..MAX_PATH] of char;
-  path: String;
   cResult: Cardinal;
 begin
   lpFileName := PCHAR(aFilename);
   cResult := GetFullPathName(lpFileName , MAX_PATH, lpBuffer, lpFileName );
   result := ExtractFilePath(lpBuffer);
-
-
 end;
 
 end.

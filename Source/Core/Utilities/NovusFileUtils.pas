@@ -8,36 +8,16 @@ Type
   TNovusFileUtils = class(tNovusUtilities)
   public
     class function IsFileInUse(fName : string) : boolean;
-   // class function GetSpecialFolderPath(afolder : Integer) : string;
     class function IsFileReadonly(fName : string) : boolean;
     class function MoveDir(aFromDirectory, aToDirectory: String): Boolean;
     class function CopyDir(aFromDirectory, aToDirectory: String): Boolean;
+    class function AbsoluteFilePath(aFilename: String): String;
   end;
 
+  function PathCombine(lpszDest: PChar; const lpszDir, lpszFile: PChar):PChar; stdcall; external 'shlwapi.dll' name 'PathCombineA';
 
 implementation
 
-(*
-0 = [Current User]\My Documents  - CSIDL_PERSONAL;
-1 = All Users\Application Data - CSIDL_COMMON_APPDATA
-2 = [User Specific]\Application Data - CSIDL_LOCAL_APPDATA;
-3 = Program Files - CSIDL_PROGRAM_FILES;
-4 = All Users\Documents - CSIDL_COMMON_DOCUMENTS;
-*)
-
-(*
-class function TNovusFileUtils.GetSpecialFolderPath(afolder : Integer) : string;
-const
-   SHGFP_TYPE_CURRENT = 0;
- var
-   path: array [0..MAX_PATH] of char;
- begin
-   if SUCCEEDED(SHGetFolderPath(0, afolder,0,SHGFP_TYPE_CURRENT,@path[0])) then
-     Result := path
-   else
-     Result := '';
- end;
-*)
 
 class function TNovusFileUtils.IsFileReadonly(fName : string) : boolean;
 var
@@ -142,6 +122,20 @@ begin
     pTo    := PChar(aToDirectory)
   end;
   Result := (0 = ShFileOperation(fos));
+end;
+
+class function TNovusFileUtils.AbsoluteFilePath(aFilename: String): String;
+var
+  lpFileName : pchar;
+  lpBuffer : array[0..MAX_PATH] of char;
+  path: String;
+  cResult: Cardinal;
+begin
+  lpFileName := PCHAR(aFilename);
+  cResult := GetFullPathName(lpFileName , MAX_PATH, lpBuffer, lpFileName );
+  result := ExtractFilePath(lpBuffer);
+
+
 end;
 
 end.

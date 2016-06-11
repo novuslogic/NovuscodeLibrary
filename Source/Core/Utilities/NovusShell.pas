@@ -184,10 +184,7 @@ begin
       FStartupInfo.hStdError := hWrite;
       FStartupInfo.dwFlags := STARTF_USESTDHANDLES or STARTF_USESHOWWINDOW;
       FStartupInfo.wShowWindow := SW_HIDE;
-      FStartupInfo.lpDesktop := 'winsta0\default';
-      //FStartupInfo.lpDesktop := NIL;
-
-     // CreateEnvironmentBlock(pEnv, 0, true);
+      FStartupInfo.lpDesktop := NIL;
 
       if CreateProcess(nil,PChar(aCommandline), nil, nil,True,
               CREATE_NEW_PROCESS_GROUP+NORMAL_PRIORITY_CLASS,
@@ -213,8 +210,6 @@ begin
             if not GetExitCodeProcess(FProcessInformation.hProcess, DWORD(liExitcode)) then
               liExitcode := -1;
         finally
-          //DestroyEnvironmentBlock(pEnv);
-
           CloseHandle(FProcessInformation.hProcess);
           CloseHandle(FProcessInformation.hThread);
         end;

@@ -24,7 +24,7 @@ package NovusCodeLibrary_XML_D18;
 {$MINENUMSIZE 1}
 {$IMAGEBASE $400000}
 {$ENDIF IMPLICITBUILDING}
-{$DESCRIPTION 'Novus Framework Runtime - XML'}
+{$DESCRIPTION 'Novus Framework Runtime - XMLBO'}
 {$RUNONLY}
 {$IMPLICITBUILD OFF}
 

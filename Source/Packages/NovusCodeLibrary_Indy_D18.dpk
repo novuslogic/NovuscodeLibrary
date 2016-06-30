@@ -24,7 +24,7 @@ package NovusCodeLibrary_Indy_D18;
 {$MINENUMSIZE 1}
 {$IMAGEBASE $400000}
 {$ENDIF IMPLICITBUILDING}
-{$DESCRIPTION 'NovusCodeLibrary Runtime - Core (Delphi XE2) Win64'}
+{$DESCRIPTION 'NovusCodeLibrary Runtime - Internet (Delphi XE4) Win32'}
 {$RUNONLY}
 {$IMPLICITBUILD OFF}
 

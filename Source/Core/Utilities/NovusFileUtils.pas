@@ -2,7 +2,7 @@ unit NovusFileUtils;
 
 interface
 
-uses StrUtils, NovusUtilities, Windows, SysUtils, Dialogs, SHFolder, ShellApi;
+uses StrUtils, NovusUtilities, Windows, SysUtils, Dialogs, SHFolder, ShellApi, ShlObj;
 
 Type
   TNovusFileUtils = class(tNovusUtilities)
@@ -13,6 +13,7 @@ Type
     class function CopyDir(aFromDirectory, aToDirectory: String): Boolean;
     class function AbsoluteFilePath(aFilename: String): String;
     class function TrailingBackSlash(const aFilename: string): string;
+    class function GetSpecialFolder(const CSIDL: integer) : string;
   end;
 
   function PathCombine(lpszDest: PChar; const lpszDir, lpszFile: PChar):PChar; stdcall; external 'shlwapi.dll' name 'PathCombineA';
@@ -142,6 +143,22 @@ begin
 
   if Trim(aFilename) <> '' then
     Result := IncludeTrailingPathDelimiter(aFilename);
+end;
+
+
+class function TNovusFileUtils.GetSpecialFolder(const CSIDL: integer) : string;
+var
+  RecPath : PWideChar;
+begin
+  RecPath := StrAlloc(MAX_PATH);
+    try
+    FillChar(RecPath^, MAX_PATH, 0);
+    if SHGetSpecialFolderPath(0, RecPath, CSIDL, false)
+      then result := RecPath
+      else result := '';
+    finally
+      StrDispose(RecPath);
+    end;
 end;
 
 end.

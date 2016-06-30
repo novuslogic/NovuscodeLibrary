@@ -12,6 +12,7 @@ Type
     class function MoveDir(aFromDirectory, aToDirectory: String): Boolean;
     class function CopyDir(aFromDirectory, aToDirectory: String): Boolean;
     class function AbsoluteFilePath(aFilename: String): String;
+    class function TrailingBackSlash(const aFilename: string): string;
   end;
 
   function PathCombine(lpszDest: PChar; const lpszDir, lpszFile: PChar):PChar; stdcall; external 'shlwapi.dll' name 'PathCombineA';
@@ -133,6 +134,14 @@ begin
   lpFileName := PCHAR(aFilename);
   cResult := GetFullPathName(lpFileName , MAX_PATH, lpBuffer, lpFileName );
   result := ExtractFilePath(lpBuffer);
+end;
+
+class function TNovusFileUtils.TrailingBackSlash(const aFilename: string): string;
+begin
+  Result := '';
+
+  if Trim(aFilename) <> '' then
+    Result := IncludeTrailingPathDelimiter(aFilename);
 end;
 
 end.

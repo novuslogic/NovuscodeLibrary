@@ -88,7 +88,7 @@ Type
     class procedure String2StringList(AString: string; var AStringList: TStringList);
     class procedure String2Strings(AString: string; var AStrings: TStrings);
     class function FormatMessStr(aString: String): String;
-//    class function TrailingBackSlash(const aFilename: string): string;
+    class function TrailingBackSlash(const aFilename: string): string;
     class function VarArrayToStr(const vArray: variant): string;
     class function VarStrNull(const V:OleVariant):string; //avoid problems with null strings
     class function IsBoolean(const sValue: string): boolean;
@@ -944,7 +944,7 @@ begin
 end;
 
 
-(*
+
 class function TNovusStringUtils.TrailingBackSlash(const aFilename: string): string;
 begin
   Result := '';
@@ -952,7 +952,6 @@ begin
   if Trim(aFilename) <> '' then
     Result := IncludeTrailingPathDelimiter(aFilename);
 end;
-*)
 
 class function TNovusStringUtils.MemoryStreamToString(Stream: TMemoryStream): string;
 var

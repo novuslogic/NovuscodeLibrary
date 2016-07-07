@@ -338,7 +338,7 @@ var
   begin
     if aBOField is TnovusBODateTimeField then
       begin
-        aBOField.value := TNovusDateUtils.UnixTimeToDateTime(TNovusDateSrtingUtils.JSONDateStr2UnixTime(TJSONString(aLJPair.JsonValue).Value));
+        aBOField.value := TNovusDateUtils.UnixTimeToDateTime(TNovusDateStringUtils.JSONDateStr2UnixTime(TJSONString(aLJPair.JsonValue).Value));
       end
     else
     if aBOField is TNovusBOIntegerField then

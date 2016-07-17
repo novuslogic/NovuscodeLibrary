@@ -140,3 +140,10 @@
 /Source/Core/Utilities/__history
 /Samples/Shell/Win32/Debug/ShellDemo.exe
 /Samples/Shell
+/Samples/Plugin/__history
+/Samples/Plugin/Win32/Debug
+*.local
+/Samples/Plugin/Project1.identcache
+/Source/Core/Plugin/__history
+/Samples/Plugin/TestPlugin.identcache
+/Samples/Plugin/Project1.deployproj

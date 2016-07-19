@@ -3,7 +3,7 @@ unit NovusStringUtils;
 interface
 
 
-uses Windows, sysutils, Forms, NovusUtilities, Classes, variants;
+uses Windows, sysutils, {Forms,} NovusUtilities, Classes, variants;
 
 Const
   Cr = #13;

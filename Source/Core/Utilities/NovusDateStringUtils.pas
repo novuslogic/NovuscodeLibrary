@@ -2,7 +2,7 @@ unit NovusDateStringUtils;
 
 interface
 
-Uses NovusDateUtils, SysUtils, Controls, NovusStringUtils, System.RegularExpressions, DateUtils ;
+Uses NovusDateUtils, SysUtils, {Controls,} NovusStringUtils, System.RegularExpressions, DateUtils ;
 
 type
   TNovusDateStringUtils = class(tNovusDateUtils)

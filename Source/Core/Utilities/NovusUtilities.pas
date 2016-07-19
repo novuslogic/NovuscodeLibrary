@@ -2,8 +2,7 @@ unit NovusUtilities;
 
 interface
 
-uses SysUtils, Classes, Windows, Messages, typinfo,
-     Graphics;
+uses SysUtils, Classes, Windows, Messages, typinfo;
 
 
 Const
@@ -17,8 +16,8 @@ Const
 Type
   TNovusUtilities = class(TObject)
   public
-     class function TwipsPerPixelX(Canvas : TCanvas) : Extended;
-     class function TwipsPerPixelY(Canvas : TCanvas) : Extended;
+//     class function TwipsPerPixelX(Canvas : TCanvas) : Extended;
+//     class function TwipsPerPixelY(Canvas : TCanvas) : Extended;
      class function CopyObject(Src,Dest : TObject; Related : Boolean = FALSE): Boolean;
      class function AppRootDirectory: String;
      class function GetExceptMess: String;
@@ -208,7 +207,7 @@ begin
   end;
 end;
 
-
+(*
 class function TNovusUtilities.TwipsPerPixelX(Canvas : TCanvas) : Extended;
 begin
   result := (1440 / GetDeviceCaps(Canvas.Handle, LOGPIXELSX));
@@ -218,8 +217,8 @@ class function TNovusUtilities.TwipsPerPixelY(Canvas : TCanvas) : Extended;
 begin
   result := (1440 / GetDeviceCaps(Canvas.Handle, LOGPIXELSY));
 end;
-
- class function TNovusUtilities.GetParamValue(const aParamKey : string; var aValue : string ) : boolean;
+*)
+class function TNovusUtilities.GetParamValue(const aParamKey : string; var aValue : string ) : boolean;
 var
   lparamloop : integer;
   i: Integer;

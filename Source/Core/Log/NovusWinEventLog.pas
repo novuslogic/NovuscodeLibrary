@@ -2,7 +2,7 @@ unit NovusWinEventLog;
 
 interface
 
-Uses Windows, Registry, SysUtils, NovusInfrastructre, Forms;
+Uses Windows, Registry, SysUtils, NovusInfrastructre, VCL.Forms;
 
 type
   TEventType = (etError,etWarning,etInformation,etAuditSuccess,etAuditFailure, etNone);

@@ -2,7 +2,7 @@ unit NovusFileUtils;
 
 interface
 
-uses StrUtils, NovusUtilities, Windows, SysUtils, Dialogs, SHFolder, ShellApi, ShlObj;
+uses StrUtils, NovusUtilities, Windows, SysUtils, SHFolder, ShellApi, ShlObj;
 
 Type
   TNovusFileUtils = class(tNovusUtilities)

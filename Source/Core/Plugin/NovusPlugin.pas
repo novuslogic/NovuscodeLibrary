@@ -30,7 +30,7 @@ type
     GetPluginObjectFunc: TGetPluginObject;
   end;
 
-  TNovusPlugin = class(Tobject)
+  TNovusPlugins = class(Tobject)
   private
   protected
     fPlugins: TList;
@@ -55,12 +55,12 @@ implementation
 uses System.Generics.Defaults;
 
 
-constructor TNovusPlugin.Create;
+constructor TNovusPlugins.Create;
 begin
   fPlugins := TList.Create;
 end;
 
-destructor TNovusPlugin.Destroy;
+destructor TNovusPlugins.Destroy;
 begin
   if (fPlugins <> nil) then
     begin
@@ -69,7 +69,7 @@ begin
   end;
 end;
 
-procedure TNovusPlugin.UnloadAllPlugins;
+procedure TNovusPlugins.UnloadAllPlugins;
 var
   I: integer;
 begin
@@ -77,7 +77,7 @@ begin
     UnloadPlugin(I);
 end;
 
-procedure TNovusPlugin.UnloadPlugin(aIndex: integer);
+procedure TNovusPlugins.UnloadPlugin(aIndex: integer);
 var
   FPluginInfo: PPluginInfo;
 begin
@@ -102,7 +102,7 @@ begin
 end;
 
 
-function TNovusPlugin.LoadPlugin(const aFilename: String): Boolean;
+function TNovusPlugins.LoadPlugin(const aFilename: String): Boolean;
 var
   lHandle: THandle;
   FPluginInfo: PPluginInfo;
@@ -147,7 +147,7 @@ begin
   End;
 end;
 
-function TNovusPlugin.FindPlugin(const aPluginName: string; out aPlugin: INovusPlugin): boolean;
+function TNovusPlugins.FindPlugin(const aPluginName: string; out aPlugin: INovusPlugin): boolean;
 var
   i: integer;
 begin
@@ -164,12 +164,12 @@ begin
     end;
 end;
 
-function TNovusPlugin.GetPlugins(Index: integer): INovusPlugin;
+function TNovusPlugins.GetPlugins(Index: integer): INovusPlugin;
 begin
   result := PPluginInfo(fPlugins[Index])^.Plugin;
 end;
 
-function TNovusPlugin.GetPluginCount: integer;
+function TNovusPlugins.GetPluginCount: integer;
 begin
   result := fPlugins.Count;
 end;

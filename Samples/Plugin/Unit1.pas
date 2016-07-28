@@ -15,7 +15,7 @@ type
     procedure FormDestroy(Sender: TObject);
   private
     { Private declarations }
-    FNovusPlugin: TNovusPlugin;
+    FNovusPlugins: TNovusPlugins;
     FTestPlugin: INovusPlugin;
   public
     { Public declarations }
@@ -42,15 +42,15 @@ procedure TForm1.FormCreate(Sender: TObject);
 begin
   System.ReportMemoryLeaksOnShutdown := true;
 
-  FNovusPlugin := TNovusPlugin.Create;
-  FNovusPlugin.LoadPlugin('TestPlugin.DLL');
-  FNovusPlugin.FindPlugin('TestPlugin', FTestPlugin);
+  FNovusPlugins := TNovusPlugins.Create;
+  FNovusPlugins.LoadPlugin('TestPlugin.DLL');
+  FNovusPlugins.FindPlugin('TestPlugin', FTestPlugin);
 end;
 
 procedure TForm1.FormDestroy(Sender: TObject);
 begin
-  FNovusPlugin.UnloadPlugin(0);
-  FNovusPlugin.Free;
+  FNovusPlugins.UnloadPlugin(0);
+  FNovusPlugins.Free;
 end;
 
 end.

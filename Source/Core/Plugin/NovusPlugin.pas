@@ -80,6 +80,7 @@ end;
 procedure TNovusPlugins.UnloadPlugin(aIndex: integer);
 var
   FPluginInfo: PPluginInfo;
+  lHandle: Thandle;
 begin
   if PluginCount = 0 then Exit;
 
@@ -87,17 +88,19 @@ begin
   if (FPluginInfo^.Handle = 0) then Exit;
 
   try
-    fPlugins.Delete(aIndex);
-
     FPluginInfo^.Plugin.Finalize;
 
-    TSingletonImplementation(FPluginInfo^.Plugin).Free;
-    FPluginInfo^.Plugin := NIL;
+    lHandle := FPluginInfo^.Handle;
 
-    if (FPluginInfo^.Handle <> 0) then FreeLibrary(FPluginInfo^.Handle);
+    FPluginInfo^.Plugin := nil;
+
+    if (lHandle <> 0) then FreeLibrary(lHandle);
+
 
   finally
     Dispose(FPluginInfo);
+
+    fPlugins.Delete(aIndex);
   end;
 end;
 
@@ -134,6 +137,7 @@ begin
     FPlugin := nil;
 
     FPluginInfo^.Plugin.Initialize;
+
 
     fPlugins.Add(FPluginInfo);
 

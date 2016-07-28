@@ -48,7 +48,7 @@ Type
     constructor Create(ALogType: TLogType);
     destructor Destroy; override;
 
-    function FormatedNow: String;
+    function FormatedNow(const aDate: tDateTime = 0): String;
 
     procedure AddLogDetails(ALogDesc: string; ALogDateTime: tDateTime);
 
@@ -91,7 +91,7 @@ Type
     function WriteLine(ATimeStr, ALogDesc: string; ALogDateTime: tDateTime): String;
     function  ReadLine: String;
 
-    procedure OpenLog(AOveride: Boolean = false); virtual;
+    function OpenLog(AOveride: Boolean = false): Boolean; virtual;
     procedure CloseLog; virtual;
 
     procedure ReadAll;
@@ -160,9 +160,14 @@ begin
   inherited;
 end;
 
-function TNovusLog.FormatedNow: String;
+function TNovusLog.FormatedNow(const aDate: tDateTime = 0): String;
+var
+  fDate: tDatetime;
 begin
-  Result := FormatDateTime(fsDateTimeMask, Now)
+  fDate := aDate;
+  if aDate = 0 then fDate := Now;
+
+  Result := FormatDateTime(fsDateTimeMask, fDate)
 end;
 
 procedure TNovusLog.AddLogDetails;
@@ -223,17 +228,25 @@ begin
   inherited;
 end;
 
-procedure TNovusLogFile.OpenLog;
+function TNovusLogFile.OpenLog(AOveride: Boolean = false): Boolean;
 begin
   inherited;
 
+  Result := False;
+
   If fbIsFileOpen then Exit;
+
+  if Not DirectoryExists(TNovusUtilities.JustPathname(Filename)) then Exit;
+
+
 
   if FileExists(Filename) then
     begin
       If (FileSize > 0) and (tNovusUtilities.FindFileSize(Filename) > FileSize) then
         RenameFile(Filename, TNovusUtilities.JustPathname(Filename) + tNovusUtilities.JustFilename(Filename) + '.bak');
      end;
+
+
 
   AssignFile(FFilePonter, Filename);
   if AOveride = False then
@@ -242,9 +255,16 @@ begin
          Append(FFilePonter)
       else Rewrite(FFilePonter);
     end
-  else Rewrite(FFilePonter);
+ else
+  begin
+     Rewrite(FFilePonter);
+
+
+  end;
 
   fbIsFileOpen:= True;
+
+  Result := fbIsFileOpen;
 
   WriteLog('Logging started');
 end;

@@ -83,7 +83,6 @@ Type
     fsFilename: string;
     FFilePonter  : text;
     fsPathName: String;
-    fsDateTimeMask: String;
   public
     constructor Create(AFilename: String);  virtual;
     destructor Destroy; override;
@@ -119,9 +118,7 @@ Type
       read FFilePonter
       write FFilePonter;
 
-    property DateTimeMask: String
-       read fsDateTimeMask
-       write fsDateTimeMask;
+
 
     property OutputConsole: Boolean
       read fbOutputConsole
@@ -134,7 +131,7 @@ constructor TNovusLog.Create(ALogType: TLogType);
 begin
   inherited Create;
 
-  fsDateTimeMask := FormatSettings.ShortDateFormat + ' hh:mm';
+  DateTimeMask := FormatSettings.ShortDateFormat + ' hh:mm';
 
   foLogDetailsList := TNovusList.Create(TNovusLogDetails);
 
@@ -167,7 +164,7 @@ begin
   fDate := aDate;
   if aDate = 0 then fDate := Now;
 
-  Result := FormatDateTime(fsDateTimeMask, fDate)
+  Result := FormatDateTime(DateTimeMask, fDate)
 end;
 
 procedure TNovusLog.AddLogDetails;

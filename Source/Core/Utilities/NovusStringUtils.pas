@@ -46,8 +46,8 @@ Type
   public
     class function FormatMessStrOptions(aString: String; aFormatOptions: Integer): String;
     class function MemoryStreamToString(Stream: TMemoryStream): string;
-    class function Str2Float(loStr: String):single;
-    class function Str2Int(AStr: String):integer;
+    class function Str2Float(aStr: String):single;
+    class function Str2Curr(aStr: String):Currency;
     class function Replicate(c: Char; iLen: integer): string;
     class function PadLeft(const s: string; iLen: integer; const sFillChar: char): string;
     class function JustFilename(const PathName : String) : String;
@@ -59,19 +59,15 @@ Type
     class function IsAlpha(AChar: Char): Boolean;
     class function IsNumberStr(S : String): Boolean;
     class function IsAlphaStr(S : String): Boolean;
-//    class function PosStr(const FindString, SourceString: string; StartPos: Integer = 1): Integer;
-//    class function PosText(const FindString, SourceString: string; StartPos: Integer = 1): Integer;
-//    class function GetValue(const AText, AName: string): string;
     class procedure GetNames(AText: string; AList: TStringList);
-//    class procedure TagsToCSV(Src, Dst: TStringList);
     class function SubstCharSim(P : string; OC, NC : ANSIChar) : string;
     class function RootDirectory: String;
     class function StripChar(s : String; Ch : Char) : string;
     class function ReplaceChar(s : String; aFromCh, aToCh : Char): String;
     class function GetStrTokenA(const s, sDelim: string; var iPos: integer): string;
     class function GetStrRes(const Index: integer): String;
-    class function StrToInt(AStr : String):Integer;
-//    class function StrChPosL(const P : AnsiString; C : AnsiChar; var Pos : Cardinal) : Boolean;
+    class function Str2Int(AStr : String):Integer;
+    class function Str2Int64(AStr : String):Int64;
     class function StrChInsertL(const S : AnsiString; C : AnsiChar; Pos : Cardinal) : AnsiString;
     class function IsIntStr(S: String):Boolean;
     class function MakeTmpFileName(AExt: string;AUseGUID: Boolean = false): String;
@@ -142,7 +138,7 @@ begin
   Result := ExtractFilePath(ParamStr(0));
 end;
 
-class function TNovusStringUtils.StrToInt;
+class function TNovusStringUtils.Str2Int;
 begin
   Result := 0;
 
@@ -153,6 +149,23 @@ begin
     If Trim(AStr) = '' then Exit;
 
     Result := SysUtils.StrtoInt(AStr);
+  Except
+    Result := 0;
+  end;
+end;
+
+
+class function TNovusStringUtils.Str2Int64;
+begin
+  Result := 0;
+
+  AStr := StripChar(AStr, #$D);
+  AStr := StripChar(AStr, #$A);
+
+  Try
+    If Trim(AStr) = '' then Exit;
+
+    Result := SysUtils.StrtoInt64(AStr);
   Except
     Result := 0;
   end;
@@ -899,21 +912,20 @@ end;
 class function TNovusStringUtils.Str2Float;
 begin
   Try
-    Result := StrToFloat(loStr);
+    Result := StrToFloat(aStr);
   Except
     Result := 0.0;
   end;
 end;
 
-class function TNovusStringUtils.Str2Int;
+class function TNovusStringUtils.Str2Curr;
 begin
   Try
-    Result := StrToInt(AStr);
+    Result := StrToCurr(aStr);
   Except
-    Result := 0;
+    Result := 0.0;
   end;
 end;
-
 
 class function TNovusStringUtils.JustPathname;
 var

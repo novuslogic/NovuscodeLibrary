@@ -1,0 +1,3 @@
+{$I ..\..\core\DelphiVersions.inc}
+
+

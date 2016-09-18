@@ -160,7 +160,7 @@ end;
 
 function TNovusXMLBO.GetFieldAsInteger(aNodeList: TJvSimpleXmlElem;FieldName: String): Integer;
 begin
-  Result := TNovusStringUtils.StrToInt(GetFieldAsString(aNodeList,FieldName));
+  Result := TNovusStringUtils.Str2Int(GetFieldAsString(aNodeList,FieldName));
 end;
 
 function TNovusXMLBO.AddFieldAsString(aNodeList: TJvSimpleXmlElem;FieldName: String;PropertyName: String;Value: String): TJvSimpleXmlElem;

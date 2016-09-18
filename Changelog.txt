@@ -1,7 +1,16 @@
+18/09/2016
+
+* Added NovusCodeLibrary.inc and DelphiVersion.Inc
+* Added support for $LIBSUFFIX in packages
+* Added support Delphi XE to Delphi 10.1
+* Changed naming conventions to use package version
+* Added support for $(Platform)\$(Config) in packages
+
+
 11/09/2016
 
 * Start of the Changelog
-* Change Licence to Apache License Version 2.0
+* Changed Licence to Apache License Version 2.0
 * New class NovusJSONUTils
 * Removed StrToInt from class NovusStringUtils - to keep compatible with Delphi RTL
 * Add Str2Int64 to class NovusStringUtils

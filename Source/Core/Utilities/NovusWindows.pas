@@ -172,8 +172,6 @@ begin
 end;
 
 class function TNovusWindows.SetEnvironmentVariableEx(const aVariableName: String; const aValue: string; aIsSystemVariable: Boolean): Integer;
-var
-  rv: DWORD;
 begin
   if aIsSystemVariable = false then
     begin
@@ -218,3 +216,5 @@ end;
 
 
 end.
+
+

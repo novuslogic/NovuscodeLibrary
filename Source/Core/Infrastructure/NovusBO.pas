@@ -1,9 +1,13 @@
+{$I ..\..\core\NovusCodeLibrary.inc}
 unit NovusBO;
 
 interface
 
 Uses NovusInfrastructre, Activex, ComObj, Classes, SysUtils,
      NovusBOField,  NovusBOMap, NovusUtilities, DBXJson, DB, NovusDateUtils,
+{$IFDEF DELPHIXE6_UP}
+     JSON,
+{$ENDIF}
      NovusStringUtils, NovusDateStringUtils;
 
 Type

@@ -1,0 +1,59 @@
+{$I ..\..\core\NovusCodeLibrary.inc}
+package NovusCodeLibrary_Core;
+
+{$R *.res}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION ON}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES OFF}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$ENDIF IMPLICITBUILDING}
+{$DESCRIPTION 'NovusCodeLibrary Runtime - Core'}
+{$LIBSUFFIX '180'}
+{$RUNONLY}
+{$IMPLICITBUILD OFF}
+
+requires
+  rtl,
+  vcl,
+  dbrtl,
+  xmlrtl,
+  soaprtl,
+  inet,
+  DbxCommonDriver;
+
+contains
+  NovusUtilities in '..\..\core\Utilities\NovusUtilities.pas',
+  NovusWindows in '..\..\Core\Utilities\NovusWindows.pas',
+  NovusVersionUtils in '..\..\Core\Utilities\NovusVersionUtils.pas',
+  NovusDateStringUtils in '..\..\Core\Utilities\NovusDateStringUtils.pas',
+  NovusDateUtils in '..\..\Core\Utilities\NovusDateUtils.pas',
+  NovusStringUtils in '..\..\Core\Utilities\NovusStringUtils.pas',
+  NovusInfrastructre in '..\..\Core\Infrastructure\NovusInfrastructre.pas',
+  NovusBO in '..\..\Core\Infrastructure\NovusBO.pas',
+  NovusBOField in '..\..\Core\Infrastructure\NovusBOField.pas',
+  NovusBOMap in '..\..\Core\Infrastructure\NovusBOMap.pas',
+  NovusList in '..\..\Core\Infrastructure\NovusList.pas',
+  NovusFileUtils in '..\..\Core\Utilities\NovusFileUtils.pas',
+  NovusNumUtils in '..\..\Core\Utilities\NovusNumUtils.pas',
+  NovusDateDiffUtil in '..\..\Core\Utilities\NovusDateDiffUtil.pas',
+  NovusGUIDEx in '..\..\Core\Utilities\NovusGUIDEx.pas';
+
+end.

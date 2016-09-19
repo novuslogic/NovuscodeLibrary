@@ -1,3 +1,8 @@
+19/09/2016
+
+* New packages for Delphi XE8 NovusCodeLibrary_Plugin, NovusCodeLibrary_Parser 
+
+
 18/09/2016
 
 * Added NovusCodeLibrary.inc and DelphiVersion.Inc

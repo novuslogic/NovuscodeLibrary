@@ -165,7 +165,7 @@
         <DCCReference Include="vcl.dcp"/>
         <DCCReference Include="NovusCodeLibrary_Core.dcp"/>
         <DCCReference Include="vcldb.dcp"/>
-        <DCCReference Include="SqlDir180.dcp"/>
+        <DCCReference Include="SqlDir220.dcp"/>
         <DCCReference Include="..\..\Core\Utilities\NovusSQLDirUtils.pas"/>
         <BuildConfiguration Include="Debug">
             <Key>Cfg_2</Key>

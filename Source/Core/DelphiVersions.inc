@@ -4,7 +4,6 @@
    ($DEFINE DELPHI10_1}
 {$ENDIF}
 
-
 (* Delphi 10 Seattle / C++Builder Seattle / D23 *)
 {$IFDEF VER300}
   ($DEFINE DELPHI10}

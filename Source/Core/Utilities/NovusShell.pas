@@ -156,9 +156,8 @@ begin
 
   sidAuth := SECURITY_WORLD_SID_AUTHORITY;
   if not AllocateAndInitializeSid(sidAuth, 1, SECURITY_WORLD_RID, 0, 0, 0, 0,
-    0, 0, 0, psidEveryone) then begin
-    Exit;
-  end;
+    0, 0, 0, psidEveryone) then  Exit;
+
   lSDSize := SizeOf(TSecurityDescriptor);
   lACLSize := GetLengthSID(psidEveryone) + SizeOf(TAccessAllowedACE) + SizeOf(TACL);
   pSD := HeapAlloc(GetProcessHeap, HEAP_ZERO_MEMORY, lSDSize + lACLSize);

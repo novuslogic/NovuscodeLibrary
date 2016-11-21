@@ -1,3 +1,12 @@
+27/10/2015
+
+* Fixed pathing issue in Delphi XE8 Packages
+
+26/10/2016
+
+* Fix Plugin Sample with Sharemem
+
+
 19/09/2016
 
 * New packages for Delphi XE8 NovusCodeLibrary_Plugin, NovusCodeLibrary_Parser 

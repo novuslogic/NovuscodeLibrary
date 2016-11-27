@@ -60,6 +60,7 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
+        <DllSuffix>220</DllSuffix>
         <DCC_UnitSearchPath>..\..\..\units\$(ProductVersion)\$(Platform)\$(Config);$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <DCC_DcuOutput>..\..\..\units\$(ProductVersion)\$(Platform)\$(Config)</DCC_DcuOutput>
         <SanitizedProjectName>NovusCodeLibrary_SQLDir</SanitizedProjectName>
@@ -69,7 +70,7 @@
         <VerInfo_Locale>3081</VerInfo_Locale>
         <DCC_ImageBase>00400000</DCC_ImageBase>
         <DCC_DependencyCheckOutputName>C:\Documents and Settings\All Users\Documents\RAD Studio\6.0\Bpl\NovusCodeLibrary_Log_D12.bpl</DCC_DependencyCheckOutputName>
-        <DCC_Description>NovusCodeLibrary Runtime - Log (Delphi XE)</DCC_Description>
+        <DCC_Description>NovusCodeLibrary Runtime - SQLDirect</DCC_Description>
         <RuntimeOnlyPackage>true</RuntimeOnlyPackage>
         <DCC_OutputNeverBuildDcps>true</DCC_OutputNeverBuildDcps>
         <GenDll>true</GenDll>
@@ -104,7 +105,6 @@
         <Version>7.0</Version>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
-        <DllSuffix>220</DllSuffix>
         <DCC_Description>NovusCodeLibrary Runtime - SQLDirect </DCC_Description>
         <VerInfo_Locale>1033</VerInfo_Locale>
     </PropertyGroup>

@@ -1,3 +1,11 @@
+28/11/2016
+
+* New unit NovusEnvironment
+* New unit NovusDialogs
+
+* New Delphi XE8 packages NovusCodeLibrary_VCLUtils 
+* New Delphi XE8 packages NovusCodeLibrary_Env
+
 27/10/2015
 
 * Fixed pathing issue in Delphi XE8 Packages

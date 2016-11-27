@@ -24,6 +24,12 @@
         <Projects Include="NovusCodeLibrary_Plugin.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="NovusCodeLibrary_Env.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="NovusCodeLibrary_VCLUtils.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -95,14 +101,32 @@
     <Target Name="NovusCodeLibrary_Plugin:Make">
         <MSBuild Projects="NovusCodeLibrary_Plugin.dproj" Targets="Make"/>
     </Target>
+    <Target Name="NovusCodeLibrary_Env">
+        <MSBuild Projects="NovusCodeLibrary_Env.dproj"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_Env:Clean">
+        <MSBuild Projects="NovusCodeLibrary_Env.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_Env:Make">
+        <MSBuild Projects="NovusCodeLibrary_Env.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_VCLUtils">
+        <MSBuild Projects="NovusCodeLibrary_VCLUtils.dproj"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_VCLUtils:Clean">
+        <MSBuild Projects="NovusCodeLibrary_VCLUtils.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_VCLUtils:Make">
+        <MSBuild Projects="NovusCodeLibrary_VCLUtils.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="NovusCodeLibrary_Core;NovusCodeLibrary_Parser;NovusCodeLibrary_Log;NovusCodeLibrary_Indy;NovusCodeLibrary_XML;NovusCodeLibrary_SQLDir;NovusCodeLibrary_Plugin"/>
+        <CallTarget Targets="NovusCodeLibrary_Core;NovusCodeLibrary_Parser;NovusCodeLibrary_Log;NovusCodeLibrary_Indy;NovusCodeLibrary_XML;NovusCodeLibrary_SQLDir;NovusCodeLibrary_Plugin;NovusCodeLibrary_Env;NovusCodeLibrary_VCLUtils"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="NovusCodeLibrary_Core:Clean;NovusCodeLibrary_Parser:Clean;NovusCodeLibrary_Log:Clean;NovusCodeLibrary_Indy:Clean;NovusCodeLibrary_XML:Clean;NovusCodeLibrary_SQLDir:Clean;NovusCodeLibrary_Plugin:Clean"/>
+        <CallTarget Targets="NovusCodeLibrary_Core:Clean;NovusCodeLibrary_Parser:Clean;NovusCodeLibrary_Log:Clean;NovusCodeLibrary_Indy:Clean;NovusCodeLibrary_XML:Clean;NovusCodeLibrary_SQLDir:Clean;NovusCodeLibrary_Plugin:Clean;NovusCodeLibrary_Env:Clean;NovusCodeLibrary_VCLUtils:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="NovusCodeLibrary_Core:Make;NovusCodeLibrary_Parser:Make;NovusCodeLibrary_Log:Make;NovusCodeLibrary_Indy:Make;NovusCodeLibrary_XML:Make;NovusCodeLibrary_SQLDir:Make;NovusCodeLibrary_Plugin:Make"/>
+        <CallTarget Targets="NovusCodeLibrary_Core:Make;NovusCodeLibrary_Parser:Make;NovusCodeLibrary_Log:Make;NovusCodeLibrary_Indy:Make;NovusCodeLibrary_XML:Make;NovusCodeLibrary_SQLDir:Make;NovusCodeLibrary_Plugin:Make;NovusCodeLibrary_Env:Make;NovusCodeLibrary_VCLUtils:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

@@ -16,8 +16,6 @@ Const
 Type
   TNovusUtilities = class(TObject)
   public
-//     class function TwipsPerPixelX(Canvas : TCanvas) : Extended;
-//     class function TwipsPerPixelY(Canvas : TCanvas) : Extended;
      class function CopyObject(Src,Dest : TObject; Related : Boolean = FALSE): Boolean;
      class function AppRootDirectory: String;
      class function GetExceptMess: String;

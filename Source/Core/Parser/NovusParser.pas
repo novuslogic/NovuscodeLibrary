@@ -46,12 +46,15 @@ type
     property ParseString: string read GetParseString;
     property SourceLineNo: Integer read FiSourceLineNo write SetSourceLineNo;
     property SourcePos: Integer read GetSourcePos write FiSourcePos;
-    property Token: Char read FToken write FToken; 
+    property Token: Char read FToken write FToken;
+
     property TokenString: string read GetTokenString;
 
     property TokenPos: Integer read FiTokenPos write FiTokenPos;
 
     function GetToken(const s, sDelim: string; var iPos: integer): string;
+
+    function GetLastToken(aoffset: Integer = 0): Char;
   end;
 
 implementation
@@ -225,6 +228,7 @@ begin
     Inc(FiTokenPos);
   end;
   Result := FToken;
+
 end;
 
 function TNovusParser.SkipTokenString: string;
@@ -303,6 +307,8 @@ begin
   Result := GetTokenString;
   if FToken <> toEOF then
     SkipToken;
+
+
 end;
 
 
@@ -366,6 +372,20 @@ begin
     if FiSourceLineNo = Value then Exit;
   end;
 end;
+
+function TNovusParser.GetLastToken(aoffset: Integer = 0): Char;
+var
+  FiPrevTokenPos:Integer;
+begin
+  Result := #0;
+
+  FiPrevTokenPos := FiTokenPos -1 + aOffset;
+  if FiPrevTokenPos < 0 then Exit;
+
+  Result := FParseString[FiPrevTokenPos];
+end;
+
+
 
 
 end.

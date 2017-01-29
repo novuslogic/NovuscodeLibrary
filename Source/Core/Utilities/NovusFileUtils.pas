@@ -14,6 +14,7 @@ Type
     class function AbsoluteFilePath(aFilename: String): String;
     class function TrailingBackSlash(const aFilename: string): string;
     class function GetSpecialFolder(const CSIDL: integer) : string;
+    class function IsValidFolder(aFolder: String): Boolean;
   end;
 
   function PathCombine(lpszDest: PChar; const lpszDir, lpszFile: PChar):PChar; stdcall; external 'shlwapi.dll' name 'PathCombineA';
@@ -160,5 +161,39 @@ begin
       StrDispose(RecPath);
     end;
 end;
+
+class function TNovusFileUtils.IsValidFolder(aFolder: String): Boolean;
+var
+  S: String;
+  I: Integer;
+begin
+  Result := False;
+
+  if FileExists(aFolder) then Exit;
+
+  Result := DirectoryExists(aFolder);
+
+  if Result = false then
+    begin
+      S := aFolder;
+      repeat
+        I := LastDelimiter('\/', S);
+        MoveFile(nil, PChar(S));
+        if (GetLastError = ERROR_ALREADY_EXISTS) or
+           (
+             (GetFileAttributes(PChar(Copy(S, I + 1, MaxInt))) = INVALID_FILE_ATTRIBUTES)
+             and
+             (GetLastError=ERROR_INVALID_NAME)
+           ) then
+          Exit;
+        if I>0 then
+          S := Copy(S,1,I-1);
+      until I = 0;
+      Result := True;
+    end;
+
+
+end;
+
 
 end.

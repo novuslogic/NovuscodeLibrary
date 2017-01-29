@@ -131,7 +131,6 @@ type
     procedure ParseTagValues;
     procedure ParseTags;
 
-
     property TemplateTags: TTemplateTags
        read FTemplateTags
        write FTemplateTags;
@@ -290,6 +289,7 @@ begin
 end;
 *)
 
+
 procedure TNovusTemplate.ParseTemplate;
 begin
   TemplateTags.Clear;
@@ -301,13 +301,16 @@ begin
   while True do
     begin
       while not (Token in [toEOF,FStartToken, FSecondToken]) do
-           SkipToken(FStartToken, FSecondToken);
-     
+        SkipToken(FStartToken, FSecondToken);
 
       if Token = toEOF then
         Break;
 
-      CreateTemplateTag;
+      if (FSecondToken=#0) then
+        CreateTemplateTag
+      else
+      if GetLastToken(-1) = FStartToken then
+        CreateTemplateTag;
 
       SkipToken(FStartToken, FSecondToken);
     end;

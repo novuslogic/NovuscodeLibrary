@@ -1,3 +1,8 @@
+
+* Fixed NouusTemplate class second token order issue and missing tags
+* Change this file to Markdown 
+
+
 28/11/2016
 
 * New unit NovusEnvironment

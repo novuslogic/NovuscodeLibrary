@@ -1,4 +1,4 @@
-package NovusCodeLibrary_Log;
+package NovusCodeLibrary_Plugin;
 
 {$R *.res}
 {$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
@@ -24,7 +24,7 @@ package NovusCodeLibrary_Log;
 {$MINENUMSIZE 1}
 {$IMAGEBASE $400000}
 {$ENDIF IMPLICITBUILDING}
-{$DESCRIPTION 'NovusCodeLibrary Runtime - Log'}
+{$DESCRIPTION 'NovusCodeLibrary Runtime - Plugin'}
 {$LIBSUFFIX '180'}
 {$RUNONLY}
 {$IMPLICITBUILD OFF}
@@ -35,7 +35,6 @@ requires
   NovusCodeLibrary_Core;
 
 contains
-  NovusLog in '..\..\Core\Log\NovusLog.pas',
-  NovusWinEventLog in '..\..\Core\Log\NovusWinEventLog.pas';
+  NovusPlugin in '..\..\Core\Plugin\NovusPlugin.pas';
 
 end.

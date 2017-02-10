@@ -6,7 +6,7 @@ package NovusCodeLibrary_SQLDir;
 {$ALIGN 8}
 {$ASSERTIONS ON}
 {$BOOLEVAL OFF}
-{$DEBUGINFO OFF}
+{$DEBUGINFO ON}
 {$EXTENDEDSYNTAX ON}
 {$IMPORTEDDATA ON}
 {$IOCHECKS ON}
@@ -25,7 +25,7 @@ package NovusCodeLibrary_SQLDir;
 {$MINENUMSIZE 1}
 {$IMAGEBASE $400000}
 {$ENDIF IMPLICITBUILDING}
-{$DESCRIPTION 'NovusCodeLibrary Runtime - SQLDirect '}
+{$DESCRIPTION 'NovusCodeLibrary Runtime - Log (Delphi XE2) Win64'}
 {$LIBSUFFIX '180'}
 {$RUNONLY}
 {$IMPLICITBUILD OFF}

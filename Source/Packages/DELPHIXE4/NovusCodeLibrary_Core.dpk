@@ -6,7 +6,7 @@ package NovusCodeLibrary_Core;
 {$ALIGN 8}
 {$ASSERTIONS ON}
 {$BOOLEVAL OFF}
-{$DEBUGINFO OFF}
+{$DEBUGINFO ON}
 {$EXTENDEDSYNTAX ON}
 {$IMPORTEDDATA ON}
 {$IOCHECKS ON}
@@ -32,12 +32,12 @@ package NovusCodeLibrary_Core;
 
 requires
   rtl,
-  vcl,
   dbrtl,
   xmlrtl,
   soaprtl,
   inet,
-  DbxCommonDriver;
+  DbxCommonDriver,
+  vcl;
 
 contains
   NovusUtilities in '..\..\core\Utilities\NovusUtilities.pas',

@@ -1,4 +1,4 @@
-package NovusCodeLibrary_Log;
+package NovusCodeLibrary_VCLUtils;
 
 {$R *.res}
 {$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
@@ -12,19 +12,20 @@ package NovusCodeLibrary_Log;
 {$LOCALSYMBOLS ON}
 {$LONGSTRINGS ON}
 {$OPENSTRINGS ON}
-{$OPTIMIZATION ON}
+{$OPTIMIZATION OFF}
 {$OVERFLOWCHECKS OFF}
 {$RANGECHECKS OFF}
 {$REFERENCEINFO ON}
 {$SAFEDIVIDE OFF}
-{$STACKFRAMES OFF}
+{$STACKFRAMES ON}
 {$TYPEDADDRESS OFF}
 {$VARSTRINGCHECKS ON}
 {$WRITEABLECONST OFF}
 {$MINENUMSIZE 1}
 {$IMAGEBASE $400000}
+{$DEFINE DEBUG}
 {$ENDIF IMPLICITBUILDING}
-{$DESCRIPTION 'NovusCodeLibrary Runtime - Log'}
+{$DESCRIPTION 'NovusCodeLibrary Runtime - VCL Utils'}
 {$LIBSUFFIX '180'}
 {$RUNONLY}
 {$IMPLICITBUILD OFF}
@@ -35,7 +36,7 @@ requires
   NovusCodeLibrary_Core;
 
 contains
-  NovusLog in '..\..\Core\Log\NovusLog.pas',
-  NovusWinEventLog in '..\..\Core\Log\NovusWinEventLog.pas';
+  NovusDialogs in '..\..\Core\Utilities\NovusDialogs.pas',
+  NovusGraphics in '..\..\Core\Utilities\NovusGraphics.pas';
 
 end.

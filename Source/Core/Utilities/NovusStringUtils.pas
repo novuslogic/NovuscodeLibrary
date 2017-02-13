@@ -51,7 +51,7 @@ Type
     class function Replicate(c: Char; iLen: integer): string;
     class function PadLeft(const s: string; iLen: integer; const sFillChar: char): string;
     class function JustFilename(const PathName : String) : String;
-    class function JustPathname(const PathName : String) : String;
+    class function JustPathname(const aPathName : String) : String;
     class function Str2DateTime(S: String): tDateTime;
     class procedure ValLongInt(S : ShortString; var LI : Longint; var ErrorCode : integer);
     class function Str2LongS(const S : ShortString; var I : LongInt) : Boolean;
@@ -927,14 +927,17 @@ begin
   end;
 end;
 
-class function TNovusStringUtils.JustPathname;
+class function TNovusStringUtils.JustPathname(const aPathName : String): string;
 var
   I : Longint;
 begin
   Result := '';
-  
-  if Trim(PathName) = '' then Exit;
 
+  if Trim(aPathName) = '' then Exit;
+
+  Result := Trim(ExtractFilePath(aPathName));
+
+  (*
   I := Succ(Length(PathName));
   repeat
     Dec(I);
@@ -953,6 +956,7 @@ begin
   end else
     {Either the default directory of a drive or invalid pathname}
     Result := Copy(PathName, 1, I);
+  *)
 end;
 
 

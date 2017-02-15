@@ -88,7 +88,7 @@ Type
     destructor Destroy; override;
 
     function WriteLine(ATimeStr, ALogDesc: string; ALogDateTime: tDateTime): String;
-    function  ReadLine: String;
+    function ReadLine: String;
 
     function OpenLog(AOveride: Boolean = false): Boolean; virtual;
     procedure CloseLog; virtual;
@@ -117,8 +117,6 @@ Type
     property FilePonter  : text
       read FFilePonter
       write FFilePonter;
-
-
 
     property OutputConsole: Boolean
       read fbOutputConsole
@@ -209,6 +207,8 @@ end;
 constructor TNovusLogFile.Create;
 begin
   inherited Create(ltFile);
+
+  fbOutputConsole := true;
 
   FsFilename := AFilename;
   fbIsFileOpen := False;

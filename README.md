@@ -1,4 +1,4 @@
 NovuscodeLibrary
 ================
 
-Utilities Library for Delphi
+A Delphi library of utility functions and non-visual classes.

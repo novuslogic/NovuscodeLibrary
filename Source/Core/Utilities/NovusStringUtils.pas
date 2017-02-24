@@ -61,11 +61,22 @@ Type
     class function IsAlphaStr(S : String): Boolean;
     class procedure GetNames(AText: string; AList: TStringList);
     class function SubstCharSim(P : string; OC, NC : ANSIChar) : string;
+    /// <summary>
+    ///   Receives application root path.
+    /// </summary>
     class function RootDirectory: String;
     class function StripChar(s : String; Ch : Char) : string;
     class function ReplaceChar(s : String; aFromCh, aToCh : Char): String;
     class function GetStrTokenA(const s, sDelim: string; var iPos: integer): string;
     class function GetStrRes(const Index: integer): String;
+
+    /// <summary>
+    ///   Convert a String to Integer
+    /// </summary>
+    /// <remarks>
+    ///   if the string is blank then a exception will not be raised but will
+    ///   converted to a zero.
+    /// </remarks>
     class function Str2Int(AStr : String):Integer;
     class function Str2Int64(AStr : String):Int64;
     class function StrChInsertL(const S : AnsiString; C : AnsiChar; Pos : Cardinal) : AnsiString;

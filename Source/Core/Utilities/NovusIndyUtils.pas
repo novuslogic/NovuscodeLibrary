@@ -13,6 +13,9 @@ Type
   public
      class function UrlEncode(const DecodedStr: String; Pluses: Boolean): String;
      class function UrlDecode(const EncodedStr: String): String;
+     /// <summary>
+     ///   Check if tcp port is open.
+     /// </summary>
      class function IsTCPPortUsed(aPort : Word; aAddress:AnsiString) : boolean;
    end;
 

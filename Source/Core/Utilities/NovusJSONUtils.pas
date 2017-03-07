@@ -48,7 +48,8 @@ end;
 
 class function tNovusJSONUtils.InJSONArrayToDate(const aElement: string;const aJSONArray: TJSONArray): tDateTime;
 begin
-  Result := TNovusDateUtils.UnixTimeToDateTime(TNovusDateStringUtils.JSONDateStr2UnixTime(InJSONArray(aElement, aJSONArray).JsonValue.ToString));
+  //Result := TNovusDateUtils.UnixTimeToDateTime(TNovusDateStringUtils.JSONDateStr2UnixTime(InJSONArray(aElement, aJSONArray).JsonValue.ToString));
+  Result := TNovusDateUtils.JSONDateToDatetime(InJSONArray(aElement, aJSONArray).JsonValue.ToString);
 end;
 
 class function tNovusJSONUtils.InJSONArrayToInt64(const aElement: string;const aJSONArray: TJSONArray): Int64;

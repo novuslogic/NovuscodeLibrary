@@ -39,7 +39,7 @@ type
     class function GetIntYear(sStr:String;iPos:Integer):Integer;
     class function UnixTimeToDateTime(const aUnixDate: Int64): TDateTime;
     class function DateTimeToISO8601(const aDateTime: TDateTime): string;
-  //  class function DateTimeToUnixTime(aDateTime : TDateTime): Int64;
+    class function JSONDateToDatetime(aJSONDate: string): TDatetime;
   end;
 
 implementation
@@ -222,6 +222,36 @@ begin
       Result := SystemTimeToDateTime(LocalTime);
     end
 end;
+
+class function TNovusDateUtils.JSONDateToDatetime(aJSONDate: string): TDatetime;
+var
+  fwYear,
+  fwMonth,
+  fwDay,
+  fwHour,
+  fwMinute,
+  fwSecond,
+  fwMillisecond: Word;
+  lsJSONValue: String;
+begin
+  Try
+    lsJSONValue := Trim(TNovusStringUtils.StripChar(aJSONDate, #34(* " *)));
+
+    fwYear        := TNovusStringUtils.Str2Int(Copy(lsJSONValue, 1, 4));
+    fwMonth       := TNovusStringUtils.Str2Int(Copy(lsJSONValue, 6, 2));
+    fwDay         := TNovusStringUtils.Str2Int(Copy(lsJSONValue, 9, 2));
+    fwHour        := TNovusStringUtils.Str2Int(Copy(lsJSONValue, 12, 2));
+    fwMinute      := TNovusStringUtils.Str2Int(Copy(lsJSONValue, 15, 2));
+    fwSecond      := TNovusStringUtils.Str2Int(Copy(lsJSONValue, 18, 2));
+    fwMillisecond := Round(TNovusStringUtils.Str2Float(Copy(lsJSONValue, 19, 4)));
+
+    Result := EncodeDateTime(fwYear, fwMonth, fwDay, fwHour, fwMinute, fwSecond, fwMillisecond);
+  Except
+    Result := 0;
+  End;
+end;
+
+
 
 (*
 class function TNovusDateUtils.DateTimeToUnixTime(aDateTime : TDateTime): Int64;

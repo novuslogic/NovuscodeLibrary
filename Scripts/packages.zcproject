@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project>
+  <outputconsole>true</outputconsole>
+  <messageslogpath></messageslogpath>
+  <Createoutputdir>true</Createoutputdir>
+  
+  <projectitem name = "NovusCodeLibrary_Core.dpk">
+    <template>[%templatepath%]package.dpk</template>
+    <properties>[%propertiespath%]delphixe4.xml</properties>
+    <overrideoutput>true</overrideoutput>
+    <output>[%outputpath%]DELPHIXE4\</output>
+    <package_description>NovusCodeLibrary Runtime - Core</package_description>
+    <package_requires>Core_requires.pas</package_requires>
+    <package_contains>Core_contains.pas</package_contains>
+    <package_name>NovusCodeLibrary_Core</package_name>
+  </projectitem>
+
+  <projectitem name = "NovusCodeLibrary_Core.dproj">
+    <template>[%templatepath%]package.dproj</template>
+    <properties>[%propertiespath%]delphixe4.xml</properties>
+    <overrideoutput>true</overrideoutput>
+    <output>[%outputpath%]DELPHIXE4\</output>
+    <package_description>NovusCodeLibrary Runtime - Core</package_description>
+    <package_name>NovusCodeLibrary_Core</package_name>
+    <MainSource>NovusCodeLibrary_Core.dpk</MainSource>
+  </projectitem>
+  
+</project>

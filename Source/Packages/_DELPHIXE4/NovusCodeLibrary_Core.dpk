@@ -6,7 +6,7 @@ package NovusCodeLibrary_Core;
 {$ALIGN 8}
 {$ASSERTIONS ON}
 {$BOOLEVAL OFF}
-{$DEBUGINFO OFF}
+{$DEBUGINFO ON}
 {$EXTENDEDSYNTAX ON}
 {$IMPORTEDDATA ON}
 {$IOCHECKS ON}
@@ -26,18 +26,18 @@ package NovusCodeLibrary_Core;
 {$IMAGEBASE $400000}
 {$ENDIF IMPLICITBUILDING}
 {$DESCRIPTION 'NovusCodeLibrary Runtime - Core'}
-{$LIBSUFFIX '220'}
+{$LIBSUFFIX '180'}
 {$RUNONLY}
 {$IMPLICITBUILD OFF}
 
 requires
   rtl,
-  vcl,
-  xmlrtl,
-  DbxCommonDriver,
   dbrtl,
+  xmlrtl,
+  soaprtl,
   inet,
-  soaprtl;
+  DbxCommonDriver,
+  vcl;
 
 contains
   NovusUtilities in '..\..\core\Utilities\NovusUtilities.pas',

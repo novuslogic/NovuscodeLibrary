@@ -56,7 +56,7 @@ begin
       begin
         if FInputRecord.Event.KeyEvent.wVirtualKeyCode = VK_ESCAPE then
           begin
-            Result := FInputRecord.Event.KeyEvent.wVirtualKeyCode;
+            Result := Chr(FInputRecord.Event.KeyEvent.wVirtualKeyCode);
 
             break;
           end;

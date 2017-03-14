@@ -1,44 +1,3 @@
-{$I ..\..\core\NovusCodeLibrary.inc}
-package NovusCodeLibrary_Core;
-
-{$R *.res}
-{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
-{$ALIGN 8}
-{$ASSERTIONS ON}
-{$BOOLEVAL OFF}
-{$DEBUGINFO OFF}
-{$EXTENDEDSYNTAX ON}
-{$IMPORTEDDATA ON}
-{$IOCHECKS ON}
-{$LOCALSYMBOLS ON}
-{$LONGSTRINGS ON}
-{$OPENSTRINGS ON}
-{$OPTIMIZATION ON}
-{$OVERFLOWCHECKS OFF}
-{$RANGECHECKS OFF}
-{$REFERENCEINFO ON}
-{$SAFEDIVIDE OFF}
-{$STACKFRAMES OFF}
-{$TYPEDADDRESS OFF}
-{$VARSTRINGCHECKS ON}
-{$WRITEABLECONST OFF}
-{$MINENUMSIZE 1}
-{$IMAGEBASE $400000}
-{$ENDIF IMPLICITBUILDING}
-{$DESCRIPTION 'NovusCodeLibrary Runtime - Core'}
-{$LIBSUFFIX '220'}
-{$RUNONLY}
-{$IMPLICITBUILD OFF}
-
-requires
-  rtl,
-  vcl,
-  xmlrtl,
-  DbxCommonDriver,
-  dbrtl,
-  inet,
-  soaprtl;
-
 contains
   NovusUtilities in '..\..\core\Utilities\NovusUtilities.pas',
   NovusWindows in '..\..\Core\Utilities\NovusWindows.pas',
@@ -55,5 +14,3 @@ contains
   NovusNumUtils in '..\..\Core\Utilities\NovusNumUtils.pas',
   NovusDateDiffUtil in '..\..\Core\Utilities\NovusDateDiffUtil.pas',
   NovusGUIDEx in '..\..\Core\Utilities\NovusGUIDEx.pas';
-
-end.

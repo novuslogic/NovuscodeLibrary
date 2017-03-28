@@ -13,7 +13,7 @@ type
 
     class function NewGuidString : String;
 
-    class function NewGuidStringA : String;
+    class function NewGuidNoBracketsString: String;
 
 
     class function IsEmptyGuid(Guid : TGuid) : boolean;
@@ -57,7 +57,7 @@ begin
   Result := TGuidExUtils.ToString(TGuidExUtils.NewGuid);
 end;
 
-class function TGuidExUtils.NewGuidStringA: String;
+class function TGuidExUtils.NewGuidNoBracketsString: String;
 begin
   Result := tNovusStringUtils.StripChar(TGuidExUtils.NewGuidString, '{');
 

@@ -69,7 +69,6 @@ Type
     class function ReplaceChar(s : String; aFromCh, aToCh : Char): String;
     class function GetStrTokenA(const s, sDelim: string; var iPos: integer): string;
     class function GetStrRes(const Index: integer): String;
-
     /// <summary>
     ///   Convert a String to Integer
     /// </summary>
@@ -90,7 +89,11 @@ Type
     class function BooleanToStr(bValue: boolean): string;
     class function StrToBoolean(const sValue: string): boolean;
     class function ReplaceStr(Const sString, sOldStr, sNewStr: string; ACheckUpper: Boolean = false): string;
+
     class procedure ParseStringList(sDelimeter: string; sStr: string; Var Lines: TStringList); overload;
+    /// <summary>
+    ///   Convert a string into a StringList by a Delimeter char
+    /// </summary>
     class procedure ParseStringList(aDelimeter: Char; sStr: string; Var Lines: TStringList); overload;
     class procedure String2StringList(AString: string; var AStringList: TStringList);
     class procedure String2Strings(AString: string; var AStrings: TStrings);

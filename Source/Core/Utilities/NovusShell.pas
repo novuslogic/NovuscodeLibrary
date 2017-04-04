@@ -32,6 +32,9 @@ type
     constructor Create; virtual;
     destructor Destroy; override;
 
+    /// <summary>
+    ///   Run an console application and capture output
+    /// </summary>
     function RunCaptureCommand(const aCommandLine: string;
                                 var aOutput: string): Integer;
 

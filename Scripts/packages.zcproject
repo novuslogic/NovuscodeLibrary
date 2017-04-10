@@ -151,6 +151,132 @@
     <MainSource>NovusCodeLibrary_SQLDir.dpk</MainSource>
   </projectitem>
 
+  <projectitem name = "NovusCodeLibrary_Parser.dpk">
+    <template>[%templatepath%]package.dpk</template>
+    <properties></properties>
+    <overrideoutput>true</overrideoutput>
+    <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
+    <package_description>NovusCodeLibrary Runtime - Parser</package_description>
+    <package_requires>Parser_requires.pas</package_requires>
+    <package_contains>Parser_contains.pas</package_contains>
+    <package_name>NovusCodeLibrary_Parser</package_name>
+  </projectitem>
+
+  <projectitem name = "NovusCodeLibrary_Parser.dproj">
+    <template>[%templatepath%]package.dproj</template>
+    <properties></properties>
+    <overrideoutput>true</overrideoutput>
+    <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
+    <package_description>NovusCodeLibrary Runtime - Parser</package_description>
+    <package_name>NovusCodeLibrary_Parser</package_name>
+    <MainSource>NovusCodeLibrary_Parser.dpk</MainSource>
+  </projectitem>
+  
+  <projectitem name = "NovusCodeLibrary_Log.dpk">
+    <template>[%templatepath%]package.dpk</template>
+    <properties></properties>
+    <overrideoutput>true</overrideoutput>
+    <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
+    <package_description>NovusCodeLibrary Runtime - Log</package_description>
+    <package_requires>Log_requires.pas</package_requires>
+    <package_contains>Log_contains.pas</package_contains>
+    <package_name>NovusCodeLibrary_Log</package_name>
+  </projectitem>
+
+  <projectitem name = "NovusCodeLibrary_Log.dproj">
+    <template>[%templatepath%]package.dproj</template>
+    <properties></properties>
+    <overrideoutput>true</overrideoutput>
+    <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
+    <package_description>NovusCodeLibrary Runtime - Log</package_description>
+    <package_name>NovusCodeLibrary_Log</package_name>
+    <MainSource>NovusCodeLibrary_Log.dpk</MainSource>
+  </projectitem>
+
+  <projectitem name = "NovusCodeLibrary_Indy.dpk">
+    <template>[%templatepath%]package.dpk</template>
+    <properties></properties>
+    <overrideoutput>true</overrideoutput>
+    <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
+    <package_description>NovusCodeLibrary Runtime - Indy</package_description>
+    <package_requires>Indy_requires.pas</package_requires>
+    <package_contains>Indy_contains.pas</package_contains>
+    <package_name>NovusCodeLibrary_Indy</package_name>
+  </projectitem>
+
+  <projectitem name = "NovusCodeLibrary_Indy.dproj">
+    <template>[%templatepath%]package.dproj</template>
+    <properties></properties>
+    <overrideoutput>true</overrideoutput>
+    <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
+    <package_description>NovusCodeLibrary Runtime - Indy</package_description>
+    <package_name>NovusCodeLibrary_Indy</package_name>
+    <MainSource>NovusCodeLibrary_Indy.dpk</MainSource>
+  </projectitem>
+
+  <projectitem name = "NovusCodeLibrary_Indy.dpk">
+    <template>[%templatepath%]package.dpk</template>
+    <properties></properties>
+    <overrideoutput>true</overrideoutput>
+    <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
+    <package_description>NovusCodeLibrary Runtime - Indy</package_description>
+    <package_requires>Indy_requires.pas</package_requires>
+    <package_contains>Indy_contains.pas</package_contains>
+    <package_name>NovusCodeLibrary_Indy</package_name>
+  </projectitem>
+
+  <projectitem name = "NovusCodeLibrary_Indy.dproj">
+    <template>[%templatepath%]package.dproj</template>
+    <properties></properties>
+    <overrideoutput>true</overrideoutput>
+    <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
+    <package_description>NovusCodeLibrary Runtime - Indy</package_description>
+    <package_name>NovusCodeLibrary_Indy</package_name>
+    <MainSource>NovusCodeLibrary_Indy.dpk</MainSource>
+  </projectitem>
+
+  <projectitem name = "NovusCodeLibrary_XML.dpk">
+    <template>[%templatepath%]package.dpk</template>
+    <properties></properties>
+    <overrideoutput>true</overrideoutput>
+    <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
+    <package_description>NovusCodeLibrary Runtime - XML</package_description>
+    <package_requires>XML_requires.pas</package_requires>
+    <package_contains>XML_contains.pas</package_contains>
+    <package_name>NovusCodeLibrary_XML</package_name>
+  </projectitem>
+
+  <projectitem name = "NovusCodeLibrary_XML.dproj">
+    <template>[%templatepath%]package.dproj</template>
+    <properties></properties>
+    <overrideoutput>true</overrideoutput>
+    <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
+    <package_description>NovusCodeLibrary Runtime - XML</package_description>
+    <package_name>NovusCodeLibrary_XML</package_name>
+    <MainSource>NovusCodeLibrary_XML.dpk</MainSource>
+  </projectitem>
+  
+ <projectitem name = "NovusCodeLibrary_SQLDir.dpk">
+    <template>[%templatepath%]package.dpk</template>
+    <properties></properties>
+    <overrideoutput>true</overrideoutput>
+    <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
+    <package_description>NovusCodeLibrary Runtime - SQLDir</package_description>
+    <package_requires>SQLDir_requires.pas</package_requires>
+    <package_contains>SQLDir_contains.pas</package_contains>
+    <package_name>NovusCodeLibrary_SQLDir</package_name>
+  </projectitem>
+
+  <projectitem name = "NovusCodeLibrary_SQLDir.dproj">
+    <template>[%templatepath%]package.dproj</template>
+    <properties></properties>
+    <overrideoutput>true</overrideoutput>
+    <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
+    <package_description>NovusCodeLibrary Runtime - SQLDir</package_description>
+    <package_name>NovusCodeLibrary_SQLDir</package_name>
+    <MainSource>NovusCodeLibrary_SQLDir.dpk</MainSource>
+  </projectitem>
+
   <projectitem name = "NovusCodeLibrary_Plugin.dpk">
     <template>[%templatepath%]package.dpk</template>
     <properties></properties>
@@ -193,7 +319,6 @@
     <MainSource>NovusCodeLibrary_Env.dpk</MainSource>
   </projectitem>
 
-
    <projectitem name = "NovusCodeLibrary_VCLUtils.dpk">
     <template>[%templatepath%]package.dpk</template>
     <properties></properties>
@@ -214,5 +339,4 @@
     <package_name>NovusCodeLibrary_VCLUtils</package_name>
     <MainSource>NovusCodeLibrary_VCLUtils.dpk</MainSource>
   </projectitem>
-
 </project>

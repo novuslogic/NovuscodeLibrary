@@ -287,6 +287,8 @@ end;
 
 procedure TNovusLogFile.CloseLog;
 begin
+  Flush(FFilePonter);
+
   fbIsFileOpen := False;
 
   WriteLog('Logging finished');
@@ -299,7 +301,7 @@ begin
   Result := inherited WriteExceptLog;
 
   WriteLine(FormatDateTime(fsDateTimeMask, Now), Result, now);
-  Flush(FFilePonter);
+//  Flush(FFilePonter);
 end;
 
 function TNovusLogFile.WriteLog(AMsg: string; AEventType: TEventType = etNone): string;
@@ -311,7 +313,7 @@ begin
   inherited WriteLog(AMsg, AEventType);
 
   Result := WriteLine(FormatedNow, AMsg, now);
-  Flush(FFilePonter);
+  //Flush(FFilePonter);
 end;
 
 procedure TNovusLogFile.ReadAll;

@@ -193,7 +193,8 @@ begin
               nil, nil, FStartupInfo, FProcessInformation) then
         try
           repeat
-            dRunning := WaitForSingleObject(FProcessInformation.hProcess, INFINITE);
+            dRunning := WaitForSingleObject(FProcessInformation.hProcess, 1000 (* INFINITE *));
+
             PeekNamedPipe(hRead,nil,0,nil, @dAvailable,nil);
             if (dAvailable > 0 ) then
                repeat

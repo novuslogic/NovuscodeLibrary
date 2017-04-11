@@ -1,5 +1,24 @@
-(* Delphi 10.1 Berlin / C++Builder Berlin / D24 *)
+{********************************************************************}
+{                                                                    }
+{           DelphiVersions.inc                                       }
+{                                                                    }
+{           Apache License                                           }
+{           Version 2.0, January 2004                                }
+{           License at http://www.apache.org/licenses/               }
+{                                                                    }
+{                                                                    }
+{           Copyright (c) 2017 Novuslogic Software                   }
+{           http://www.novuslogic.com                                }
+{                                                                    }
+{********************************************************************} 
 
+
+(* Delphi 10.2 Tokyo / C++Builder Berlin / D25 *)
+{$IFDEF VER310}
+   ($DEFINE DELPHI10_2}
+{$ENDIF}
+
+(* Delphi 10.1 Berlin / C++Builder Berlin / D24 *)
 {$IFDEF VER310}
    ($DEFINE DELPHI10_1}
 {$ENDIF}
@@ -63,7 +82,16 @@
 {$IFDEF VER180}
    {$DEFINE DELPHI2007}
 {$ELSEIF VER185}
-   {$DEFINE DELPHI2007}
+   {$DEFINE DELPHI2007_1}
+{$ENDIF}
+
+{$IFDEF DELPHI10_2}
+   {$DEFINE DELPHI10_2_UP}
+   {$DEFINE DELPHI10_1_UP}
+   {$DEFINE DELPHI10_UP}
+   {$DEFINE DELPHIXE8_UP}
+   {$DEFINE DELPHIXE7_UP}
+   {$DEFINE DELPHIXE6_UP}
 {$ENDIF}
 
 {$IFDEF DELPHI10_1}

@@ -27,7 +27,6 @@ begin
   Try
     loTemplate := tNovusTemplate.Create;
 
-
     loTemplate.StartToken := '{';
     loTemplate.EndToken := '}';
     loTemplate.SecondToken := '%';

@@ -1,4 +1,19 @@
-﻿unit NovusWindows;
+﻿{********************************************************************}
+{                                                                    }
+{           DelphiVersions.inc                                       }
+{                                                                    }
+{           Apache License                                           }
+{           Version 2.0, January 2004                                }
+{           License at http://www.apache.org/licenses/               }
+{                                                                    }
+{                                                                    }
+{           Copyright (c) 2017 Novuslogic Software                   }
+{           http://www.novuslogic.com                                }
+{                                                                    }
+{********************************************************************}
+
+{$I ..\..\core\NovusCodeLibrary.inc}
+unit NovusWindows;
 
 interface
 
@@ -9,14 +24,46 @@ Type
   TNovusWindows = class(TNovusUtilities)
   protected
   public
+    /// <summary>
+    ///   Is Win64 running
+    /// </summary>
     class function IsWin64: Boolean;
+    /// <summary>
+    ///   Returns Windows path \Program Files\Common Files
+    /// </summary>
     class function CommonFilesDir: string;
+    /// <summary>
+    ///   Returns Windows System path directory
+    /// </summary>
     class function WindowsSystemDir: String;
+    /// <summary>
+    ///   Returns Windows installed path directory
+    /// </summary>
     class function WindowsDir: string;
+    /// <summary>
+    ///   Returns the path of the directory for windows temporary files
+    /// </summary>
     class function WindowsTempPath: String;
+    /// <summary>
+    ///   Return current windows exception
+    /// </summary>
     class function WindowsExceptMess: String;
+    /// <summary>
+    ///   Returns NetBIOS name of the local computer
+    /// </summary>
+    /// <remarks>
+    ///   Using RPC will only return local comupter name not the RPC Windows computer name.
+    ///
+    ///   https://msdn.microsoft.com/en-us/library/windows/desktop/ms724295(v=vs.85).aspx
+    /// </remarks>
     class function GetLocalComputerName: String;
+    /// <summary>
+    ///   Set local Windows Environment Variable
+    /// </summary>
     class function SetEnvironmentVariableEx(const aVariableName: String; const aValue: string; aIsSystemVariable: Boolean): Integer;
+    /// <summary>
+    ///   Set system Windows Environment Variable
+    /// </summary>
     class function SetSysEnvironmentVariable(const aVariableName: String; aValue: string): boolean;
   end;
 
@@ -76,10 +123,10 @@ begin
 
   ExceptionErrorMessage(ExceptObject, ExceptAddr, P,  ValSize);
 
-{$IFDEF VER180}
- S := StrPas(P);
+{$IFDEF DELPHI2009_UP}
+   S := StrPas(PWideChar(P));
 {$ELSE}
- S := StrPas(PWideChar(P));
+   S := StrPas(P);
  {$ENDIF}
 
   FreeMem(P);
@@ -87,7 +134,6 @@ begin
   S := Copy(S, (Pos('.', S) + 1), Length(S) - Pos('.', S));
   Result := Copy(S, (Pos('.', S) + 1), Length(S) - Pos('.', S));
 end;
-
 
 class function TNovusWindows.GetLocalComputerName;
 var
@@ -101,10 +147,10 @@ begin
   P := AllocMem(Size);
 
   if GetComputerName(P, Size) then
-    {$IFDEF VER180}
-    Result := StrPas(P);
-    {$ELSE}
+    {$IFDEF DELPHI2009_UP}
     Result := StrPas(PWideChar(P));
+    {$ELSE}
+    Result := StrPas(P);
     {$ENDIF}
 
   FreeMem(P);
@@ -147,28 +193,6 @@ begin
 
     reg.free;
   End;
-
-  (*
-  with TRegistry.Create do
-    try
-      RootKey := HKEY_LOCAL_MACHINE;
-      fok  := OpenKey('SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment', true);
-
-      if fok then
-      begin
-        WriteString(aVariableName, aValue);
-
-        SetEnvironmentVariable(PChar(aVariableName), PChar(aValue));
-
-        SendMessage(HWND_BROADCAST, WM_SETTINGCHANGE, 0, Integer(PChar('Environment')));
-      end
-    else
-      Result := GetLastError;
-
-    finally
-      Free;
-    end;
-    *)
 end;
 
 class function TNovusWindows.SetEnvironmentVariableEx(const aVariableName: String; const aValue: string; aIsSystemVariable: Boolean): Integer;

@@ -4,7 +4,7 @@
         <MainSource><%PROJECTITEM.MainSource%></MainSource>
         <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
         <DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
-        <DCC_DependencyCheckOutputName>C:\Documents and Settings\All Users\Documents\RAD Studio\5.0\Bpl\NovusCodeLibrary_Core_D11.bpl</DCC_DependencyCheckOutputName>
+        <DCC_DependencyCheckOutputName></DCC_DependencyCheckOutputName>
         <ProjectVersion>17.2</ProjectVersion>
         <Config Condition="'$(Config)'==''">Debug</Config>
         <Base>True</Base>
@@ -60,7 +60,7 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
-        <DllSuffix><%properties.libsuffix%></DllSuffix>
+        <DllSuffix><%VARIABLECMDLINE.libsuffix%></DllSuffix>
         <DCC_DcuOutput>..\..\..\units\$(ProductVersion)\$(Platform)\$(Config)</DCC_DcuOutput>
         <DCC_UnitSearchPath>..\..\..\units\$(ProductVersion)\$(Platform)\$(Config);$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <SanitizedProjectName><%projectitem.package_name%></SanitizedProjectName>
@@ -175,9 +175,9 @@
                 <Platform value="Win64">True</Platform>
             </Platforms>
             <Deployment Version="1">
-                <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\16.0\Bpl\NovusCodeLibrary_Core220.bpl" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="<%PROJECTITEM.name%>" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
-                        <RemoteName>NovusCodeLibrary_Core.bpl</RemoteName>
+                        <RemoteName><%PROJECTITEM.name%></RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

@@ -1,7 +1,24 @@
+{********************************************************************}
+{                                                                    }
+{           packages.pas                                             }
+{                                                                    }
+{           Apache License                                           }
+{           Version 2.0, January 2004                                }
+{           License at http://www.apache.org/licenses/               }
+{                                                                    }
+{                                                                    }
+{           Copyright (c) 2017 Novuslogic Software                   }
+{           http://www.novuslogic.com                                }
+{                                                                    }
+{********************************************************************} 
+
 Uses Zcodegen, Delphi;
 
 procedure BuldDelphiPackages(aCompilerVersion: integer);
 begin
+  Output.Log('Delphi Common Directory:' + GetBDSCOMMONDIR(aCompilerVersion));
+    
+  
   if Zcodegen('packages.zcproject', 'packages.zcconfig', Format('DELPHIVER="%s";LIBSUFFIX="%s"', [GetDelphiCompilerVersion(aCompilerVersion), GetDelphiPackageVersion(aCompilerVersion)]), wd, '') <> 0 then
      RaiseException(erCustomError, 'failed.');  
 end;

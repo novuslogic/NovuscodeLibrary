@@ -10,22 +10,22 @@
 {           Copyright (c) 2017 Novuslogic Software                   }
 {           http://www.novuslogic.com                                }
 {                                                                    }
-{********************************************************************} 
+{********************************************************************}
 
 
 (* Delphi 10.2 Tokyo / C++Builder Berlin / D25 *)
-{$IFDEF VER310}
-   ($DEFINE DELPHI10_2}
+{$IFDEF VER320}
+   {$DEFINE DELPHI10_2}
 {$ENDIF}
 
 (* Delphi 10.1 Berlin / C++Builder Berlin / D24 *)
 {$IFDEF VER310}
-   ($DEFINE DELPHI10_1}
+   {$DEFINE DELPHI10_1}
 {$ENDIF}
 
 (* Delphi 10 Seattle / C++Builder Seattle / D23 *)
 {$IFDEF VER300}
-  ($DEFINE DELPHI10}
+  {$DEFINE DELPHI10}
 {$ENDIF}
 
 (* Delphi XE8 / C++Builder XE8 / D22 *)
@@ -92,6 +92,7 @@
    {$DEFINE DELPHIXE8_UP}
    {$DEFINE DELPHIXE7_UP}
    {$DEFINE DELPHIXE6_UP}
+   {$DEFINE DELPHI2009_UP}
 {$ENDIF}
 
 {$IFDEF DELPHI10_1}
@@ -100,6 +101,7 @@
    {$DEFINE DELPHIXE8_UP}
    {$DEFINE DELPHIXE7_UP}
    {$DEFINE DELPHIXE6_UP}
+   {$DEFINE DELPHI2009_UP}
 {$ENDIF}
 
 {$IFDEF DELPHI10}
@@ -107,23 +109,51 @@
    {$DEFINE DELPHIXE8_UP}
    {$DEFINE DELPHIXE7_UP}
    {$DEFINE DELPHIXE6_UP}
+   {$DEFINE DELPHI2009_UP}
 {$ENDIF}
 
 {$IFDEF DELPHIXE8}
    {$DEFINE DELPHIXE8_UP}
    {$DEFINE DELPHIXE7_UP}
    {$DEFINE DELPHIXE6_UP}
+   {$DEFINE DELPHI2009_UP}
 {$ENDIF}
 
 {$IFDEF DELPHIXE7}
    {$DEFINE DELPHIXE7_UP}
    {$DEFINE DELPHIXE6_UP}
+   {$DEFINE DELPHI2009_UP}
 {$ENDIF}
 
 {$IFDEF DELPHIXE6}
    {$DEFINE DELPHIXE6_UP}
+   {$DEFINE DELPHI2009_UP}
 {$ENDIF}
 
+{$IFDEF DELPHIXE5}
+  {$DEFINE DELPHI2009_UP}
+{$ENDIF}
 
+{$IFDEF DELPHIXE4}
+  {$DEFINE DELPHI2009_UP}
+{$ENDIF}
 
+{$IFDEF DELPHIXE3}
+  {$DEFINE DELPHI2009_UP}
+{$ENDIF}
 
+{$IFDEF DELPHIXE2}
+  {$DEFINE DELPHI2009_UP}
+{$ENDIF}
+
+{$IFDEF DELPHIXE}
+  {$DEFINE DELPHI2009_UP}
+{$ENDIF}
+
+{$IFDEF DELPHI2010}
+  {$DEFINE DELPHI2009_UP}
+{$ENDIF}
+
+{$IFDEF DELPHI2009}
+  {$DEFINE DELPHI2009_UP}
+{$ENDIF}

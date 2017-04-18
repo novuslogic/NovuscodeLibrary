@@ -23,8 +23,6 @@ Begin
   DecodeTime(Date1, Hour, Min, Sec, MSec);
   DecodeTime(Date2, Hour1, Min1, Sec1, MSec1);
 
-  Result := 0;
-
   Case Period of
       1: Result := (((((Trunc(Date1) - Trunc(Date2))* 86400) - ((Hour1 - Hour)* 3600))) - ((Min1 - Min) * 60)) - (Sec1 - Sec);
 

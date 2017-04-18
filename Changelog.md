@@ -1,7 +1,9 @@
 
-* Fixed NouusTemplate class second token order issue and missing tags
-* Change this file to Markdown 
+18/04/2017
 
+* Public release.
+* Fixed NovusTemplate class second token order issue and missing tags
+* Change this file to Markdown 
 
 28/11/2016
 

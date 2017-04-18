@@ -64,6 +64,12 @@ Type
     /// <summary>
     ///   Set system Windows Environment Variable
     /// </summary>
+    /// <param name="aVariableName">
+    ///   Variable name
+    /// </param>
+    /// <param name="aValue">
+    ///   Value of variable
+    /// </param>
     class function SetSysEnvironmentVariable(const aVariableName: String; aValue: string): boolean;
   end;
 

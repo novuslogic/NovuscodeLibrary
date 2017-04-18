@@ -40,7 +40,7 @@ How to install
 Changelog
 ---------
 
-[Changelog](changelog.md)
+[Changelog](https://github.com/novuslogic/NovuscodeLibrary/blob/master/Changelog.md)
 
 
 Licence

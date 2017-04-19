@@ -3,14 +3,14 @@ unit NovusLog;
 interface
 
 Uses Classes, NovusStringUtils, NovusList, NovusUtilities, SysUtils,
-     NovusBO, NovusWinEventLog;
+  NovusBO, NovusWinEventLog;
 
 Type
   TLogType = (ltFile, ltWinEventType);
 
   TNovusLogDetails = class(TNovusBO)
   private
-    fiLogID:Integer;
+    fiLogID: Integer;
     fdtLogDateTime: tDateTime;
     fsLogDesc: String;
     fsDateTimeMask: String;
@@ -19,21 +19,13 @@ Type
     constructor Create; virtual;
     destructor Destroy; override;
 
-    Property LogID: Integer
-      read fiLogID
-      write fiLogID;
+    Property LogID: Integer read fiLogID write fiLogID;
 
-    property LogDateTime: tdateTime
-      read fdtLogDateTime
-      write fdtLogDateTime;
+    property LogDateTime: tDateTime read fdtLogDateTime write fdtLogDateTime;
 
-    property LogDesc: String
-      read fsLogDesc
-      write fsLogDesc;
+    property LogDesc: String read fsLogDesc write fsLogDesc;
 
-    property DateTimeMask: String
-       read fsDateTimeMask
-       write fsDateTimeMask;
+    property DateTimeMask: String read fsDateTimeMask write fsDateTimeMask;
 
   end;
 
@@ -52,42 +44,36 @@ Type
 
     procedure AddLogDetails(ALogDesc: string; ALogDateTime: tDateTime);
 
-    function WriteLog(AMsg: string; AEventType: TEventType = etNone): string; virtual;
-    function WriteExceptLog:String; virtual;
+    function WriteLog(AMsg: string; AEventType: TEventType = etNone)
+      : string; virtual;
+    function WriteExceptLog: String; virtual;
 
-    Property oLogDetailsList: TNovusList
-      read foLogDetailsList
+    Property oLogDetailsList: TNovusList read foLogDetailsList
       write foLogDetailsList;
 
-    property DateTimeMask: String
-       read fsDateTimeMask
-       write fsDateTimeMask;
+    property DateTimeMask: String read fsDateTimeMask write fsDateTimeMask;
 
-    property oEventLog: tNovusWinEventLog
-      read foEventLog
-      write foEventLog;
+    property oEventLog: tNovusWinEventLog read foEventLog write foEventLog;
 
-    property  LastLogID: Integer
-      read  fiLastLogID
-      write fiLastLogID;
+    property LastLogID: Integer read fiLastLogID write fiLastLogID;
   end;
-
 
   TNovusLogFile = Class(TNovusLog)
   private
   protected
     fboutputConsole: Boolean;
     fcSeparator: char;
-    fiFileSize: integer;
+    fiFileSize: Integer;
     fbIsFileOpen: Boolean;
     fsFilename: string;
-    FFilePonter  : text;
+    FFilePonter: text;
     fsPathName: String;
   public
-    constructor Create(AFilename: String);  virtual;
+    constructor Create(AFilename: String); virtual;
     destructor Destroy; override;
 
-    function WriteLine(ATimeStr, ALogDesc: string; ALogDateTime: tDateTime): String;
+    function WriteLine(ATimeStr, ALogDesc: string;
+      ALogDateTime: tDateTime): String;
     function ReadLine: String;
 
     function OpenLog(AOveride: Boolean = false): Boolean; virtual;
@@ -95,32 +81,21 @@ Type
 
     procedure ReadAll;
 
-    function WriteLog(AMsg: string; AEventType: TEventType = etNone): string; override;
+    function WriteLog(AMsg: string; AEventType: TEventType = etNone)
+      : string; override;
     function WriteExceptLog: String; override;
 
-    property Filename: String
-       read FsFilename
-       write FsFilename;
+    property Filename: String read fsFilename write fsFilename;
 
-    property Separator: char
-      read fcSeparator
-      write fcSeparator;
+    property Separator: char read fcSeparator write fcSeparator;
 
-    property IsFileOpen: Boolean
-       read fbIsFileOpen
-       write fbIsFileOpen;
+    property IsFileOpen: Boolean read fbIsFileOpen write fbIsFileOpen;
 
-    property FileSize: Integer
-       read fiFileSize
-       write fiFileSize;
+    property FileSize: Integer read fiFileSize write fiFileSize;
 
-    property FilePonter  : text
-      read FFilePonter
-      write FFilePonter;
+    property FilePonter: text read FFilePonter write FFilePonter;
 
-    property OutputConsole: Boolean
-      read fbOutputConsole
-      write  fbOutputConsole;
+    property OutputConsole: Boolean read fboutputConsole write fboutputConsole;
   end;
 
 implementation
@@ -157,23 +132,24 @@ end;
 
 function TNovusLog.FormatedNow(const aDate: tDateTime = 0): String;
 var
-  fDate: tDatetime;
+  fDate: tDateTime;
 begin
   fDate := aDate;
-  if aDate = 0 then fDate := Now;
+  if aDate = 0 then
+    fDate := Now;
 
   Result := FormatDateTime(DateTimeMask, fDate)
 end;
 
 procedure TNovusLog.AddLogDetails;
 Var
-  loLogDetails : TNovusLogDetails;
+  loLogDetails: TNovusLogDetails;
 begin
-  Inc(fiLastLogId);
+  Inc(fiLastLogID);
 
   loLogDetails := TNovusLogDetails.Create;
 
-  loLogDetails.LogId := fiLastLogId;
+  loLogDetails.LogID := fiLastLogID;
 
   loLogDetails.LogDateTime := ALogDateTime;
   loLogDetails.LogDesc := ALogDesc;
@@ -183,7 +159,8 @@ begin
   foLogDetailsList.Add(loLogDetails);
 end;
 
-function TNovusLog.WriteLog(AMsg: string; AEventType: TEventType = etNone): String;
+function TNovusLog.WriteLog(AMsg: string;
+  AEventType: TEventType = etNone): String;
 Var
   ldDataTime: tDateTime;
 begin
@@ -192,11 +169,11 @@ begin
   AddLogDetails(AMsg, ldDataTime);
 
   If AEventType = etNone then
-    begin
-      Self.oEventLog.EventType := AEventType;
+  begin
+    Self.oEventLog.EventType := AEventType;
 
-      Self.oEventLog.LogEvent(AMsg);
-    end;
+    Self.oEventLog.LogEvent(AMsg);
+  end;
 end;
 
 function TNovusLog.WriteExceptLog: String;
@@ -208,12 +185,12 @@ constructor TNovusLogFile.Create;
 begin
   inherited Create(ltFile);
 
-  fbOutputConsole := true;
+  fboutputConsole := true;
 
-  FsFilename := AFilename;
-  fbIsFileOpen := False;
+  fsFilename := AFilename;
+  fbIsFileOpen := false;
 
-  FsPathname := '';
+  fsPathName := '';
 
   fiFileSize := 0;
 
@@ -229,53 +206,54 @@ function TNovusLogFile.OpenLog(AOveride: Boolean = false): Boolean;
 begin
   inherited;
 
-  Result := False;
+  Result := false;
 
-  If fbIsFileOpen then Exit;
+  If fbIsFileOpen then
+    Exit;
 
-  if Not DirectoryExists(TNovusUtilities.JustPathname(Filename)) then Exit;
-
-
+  if Not DirectoryExists(TNovusUtilities.JustPathname(Filename)) then
+    Exit;
 
   if FileExists(Filename) then
-    begin
-      If (FileSize > 0) and (tNovusUtilities.FindFileSize(Filename) > FileSize) then
-        RenameFile(Filename, TNovusUtilities.JustPathname(Filename) + tNovusUtilities.JustFilename(Filename) + '.bak');
-     end;
-
-
+  begin
+    If (FileSize > 0) and (TNovusUtilities.FindFileSize(Filename) > FileSize)
+    then
+      RenameFile(Filename, TNovusUtilities.JustPathname(Filename) +
+        TNovusUtilities.JustFilename(Filename) + '.bak');
+  end;
 
   AssignFile(FFilePonter, Filename);
-  if AOveride = False then
-    begin
-      if FileExists(Filename) then
-         Append(FFilePonter)
-      else Rewrite(FFilePonter);
-    end
- else
+  if AOveride = false then
   begin
-     Rewrite(FFilePonter);
-
+    if FileExists(Filename) then
+      Append(FFilePonter)
+    else
+      Rewrite(FFilePonter);
+  end
+  else
+  begin
+    Rewrite(FFilePonter);
 
   end;
 
-  fbIsFileOpen:= True;
+  fbIsFileOpen := true;
 
   Result := fbIsFileOpen;
 
   WriteLog('Logging started');
 end;
 
-function TNovusLogFile.WriteLine(ATimeStr, ALogDesc: string; ALogDateTime: tDateTime): String;
+function TNovusLogFile.WriteLine(ATimeStr, ALogDesc: string;
+  ALogDateTime: tDateTime): String;
 Var
   lsLine: String;
 begin
   If Separator = #0 then
-    lsLine := ATimeStr  + ALogDesc
+    lsLine := ATimeStr + ALogDesc
   else
-    lsLine := ATimeStr  + Separator + ALogDesc;
+    lsLine := ATimeStr + Separator + ALogDesc;
 
-  Writeln(FFilePonter, lsline);
+  Writeln(FFilePonter, lsLine);
 
   Result := lsLine;
 end;
@@ -289,7 +267,7 @@ procedure TNovusLogFile.CloseLog;
 begin
   Flush(FFilePonter);
 
-  fbIsFileOpen := False;
+  fbIsFileOpen := false;
 
   WriteLog('Logging finished');
 
@@ -300,20 +278,23 @@ function TNovusLogFile.WriteExceptLog: String;
 begin
   Result := inherited WriteExceptLog;
 
-  WriteLine(FormatDateTime(fsDateTimeMask, Now), Result, now);
-//  Flush(FFilePonter);
+  WriteLine(FormatDateTime(fsDateTimeMask, Now), Result, Now);
+  // Flush(FFilePonter);
 end;
 
-function TNovusLogFile.WriteLog(AMsg: string; AEventType: TEventType = etNone): string;
+function TNovusLogFile.WriteLog(AMsg: string;
+  AEventType: TEventType = etNone): string;
 begin
-  if AMsg = '' then Exit;
+  if AMsg = '' then
+    Exit;
 
-  if OutputConsole then WriteLn(AMsg);
-   
+  if OutputConsole then
+    Writeln(AMsg);
+
   inherited WriteLog(AMsg, AEventType);
 
-  Result := WriteLine(FormatedNow, AMsg, now);
-  //Flush(FFilePonter);
+  Result := WriteLine(FormatedNow, AMsg, Now);
+  // Flush(FFilePonter);
 end;
 
 procedure TNovusLogFile.ReadAll;
@@ -323,30 +304,30 @@ Var
   ldLogDateTime: tDateTime;
   lsLogDesc: String;
 begin
-  If Not FileExists(Filename) then Exit;
+  If Not FileExists(Filename) then
+    Exit;
 
   AssignFile(FFilePonter, Filename);
 
   Reset(FFilePonter);
 
   while not System.Eof(FilePonter) do
+  begin
+    lsLine := ReadLine;
+
+    If Trim(lsLine) <> '' then
     begin
-      lsLine := ReadLine;
+      liPos := 1;
+      ldLogDateTime := TNovusStringUtils.Str2DateTime
+        (TNovusStringUtils.GetStrTokenA(lsLine, '-', liPos));
+      lsLogDesc := TNovusStringUtils.GetStrTokenA(lsLine, '-', liPos);
 
-      If Trim(lsLine) <> '' then
-        begin
-          liPos := 1;
-          ldLogDateTime := TNovusStringUtils.Str2DateTime(tNovusStringUtils.GetStrTokenA(lsLine, '-', liPos));
-          lsLogDesc := tNovusStringUtils.GetStrTokenA(lsLine, '-', liPos);
-
-          AddLogDetails(lsLogDesc, ldLogDateTime);
-        end;
-
-
+      AddLogDetails(lsLogDesc, ldLogDateTime);
     end;
 
-  CloseFile(FFilePonter)
+  end;
 
+  CloseFile(FFilePonter)
 end;
 
 end.

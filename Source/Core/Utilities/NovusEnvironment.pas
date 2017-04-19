@@ -22,7 +22,8 @@ Var
 begin
   result := aInput;
 
-  if aInput = '' then Exit;
+  if aInput = '' then
+    Exit;
 
   Try
     loTemplate := tNovusTemplate.Create;
@@ -35,16 +36,16 @@ begin
 
     loTemplate.ParseTemplate;
 
-    For I := 0 to loTemplate.TemplateTags.Count -1 do
-      begin
-        FTemplateTag := TTemplateTag(loTemplate.TemplateTags.items[i]);
+    For I := 0 to loTemplate.TemplateTags.Count - 1 do
+    begin
+      FTemplateTag := TTemplateTag(loTemplate.TemplateTags.items[I]);
 
-        FTemplateTag.TagValue := GetEnvironmentVariable(FTemplateTag.TagName);
-      end;
+      FTemplateTag.TagValue := GetEnvironmentVariable(FTemplateTag.TagName);
+    end;
 
     loTemplate.InsertAllTagValues;
 
-    Result := Trim(loTemplate.OutputDoc.Text);
+    result := Trim(loTemplate.OutputDoc.Text);
 
   Finally
     loTemplate.Free;

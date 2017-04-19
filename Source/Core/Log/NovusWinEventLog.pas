@@ -5,7 +5,8 @@ interface
 Uses Windows, Registry, SysUtils, NovusInfrastructre, VCL.Forms;
 
 type
-  TEventType = (etError,etWarning,etInformation,etAuditSuccess,etAuditFailure, etNone);
+  TEventType = (etError, etWarning, etInformation, etAuditSuccess,
+    etAuditFailure, etNone);
 
   TNovusWinEventLog = class(tNovusInfrastructre)
   private
@@ -23,30 +24,23 @@ type
     procedure SetEventCategory(Value: Word);
 
   public
-    constructor Create; 
+    constructor Create;
     destructor Destroy; override;
 
     procedure LogEvent(const Line: String);
 
-    property ApplicationName: String
-      read FsApplicationName
+    property ApplicationName: String read FsApplicationName
       write SetApplicationName;
 
-    property IncludeUserName: Boolean
-      read FbIncludeUserName
+    property IncludeUserName: Boolean read FbIncludeUserName
       write SetIncludeUserName;
 
-    property EventType: TEventType
-      read FEventType
-      write FEventType default etInformation;
+    property EventType: TEventType read FEventType write FEventType
+      default etInformation;
 
-    property EventID: DWord
-      read FwEventID
-      write SetEventID;
+    property EventID: DWord read FwEventID write SetEventID;
 
-    property EventCategory: Word
-      read FwEventCategory
-      write SetEventCategory;
+    property EventCategory: Word read FwEventCategory write SetEventCategory;
   end;
 
 implementation
@@ -64,7 +58,7 @@ begin
   FbIncludeUserName := Value;
 end;
 
-procedure TNovusWinEventLog.SetEventId(Value: DWord);
+procedure TNovusWinEventLog.SetEventID(Value: DWord);
 begin
   FwEventID := Abs(Value);
 end;
@@ -76,69 +70,76 @@ end;
 
 procedure TNovusWinEventLog.LogEvent(const Line: String);
 var
-  LogHandle:	THandle;
+  LogHandle: THandle;
   OK: Boolean;
   eType: Word;
   eMsg, aName: PChar;
   Reg: TRegistry;
-  nSize: Dword;
-  VersionInfo : TOSVersionInfo;
+  nSize: DWord;
+  VersionInfo: TOSVersionInfo;
 begin
-  VersionInfo.dwOSVersionInfoSize := SizeOf( TOSVersionInfo );
-  if Windows.GetVersionEx( VersionInfo ) then
-  if VersionInfo.dwPlatformId < VER_PLATFORM_WIN32_NT then Exit;
+  VersionInfo.dwOSVersionInfoSize := SizeOf(TOSVersionInfo);
+  if Windows.GetVersionEx(VersionInfo) then
+    if VersionInfo.dwPlatformId < VER_PLATFORM_WIN32_NT then
+      Exit;
 
-  LogHandle:= OpenEventLog( NIL, PChar(ApplicationName) );
-  if Loghandle<>0 then
+  LogHandle := OpenEventLog(NIL, PChar(ApplicationName));
+  if LogHandle <> 0 then
+  begin
+    eType := 0;
+    case EventType of
+      etError:
+        eType := 1;
+      etWarning:
+        eType := 2;
+      etInformation:
+        eType := 4;
+      etAuditSuccess:
+        eType := 8;
+      etAuditFailure:
+        eType := 16;
+    end;
+
+    FsUserName := #13#10;
+    If IncludeUserName then
     begin
-       eType := 0;
-       case EventType of
-         etError:        eType := 1;
-         etWarning:      eType := 2;
-         etInformation:  eType := 4;
-         etAuditSuccess: eType := 8;
-         etAuditFailure: eType := 16;
-       end;
-
-       FsUsername := #13#10;
-       If IncludeUserName then
-         begin
-           nSize := 20 ; // Max UserName
-           aName := stralloc ( nSize+1 );
-           OK := GetUserName( aName, nSize );
- 	   if not OK then strcopy( aName, 'N/A' );
-	   FsUserName := FsUserName + 'User: ' + aName + #13#10;
- 	   strDispose( aName );
-	 end;
+      nSize := 20; // Max UserName
+      aName := stralloc(nSize + 1);
+      OK := GetUserName(aName, nSize);
+      if not OK then
+        strcopy(aName, 'N/A');
+      FsUserName := FsUserName + 'User: ' + aName + #13#10;
+      strDispose(aName);
+    end;
 
     If IncludeUserName then
-       eMsg := Pchar(FsUserName + Line)
+      eMsg := PChar(FsUserName + Line)
     else
-       eMsg := Pchar(Line);
+      eMsg := PChar(Line);
 
-       ReportEvent(LogHandle, eType, EventCategory, EventID, NIL, 1, 0, @eMsg, NIL);
-       CloseEventLog(LogHandle);
-    end;
+    ReportEvent(LogHandle, eType, EventCategory, EventID, NIL, 1, 0,
+      @eMsg, NIL);
+    CloseEventLog(LogHandle);
+  end;
 end;
 
-constructor TNovusWinEventLog.create;
+constructor TNovusWinEventLog.Create;
 begin
-  inherited create;
+  inherited Create;
 
   ApplicationName := 'TNovusWinEventLog';
   If Assigned(Application) then
     ApplicationName := Application.Title;
-  
-  EventCategory       := 0;
-  EventID             := 0;
-  EventType           := etInformation;
-  IncludeUserName     := True;
+
+  EventCategory := 0;
+  EventID := 0;
+  EventType := etInformation;
+  IncludeUserName := True;
 end;
 
-destructor TNovusWinEventLog.destroy;
+destructor TNovusWinEventLog.Destroy;
 begin
-  inherited destroy;
+  inherited Destroy;
 end;
-
 
 end.

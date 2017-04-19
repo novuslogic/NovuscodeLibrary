@@ -3,10 +3,11 @@ unit NovusTemplate;
 interface
 
 Uses NovusParser, Novuslist, Classes, SysUtils, NovusStringUtils,
-     NovusStringParser;
+  NovusStringParser;
 
 type
-  TOnGetTagValueEvent = procedure (Sender : TObject; Var ATagValue: String) of object;
+  TOnGetTagValueEvent = procedure(Sender: TObject; Var ATagValue: String)
+    of object;
 
   TTemplateTags = Class(tNovuslist);
 
@@ -18,7 +19,7 @@ type
     FValues: tStringList;
     FsTagName: string;
     fsTagValue: String;
-    FOnGetTagValueEvent  : TOnGetTagValueEvent;
+    FOnGetTagValueEvent: TOnGetTagValueEvent;
     function GetTagValue: String;
     procedure SetTagName(const Value: string);
     procedure SetTagValue(const Value: string);
@@ -29,66 +30,49 @@ type
 
     procedure Assign(Source: TPersistent); override;
   published
-    property TagName: string
-       read FsTagName
-       write SetTagName;
+    property TagName: string read FsTagName write SetTagName;
 
-    property TagValue: string
-       read GetTagValue
-       write SetTagValue;
+    property TagValue: string read GetTagValue write SetTagValue;
 
-    property Values: tStringList
-       read FValues
-       write FValues;
+    property Values: tStringList read FValues write FValues;
 
-    property RawTag: String
-      read fsRawTag
-      write fsRawTag;
+    property RawTag: String read FsRawTag write FsRawTag;
 
-    property RawTagEx: String
-      read fsRawTagEx
-      write fsRawTagEx;
+    property RawTagEx: String read FsRawTagEx write FsRawTagEx;
 
-    property OnGetTagValueEvent  : TOnGetTagValueEvent
-      read FOnGetTagValueEvent
+    property OnGetTagValueEvent: TOnGetTagValueEvent read FOnGetTagValueEvent
       write FOnGetTagValueEvent;
 
-    property TagIndex: INteger
-      read fiTagIndex
-      write fiTagIndex;
+    property TagIndex: INteger read fiTagIndex write fiTagIndex;
   end;
 
   TTemplateTag = class(TTag)
   private
-    FiSourceLineNo: Integer;
-    FiSourcePos: Integer;
+    FiSourceLineNo: INteger;
+    FiSourcePos: INteger;
   protected
   public
-    property SourceLineNo: Integer
-       read FiSourceLineNo
-       write FiSourceLineNo;
+    property SourceLineNo: INteger read FiSourceLineNo write FiSourceLineNo;
 
-    property SourcePos: Integer
-      read fiSourcePos
-      write fiSourcePos;
+    property SourcePos: INteger read FiSourcePos write FiSourcePos;
   end;
 
   TTagClass = class of TTag;
 
   TTags = class(TCollection)
   private
-    fiIndexPos: Integer;
+    fiIndexPos: INteger;
     FOwner: TComponent;
-    function GetItem(Index: Integer): TTag;
-    procedure SetItem(Index: Integer; Value: TTag);
+    function GetItem(Index: INteger): TTag;
+    procedure SetItem(Index: INteger; Value: TTag);
   protected
     function GetOwner: TPersistent; override;
   public
     constructor Create(AOwner: TComponent);
     function Add: TTag;
-    function AddItem(Item: TTag; Index: Integer): TTag;
-    function Insert(Index: Integer): TTag;
-    property Items[Index: Integer]: TTag read GetItem write SetItem; default;
+    function AddItem(Item: TTag; Index: INteger): TTag;
+    function Insert(Index: INteger): TTag;
+    property Items[Index: INteger]: TTag read GetItem write SetItem; default;
 
     function CreateTag: TTag;
     function GetTagClass: TTagClass;
@@ -101,10 +85,9 @@ type
     FEndToken: Char;
     FSecondToken: Char;
 
-
     FTemplateTags: TTemplateTags;
     FTemplateDoc: tStringList;
-    FOutputDoc: tStringlist;
+    FOutputDoc: tStringList;
     FParserStream: TMemoryStream;
   public
     constructor Create;
@@ -117,66 +100,53 @@ type
     procedure InsertAllTagValues;
 
     function InsertOutputDoc(ATemplateTag: TTemplateTag): Boolean;
-    function TagValuesAllExists:boolean;
+    function TagValuesAllExists: Boolean;
 
-    function FindTagNameIndexOf(ATagName: String; AIndex: Integer = 0): Integer;
-    function FindNextTagNameIndexOf(ATagName: String; AIndex: Integer): Integer;
+    function FindTagNameIndexOf(ATagName: String; AIndex: INteger = 0): INteger;
+    function FindNextTagNameIndexOf(ATagName: String; AIndex: INteger): INteger;
 
     procedure CreateTemplateTag;
-    function AddTemplateTag(ATemplateTag: tTemplateTag): Integer;
+    function AddTemplateTag(ATemplateTag: TTemplateTag): INteger;
 
     procedure InsertTemplateTag(ATemplateTag: TTemplateTag);
-    procedure InsertLineNo(ALineNo: Integer; AValue: String);
+    procedure InsertLineNo(ALineNo: INteger; AValue: String);
 
     procedure ParseTagValues;
     procedure ParseTags;
 
-    property TemplateTags: TTemplateTags
-       read FTemplateTags
-       write FTemplateTags;
+    property TemplateTags: TTemplateTags read FTemplateTags write FTemplateTags;
 
-    property TemplateDoc: tStringList
-      read FTemplateDoc
-      write FTemplateDoc;
+    property TemplateDoc: tStringList read FTemplateDoc write FTemplateDoc;
 
-    Property OutputDoc: tStringlist
-      read FOutputDoc
-      write FOutputDoc;
+    Property OutputDoc: tStringList read FOutputDoc write FOutputDoc;
 
-    property StartToken: Char
-       read FStartToken
-       write FStartToken;
+    property StartToken: Char read FStartToken write FStartToken;
 
-    property EndToken: Char
-       read FEndToken
-       write FEndToken;
+    property EndToken: Char read FEndToken write FEndToken;
 
-    property SecondToken: char
-      read FSecondToken
-      write FSecondToken;
+    property SecondToken: Char read FSecondToken write FSecondToken;
   end;
-
 
 implementation
 
 // novustemplate
 
-constructor TNovusTemplate.create;
+constructor TNovusTemplate.Create;
 begin
-  inherited create;
+  inherited Create;
 
   FStartToken := '{';
   FEndToken := '}';
 
   FTemplateTags := TTemplateTags.Create(TTemplateTag);
-  FTemplateDoc :=  tStringList.Create;
-  FOutputDoc := tStringlist.Create;
+  FTemplateDoc := tStringList.Create;
+  FOutputDoc := tStringList.Create;
   FParserStream := TMemoryStream.Create;
 end;
 
-destructor TNovusTemplate.destroy;
+destructor TNovusTemplate.Destroy;
 begin
-  inherited destroy;
+  inherited Destroy;
 
   FParserStream.Free;
   FOutputDoc.Free;
@@ -184,111 +154,43 @@ begin
   FTemplateTags.Free;
 end;
 
-function TNovusTemplate.TagValuesAllExists:boolean;
+function TNovusTemplate.TagValuesAllExists: Boolean;
 Var
-  I: integer;
-  FTemplateTag: tTemplateTag;
-  Count: Integer;
+  I: INteger;
+  FTemplateTag: TTemplateTag;
+  Count: INteger;
 begin
   Result := False;
 
   Count := 0;
   for I := 0 to TemplateTags.Count - 1 do
-    begin
-      FTemplateTag := TTemplateTag(TemplateTags.items[i]);
+  begin
+    FTemplateTag := TTemplateTag(TemplateTags.Items[I]);
 
-      if FTemplateTag.TagValue <> '' then Inc(Count, 1);
-    end;
+    if FTemplateTag.TagValue <> '' then
+      Inc(Count, 1);
+  end;
 
-  if (Count = TemplateTags.Count) then Result := True;
+  if (Count = TemplateTags.Count) then
+    Result := True;
 end;
-
 
 procedure TNovusTemplate.InsertAllTagValues;
 Var
-  I: integer;
-  FTemplateTag : ttemplateTag;
+  I: INteger;
+  FTemplateTag: TTemplateTag;
 begin
-  for I := 0 to TemplateTags.Count -1 do
-    begin
-      FTemplateTag := ttemplateTag(TemplateTags.items[i]);
-
-      if I <= TemplateTags.Count - 2  then
-        InsertOutputDoc(FTemplateTag)
-      else
-        InsertOutputDoc(FTemplateTag);
-
-
-    end;
-end;
-
-(*
-procedure TNovusTemplate.ParseLineNo(ALineNo: Integer);
-begin
-  Reset;
-
-  SourceLineNo := ALineNo;
-
-  Token := toBOF;
-
-  while True do
-    begin
-      while not (Token in [toEOF,FStartToken, FSecondToken]) do
-          SkipToken(FStartToken, FSecondToken);
-
-      if Token = toEOF then
-        Break;
-
-      AddTemplateTag;
-
-      SkipToken(FStartToken, FSecondToken);
-
-      if SourceLineNo > ALineNo  then Break;
-    end;
-end;
-*)
-(*
-procedure TNovusTemplate.ReParseTemplate(ALineNo: Integer);
-Var
-  LTemplateTags: tNovusList;
-  LTemplateTag: tTemplateTag;
-  I: Integer;
-begin
-  LTemplateTags := TTemplateTags.Create(TTemplateTag);
-
   for I := 0 to TemplateTags.Count - 1 do
-    begin
-      LTemplateTag := tTemplateTag(TemplateTags.Items[i]);
+  begin
+    FTemplateTag := TTemplateTag(TemplateTags.Items[I]);
 
-      LTemplateTags.Add(LTemplateTag);
-    end;
+    if I <= TemplateTags.Count - 2 then
+      InsertOutputDoc(FTemplateTag)
+    else
+      InsertOutputDoc(FTemplateTag);
 
-  TemplateTags.Clear;
-
-  Reset;
-
-  while True do
-    begin
-      while not (Token in [toEOF,FStartToken, FSecondToken]) do
-          SkipToken(FStartToken, FSecondToken);
-
-      if Token = toEOF then
-        Break;
-
-      AddTemplateTag;
-
-      SkipToken(FStartToken, FSecondToken);
-
-    end;
-
-  FOutputDoc.Clear;
-
-  FOutputDoc.Assign(FTemplateDoc);
-
-  LTemplateTags.Free;
+  end;
 end;
-*)
-
 
 procedure TNovusTemplate.ParseTemplate;
 begin
@@ -299,21 +201,20 @@ begin
   Reset;
 
   while True do
-    begin
-      while not (Token in [toEOF,FStartToken, FSecondToken]) do
-        SkipToken(FStartToken, FSecondToken);
-
-      if Token = toEOF then
-        Break;
-
-      if (FSecondToken=#0) then
-        CreateTemplateTag
-      else
-      if GetLastToken(-1) = FStartToken then
-        CreateTemplateTag;
-
+  begin
+    while not(Token in [toEOF, FStartToken, FSecondToken]) do
       SkipToken(FStartToken, FSecondToken);
-    end;
+
+    if Token = toEOF then
+      Break;
+
+    if (FSecondToken = #0) then
+      CreateTemplateTag
+    else if GetLastToken(-1) = FStartToken then
+      CreateTemplateTag;
+
+    SkipToken(FStartToken, FSecondToken);
+  end;
 
   FOutputDoc.Assign(FTemplateDoc);
 end;
@@ -329,97 +230,97 @@ begin
   LoadFromStream(FParserStream);
 end;
 
-
 function TNovusTemplate.InsertOutputDoc(ATemplateTag: TTemplateTag): Boolean;
 Var
   liDiffPos: INteger;
   FsInput: String;
-  I, LiIndex: Integer;
+  I, LiIndex: INteger;
   FTemplateTag: TTemplateTag;
   FNextTemplateTag: TTemplateTag;
-  lsTagName:String;
+  lsTagName: String;
 begin
   Result := False;
 
-  If Not Assigned(ATemplateTag) then Exit;
-
+  If Not Assigned(ATemplateTag) then
+    Exit;
 
   FTemplateTag := ATemplateTag;
 
   FsInput := FOutputDoc.Strings[FTemplateTag.SourceLineNo - 1];
 
   if FSecondToken <> #0 then
-    lsTagName := FStartToken + FSecondToken + FTemplateTag.RawTag + FSecondToken + FEndToken
+    lsTagName := FStartToken + FSecondToken + FTemplateTag.RawTag + FSecondToken
+      + FEndToken
   else
     lsTagName := FStartToken + FTemplateTag.RawTag + FEndToken;
 
   if FTemplateTag.TagValue <> '' then
-     FOutputDoc.Strings[FTemplateTag.SourceLineNo - 1] := TNovusStringUtils.ReplaceStrPos(FsInput, lsTagName, FTemplateTag.TagValue, FTemplateTag.SourcePos -1, true)
+    FOutputDoc.Strings[FTemplateTag.SourceLineNo - 1] :=
+      TNovusStringUtils.ReplaceStrPos(FsInput, lsTagName, FTemplateTag.TagValue,
+      FTemplateTag.SourcePos - 1, True)
   else
-    begin
-      System.Delete(FsInput, (FTemplateTag.SourcePos), Length(lsTagName));
+  begin
+    System.Delete(FsInput, (FTemplateTag.SourcePos), Length(lsTagName));
 
-      FOutputDoc.Strings[FTemplateTag.SourceLineNo - 1] := FsInput;
-    end;
-
+    FOutputDoc.Strings[FTemplateTag.SourceLineNo - 1] := FsInput;
+  end;
 
   if Length(FTemplateTag.TagValue) > Length(lsTagName) then
+  begin
+    liDiffPos := (Length(FTemplateTag.TagValue) - Length(lsTagName));
+
+    if Length(FTemplateTag.TagValue) <=
+      Length(FOutputDoc.Strings[FTemplateTag.SourceLineNo - 1]) then
     begin
-      liDiffPos := (Length(FTemplateTag.TagValue) - Length(lsTagName));
+      for I := FTemplateTag.TagIndex + 1 to TemplateTags.Count - 1 do
+      begin
+        FNextTemplateTag := TTemplateTag(TemplateTags.Items[I]);
 
-      if Length(FTemplateTag.TagValue) <= Length(FOutputDoc.Strings[FTemplateTag.SourceLineNo - 1]) then
-        begin
-          for I := FTemplateTag.TagIndex + 1 to TemplateTags.Count -1 do
-            begin
-              FNextTemplateTag := tTemplateTag(TemplateTags.Items[i]);
-
-              if FTemplateTag.SourceLineNo = FNextTemplateTag.SourceLineNo then
-                FNextTemplateTag.SourcePos := FNextTemplateTag.SourcePos + liDiffPos;
-            end;
-        end;
-    end
-  else
-  if Length(FTemplateTag.TagValue) < Length(lsTagName) then
-    begin
-      liDiffPos := (Length(lsTagName) - Length(FTemplateTag.TagValue));
-
-      for I := FTemplateTag.TagIndex + 1 to TemplateTags.Count -1 do
-        begin
-          FNextTemplateTag := tTemplateTag(TemplateTags.Items[i]);
-
-          if FTemplateTag.SourceLineNo = FNextTemplateTag.SourceLineNo then
-            FNextTemplateTag.SourcePos := FNextTemplateTag.SourcePos - liDiffPos;
-        end;
+        if FTemplateTag.SourceLineNo = FNextTemplateTag.SourceLineNo then
+          FNextTemplateTag.SourcePos := FNextTemplateTag.SourcePos + liDiffPos;
+      end;
     end;
+  end
+  else if Length(FTemplateTag.TagValue) < Length(lsTagName) then
+  begin
+    liDiffPos := (Length(lsTagName) - Length(FTemplateTag.TagValue));
+
+    for I := FTemplateTag.TagIndex + 1 to TemplateTags.Count - 1 do
+    begin
+      FNextTemplateTag := TTemplateTag(TemplateTags.Items[I]);
+
+      if FTemplateTag.SourceLineNo = FNextTemplateTag.SourceLineNo then
+        FNextTemplateTag.SourcePos := FNextTemplateTag.SourcePos - liDiffPos;
+    end;
+  end;
 
 end;
 
 procedure TNovusTemplate.InsertTemplateTag(ATemplateTag: TTemplateTag);
 begin
-  TemplateTags.Insert(aTemplateTag, aTemplateTag.TagIndex);
+  TemplateTags.Insert(ATemplateTag, ATemplateTag.TagIndex);
 end;
 
-procedure TNovusTemplate.InsertLineNo(ALineNo: Integer; AValue: String);
+procedure TNovusTemplate.InsertLineNo(ALineNo: INteger; AValue: String);
 Var
   LTemplateTag: TTemplateTag;
-  I: Integer;
-  lsRawTag : String;
+  I: INteger;
+  lsRawTag: String;
 begin
   FTemplateDoc.Insert(ALineNo, AValue);
   LoadParserStream;
 
-  FoutputDoc.Insert(ALineNo, AValue);
+  FOutputDoc.Insert(ALineNo, AValue);
 
   for I := 0 to FTemplateTags.Count - 1 do
-    begin
-      LTemplateTag := tTemplateTag(FTemplateTags.Items[i]);
+  begin
+    LTemplateTag := TTemplateTag(FTemplateTags.Items[I]);
 
-      if LTemplateTag.SourceLineNo > ALineNo then
-        LTemplateTag.SourceLineNo := LTemplateTag.SourceLineNo + 1;
-    end;
+    if LTemplateTag.SourceLineNo > ALineNo then
+      LTemplateTag.SourceLineNo := LTemplateTag.SourceLineNo + 1;
+  end;
 
 end;
-
 
 procedure TNovusTemplate.CreateTemplateTag;
 var
@@ -441,9 +342,10 @@ begin
   FTemplateTag.RawTag := FTemplateTag.TagName;
 
   if FSecondToken = #0 then
-    FTemplateTag.RawTagEx :=  FStartToken + FTemplateTag.TagName + FEndToken
+    FTemplateTag.RawTagEx := FStartToken + FTemplateTag.TagName + FEndToken
   else
-    FTemplateTag.RawTagEx :=  FStartToken + FSecondToken + FTemplateTag.TagName + FSecondToken + FEndToken;
+    FTemplateTag.RawTagEx := FStartToken + FSecondToken + FTemplateTag.TagName +
+      FSecondToken + FEndToken;
 
   AddTemplateTag(FTemplateTag);
 end;
@@ -459,65 +361,67 @@ end;
 
 procedure TNovusTemplate.ParseTagValues;
 Var
-  I, X: Integer;
+  I, X: INteger;
   FTemplateTag: TTemplateTag;
-  fsTagName: String;
+  FsTagName: String;
   FStrParser: tNovusStringParser;
 begin
-  for I := 0 to TemplateTags.Count -1 do
-    begin
-      FTemplateTag := TTemplateTag(TemplateTags.items[i]);
+  for I := 0 to TemplateTags.Count - 1 do
+  begin
+    FTemplateTag := TTemplateTag(TemplateTags.Items[I]);
 
-      FStrParser := tNovusStringParser.Create(FTemplateTag.RawTag);
+    FStrParser := tNovusStringParser.Create(FTemplateTag.RawTag);
 
-      FTemplateTag.TagName := FStrParser.Items[0];
+    FTemplateTag.TagName := FStrParser.Items[0];
 
-      For X := 1 to FStrParser.WordCount -1 do
-        FTemplateTag.Values.Add(FStrParser.Items[x]);
+    For X := 1 to FStrParser.WordCount - 1 do
+      FTemplateTag.Values.Add(FStrParser.Items[X]);
 
-      FStrParser.Free;
-    end;
+    FStrParser.Free;
+  end;
 end;
-
 
 procedure TNovusTemplate.ParseTags;
 Var
   FTemplateTag: TTemplateTag;
-  I: Integer;
-  fsInput: String;
+  I: INteger;
+  FsInput: String;
 begin
-  For I := 0 to TemplateTags.Count -1 do
-    begin
-      FTemplateTag := TTemplateTag(TemplateTags.items[i]);
+  For I := 0 to TemplateTags.Count - 1 do
+  begin
+    FTemplateTag := TTemplateTag(TemplateTags.Items[I]);
 
-      FsInput := FOutputDoc.Strings[FTemplateTag.SourceLineNo - 1];
+    FsInput := FOutputDoc.Strings[FTemplateTag.SourceLineNo - 1];
 
-      FOutputDoc.Strings[FTemplateTag.SourceLineNo - 1] := TNovusStringUtils.ReplaceStrPos(FsInput, '{' + FTemplateTag.TagName + '}', FTemplateTag.TagValue, FTemplateTag.SourcePos -1);
-    end;
+    FOutputDoc.Strings[FTemplateTag.SourceLineNo - 1] :=
+      TNovusStringUtils.ReplaceStrPos(FsInput, '{' + FTemplateTag.TagName + '}',
+      FTemplateTag.TagValue, FTemplateTag.SourcePos - 1);
+  end;
 end;
 
-
-function TNovusTemplate.FindNextTagNameIndexOf(ATagName: String; AIndex: Integer): Integer;
+function TNovusTemplate.FindNextTagNameIndexOf(ATagName: String;
+  AIndex: INteger): INteger;
 begin
   Result := FindTagNameIndexOf(ATagName, AIndex);
 end;
 
-function TNovusTemplate.FindTagNameIndexOf(ATagName: String; AIndex: Integer = 0): Integer;
+function TNovusTemplate.FindTagNameIndexOf(ATagName: String;
+  AIndex: INteger = 0): INteger;
 Var
-  I: integer;
+  I: INteger;
 begin
   Result := -1;
 
-  for I := AIndex to TemplateTags.Count -1 do
+  for I := AIndex to TemplateTags.Count - 1 do
+  begin
+    if Trim(uppercase(TTemplateTag(TemplateTags.Items[I]).TagName))
+      = Trim(uppercase(ATagName)) then
     begin
-      if Trim(uppercase(TTemplateTag(TemplateTags.items[i]).TagName)) = Trim(Uppercase(ATagName)) then
-        begin
-          Result := i;
+      Result := I;
 
-          break;
-        end;
+      Break;
     end;
-
+  end;
 
 end;
 
@@ -542,9 +446,9 @@ end;
 
 procedure TTag.SetTagValue(const Value: string);
 begin
-  if FsTagValue <> Value then
+  if fsTagValue <> Value then
   begin
-    FsTagValue := Value;
+    fsTagValue := Value;
     Changed(False);
   end;
 end;
@@ -553,15 +457,15 @@ constructor TTag.Create(Collection: TCollection);
 begin
   inherited Create(Collection);
 
-  fValues := tStringList.Create;
+  FValues := tStringList.Create;
 
-  fsTagName := '';
+  FsTagName := '';
   fsTagValue := '';
 end;
 
 destructor TTag.Destroy;
 begin
-  fValues.Free;
+  FValues.Free;
 
   inherited;
 end;
@@ -574,7 +478,7 @@ begin
     TagValue := TTag(Source).TagValue;
   end
   else
-  inherited Assign(Source);
+    inherited Assign(Source);
 end;
 
 // TTags
@@ -587,12 +491,12 @@ begin
 
 end;
 
-function TTags.GetItem(Index: Integer): TTag;
+function TTags.GetItem(Index: INteger): TTag;
 begin
   Result := TTag(inherited GetItem(Index));
 end;
 
-procedure TTags.SetItem(Index: Integer; Value: TTag);
+procedure TTags.SetItem(Index: INteger; Value: TTag);
 begin
   inherited SetItem(Index, Value);
 end;
@@ -602,7 +506,7 @@ begin
   Result := TTag(inherited Add);
 end;
 
-function TTags.AddItem(Item: TTag; Index: Integer): TTag;
+function TTags.AddItem(Item: TTag; Index: INteger): TTag;
 begin
   if Item = nil then
     Result := CreateTag
@@ -617,7 +521,7 @@ begin
   end;
 end;
 
-function TTags.Insert(Index: Integer): TTag;
+function TTags.Insert(Index: INteger): TTag;
 begin
   Result := AddItem(nil, Index);
 end;
@@ -639,14 +543,4 @@ begin
   Result := FOwner;
 end;
 
-
-
-
-
-
-
 end.
-
-
-
-

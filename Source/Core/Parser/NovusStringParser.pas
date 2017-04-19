@@ -3,209 +3,195 @@ unit NovusStringParser;
 interface
 
 Uses NovusUtilities, NovusStringUtils, NovusParser, Classes,
-    SysUtils, StrUtils;
-
+  SysUtils, StrUtils;
 
 type
-   tNovusStringParser = Class(tNovusParser)
-   private
-     FItems: TStringList;
-     stText         : String;
-     stWordCount    : Integer;
-     stFindString   : String;
-     stFindPosition : Integer;
+  tNovusStringParser = Class(tNovusParser)
+  private
+    FItems: TStringList;
+    stText: String;
+    stWordCount: Integer;
+    stFindString: String;
+    stFindPosition: Integer;
 
-     procedure GetWordCount;
-     procedure SetText(const Value: String);
+    procedure GetWordCount;
+    procedure SetText(const Value: String);
 
+  Public
 
-   Public
+    constructor Create(AText: String);
+    destructor Destroy; override;
 
-     constructor Create(AText : String);
-     destructor Destroy; override;
+    function Replace(fromStr, toStr: String): Integer;
 
-     function Replace(fromStr, toStr : String) : Integer;
+    function FindFirst(search: String): Integer;
 
-     function FindFirst(search : String) : Integer;
+    function FindNext: Integer;
 
-     function FindNext : Integer;
+    property Text: String read stText write SetText;
 
-     property Text : String
-         read stText
-        write SetText;
+    property WordCount: Integer read stWordCount;
 
-     property WordCount : Integer
-         read stWordCount;
-
-     property Items: TStringList
-       read FItems
-       write FItems;
- end;
+    property Items: TStringList read FItems write FItems;
+  end;
 
 implementation
 
-
 constructor tNovusStringParser.Create(AText: String);
 begin
- FItems := TStringList.Create;
+  FItems := TStringList.Create;
 
- stText         := AText;
- stFindPosition := 1;
- stFindString   := '';
- GetWordCount;
+  stText := AText;
+  stFindPosition := 1;
+  stFindString := '';
+  GetWordCount;
 end;
 
-
-destructor tNovusStringParser.destroy;
+destructor tNovusStringParser.Destroy;
 begin
-inherited destroy;
+  inherited Destroy;
 end;
-
 
 procedure tNovusStringParser.SetText(const Value: String);
 begin
-stText         := Value;
-stFindPosition := 1;
-GetWordCount;
+  stText := Value;
+  stFindPosition := 1;
+  GetWordCount;
 end;
-
 
 function tNovusStringParser.FindFirst(search: String): Integer;
 begin
-stFindString   := search;
-stFindPosition := 1;
+  stFindString := search;
+  stFindPosition := 1;
 
-Result := FindNext;
+  Result := FindNext;
 end;
-
 
 function tNovusStringParser.FindNext: Integer;
 var
- index    : Integer;
- findSize : Integer;
+  index: Integer;
+  findSize: Integer;
 begin
 
- if Length(stFindString) = 0
- then Result := -2
- else
- begin
-   findSize := Length(stFindString);
+  if Length(stFindString) = 0 then
+    Result := -2
+  else
+  begin
+    findSize := Length(stFindString);
 
-   Result := -1;
+    Result := -1;
 
-   index  := stFindPosition;
+    index := stFindPosition;
 
-   while (index <= Length(stText)) and (Result < 0) do
-   begin
-     if stText[index] = stFindString[1] then
-     begin
-       if AnsiMidStr(stText, index, findSize) = stFindString
-       then Result := index;
-     end;
-     Inc(index);
-   end;
+    while (index <= Length(stText)) and (Result < 0) do
+    begin
+      if stText[index] = stFindString[1] then
+      begin
+        if AnsiMidStr(stText, index, findSize) = stFindString then
+          Result := index;
+      end;
+      Inc(index);
+    end;
 
-   stFindPosition := index
- end;
+    stFindPosition := index
+  end;
 end;
-
 
 function tNovusStringParser.Replace(fromStr, toStr: String): Integer;
 var
- fromSize, count, index  : Integer;
- newText : String;
- matched : Boolean;
+  fromSize, count, index: Integer;
+  newText: String;
+  matched: Boolean;
 begin
- fromSize := Length(fromStr);
+  fromSize := Length(fromStr);
 
- count := 0;
+  count := 0;
 
- newText := '';
- index := 1;
+  newText := '';
+  index := 1;
 
- while index <= Length(stText) do
- begin
-   matched := false;
+  while index <= Length(stText) do
+  begin
+    matched := false;
 
-   if stText[index] = fromStr[1] then
-   begin
-     if AnsiMidStr(stText, index, fromSize) = fromStr then
-     begin
-       Inc(count);
+    if stText[index] = fromStr[1] then
+    begin
+      if AnsiMidStr(stText, index, fromSize) = fromStr then
+      begin
+        Inc(count);
 
-       newText := newText + toStr;
+        newText := newText + toStr;
 
-       Inc(index, fromSize);
+        Inc(index, fromSize);
 
-       matched := true;
-     end;
-   end;
+        matched := true;
+      end;
+    end;
 
+    if not matched then
+    begin
+      newText := newText + stText[index];
+      Inc(index);
+    end;
+  end;
 
-   if not matched then
-   begin
-     newText := newText + stText[index];
-     Inc(index);
-   end;
- end;
+  if count > 0 then
+    stText := newText;
 
- if count > 0 then stText := newText;
-
- Result := count;
+  Result := count;
 end;
 
 procedure tNovusStringParser.GetWordCount;
 const
- LF    = #10;
- TAB   = #9;
- CR    = #13;
- BLANK = #32;
- SEMICOL = ';';
- EQUALS = '=';
+  LF = #10;
+  TAB = #9;
+  CR = #13;
+  BLANK = #32;
+  SEMICOL = ';';
+  EQUALS = '=';
 var
- lsWord: String;
- WordSeparatorSet : Set of Char;
- index  : Integer;
- inWord : Boolean;
+  lsWord: String;
+  WordSeparatorSet: Set of Char;
+  index: Integer;
+  inWord: Boolean;
 begin
- WordSeparatorSet := [LF, TAB, CR, BLANK, SEMICOL];
+  WordSeparatorSet := [LF, TAB, CR, BLANK, SEMICOL];
 
- stWordCount := 0;
+  stWordCount := 0;
 
- inWord := false;
+  inWord := false;
 
- lsWord := '';
+  lsWord := '';
 
- for index := 1 to Length(stText) do
- begin
+  for index := 1 to Length(stText) do
+  begin
 
-   if stText[index] In WordSeparatorSet then
-   begin
-     if inWord then
-       begin
-         FItems.Add(lsWord);
+    if stText[index] In WordSeparatorSet then
+    begin
+      if inWord then
+      begin
+        FItems.Add(lsWord);
 
-         Inc(stWordCount);
-         lsWord := '';
-       end;
+        Inc(stWordCount);
+        lsWord := '';
+      end;
 
+      inWord := false;
+    end
+    else
 
-     inWord := false;
-   end
-   else
+      inWord := true;
 
-     inWord := true;
-
-    if InWord then
+    if inWord then
       lsWord := lsWord + stText[index];
- end;
+  end;
 
- if inWord then
-   begin
-     FItems.Add(lsWord);
+  if inWord then
+  begin
+    FItems.Add(lsWord);
 
-     Inc(stWordCount);
-   end;
+    Inc(stWordCount);
+  end;
 end;
 
 end.

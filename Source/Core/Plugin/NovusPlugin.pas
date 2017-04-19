@@ -2,8 +2,7 @@ unit NovusPlugin;
 
 interface
 
-Uses Windows, SysUtils, Classes ;
-
+Uses Windows, SysUtils, Classes;
 
 const
   func_GetPluginObject = 'GetPluginObject';
@@ -19,10 +18,10 @@ type
     property PluginName: string read GetPluginName;
   end;
 
-
   TGetPluginObject = function: INovusPlugin; stdcall;
 
   PPluginInfo = ^TPluginInfo;
+
   TPluginInfo = record
     FileName: string;
     Handle: Thandle;
@@ -35,25 +34,23 @@ type
   protected
     fPlugins: TList;
     function GetPlugins(Index: integer): INovusPlugin;
-    function GetPluginCount: Integer;
+    function GetPluginCount: integer;
   public
     constructor Create;
     destructor Destroy; override;
 
-    function FindPlugin(const aPluginName: string; out aPlugin: INovusPlugin): boolean;
-    function LoadPlugin(const aFilename: String): Boolean;
+    function FindPlugin(const aPluginName: string;
+      out aPlugin: INovusPlugin): boolean;
+    function LoadPlugin(const aFilename: String): boolean;
     procedure UnloadPlugin(aIndex: integer);
     procedure UnloadAllPlugins;
     property Plugins[Index: integer]: INovusPlugin read GetPlugins; default;
     property PluginCount: integer read GetPluginCount;
   end;
 
-
-
 implementation
 
 uses System.Generics.Defaults;
-
 
 constructor TNovusPlugins.Create;
 begin
@@ -63,9 +60,9 @@ end;
 destructor TNovusPlugins.Destroy;
 begin
   if (fPlugins <> nil) then
-    begin
-      UnloadAllPlugins;
-      fplugins.Free;
+  begin
+    UnloadAllPlugins;
+    fPlugins.Free;
   end;
 end;
 
@@ -73,7 +70,7 @@ procedure TNovusPlugins.UnloadAllPlugins;
 var
   I: integer;
 begin
-  for i := PluginCount - 1 downto 0 do
+  for I := PluginCount - 1 downto 0 do
     UnloadPlugin(I);
 end;
 
@@ -82,10 +79,12 @@ var
   FPluginInfo: PPluginInfo;
   lHandle: Thandle;
 begin
-  if PluginCount = 0 then Exit;
+  if PluginCount = 0 then
+    Exit;
 
   FPluginInfo := fPlugins[aIndex];
-  if (FPluginInfo^.Handle = 0) then Exit;
+  if (FPluginInfo^.Handle = 0) then
+    Exit;
 
   try
     FPluginInfo^.Plugin.Finalize;
@@ -94,8 +93,8 @@ begin
 
     FPluginInfo^.Plugin := nil;
 
-    if (lHandle <> 0) then FreeLibrary(lHandle);
-
+    if (lHandle <> 0) then
+      FreeLibrary(lHandle);
 
   finally
     Dispose(FPluginInfo);
@@ -104,25 +103,25 @@ begin
   end;
 end;
 
-
-function TNovusPlugins.LoadPlugin(const aFilename: String): Boolean;
+function TNovusPlugins.LoadPlugin(const aFilename: String): boolean;
 var
-  lHandle: THandle;
+  lHandle: Thandle;
   FPluginInfo: PPluginInfo;
   ptr: pointer;
   FPlugin: INovusPlugin;
 begin
   Result := False;
 
-  if not FileExists(aFileName) then Exit;
+  if not FileExists(aFilename) then
+    Exit;
 
   Try
     New(FPluginInfo);
 
-    FPluginInfo^.FileName := aFileName;
+    FPluginInfo^.FileName := aFilename;
 
     FPluginInfo^.Handle := 0;
-    FPluginInfo^.Handle := LoadLibrary(Pchar(aFileName));
+    FPluginInfo^.Handle := LoadLibrary(Pchar(aFilename));
 
     ptr := GetProcAddress(FPluginInfo^.Handle, func_GetPluginObject);
 
@@ -132,12 +131,11 @@ begin
     FPlugin := nil;
 
     if FindPlugin(FPluginInfo^.Plugin.PluginName, FPlugin) then
-       raise Exception.Create('Plugin Loaded already');
+      raise Exception.Create('Plugin Loaded already');
 
     FPlugin := nil;
 
     FPluginInfo^.Plugin.Initialize;
-
 
     fPlugins.Add(FPluginInfo);
 
@@ -146,36 +144,38 @@ begin
     lHandle := FPluginInfo^.Handle;
     FPluginInfo^.Plugin := nil;
     Dispose(FPluginInfo);
-    if (lHandle <> 0) then FreeLibrary(lHandle);
+    if (lHandle <> 0) then
+      FreeLibrary(lHandle);
     raise;
   End;
 end;
 
-function TNovusPlugins.FindPlugin(const aPluginName: string; out aPlugin: INovusPlugin): boolean;
+function TNovusPlugins.FindPlugin(const aPluginName: string;
+  out aPlugin: INovusPlugin): boolean;
 var
-  i: integer;
+  I: integer;
 begin
-  Result := false;
+  Result := False;
   aPlugin := nil;
 
-  for i := 0 to (PluginCount - 1) do
-    if SameText(Plugins[i].PluginName, aPluginName) then
-      begin
-        aPlugin := Plugins[i];
+  for I := 0 to (PluginCount - 1) do
+    if SameText(Plugins[I].PluginName, aPluginName) then
+    begin
+      aPlugin := Plugins[I];
 
-        result := true;
-        Exit;
+      Result := True;
+      Exit;
     end;
 end;
 
 function TNovusPlugins.GetPlugins(Index: integer): INovusPlugin;
 begin
-  result := PPluginInfo(fPlugins[Index])^.Plugin;
+  Result := PPluginInfo(fPlugins[Index])^.Plugin;
 end;
 
 function TNovusPlugins.GetPluginCount: integer;
 begin
-  result := fPlugins.Count;
+  Result := fPlugins.Count;
 end;
 
 end.

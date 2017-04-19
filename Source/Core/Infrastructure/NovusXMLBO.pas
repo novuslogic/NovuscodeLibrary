@@ -3,7 +3,7 @@ unit NovusXMLBO;
 interface
 
 Uses NovusBO, JvSimpleXML, SysUtils, NovusUtilities, NovusSimpleXML,
-     NovusStringUtils, Classes;
+  NovusStringUtils, Classes;
 
 Type
   TNovusXMLBO = Class(TNovusBO)
@@ -13,8 +13,8 @@ Type
     fNodeNames: tStringlist;
     fsXMLFileName: String;
     foXMLDocument: TJvSimpleXML;
-    function  GetoXMLDocument : TJvSimpleXML; virtual;
-    procedure SetoXMLDocument(Value : TJvSimpleXML); virtual;
+    function GetoXMLDocument: TJvSimpleXML; virtual;
+    procedure SetoXMLDocument(Value: TJvSimpleXML); virtual;
   public
     constructor Create; virtual;
     destructor Destroy; override;
@@ -22,32 +22,34 @@ Type
     procedure SaveXML;
     procedure LoadXML;
 
+    function FindNode(aNodeList: TJvSimpleXmlElem; NodeName: String;
+      Var Index: Integer): TJvSimpleXmlElem;
 
+    function AddFieldAsString(aNodeList: TJvSimpleXmlElem; FieldName: String;
+      PropertyName: String; Value: String): TJvSimpleXmlElem;
+    function AddFieldAsBoolean(aNodeList: TJvSimpleXmlElem; FieldName: String;
+      PropertyName: String; Value: Boolean): TJvSimpleXmlElem;
+    procedure SetFieldAsBoolean(aNodeList: TJvSimpleXmlElem; FieldName: String;
+      Value: Boolean);
+    procedure SetFieldAsinteger(aNodeList: TJvSimpleXmlElem; FieldName: String;
+      Value: Integer);
+    procedure SetFieldAsString(aNodeList: TJvSimpleXmlElem; FieldName: String;
+      Value: String);
+    function GetFieldAsinteger(aNodeList: TJvSimpleXmlElem;
+      FieldName: String): Integer;
+    function GetFieldAsBoolean(aNodeList: TJvSimpleXmlElem;
+      FieldName: String): Boolean;
+    function GetFieldAsString(aNodeList: TJvSimpleXmlElem;
+      FieldName: String): String;
+    function IsFieldExists(aNodeList: TJvSimpleXmlElem;
+      FieldName: String): Boolean;
 
-    function FindNode(aNodeList: TJvSimpleXmlElem; NodeName: String; Var Index: Integer): TJvSimpleXmlElem;
-
-    function AddFieldAsString(aNodeList: TJvSimpleXmlElem;FieldName: String;PropertyName: String;Value: String): TJvSimpleXmlElem;
-    function AddFieldAsBoolean(aNodeList: TJvSimpleXmlElem;FieldName: String;PropertyName: String;Value: Boolean): TJvSimpleXmlElem;
-    procedure SetFieldAsBoolean(aNodeList: TJvSimpleXmlElem;FieldName: String; Value: Boolean);
-    procedure SetFieldAsinteger(aNodeList: TJvSimpleXmlElem;FieldName: String; Value: integer);
-    procedure SetFieldAsString(aNodeList: TJvSimpleXmlElem;FieldName: String; Value: String);
-    function GetFieldAsinteger(aNodeList: TJvSimpleXmlElem;FieldName: String): integer;
-    function GetFieldAsBoolean(aNodeList: TJvSimpleXmlElem;FieldName: String): Boolean;
-    function GetFieldAsString(aNodeList: TJvSimpleXmlElem; FieldName: String): String;
-    function IsFieldExists(aNodeList: TJvSimpleXmlElem; FieldName: String): Boolean;
-
-
-    Property oXMLDocument: TJvSimpleXML
-      read GetoXMLDocument
+    Property oXMLDocument: TJvSimpleXML read GetoXMLDocument
       write SetoXMLDocument;
 
-    Property XMLFileName: string
-      read fsXMLFileName
-      write fsXMLFileName;
+    Property XMLFileName: string read fsXMLFileName write fsXMLFileName;
 
-    property NodeNames: tStringList
-      read fNodeNames
-      write fNodeNames;
+    property NodeNames: tStringlist read fNodeNames write fNodeNames;
 
     procedure New; override;
     function Retrieve: Boolean; override;
@@ -55,9 +57,7 @@ Type
 
     procedure DeleteXML(aNodeList: TJvSimpleXmlElem); virtual;
 
-    property FreeObject: Boolean
-      read fbFreeObject
-      write fbFreeObject;
+    property FreeObject: Boolean read fbFreeObject write fbFreeObject;
   end;
 
 implementation
@@ -80,9 +80,9 @@ begin
   fNodeNames.Free;
 
   if FreeObject then
-    begin
-      foXMLDocument.Free
-    end;
+  begin
+    foXMLDocument.Free
+  end;
 
   inherited;
 end;
@@ -99,23 +99,22 @@ begin
   Result := False;
 
   If Assigned(oXMLDocument) then
-   If FileExists(XMLFilename) then
-     begin
-       LoadXML;
+    If FileExists(XMLFileName) then
+    begin
+      LoadXML;
 
-       TNovusSimpleXML.ListNodeNames(oXMLDocument.Root, fNodeNames);
+      TNovusSimpleXML.ListNodeNames(oXMLDocument.Root, fNodeNames);
 
-       fbIsNewRec := False;
+      fbIsNewRec := False;
 
-       Result := True;
-     end;
+      Result := True;
+    end;
 end;
 
 procedure TNovusXMLBO.LoadXML;
 begin
-  oXMLDocument.LoadFromFile(XMLFilename);
+  oXMLDocument.LoadFromFile(XMLFileName);
 end;
-
 
 function TNovusXMLBO.Post: Boolean;
 begin
@@ -124,135 +123,142 @@ begin
   Result := False;
 
   If Assigned(oXMLDocument) then
-   If FileExists(XMLFilename) then
-     begin
-       SaveXML;
+    If FileExists(XMLFileName) then
+    begin
+      SaveXML;
 
-       fbIsNewRec := False;
+      fbIsNewRec := False;
 
-       Result := True;
-     end;
+      Result := True;
+    end;
 end;
 
 procedure TNovusXMLBO.SaveXML;
 begin
-  oXMLDocument.SaveToFile(XMLFilename);
+  oXMLDocument.SaveToFile(XMLFileName);
 end;
 
-function  TNovusXMLBO.GetoXMLDocument :TJvSimpleXML;
+function TNovusXMLBO.GetoXMLDocument: TJvSimpleXML;
 begin
   Result := foXMLDocument;
 end;
 
-procedure TNovusXMLBO.SetoXMLDocument(Value : TJvSimpleXML);
+procedure TNovusXMLBO.SetoXMLDocument(Value: TJvSimpleXML);
 begin
   TNovusUtilities.FreeObject(foXMLDocument);
   if (Value <> nil) then
-    foXMLDocument := value;
+    foXMLDocument := Value;
 end;
 
-function TNovusXMLBO.GetFieldAsBoolean(aNodeList: TJvSimpleXmlElem;FieldName: String): Boolean;
+function TNovusXMLBO.GetFieldAsBoolean(aNodeList: TJvSimpleXmlElem;
+  FieldName: String): Boolean;
 begin
-  result := false;
-  If uppercase(GetFieldAsString(aNodeList,FieldName)) = 'TRUE' then
+  Result := False;
+  If uppercase(GetFieldAsString(aNodeList, FieldName)) = 'TRUE' then
     Result := True;
 end;
 
-function TNovusXMLBO.GetFieldAsInteger(aNodeList: TJvSimpleXmlElem;FieldName: String): Integer;
+function TNovusXMLBO.GetFieldAsinteger(aNodeList: TJvSimpleXmlElem;
+  FieldName: String): Integer;
 begin
-  Result := TNovusStringUtils.Str2Int(GetFieldAsString(aNodeList,FieldName));
+  Result := TNovusStringUtils.Str2Int(GetFieldAsString(aNodeList, FieldName));
 end;
 
-function TNovusXMLBO.AddFieldAsString(aNodeList: TJvSimpleXmlElem;FieldName: String;PropertyName: String;Value: String): TJvSimpleXmlElem;
+function TNovusXMLBO.AddFieldAsString(aNodeList: TJvSimpleXmlElem;
+  FieldName: String; PropertyName: String; Value: String): TJvSimpleXmlElem;
 begin
   Result := NIL;
 
   If Trim(PropertyName) <> '' then
-    begin
-      Result := aNodeList.Items.Add(FieldName);
-      Result.Properties.Add(PropertyName, Value)
-    end
+  begin
+    Result := aNodeList.Items.Add(FieldName);
+    Result.Properties.Add(PropertyName, Value)
+  end
   else
     Result := aNodeList.Items.Add(FieldName, Value);
 end;
 
-
-function TNovusXMLBO.AddFieldAsBoolean(aNodeList: TJvSimpleXmlElem;FieldName: String;PropertyName: String;Value: Boolean): TJvSimpleXmlElem;
+function TNovusXMLBO.AddFieldAsBoolean(aNodeList: TJvSimpleXmlElem;
+  FieldName: String; PropertyName: String; Value: Boolean): TJvSimpleXmlElem;
 begin
-  Result := AddFieldAsString(aNodeList,FieldName,PropertyName,TNovusStringUtils.BooleanToStr(Value));
+  Result := AddFieldAsString(aNodeList, FieldName, PropertyName,
+    TNovusStringUtils.BooleanToStr(Value));
 end;
 
-procedure TNovusXMLBO.SetFieldAsString(aNodeList: TJvSimpleXmlElem;FieldName: String; Value: String);
+procedure TNovusXMLBO.SetFieldAsString(aNodeList: TJvSimpleXmlElem;
+  FieldName: String; Value: String);
 Var
   Index: Integer;
   fJvSimpleXmlElem: TJvSimpleXmlElem;
 begin
   Index := 0;
-  fJvSimpleXmlElem := TNovusSimpleXML.FindNode(aNodeList, FieldName,Index);
+  fJvSimpleXmlElem := TNovusSimpleXML.FindNode(aNodeList, FieldName, Index);
 
   If Assigned(fJvSimpleXmlElem) then
     fJvSimpleXmlElem.Value := Value;
 end;
 
-procedure TNovusXMLBO.SetFieldAsBoolean(aNodeList: TJvSimpleXmlElem;FieldName: String; Value: Boolean);
+procedure TNovusXMLBO.SetFieldAsBoolean(aNodeList: TJvSimpleXmlElem;
+  FieldName: String; Value: Boolean);
 begin
-  If Value = True then SetFieldAsString(aNodeList,FieldName, 'True')
+  If Value = True then
+    SetFieldAsString(aNodeList, FieldName, 'True')
   else
-    SetFieldAsString(aNodeList,FieldName, 'False');
+    SetFieldAsString(aNodeList, FieldName, 'False');
 end;
 
-procedure TNovusXMLBO.SetFieldAsInteger(aNodeList: TJvSimpleXmlElem;FieldName: String; Value: Integer);
+procedure TNovusXMLBO.SetFieldAsinteger(aNodeList: TJvSimpleXmlElem;
+  FieldName: String; Value: Integer);
 begin
-  SetFieldAsString(aNodeList,FieldName, InttoStr(Value))
+  SetFieldAsString(aNodeList, FieldName, InttoStr(Value))
 end;
 
-function TNovusXMLBO.GetFieldAsString(aNodeList: TJvSimpleXmlElem; FieldName: String): String;
+function TNovusXMLBO.GetFieldAsString(aNodeList: TJvSimpleXmlElem;
+  FieldName: String): String;
 Var
   Index: Integer;
   fJvSimpleXmlElem: TJvSimpleXmlElem;
 begin
   Result := '';
 
-  If Not Assigned(aNodeList) then Exit;
+  If Not Assigned(aNodeList) then
+    Exit;
 
   Index := 0;
-  fJvSimpleXmlElem := TNovusSimpleXML.FindNode(aNodeList, FieldName,Index);
+  fJvSimpleXmlElem := TNovusSimpleXML.FindNode(aNodeList, FieldName, Index);
 
   If Assigned(fJvSimpleXmlElem) then
     Result := fJvSimpleXmlElem.Value;
 end;
 
-function TNovusXMLBO.IsFieldExists(aNodeList: TJvSimpleXmlElem; FieldName: String): Boolean;
+function TNovusXMLBO.IsFieldExists(aNodeList: TJvSimpleXmlElem;
+  FieldName: String): Boolean;
 Var
   Index: Integer;
 begin
   Result := False;
 
-  If Not Assigned(aNodeList) then Exit;
+  If Not Assigned(aNodeList) then
+    Exit;
 
   Index := 0;
-  Result := (TNovusSimpleXML.FindNode(aNodeList, FieldName,Index) <> NIL);
+  Result := (TNovusSimpleXML.FindNode(aNodeList, FieldName, Index) <> NIL);
 end;
-
 
 procedure TNovusXMLBO.DeleteXML(aNodeList: TJvSimpleXmlElem);
 begin
-  If Not Assigned(aNodeList) then Exit;
+  If Not Assigned(aNodeList) then
+    Exit;
 
   foXMLDocument.Root.Items.Delete(aNodeList.Name);
 
   Post;
 end;
 
-
-function TNovusXMLBO.FindNode(aNodeList: TJvSimpleXmlElem; NodeName: String; Var Index: Integer): TJvSimpleXmlElem;
+function TNovusXMLBO.FindNode(aNodeList: TJvSimpleXmlElem; NodeName: String;
+  Var Index: Integer): TJvSimpleXmlElem;
 begin
   Result := TNovusSimpleXML.FindNode(aNodeList, NodeName, Index);
 end;
 
-
 end.
-
-
-
-

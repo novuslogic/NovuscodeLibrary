@@ -1,4 +1,7 @@
 
+19/04/2017
+* [Reformatted all units with Delphi internal source code formater](https://github.com/novuslogic/NovuscodeLibrary/issues/1)
+
 18/04/2017
 
 * Public release.

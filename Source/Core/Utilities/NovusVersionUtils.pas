@@ -1,3 +1,4 @@
+{$I ..\..\core\NovusCodeLibrary.inc}
 unit NovusVersionUtils;
 
 interface
@@ -8,7 +9,6 @@ type
   TTranslation = record
     Language, CharSet: Word;
   end;
-
 
   TNovusVersionUtils = class(TNovusUtilities)
     class function GetFixedFileInfo(FileInfo: Pointer): PVSFixedFileInfo;
@@ -26,10 +26,8 @@ type
     class function GetBuildNumber: String;
   end;
 
-
   PTranslations = ^TTranslations;
   TTranslations = array [0 .. 65535] of TTranslation;
-
 
 implementation
 

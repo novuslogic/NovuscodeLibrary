@@ -1,3 +1,4 @@
+{$I ..\..\core\NovusCodeLibrary.inc}
 unit NovusShell;
 
 interface

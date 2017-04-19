@@ -1,8 +1,9 @@
-unit NovusStringUtils;
-
+{$I ..\..\core\NovusCodeLibrary.inc}
+unit NovusStringUtils;
+
 interface
 
-uses Windows, sysutils, {Forms,} NovusUtilities, Classes, variants;
+uses Windows, sysutils, NovusUtilities, Classes, variants;
 
 Const
   Cr = #13;
@@ -115,7 +116,6 @@ Type
     class function TrailingBackSlash(const aFilename: string): string;
     class function VarArrayToStr(const vArray: variant): string;
     class function VarStrNull(const V: OleVariant): string;
-    // avoid problems with null strings
     class function IsBoolean(const sValue: string): Boolean;
     class function StrToUInt64(const s: String): UInt64;
   end;

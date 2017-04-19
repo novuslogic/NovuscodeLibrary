@@ -4,11 +4,11 @@ unit NovusBO;
 interface
 
 Uses NovusInfrastructre, Activex, ComObj, Classes, SysUtils,
-     NovusBOField,  NovusBOMap, NovusUtilities, DBXJson, DB, NovusDateUtils,
+  NovusBOField, NovusBOMap, NovusUtilities, DBXJson, DB, NovusDateUtils,
 {$IFDEF DELPHIXE6_UP}
-     JSON,
+  JSON,
 {$ENDIF}
-     NovusStringUtils, NovusDateStringUtils;
+  NovusStringUtils, NovusDateStringUtils;
 
 Type
 
@@ -23,9 +23,9 @@ Type
     foFormObject: tObject;
     fsGUIDString: String;
     fbIsNewRec: Boolean;
-    foParentObject: TObject;
+    foParentObject: tObject;
 
-    function GetoChildList: TList; virtual;
+    function GetoChildList: tList; virtual;
     function GetImageIndex: Integer; virtual;
     function GetIsNewRec: Boolean; virtual;
     procedure SetIsNewRec(Value: Boolean);
@@ -45,10 +45,11 @@ Type
     function GetPrimary_ID: Integer; virtual;
     function GetIsMandtoryRecord: Boolean; virtual;
 
-    procedure CopyFromJSONObject(aJSONObject: TJSONObject; aFieldName: string = ''); virtual;
-    function  ToJSONObject: TJSONobject; virtual;
-    function  ToJSON: String;
-    function  ToJSONNoBrackets: String;
+    procedure CopyFromJSONObject(aJSONObject: TJSONObject;
+      aFieldName: string = ''); virtual;
+    function ToJSONObject: TJSONObject; virtual;
+    function ToJSON: String;
+    function ToJSONNoBrackets: String;
 
     procedure PropertiesToFields; virtual;
     procedure FieldsToProperties; overload; virtual;
@@ -70,60 +71,41 @@ Type
     function Post: Boolean; virtual;
     function Delete: Boolean; virtual;
 
-    function NewBO: tNovusBO; virtual;
-    function CloneBO: tNovusBO; virtual;
-    procedure CopyFrom(AFromNovusBO: tNovusBO); virtual;
+    function NewBO: TNovusBO; virtual;
+    function CloneBO: TNovusBO; virtual;
+    procedure CopyFrom(AFromNovusBO: TNovusBO); virtual;
 
-    procedure CopyBOFields(AFromNovusBO: tNovusBO);
+    procedure CopyBOFields(AFromNovusBO: TNovusBO);
 
     procedure Sort; virtual;
 
-    Property oParentObject: TObject
-      read foParentObject
-      write  foParentObject;
+    Property oParentObject: tObject read foParentObject write foParentObject;
 
-    property BOF: Boolean
-       read GetBOF;
+    property BOF: Boolean read GetBOF;
 
-    property EOF: Boolean
-       read GetEOF;
+    property EOF: Boolean read GetEOF;
 
-    Property IsMandtoryRecord: Boolean
-      read GetIsMandtoryRecord;
+    Property IsMandtoryRecord: Boolean read GetIsMandtoryRecord;
 
-    Property IsNewRec: Boolean
-      read GetIsNewRec
-      write SetIsNewRec;
+    Property IsNewRec: Boolean read GetIsNewRec write SetIsNewRec;
 
-    Property GUIDString: String
-      read fsGUIDString;
+    Property GUIDString: String read fsGUIDString;
 
-    Property oFormObject: tObject
-      read foFormObject
-      write foFormObject;
+    Property oFormObject: tObject read foFormObject write foFormObject;
 
-    property Text: String
-      read GetText;
+    property Text: String read GetText;
 
-    property ImageIndex: Integer
-      read GetImageIndex;
+    property ImageIndex: Integer read GetImageIndex;
 
-    Property oChildList: tList
-       read GetoChildList;
+    Property oChildList: tList read GetoChildList;
 
-    property GUIDID: String
-      read GetGUIDID
-      write SetGUIDID;
+    property GUIDID: String read GetGUIDID write SetGUIDID;
 
-    property Primary_ID: Integer
-      Read GetPrimary_ID;
+    property Primary_ID: Integer Read GetPrimary_ID;
 
-    property oBOMap: tNovusBOMap
-      read FoNovusBOMap
-      write FoNovusBOMap;
+    property oBOMap: TNovusBOMap read FoNovusBOMap write FoNovusBOMap;
 
-    property LastExceptionMessage: String
-      read fsLastExceptionMessage
+    property LastExceptionMessage: String read fsLastExceptionMessage
       write fsLastExceptionMessage;
   end;
 
@@ -131,11 +113,11 @@ Type
 
 implementation
 
-//uses NovusStringUtils;
+// uses NovusStringUtils;
 
 constructor TNovusBO.Create;
 begin
-  FoNovusBOMap := TNovusBOMap.create;
+  FoNovusBOMap := TNovusBOMap.Create;
 
   inherited Create;
 
@@ -200,7 +182,6 @@ procedure TNovusBO.Clear;
 begin
 end;
 
-
 function TNovusBO.GetText: String;
 begin
   Result := '';
@@ -224,37 +205,38 @@ begin
   fbIsNewRec := Value;
 end;
 
-procedure TNovusBO.CopyFrom(AFromNovusBO: tNovusBO);
+procedure TNovusBO.CopyFrom(AFromNovusBO: TNovusBO);
 begin
 end;
 
-procedure TNovusBO.CopyBOFields(AFromNovusBO: tNovusBO);
+procedure TNovusBO.CopyBOFields(AFromNovusBO: TNovusBO);
 Var
   I: Integer;
   loNovusBOField1: tNovusBOField;
   loNovusBOField2: tNovusBOField;
 begin
-  if Not Assigned(AFromNovusBO) then Exit;
+  if Not Assigned(AFromNovusBO) then
+    Exit;
 
   if Assigned(AFromNovusBO.oBOMap) then
+  begin
+    For I := 0 to AFromNovusBO.oBOMap.oFieldList.Count - 1 do
     begin
-      For I := 0 to AFromNovusBO.oBOMap.oFieldList.Count -1 do
-        begin
-          loNovusBOField1 := tNovusBOField(AFromNovusBO.oBOMap.oFieldList[i]);
+      loNovusBOField1 := tNovusBOField(AFromNovusBO.oBOMap.oFieldList[I]);
 
-          loNovusBOField2 := oBOMap.FieldByName(loNovusBOField1.FieldName);
-          if Assigned(loNovusBOField2) then
-            loNovusBOField2.Value := loNovusBOField1.Value;
-        end;
+      loNovusBOField2 := oBOMap.FieldByName(loNovusBOField1.FieldName);
+      if Assigned(loNovusBOField2) then
+        loNovusBOField2.Value := loNovusBOField1.Value;
     end;
+  end;
 end;
 
-function TNovusBO.CloneBO: tNovusBO;
+function TNovusBO.CloneBO: TNovusBO;
 begin
   Result := NIL;
 end;
 
-function TNovusBO.NewBO: tNovusBO;
+function TNovusBO.NewBO: TNovusBO;
 begin
   Result := NIL;
 end;
@@ -292,7 +274,7 @@ end;
 function TNovusBO.GetEOF: Boolean;
 begin
   Result := True;
-  
+
 end;
 
 function TNovusBO.GetBOF: Boolean;
@@ -316,7 +298,6 @@ procedure TNovusBO.PropertiesToFields;
 begin
 end;
 
-
 procedure TNovusBO.FieldsToProperties;
 begin
 end;
@@ -329,110 +310,113 @@ procedure TNovusBO.InitObjects;
 begin
 end;
 
-
-procedure TNovusBO.CopyFromJSONObject(aJSONObject: TJSONObject; aFieldName: string = '');
+procedure TNovusBO.CopyFromJSONObject(aJSONObject: TJSONObject;
+  aFieldName: string = '');
 var
-  loBOField : TNovusBOField;
+  loBOField: tNovusBOField;
   I: Integer;
-  LJPair    : TJSONPair;
+  LJPair: TJSONPair;
 
-  procedure PassField(var aBOField : TNovusBOField; aLJPair: TJSONPair);
-
+  procedure PassField(var aBOField: tNovusBOField; aLJPair: TJSONPair);
 
   begin
     if aBOField is TnovusBODateTimeField then
+    begin
+      aBOField.Value := TNovusDateUtils.UnixTimeToDateTime
+        (TNovusDateStringUtils.JSONDateStr2UnixTime
+        (TJSONString(aLJPair.JsonValue).Value));
+    end
+    else if aBOField is TNovusBOIntegerField then
+      aBOField.Value := TJSONNumber(aLJPair.JsonValue).AsInt
+    else if aBOField is TNovusBOStringField then
+      aBOField.Value := TJSONString(aLJPair.JsonValue).Value
+    else if aBOField is TNovusBOSmallintField then
+    begin
+      if (tNovusStringUtils.IsBoolean(aLJPair.JsonValue.ToString)) or
+        TNovusBOSmallintField(loBOField).UseAsBoolean then
       begin
-        aBOField.value := TNovusDateUtils.UnixTimeToDateTime(TNovusDateStringUtils.JSONDateStr2UnixTime(TJSONString(aLJPair.JsonValue).Value));
+        aBOField.Value :=
+          Smallint(tNovusStringUtils.StrToBoolean(aLJPair.JsonValue.ToString));
       end
-    else
-    if aBOField is TNovusBOIntegerField then
-       aBOField.value := TJSONNumber(aLJPair.JsonValue).AsInt
-    else
-    if aBOField is TNovusBOStringField then
-       aBOField.value := TJSONString(aLJPair.JsonValue).Value
-    else
-    if aBOField is TNovusBOSmallintField then
-      begin
-        if (tNovusStringUtils.IsBoolean(aLJPair.JsonValue.ToString)) or TNovusBOSmallIntField(loBOField).UseAsBoolean then
-          begin
-           aBOField.value := Smallint(tNovusStringUtils.StrToBoolean(aLJPair.JsonValue.ToString));
-          end
-       else
-          aBOField.value := Smallint(TJSONNumber(aLJPair.JsonValue).AsInt);
-      end;
+      else
+        aBOField.Value := Smallint(TJSONNumber(aLJPair.JsonValue).AsInt);
+    end;
   end;
 
-
-
 begin
-  if Not Assigned(aJSONObject) then Exit;
+  if Not Assigned(aJSONObject) then
+    Exit;
 
-   for I := 0 to aJSONObject.Size -1 do
-     begin
-       LJPair  :=  aJSONObject.Get(i);
+  for I := 0 to aJSONObject.Size - 1 do
+  begin
+    LJPair := aJSONObject.Get(I);
 
-       loBOField := oBOMap.FieldByName(TJSONPair(LJPair).JsonString.Value);
-       if Assigned(loBOField) then
-         begin
-           if aFieldName = '' then
-             begin
-               PassField(loBOField,LJPair);
-             end
-           else
-           if aFieldName = loBOField.FieldName then
-             begin
-               PassField(loBOField,LJPair);
+    loBOField := oBOMap.FieldByName(TJSONPair(LJPair).JsonString.Value);
+    if Assigned(loBOField) then
+    begin
+      if aFieldName = '' then
+      begin
+        PassField(loBOField, LJPair);
+      end
+      else if aFieldName = loBOField.FieldName then
+      begin
+        PassField(loBOField, LJPair);
 
-               break;
-             end;
-         end;
-     end;
+        break;
+      end;
+    end;
+  end;
 end;
 
-function TNovusBO.ToJSONObject: TJSONobject;
+function TNovusBO.ToJSONObject: TJSONObject;
 var
-   loJSONObject: TJSONObject;
-   I: Integer;
-   LJValue    : TJSONValue;
-   loBOField: TNovusBOField;
+  loJSONObject: TJSONObject;
+  I: Integer;
+  LJValue: TJSONValue;
+  loBOField: tNovusBOField;
 begin
-  loJSONObject:= TJSONObject.Create;
+  loJSONObject := TJSONObject.Create;
 
-  for I := 0 to oBOMap.oFieldList.Count -1 do
+  for I := 0 to oBOMap.oFieldList.Count - 1 do
+  begin
+    loBOField := tNovusBOField(oBOMap.oFieldList.Items[I]);
+
+    if loBOField.ToJSON then
     begin
-      loBOField := TNovusBOField(oBOMap.oFieldList.Items[i]);
-
-      if loBOField.ToJSON then
-        begin
-          if loBOField is  TNovusBODateTimeField then
-            begin
-              if loBOField.Value <> 0 then
-                loJSONObject.AddPair(TJSONPair.Create(loBOField.FieldName, TJSONString.Create(TNovusDateUtils.DateTimeToISO8601(loBOField.Value))));
-            end
-          else
-          if loBOField is  TNovusBOStringField then
-            loJSONObject.AddPair(TJSONPair.Create(loBOField.FieldName, TJSONString.Create(loBOField.Value)))
-          else
-          if loBOField is TNovusBOIntegerField then
-            loJSONObject.AddPair(TJSONPair.Create(loBOField.FieldName, TJSONNumber.Create(loBOField.Value)))
-          else
-          if loBOField is TNovusBOFloatField then
-            loJSONObject.AddPair(TJSONPair.Create(loBOField.FieldName, TJSONNumber.Create(loBOField.Value)))
-          else
-          if loBOField is  TNovusBOBooleanField then
-            loJSONObject.AddPair(TJSONPair.Create(loBOField.FieldName, TJSONString.Create(TNovusStringUtils.BooleanToStr(TNovusBOBooleanField(loBOField).AsBoolean))))
-          else
-          if loBOField is  TNovusBOSmallIntField then
-            begin
-              if Not TNovusBOSmallIntField(loBOField).UseAsBoolean then
-                loJSONObject.AddPair(TJSONPair.Create(loBOField.FieldName, TJSONNumber.Create(loBOField.Value)))
-              else
-                loJSONObject.AddPair(TJSONPair.Create(loBOField.FieldName, TJSONString.Create(TNovusStringUtils.BooleanToStr(TNovusBOSmallIntField(loBOField).AsBoolean))));
-            end;
-        end;
+      if loBOField is TnovusBODateTimeField then
+      begin
+        if loBOField.Value <> 0 then
+          loJSONObject.AddPair(TJSONPair.Create(loBOField.FieldName,
+            TJSONString.Create(TNovusDateUtils.DateTimeToISO8601
+            (loBOField.Value))));
+      end
+      else if loBOField is TNovusBOStringField then
+        loJSONObject.AddPair(TJSONPair.Create(loBOField.FieldName,
+          TJSONString.Create(loBOField.Value)))
+      else if loBOField is TNovusBOIntegerField then
+        loJSONObject.AddPair(TJSONPair.Create(loBOField.FieldName,
+          TJSONNumber.Create(loBOField.Value)))
+      else if loBOField is TNovusBOFloatField then
+        loJSONObject.AddPair(TJSONPair.Create(loBOField.FieldName,
+          TJSONNumber.Create(loBOField.Value)))
+      else if loBOField is TNovusBOBooleanField then
+        loJSONObject.AddPair(TJSONPair.Create(loBOField.FieldName,
+          TJSONString.Create(tNovusStringUtils.BooleanToStr(TNovusBOBooleanField
+          (loBOField).AsBoolean))))
+      else if loBOField is TNovusBOSmallintField then
+      begin
+        if Not TNovusBOSmallintField(loBOField).UseAsBoolean then
+          loJSONObject.AddPair(TJSONPair.Create(loBOField.FieldName,
+            TJSONNumber.Create(loBOField.Value)))
+        else
+          loJSONObject.AddPair(TJSONPair.Create(loBOField.FieldName,
+            TJSONString.Create(tNovusStringUtils.BooleanToStr
+            (TNovusBOSmallintField(loBOField).AsBoolean))));
+      end;
     end;
+  end;
 
-  result := loJSONObject;
+  Result := loJSONObject;
 end;
 
 function TNovusBO.ToJSON: String;
@@ -441,19 +425,15 @@ var
 begin
   loJSONObject := ToJSONObject;
 
-  result := loJSONObject.ToString;
+  Result := loJSONObject.ToString;
   loJSONObject.Free;
 end;
 
 function TNovusBO.ToJSONNoBrackets: String;
 begin
-  Result := TNovusStringUtils.StripChar(ToJSON, '{');
+  Result := tNovusStringUtils.StripChar(ToJSON, '{');
 
-  Result := TNovusStringUtils.StripChar(Result, '}');
+  Result := tNovusStringUtils.StripChar(Result, '}');
 end;
 
 end.
-
-
-
-

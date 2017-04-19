@@ -2,21 +2,12 @@ unit NovusBOField;
 
 interface
 
-Uses NovusInfrastructre, DB, NovusStringUtils, SysUtils, Variants, Classes, math;
-
+Uses NovusInfrastructre, DB, NovusStringUtils, SysUtils, Variants, Classes,
+  math;
 
 Type
-  TNovusBOFieldType  = (nftUnknown,
-    nftString,
-    nftInteger,
-    nftBoolean,
-    nftFloat,
-    nftCurrency,
-    nftDateTime,
-    nftLargeInt,
-    nftBlob     ,
-    nftSmallInt
-    );
+  TNovusBOFieldType = (nftUnknown, nftString, nftInteger, nftBoolean, nftFloat,
+    nftCurrency, nftDateTime, nftLargeInt, nftBlob, nftSmallInt);
 
   TNovusBOField = class(tNovusInfrastructre)
   private
@@ -32,25 +23,15 @@ Type
 
     function IsClear: Boolean;
 
-    property FieldName: String
-       read fsFieldName
-       write fsFieldName;
+    property FieldName: String read fsFieldName write fsFieldName;
 
-    property Value: Variant
-      read FValue
-      write FValue;
+    property Value: Variant read FValue write FValue;
 
-    property ToJSON: Boolean
-      read fbToJSON
-      write fbToJSON;
+    property ToJSON: Boolean read fbToJSON write fbToJSON;
 
-    property Size: Integer
-      read fiSize
-      write fiSize;
+    property Size: Integer read fiSize write fiSize;
 
-    property FieldType: TNovusBOFieldType
-      read FFieldType
-      write FFieldType;
+    property FieldType: TNovusBOFieldType read fFieldType write fFieldType;
   end;
 
   TNovusBOIntegerField = class(TNovusBOField)
@@ -62,12 +43,9 @@ Type
   public
     constructor Create; override;
 
-    property AsInteger: Integer
-      read GetAsInteger
-      write SetAsInteger;
+    property AsInteger: Integer read GetAsInteger write SetAsInteger;
 
-    property AsString: String
-      read GetAsString;
+    property AsString: String read GetAsString;
   end;
 
   TNovusBOFloatField = class(TNovusBOField)
@@ -78,9 +56,7 @@ Type
   public
     constructor Create; override;
 
-    property AsFloat: extended
-      read GetAsFloat
-      write SetAsFloat;
+    property AsFloat: extended read GetAsFloat write SetAsFloat;
   end;
 
   TNovusBONumericField = class(TNovusBOFloatField)
@@ -93,17 +69,11 @@ Type
     function GetAsCurrency: Currency;
     procedure SetAsCurrency(AValue: Currency);
   public
-    property AsNumeric: Double
-      read GetAsNumeric
-      write SetAsNumeric;
+    property AsNumeric: Double read GetAsNumeric write SetAsNumeric;
 
-    property AsDouble: Double
-      read GetAsDouble
-      write SetAsDouble;
+    property AsDouble: Double read GetAsDouble write SetAsDouble;
 
-    property AsCurrency: Currency
-      read GetAsCurrency
-      write SetAsCurrency;
+    property AsCurrency: Currency read GetAsCurrency write SetAsCurrency;
   end;
 
   TNovusBODoubleField = class(TNovusBONumericField);
@@ -112,19 +82,16 @@ Type
   private
   protected
     function GetAsAnsiString: AnsiString;
-    procedure SetAsAnsiString(aValue: AnsiString);
+    procedure SetAsAnsiString(AValue: AnsiString);
 
     function GetAsString: String;
     procedure SetAsString(AValue: String);
   public
     constructor Create; override;
 
-    property AsString: String
-      read GetAsString
-      write SetAsString;
+    property AsString: String read GetAsString write SetAsString;
 
-    property AsAnsiString: AnsiString
-      read GetAsAnsiString
+    property AsAnsiString: AnsiString read GetAsAnsiString
       write SetAsAnsiString;
   end;
 
@@ -135,9 +102,7 @@ Type
     constructor Create; override;
     destructor Destroy; override;
 
-    property AsBlob: variant
-      read FValue
-      write FValue;
+    property AsBlob: Variant read FValue write FValue;
   end;
 
   TNovusBOSmallIntField = class(TNovusBOField)
@@ -152,17 +117,11 @@ Type
   public
     constructor Create; override;
 
-    property AsBoolean: Boolean
-      read GetAsBoolean
-      write SetAsBoolean;
+    property AsBoolean: Boolean read GetAsBoolean write SetAsBoolean;
 
-    property AsSmallInt: SmallInt
-      read GetAsSmallInt
-      write SetAsSmallInt;
+    property AsSmallInt: SmallInt read GetAsSmallInt write SetAsSmallInt;
 
-    property UseAsBoolean: Boolean
-      read fbUseAsBoolean
-      write fbUseAsBoolean;
+    property UseAsBoolean: Boolean read fbUseAsBoolean write fbUseAsBoolean;
 
   end;
 
@@ -175,9 +134,7 @@ Type
   public
     constructor Create; override;
 
-    property AsBoolean: Boolean
-      read GetAsBoolean
-      write SetAsBoolean;
+    property AsBoolean: Boolean read GetAsBoolean write SetAsBoolean;
 
   end;
 
@@ -191,32 +148,27 @@ Type
   public
     constructor Create; override;
 
-    property AsString: String
-      read GetAsString;
+    property AsString: String read GetAsString;
 
-    property DateFormat: String
-      read fsDateFormat
-      write fsDateFormat;
+    property DateFormat: String read fsDateFormat write fsDateFormat;
 
-    property AsDateTime: TDateTime
-      read GetAsDateTime
-      write SetAsDateTime;
+    property AsDateTime: TDateTime read GetAsDateTime write SetAsDateTime;
   end;
 
 implementation
 
 // NovusBOField
 
-constructor TNovusBOField.create;
+constructor TNovusBOField.Create;
 begin
-  inherited create;
+  inherited Create;
 
   fbToJSON := True;
 end;
 
-destructor TNovusBOField.destroy;
+destructor TNovusBOField.Destroy;
 begin
-  inherited destroy;
+  inherited Destroy;
 end;
 
 function TNovusBOField.IsClear: Boolean;
@@ -225,11 +177,11 @@ begin
 end;
 
 
-//NovusBOIntegerFieldType
+// NovusBOIntegerFieldType
 
-constructor TNovusBOIntegerField.create;
+constructor TNovusBOIntegerField.Create;
 begin
-  inherited create;
+  inherited Create;
 
   FieldType := TNovusBOFieldType.nftInteger;
 end;
@@ -249,11 +201,10 @@ begin
   FValue := AValue;
 end;
 
-//NovusBOStringField
-
-constructor TNovusBOStringField.create;
+// NovusBOStringField
+constructor TNovusBOStringField.Create;
 begin
-  inherited create;
+  inherited Create;
 
   FieldType := TNovusBOFieldType.nftString;
 end;
@@ -273,15 +224,15 @@ begin
   Result := FValue;
 end;
 
-procedure TNovusBOStringField.SetAsAnsiString(aValue: AnsiString);
+procedure TNovusBOStringField.SetAsAnsiString(AValue: AnsiString);
 begin
-  FValue := aValue;
+  FValue := AValue;
 end;
 
 // NovusBOBooleanField
-constructor TNovusBOBooleanField.create;
+constructor TNovusBOBooleanField.Create;
 begin
-  inherited create;
+  inherited Create;
 
   FieldType := TNovusBOFieldType.nftBoolean;
 end;
@@ -296,17 +247,13 @@ begin
   FValue := AValue;
 end;
 
-
-
-
-//NovusBOSmallIntField
-constructor TNovusBOSmallIntField.create;
+// NovusBOSmallIntField
+constructor TNovusBOSmallIntField.Create;
 begin
-  inherited create;
+  inherited Create;
 
   FieldType := TNovusBOFieldType.nftSmallInt;
 end;
-
 
 function TNovusBOSmallIntField.GetAsSmallInt: SmallInt;
 begin
@@ -325,18 +272,19 @@ end;
 
 procedure TNovusBOSmallIntField.SetAsBoolean(AValue: Boolean);
 begin
-  if AValue then FValue := 1
-  else FValue := 0;
+  if AValue then
+    FValue := 1
+  else
+    FValue := 0;
 end;
 
-//NovusBODateTimeField
-constructor TNovusBODateTimeField.create;
+// NovusBODateTimeField
+constructor TNovusBODateTimeField.Create;
 begin
-  inherited create;
+  inherited Create;
 
   FieldType := TNovusBOFieldType.nftDateTime;
 end;
-
 
 function TNovusBODateTimeField.GetAsDateTime: TDateTime;
 begin
@@ -347,7 +295,8 @@ function TNovusBODateTimeField.GetAsString;
 begin
   Result := '';
 
-  if Fvalue = 0 then Exit;
+  if FValue = 0 then
+    Exit;
 
   DateTimeToString(Result, fsDateFormat, FValue);
 end;
@@ -357,24 +306,23 @@ begin
   FValue := AValue;
 end;
 
-//TNovusBlobField
-constructor TNovusBOBlobField.create;
+// TNovusBlobField
+constructor TNovusBOBlobField.Create;
 begin
-  inherited create;
+  inherited Create;
 
   FieldType := TNovusBOFieldType.nftBlob;
 end;
 
-destructor TNovusBOBlobField.destroy;
+destructor TNovusBOBlobField.Destroy;
 begin
-  inherited destroy;
+  inherited Destroy;
 end;
 
-
 // NovusBOFloatField
-constructor TNovusBOFloatField.create;
+constructor TNovusBOFloatField.Create;
 begin
-  inherited create;
+  inherited Create;
 
   FieldType := TNovusBOFieldType.nftFloat;
 end;
@@ -392,32 +340,32 @@ end;
 
 // TNovusBONumericField
 
-function TNovusBOnumericField.GetAsNumeric: Double;
+function TNovusBONumericField.GetAsNumeric: Double;
 begin
   Result := FValue;
 end;
 
-procedure TNovusBOnumericField.SetAsnumeric(AValue: Double);
+procedure TNovusBONumericField.SetAsNumeric(AValue: Double);
 begin
   FValue := AValue;
 end;
 
-function TNovusBOnumericField.GetAsDouble: Double;
+function TNovusBONumericField.GetAsDouble: Double;
 begin
   Result := FValue;
 end;
 
-procedure TNovusBOnumericField.SetAsDouble(AValue: Double);
+procedure TNovusBONumericField.SetAsDouble(AValue: Double);
 begin
   FValue := AValue;
 end;
 
-function TNovusBOnumericField.GetAsCurrency: Currency;
+function TNovusBONumericField.GetAsCurrency: Currency;
 begin
   Result := FValue;
 end;
 
-procedure TNovusBOnumericField.SetAsCurrency(AValue: Currency);
+procedure TNovusBONumericField.SetAsCurrency(AValue: Currency);
 begin
   FValue := AValue;
 end;

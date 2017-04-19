@@ -14,46 +14,39 @@ Type
     constructor Create; virtual;
     destructor Destroy; override;
 
-    function AddBOField(ABOField: tNovusBOField):  tNovusBOField;
+    function AddBOField(ABOField: tNovusBOField): tNovusBOField;
 
-    function FieldByName(aFieldName: String): TNovusBOField;
+    function FieldByName(aFieldName: String): tNovusBOField;
 
-    property oFieldList: tNovusList
-      read FoFieldList
-      write FoFieldList;
+    property oFieldList: tNovusList read FoFieldList write FoFieldList;
 
-    property TableName: String
-      read fsTablename
-      write fsTableName;
-
-
-
+    property TableName: String read fsTableName write fsTableName;
   end;
 
 implementation
 
-constructor TNovusBOMap.create;
+constructor TNovusBOMap.Create;
 begin
-  inherited create;
+  inherited Create;
 
   FoFieldList := tNovusList.Create(tNovusBOField);
 
   FoFieldList.Clear;
 end;
 
-destructor TNovusBOMap.destroy;
+destructor TNovusBOMap.Destroy;
 begin
   FoFieldList.Free;
 
-  inherited destroy;
+  inherited Destroy;
 end;
 
-function TNovusBOMap.AddBOField(ABOField: tNovusBOField):  tNovusBOField;
+function TNovusBOMap.AddBOField(ABOField: tNovusBOField): tNovusBOField;
 begin
   FoFieldList.Add(ABOField);
 end;
 
-function TNovusBOMap.FieldByName(aFieldName: String): TNovusBOField;
+function TNovusBOMap.FieldByName(aFieldName: String): tNovusBOField;
 Var
   I: Integer;
   loNovusBOField: tNovusBOField;
@@ -61,17 +54,15 @@ begin
   Result := NIL;
 
   for I := 0 to FoFieldList.Count - 1 do
+  begin
+    loNovusBOField := tNovusBOField(FoFieldList.items[I]);
+
+    If Uppercase(loNovusBOField.FieldName) = Uppercase(aFieldName) then
     begin
-      loNovusBOField := tNovusBOField(FoFieldList.items[i]);
-
-      If Uppercase(loNovusBOField.FieldName) = Uppercase(aFieldName) then
-        begin
-          Result := loNovusBOField;
-          Break;
-        end;
+      Result := loNovusBOField;
+      Break;
     end;
+  end;
 end;
-
-
 
 end.

@@ -4,6 +4,7 @@ interface
 
 uses
   contnrs, NovusInfrastructre;
+
 type
   TNovusList = class(TNovusInfrastructre)
   protected
@@ -25,27 +26,18 @@ type
     function Delete(AItem: TObject): Boolean;
     function Equals(AList: TNovusList): Boolean;
     property Count: Integer read GetCount;
-    property Items[Index: Integer]: TObject
-    read Get write Put; default;
+    property Items[Index: Integer]: TObject read Get write Put; default;
     procedure Clear;
 
-    procedure CopyFrom(aNovusList: tNovusList);
+    procedure CopyFrom(aNovusList: TNovusList);
 
-    property List: TObjectList
-      read FList
-      write FList;
+    property List: TObjectList read FList write FList;
 
-    property aClass: tClass
-      read FaClass
-      write FaClass;
+    property aClass: TClass read faclass write faclass;
 
-    property aClassname: string
-      read fsaClassname
-      write fsaClassname;
+    property aClassname: string read fsaClassname write fsaClassname;
 
-    property oParentObject: tObject
-      read foParentObject
-      write foParentObject;
+    property oParentObject: TObject read foParentObject write foParentObject;
   end;
 
 implementation
@@ -56,7 +48,7 @@ uses
 
 constructor TNovusList.Create(AaClass: TClass);
 begin
-  inherited create;
+  inherited Create;
 
   foParentObject := NIL;
 
@@ -84,40 +76,39 @@ var
   Test: Boolean;
 begin
   try
-    Test := AItem is Faclass;
+    Test := AItem is faclass;
   except
     on Exception do
-      raise EInvalidCast.Create(Format(
-        'NovusList: Cannot add a non-object to a list of %s objects',
-        [FaClass.ClassName]));
+      raise EInvalidCast.Create
+        (Format('NovusList: Cannot add a non-object to a list of %s objects',
+        [faclass.Classname]));
   end;
   if Test then
     Result := FList.Add(AItem)
   else
-    raise EInvalidCast.Create(Format(
-      'NovusList: Cannot add a %s object to a list of %s objects',
-      [AItem.ClassName, FaClass.ClassName]));
+    raise EInvalidCast.Create
+      (Format('NovusList: Cannot add a %s object to a list of %s objects',
+      [AItem.Classname, faclass.Classname]));
 end;
-
 
 procedure TNovusList.Insert(AItem: TObject; AIndex: Integer);
 var
   Test: Boolean;
 begin
   try
-    Test := AItem is Faclass;
+    Test := AItem is faclass;
   except
     on Exception do
-      raise EInvalidCast.Create(Format(
-        'NovusList: Cannot insert a non-object to a list of %s objects',
-        [FaClass.ClassName]));
+      raise EInvalidCast.Create
+        (Format('NovusList: Cannot insert a non-object to a list of %s objects',
+        [faclass.Classname]));
   end;
   if Test then
-     FList.Insert(AIndex, AItem)
+    FList.Insert(AIndex, AItem)
   else
-    raise EInvalidCast.Create(Format(
-      'NovusList: Cannot insert a %s object to a list of %s objects',
-      [AItem.ClassName, FaClass.ClassName]));
+    raise EInvalidCast.Create
+      (Format('NovusList: Cannot insert a %s object to a list of %s objects',
+      [AItem.Classname, faclass.Classname]));
 end;
 
 function TNovusList.Delete(AItem: TObject): Boolean;
@@ -128,13 +119,13 @@ begin
 
   liIndex := FList.IndexOf(AItem);
   If liIndex > -1 then
-    begin
-      FList.Remove(AItem);
+  begin
+    FList.Remove(AItem);
 
-      FList.Pack;
+    FList.Pack;
 
-      Result := True;
-    end;
+    Result := True;
+  end;
 end;
 
 procedure TNovusList.Put(Index: Integer; Item: TObject);
@@ -142,18 +133,19 @@ var
   Test: Boolean;
 begin
   try
-    Test := Item is FaClass;
-  except on Exception do
-      raise EInvalidCast.Create(Format(
-        'NLSafeList: Cannot put a non-object into a list of %s objects',
-        [FaClass.ClassName]));
+    Test := Item is faclass;
+  except
+    on Exception do
+      raise EInvalidCast.Create
+        (Format('NLSafeList: Cannot put a non-object into a list of %s objects',
+        [faclass.Classname]));
   end;
   if Test then
     FList[Index] := Item
   else
-    raise EInvalidCast.Create(Format(
-      'NLSafeList: Cannot put a %s object into a list of %s objects',
-      [TObject(Item).ClassName, FaClass.ClassName]));
+    raise EInvalidCast.Create
+      (Format('NLSafeList: Cannot put a %s object into a list of %s objects',
+      [TObject(Item).Classname, faclass.Classname]));
 end;
 
 function TNovusList.GetCount: Integer;
@@ -179,16 +171,14 @@ begin
   FList.Clear;
 end;
 
-procedure TNovusList.CopyFrom(aNovusList: tNovusList);
+procedure TNovusList.CopyFrom(aNovusList: TNovusList);
 Var
   I: Integer;
 begin
   Clear;
 
-  for I := 0 to aNovusList.Count -1 do
-    Add(aNovusList.Items[i]);
-
+  for I := 0 to aNovusList.Count - 1 do
+    Add(aNovusList.Items[I]);
 end;
 
 end.
-

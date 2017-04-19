@@ -6,30 +6,20 @@ uses SysUtils, NovusUtilities;
 
 type
   TGuidExUtils = class(TNovusUtilities)
-
-    class function NewGuid : TGuid;
-
-    class function EqualGuids(Guid1, Guid2 : TGuid) : boolean;
-
-    class function NewGuidString : String;
-
+    class function NewGuid: TGuid;
+    class function EqualGuids(Guid1, Guid2: TGuid): boolean;
+    class function NewGuidString: String;
     class function NewGuidNoBracketsString: String;
-
-
-    class function IsEmptyGuid(Guid : TGuid) : boolean;
-
-    class function ToQuotedString(Guid : TGuid) : string;
-
-    class function FromString(Value : string) : TGuid;
-    class function EmptyGuid : TGuid;
-    class function ToString(Guid : TGuid) : string;
+    class function IsEmptyGuid(Guid: TGuid): boolean;
+    class function ToQuotedString(Guid: TGuid): string;
+    class function FromString(Value: string): TGuid;
+    class function EmptyGuid: TGuid;
+    class function ToString(Guid: TGuid): string;
   end;
 
 implementation
 
 uses NovusStringUtils;
-
-{ TGuidExUtils }
 
 class function TGuidExUtils.EmptyGuid: TGuid;
 begin
@@ -46,31 +36,29 @@ begin
   result := StringToGuid(Value);
 end;
 
-class function TGuidExUtils.IsEmptyGuid(Guid : TGuid): boolean;
+class function TGuidExUtils.IsEmptyGuid(Guid: TGuid): boolean;
 begin
-  result := EqualGuids(Guid,EmptyGuid);
+  result := EqualGuids(Guid, EmptyGuid);
 end;
-
 
 class function TGuidExUtils.NewGuidString: String;
 begin
-  Result := TGuidExUtils.ToString(TGuidExUtils.NewGuid);
+  result := TGuidExUtils.ToString(TGuidExUtils.NewGuid);
 end;
 
 class function TGuidExUtils.NewGuidNoBracketsString: String;
 begin
-  Result := tNovusStringUtils.StripChar(TGuidExUtils.NewGuidString, '{');
+  result := tNovusStringUtils.StripChar(TGuidExUtils.NewGuidString, '{');
 
-  Result := tNovusStringUtils.StripChar(Result, '}')
+  result := tNovusStringUtils.StripChar(result, '}')
 end;
-
 
 class function TGuidExUtils.NewGuid: TGuid;
 var
-  Guid : TGuid;
+  Guid: TGuid;
 begin
   CreateGUID(Guid);
-  Result := Guid;
+  result := Guid;
 end;
 
 class function TGuidExUtils.ToQuotedString(Guid: TGuid): string;
@@ -83,7 +71,4 @@ begin
   result := GuidToString(Guid);
 end;
 
-end.//GuidEx
-
-
-
+end.

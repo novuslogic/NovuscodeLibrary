@@ -1,5 +1,5 @@
 unit NovusStringUtils;
-
+
 interface
 
 uses Windows, sysutils, {Forms,} NovusUtilities, Classes, variants;
@@ -971,3 +971,4 @@ begin
 end;
 
 end.
+

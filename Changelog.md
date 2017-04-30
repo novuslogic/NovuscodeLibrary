@@ -1,4 +1,10 @@
 
+30/04/2017
+
+* New unit NovusStreamUtils.pas
+* [TNovusVersionUtils.GetFileInfoString is not passing an pascal string but an ansistring](https://github.com/novuslogic/NovuscodeLibrary/issues/3)
+* New property IgnoreBlankValue in class TNovusTemplate - If TagValue is blank the TagName remains in OutputDoc
+
 19/04/2017
 * [Reformatted all units with Delphi internal source code formater](https://github.com/novuslogic/NovuscodeLibrary/issues/1)
 

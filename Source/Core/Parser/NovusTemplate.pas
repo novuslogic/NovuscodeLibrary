@@ -84,7 +84,7 @@ type
     FStartToken: Char;
     FEndToken: Char;
     FSecondToken: Char;
-
+    fbIgnoreBlankValue: boolean;
     FTemplateTags: TTemplateTags;
     FTemplateDoc: tStringList;
     FOutputDoc: tStringList;
@@ -125,6 +125,9 @@ type
     property EndToken: Char read FEndToken write FEndToken;
 
     property SecondToken: Char read FSecondToken write FSecondToken;
+
+    property IgnoreBlankValue: Boolean read fbIgnoreBlankValue write fbIgnoreBlankValue;
+
   end;
 
 implementation
@@ -142,6 +145,8 @@ begin
   FTemplateDoc := tStringList.Create;
   FOutputDoc := tStringList.Create;
   FParserStream := TMemoryStream.Create;
+
+  IgnoreBlankValue := False;
 end;
 
 destructor TNovusTemplate.Destroy;
@@ -183,6 +188,9 @@ begin
   for I := 0 to TemplateTags.Count - 1 do
   begin
     FTemplateTag := TTemplateTag(TemplateTags.Items[I]);
+
+    if (IgnoreBlankValue = True) and (FTemplateTag.TagValue = '') then
+      Continue;
 
     if I <= TemplateTags.Count - 2 then
       InsertOutputDoc(FTemplateTag)

@@ -197,6 +197,8 @@ begin
   then
     raise Exception.Create('Specified file info string not available');
   SetString(Result, P, Len);
+
+  Result := Trim(Result);
 end;
 
 end.

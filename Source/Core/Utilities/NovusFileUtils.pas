@@ -12,6 +12,9 @@ Type
     class function MoveDir(aFromDirectory, aToDirectory: String): Boolean;
     class function CopyDir(aFromDirectory, aToDirectory: String): Boolean;
     class function AbsoluteFilePath(aFilename: String): String;
+     /// <summary>
+    ///   Uses IncludeTrailingPathDelimiter, if filename is blank returns blank.
+    /// </summary>
     class function TrailingBackSlash(const aFilename: string): string;
     class function GetSpecialFolder(const CSIDL: integer) : string;
     class function IsValidFolder(aFolder: String): Boolean;

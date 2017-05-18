@@ -37,6 +37,9 @@ const
     FILE_EXECUTE or Windows.SYNCHRONIZE);
 
 type
+  TEventRunCaptureCommandOutput = procedure(var aOutput: string) of Object;
+
+
   TAceHeader = packed record
     AceType: Byte;
     AceFlags: Byte;

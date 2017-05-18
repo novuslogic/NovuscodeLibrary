@@ -17,8 +17,10 @@ type
     procedure Put(Index: Integer; Item: TObject);
     function GetCount: Integer;
   public
-    constructor Create(AaClass: TClass);
+    constructor Create(aClass: TClass); virtual;
     destructor Destroy; override;
+
+    procedure InitClass(aClass: tClass);
 
     procedure Insert(AItem: TObject; AIndex: Integer);
 
@@ -46,16 +48,11 @@ uses
   SysUtils,
   NovusBO;
 
-constructor TNovusList.Create(AaClass: TClass);
+constructor TNovusList.Create(aClass: TClass);
 begin
   inherited Create;
 
-  foParentObject := NIL;
-
-  aClassname := AaClass.Classname;
-
-  FList := TObjectList.Create;
-  faclass := AaClass;
+  InitClass(aClass);
 end;
 
 destructor TNovusList.Destroy;
@@ -64,6 +61,16 @@ begin
 
   FList.Free;
   inherited Destroy;
+end;
+
+procedure TNovusList.InitClass(aClass: tClass);
+begin
+  foParentObject := NIL;
+
+  aClassname := aClass.Classname;
+
+  FList := TObjectList.Create;
+  faclass := aClass;
 end;
 
 function TNovusList.Get(Index: Integer): TObject;

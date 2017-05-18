@@ -1,3 +1,7 @@
+15/05/2016
+
+*  New procedure TNovusList.InitClass moved initial of class for list
+
 
 30/04/2017
 

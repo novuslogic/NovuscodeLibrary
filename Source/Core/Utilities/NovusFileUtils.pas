@@ -1,8 +1,9 @@
+{$I ..\..\core\NovusCodeLibrary.inc}
 unit NovusFileUtils;
 
 interface
 
-uses StrUtils, NovusUtilities, Windows, SysUtils, SHFolder, ShellApi, ShlObj;
+uses StrUtils, NovusUtilities, Windows, SysUtils, SHFolder, ShellApi, ShlObj, Classes;
 
 Type
   TNovusFileUtils = class(tNovusUtilities)
@@ -18,6 +19,12 @@ Type
     class function TrailingBackSlash(const aFilename: string): string;
     class function GetSpecialFolder(const CSIDL: integer) : string;
     class function IsValidFolder(aFolder: String): Boolean;
+    /// <summary>
+    ///   Returns if true or false if a text file
+    /// </summary>
+{$IFDEF DELPHI2009_UP}
+    class function IsTextFile(aFilename: String;var aEncoding: tEncoding): integer;
+{$ENDIF}
   end;
 
   function PathCombine(lpszDest: PChar; const lpszDir, lpszFile: PChar):PChar; stdcall; external 'shlwapi.dll' name 'PathCombineA';
@@ -194,9 +201,72 @@ begin
       until I = 0;
       Result := True;
     end;
-
-
 end;
 
+{$IFDEF DELPHI2009_UP}
+class function TNovusFileUtils.IsTextFile(aFilename: String;var aEncoding: TEncoding): integer;
+var
+  F: TFileStream;
+  Buffer: array [0 .. 1023] of byte;
+  FEncoding: TEncoding;
+  ch: byte;
+Const
+  cNUL = 0; // Null char
+  cBS = 8; // Back Space
+  cCR = 13; // Carriage Return
+  cSUB = 26; // Substitute
+
+  function isControlChar(aCh: byte): boolean;
+  begin
+    Result := (((aCh > cNUL) and (aCh < cBS)) or
+      ((aCh > cCR) and (aCh < cSUB)));
+
+  end;
+
+begin
+  Result := -1;
+  if not FileExists(aFilename) then
+    Exit;
+
+  Result := 0;
+
+  Try
+    F := TFileStream.Create(aFilename, fmOpenRead);
+
+    if F.Position < F.Size then
+    begin
+      F.Read(Buffer, 1024);
+
+      for ch in Buffer do
+      begin
+        if not isControlChar(ch) then
+        begin
+          if (Buffer[0] = $EF) and (Buffer[1] = $BB) and (Buffer[2] = $BF) then
+            FEncoding := TEncoding.UTF8
+          else if (Buffer[0] = $FE) and (Buffer[1] = $FF) then
+            FEncoding := TEncoding.Unicode
+          else if (Buffer[0] = 0) and (Buffer[1] = 0) and (Buffer[2] = $FE) and
+            (Buffer[3] = $FF) then
+            FEncoding := TEncoding.BigEndianUnicode
+          else if (Buffer[0] = $2B) and (Buffer[1] = $2F) and (Buffer[2] = $76)
+          then
+            FEncoding := TEncoding.UTF7
+          else
+            FEncoding := TEncoding.Default;
+
+          aEncoding := FEncoding;
+
+          Result := 1;
+
+          break;
+        end;
+      end;
+    end;
+
+  Finally
+    F.Free;
+  End;
+end;
+{$ENDIF}
 
 end.

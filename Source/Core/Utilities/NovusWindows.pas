@@ -3,7 +3,7 @@ unit NovusWindows;
 
 interface
 
-uses Windows, sysutils, Classes, NovusUtilities, Registry, Messages;
+uses Windows, sysutils, Classes, NovusUtilities, Registry, Messages, TlHelp32;
 
 Type
   TNovusWindows = class(TNovusUtilities)
@@ -58,6 +58,8 @@ Type
     /// </param>
     class function SetSysEnvironmentVariable(const aVariableName: String;
       aValue: string): Boolean;
+
+    class function IsProcess32Exists(aFileName: string): Boolean;
   end;
 
 function CreateEnvironmentBlock(var lpEnvironment: Pointer; hToken: THandle;
@@ -243,6 +245,28 @@ begin
       result := Wow64Process;
     end;
   end;
+end;
+
+class function TNovusWindows.IsProcess32Exists(aFileName: string): Boolean;
+var
+  ContinueLoop: BOOL;
+  FSnapshotHandle: THandle;
+  FProcessEntry32: TProcessEntry32;
+begin
+  FSnapshotHandle := CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+  FProcessEntry32.dwSize := SizeOf(FProcessEntry32);
+  ContinueLoop := Process32First(FSnapshotHandle, FProcessEntry32);
+  result := False;
+  while Integer(ContinueLoop) <> 0 do
+  begin
+    if ((UpperCase(ExtractFileName(FProcessEntry32.szExeFile))
+      = UpperCase(aFileName)) or (UpperCase(FProcessEntry32.szExeFile)
+      = UpperCase(aFileName))) then
+      result := True;
+
+    ContinueLoop := Process32Next(FSnapshotHandle, FProcessEntry32);
+  end;
+  CloseHandle(FSnapshotHandle);
 end;
 
 end.

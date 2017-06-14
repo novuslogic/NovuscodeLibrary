@@ -113,7 +113,7 @@ Type
       var AStringList: TStringList);
     class procedure String2Strings(aString: string; var AStrings: TStrings);
     class function FormatMessStr(aString: String): String;
-    class function TrailingBackSlash(const aFilename: string): string;
+//    class function TrailingBackSlash(const aFilename: string): string;
     class function VarArrayToStr(const vArray: variant): string;
     class function VarStrNull(const V: OleVariant): string;
     class function IsBoolean(const sValue: string): Boolean;
@@ -816,6 +816,7 @@ begin
   *)
 end;
 
+(*
 class function TNovusStringUtils.TrailingBackSlash(const aFilename
   : string): string;
 begin
@@ -824,6 +825,7 @@ begin
   if Trim(aFilename) <> '' then
     result := IncludeTrailingPathDelimiter(aFilename);
 end;
+*)
 
 class function TNovusStringUtils.MemoryStreamToString
   (Stream: TMemoryStream): string;

@@ -51,6 +51,8 @@ procedure TForm1.FormDestroy(Sender: TObject);
 begin
   FNovusPlugins.UnloadPlugin(0);
   FNovusPlugins.Free;
+
+  ReportMemoryLeaksOnShutdown := true;
 end;
 
 end.

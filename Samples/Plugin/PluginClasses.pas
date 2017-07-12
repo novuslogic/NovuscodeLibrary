@@ -43,7 +43,7 @@ end;
 
 procedure TTestPlugin.Finalize;
 begin
-//
+  ReportMemoryLeaksOnShutdown := true;
 end;
 
 

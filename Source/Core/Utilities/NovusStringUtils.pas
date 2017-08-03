@@ -74,8 +74,14 @@ Type
     class function RootDirectory: String;
     class function StripChar(s: String; Ch: Char): string;
     class function ReplaceChar(s: String; aFromCh, aToCh: Char): String;
+    /// <summary>
+    ///   Simple token string parser
+    /// </summary>
+    class function GetStrToken(const s: string; sTokens: array of string;
+      var iPos: Integer; var sLastToken: String): string;
     class function GetStrTokenA(const s, sDelim: string;
       var iPos: Integer): string;
+
     class function GetStrRes(const Index: Integer): String;
     /// <summary>
     /// Convert a String to Integer
@@ -484,6 +490,54 @@ begin
   until (I = 0) or (PathName[I] in DosDelimSet);
   result := Copy(PathName, succ(I), StMaxFileLen);
 end;
+
+
+class function TNovusStringUtils.GetStrToken(const s: string; sTokens: array of string;
+  var iPos: Integer; var sLastToken: String): string;
+var
+  sTemp: string;
+  iEndPos: Integer;
+
+  function FindEndPos: Integer;
+  var
+    liEndPos: Integer;
+    I: integer;
+  begin
+     liEndPos := 0;
+     i := 0;
+     while( liEndPos = 0) do
+       begin
+         sLastToken := sTokens[i];
+         liEndPos := Pos(sLastToken, sTemp);
+
+         Inc(i);
+         if I > Length(sTokens) then break
+       end;
+
+    Result := liEndPos;
+  end;
+
+begin
+  result := '';
+  if (iPos <= 0) or (iPos > Length(s)) then
+    Exit;
+
+  sTemp := Copy(s, iPos, Length(s) + 1 - iPos);
+
+  iEndPos := FindEndPos;
+  if iEndPos <= 0 then
+  begin
+    result := sTemp;
+    iPos := -1;
+  end
+  else
+  begin
+    result := Copy(sTemp, 1, iEndPos - 1);
+
+    iPos := iPos + iEndPos + Length(sLastToken) - 1;
+  end
+end;
+
 
 class function TNovusStringUtils.GetStrTokenA(const s, sDelim: string;
   var iPos: Integer): string;

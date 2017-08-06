@@ -56,7 +56,7 @@ Type
     class function Replicate(c: Char; iLen: Integer): string;
     class function PadLeft(const s: string; iLen: Integer;
       const sFillChar: Char): string;
-    class function JustFilename(const PathName: String): String;
+    class function JustFilename(const aPathName: String): String;
     class function JustPathname(const aPathName: String): String;
     class function Str2DateTime(s: String): tDateTime;
     class procedure ValLongInt(s: ShortString; var LI: Longint;
@@ -482,13 +482,13 @@ var
   I: Longint;
 begin
   result := '';
-  if PathName = '' then
+  if aPathName = '' then
     Exit;
-  I := succ(Length(PathName));
+  I := succ(Length(aPathName));
   repeat
     dec(I);
-  until (I = 0) or (PathName[I] in DosDelimSet);
-  result := Copy(PathName, succ(I), StMaxFileLen);
+  until (I = 0) or (aPathName[I] in DosDelimSet);
+  result := Copy(aPathName, succ(I), StMaxFileLen);
 end;
 
 
@@ -847,27 +847,6 @@ begin
     Exit;
 
   result := Trim(ExtractFilePath(aPathName));
-
-  (*
-    I := Succ(Length(PathName));
-    repeat
-    Dec(I);
-    until (I = 0) or (PathName[I] in DosDelimSet);                         {!!.01}
-
-    if I = 1 then
-    {Either the root directory of default drive or invalid pathname}
-    Result := PathName[1]
-    else if (PathName[I] = '\') then begin
-    if PathName[Pred(I)] = ':' then
-    {Root directory of a drive, leave trailing backslash}
-    Result := Copy(PathName, 1, I)
-    else
-    {Subdirectory, remove the trailing backslash}
-    Result := Copy(PathName, 1, Pred(I));
-    end else
-    {Either the default directory of a drive or invalid pathname}
-    Result := Copy(PathName, 1, I);
-  *)
 end;
 
 (*

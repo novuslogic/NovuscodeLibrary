@@ -211,15 +211,15 @@ begin
   If fbIsFileOpen then
     Exit;
 
-  if Not DirectoryExists(TNovusUtilities.JustPathname(Filename)) then
+  if Not DirectoryExists(TNovusStringUtils.JustPathname(Filename)) then
     Exit;
 
   if FileExists(Filename) then
   begin
     If (FileSize > 0) and (TNovusUtilities.FindFileSize(Filename) > FileSize)
     then
-      RenameFile(Filename, TNovusUtilities.JustPathname(Filename) +
-        TNovusUtilities.JustFilename(Filename) + '.bak');
+      RenameFile(Filename, TNovusStringUtils.JustPathname(Filename) +
+        TNovusStringUtils.JustFilename(Filename) + '.bak');
   end;
 
   AssignFile(FFilePonter, Filename);

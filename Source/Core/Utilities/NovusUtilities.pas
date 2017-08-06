@@ -23,8 +23,8 @@ Type
     class function FindStringListValue(const Strings: tstringlist;
       Name: String): String;
     class function FindFileSize(Afile: String): Integer;
-    class function JustFilename(const PathName: String): String;
-    class function JustPathname(const PathName: ShortString): String;
+//    class function JustFilename(const PathName: String): String;
+//    class function JustPathname(const PathName: ShortString): String;
     class function GetPropertyasClass(aObject: TObject;
       aPropertyName: string): TObject;
     class function IsProperty(aObject: TObject; aPropertyName: string): Boolean;
@@ -83,7 +83,7 @@ begin
 
   SysUtils.FindClose(SR);
 end;
-
+(*
 class function TNovusUtilities.JustFilename(const PathName: String): String;
 var
   I: Longint;
@@ -122,6 +122,7 @@ begin
   else
     Result := Copy(PathName, 1, I);
 end;
+*)
 
 class function TNovusUtilities.CopyObject(Src, Dest: TObject;
   Related: Boolean = FALSE): Boolean;

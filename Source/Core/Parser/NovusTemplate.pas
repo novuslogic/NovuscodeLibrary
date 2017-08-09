@@ -9,7 +9,15 @@ type
   TOnGetTagValueEvent = procedure(Sender: TObject; Var ATagValue: String)
     of object;
 
-  TTemplateTags = Class(tNovuslist);
+  TTemplateTags = Class(tNovuslist)
+  private
+  protected
+  public
+    /// <summary>
+    ///   Find Tagname from TTemplateTags class
+    /// </summary>
+    function FindTagNameIndexOf(ATagName: String; AIndex: Integer = 0): Integer;
+  End;
 
   TTag = class(TCollectionItem)
   private
@@ -102,8 +110,8 @@ type
     function InsertOutputDoc(ATemplateTag: TTemplateTag): Boolean;
     function TagValuesAllExists: Boolean;
 
-    function FindTagNameIndexOf(ATagName: String; AIndex: INteger = 0): INteger;
-    function FindNextTagNameIndexOf(ATagName: String; AIndex: INteger): INteger;
+    function FindTagNameIndexOf(ATagName: String; AIndex: INteger = 0): Integer;
+    function FindNextTagNameIndexOf(ATagName: String; AIndex: INteger): Integer;
 
     procedure CreateTemplateTag;
     function AddTemplateTag(ATemplateTag: TTemplateTag): INteger;
@@ -414,7 +422,7 @@ begin
 end;
 
 function TNovusTemplate.FindTagNameIndexOf(ATagName: String;
-  AIndex: INteger = 0): INteger;
+  AIndex: integer = 0): INteger;
 Var
   I: INteger;
 begin
@@ -549,6 +557,27 @@ end;
 function TTags.GetOwner: TPersistent;
 begin
   Result := FOwner;
+end;
+
+
+function TTemplateTags.FindTagNameIndexOf(ATagName: String;
+  AIndex: integer = 0): INteger;
+Var
+  I: INteger;
+begin
+  Result := -1;
+
+  for I := AIndex to Self.Count - 1 do
+  begin
+    if Trim(uppercase(TTemplateTag(Self.Items[I]).TagName))
+      = Trim(uppercase(ATagName)) then
+    begin
+      Result := I;
+
+      Break;
+    end;
+  end;
+
 end;
 
 end.

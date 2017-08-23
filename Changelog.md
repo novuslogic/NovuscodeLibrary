@@ -1,3 +1,12 @@
+23/08/2017
+
+* New function TNovusWebUtils.GetMimeFromData
+* New function TNovusWebUtils.GetMIMEType
+* New function TNovusWebUtils.OpenDefaultWebBrowser
+* New function TNovusWebUtils.WebBrowserLoadFromHTML
+* Moved TNovusIndyUtils.UrlEncode and TNovusIndyUtils.UrlDecode to New TNovusWebUtils Class 
+* New TNovusWebUtils Class 
+
 15/05/2017
 
 *  New procedure TNovusList.InitClass moved initial of class for list

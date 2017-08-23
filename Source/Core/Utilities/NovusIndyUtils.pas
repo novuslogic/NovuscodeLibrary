@@ -7,11 +7,14 @@ uses SysUtils, NovusNumUtils, Winsock, IdTCPClient, NovusUtilities;
 
 Type
   TNovusIndyUtils = class(tNovusUtilities)
-
   protected
   public
+  (*
+    moved to NovusWebUtils unit
+
     class function UrlEncode(const DecodedStr: String; Pluses: Boolean): String;
     class function UrlDecode(const EncodedStr: String): String;
+    *)
     /// <summary>
     /// Check if tcp port is open.
     /// </summary>
@@ -20,6 +23,7 @@ Type
 
 implementation
 
+(*
 class function TNovusIndyUtils.UrlEncode(const DecodedStr: String;
   Pluses: Boolean): String;
 var
@@ -68,6 +72,7 @@ begin
     end;
   end;
 end;
+*)
 
 class function TNovusIndyUtils.IsTCPPortUsed(aPort: Word;
   aAddress: AnsiString): Boolean;

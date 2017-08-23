@@ -8,6 +8,10 @@ uses StrUtils, NovusUtilities, Windows, SysUtils, SHFolder, ShellApi, ShlObj, Cl
 Type
   TNovusFileUtils = class(tNovusUtilities)
   public
+
+    /// <summary>
+    ///   Check if file is being used or locked.
+    /// </summary>
     class function IsFileInUse(fName : string) : boolean;
     class function IsFileReadonly(fName : string) : boolean;
     class function MoveDir(aFromDirectory, aToDirectory: String): Boolean;
@@ -231,7 +235,7 @@ begin
   Result := 0;
 
   Try
-    F := TFileStream.Create(aFilename, fmOpenRead);
+    F := TFileStream.Create(aFilename, fmOpenRead	or fmShareDenyWrite);
 
     if F.Position < F.Size then
     begin

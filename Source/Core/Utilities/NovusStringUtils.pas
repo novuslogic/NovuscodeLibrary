@@ -73,6 +73,9 @@ Type
     /// </summary>
     class function RootDirectory: String;
     class function StripChar(s: String; Ch: Char): string;
+    /// <summary>
+    ///   Replace an character with another in a string
+    /// </summary>
     class function ReplaceChar(s: String; aFromCh, aToCh: Char): String;
     /// <summary>
     ///   Simple token string parser

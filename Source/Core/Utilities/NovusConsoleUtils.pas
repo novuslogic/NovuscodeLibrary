@@ -5,17 +5,29 @@ interface
 Uses NovusUtilities, Winapi.Windows, SysUtils;
 
 type
+  TKeyEvent = record
+    KeyCode: Word;
+    ScanCode: Word;
+  end;
+
   TNovusConsoleUtils = class(TNovusUtilities)
   private
   protected
   public
     /// <summary>
-    /// Check if the console has a key press.
+    /// Check if the console has a key press
     /// </summary>
     /// <param name="aHandle">
     /// Windows Console Handle
     /// </param>
     class function IsAvailableKey(aHandle: THandle): Boolean;
+    /// <summary>
+    /// Check if the console has a key press and return key
+    /// </summary>
+    /// <param name="aHandle">
+    /// Windows Console Handle
+    /// </param>
+    class function IsAvailableKeyEx(aHandle: THandle): TKeyEvent;
     /// <summary>
     /// Get available char from console.
     /// </summary>
@@ -29,6 +41,8 @@ type
     /// </summary>
     class function GetStdOutputHandle: THandle;
   end;
+
+
 
 implementation
 
@@ -71,19 +85,15 @@ begin
     end;
 
   until false;
-
-  // Win32Check(
-  // ReadConsole( ahandle,
-  // @result, 1,
-  // charsread, nil ));
 End;
 
-class function TNovusConsoleUtils.IsAvailableKey(aHandle: THandle): Boolean;
+class function TNovusConsoleUtils.IsAvailableKeyEx(aHandle: THandle): TKeyEvent;
 Var
   i, numEvents: Cardinal;
   events: Array of TInputRecord;
 Begin
-  Result := false;
+  Result.KeyCode := 0;
+  Result.ScanCode :=0 ;
   Win32Check(GetNumberOfConsoleInputEvents(aHandle, numEvents));
   If numEvents > 0 Then
   Begin
@@ -93,10 +103,22 @@ Begin
       If (events[i].EventType = KEY_EVENT) and
         (events[i].Event.KeyEvent.bKeyDown) Then
       Begin
-        Result := true;
+        Result.KeyCode := events[i].Event.KeyEvent.wVirtualKeyCode;
+        Result.ScanCode := events[i].Event.KeyEvent.wVirtualScanCode;
+
         break;
       End;
   End;
 End;
+
+
+class function TNovusConsoleUtils.IsAvailableKey(aHandle: THandle): Boolean;
+Var
+  loKeyEvent: TKeyEvent;
+begin
+  loKeyEvent := TNovusConsoleUtils.IsAvailableKeyEx(aHandle);
+
+  Result := ((loKeyEvent.KeyCode <>0) or (loKeyEvent.ScanCode <> 0));
+end;
 
 end.

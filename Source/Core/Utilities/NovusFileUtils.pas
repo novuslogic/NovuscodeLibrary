@@ -8,7 +8,6 @@ uses StrUtils, NovusUtilities, Windows, SysUtils, SHFolder, ShellApi, ShlObj, Cl
 Type
   TNovusFileUtils = class(tNovusUtilities)
   public
-
     /// <summary>
     ///   Check if file is being used or locked.
     /// </summary>

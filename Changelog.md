@@ -1,3 +1,7 @@
+31/08/2017
+
+* New function function IsAvailableKeyEx(aHandle: THandle): TKeyEvent;
+
 23/08/2017
 
 * New function TNovusWebUtils.GetMimeFromData

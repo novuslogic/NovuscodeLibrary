@@ -125,6 +125,8 @@ end;
 
 procedure TNovusParser.SkipBlanks;
 begin
+  if Trim(FParseString) = '' then Exit;
+
   while True do
   begin
     FToken := FParseString[FiTokenPos];
@@ -185,6 +187,13 @@ function TNovusParser.SkipToken(AStartToken: char = #0; ASecondToken : Char  = #
 const
   KeySet = ['A'..'Z', 'a'..'z', '0'..'9', '_'];
 begin
+  If Trim(FParseString) = '' then
+    begin
+      FToken := toEOF;
+
+      Exit;
+    end;
+
   SkipBlanks;
   FiSourcePos := FiTokenPos;
   if FParseString[FiTokenPos] = toEOF then

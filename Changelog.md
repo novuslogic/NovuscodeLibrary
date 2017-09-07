@@ -1,3 +1,8 @@
+9//08/2017
+
+* TNovusparser class was crashing if input file was blank.
+
+
 31/08/2017
 
 * New function function IsAvailableKeyEx(aHandle: THandle): TKeyEvent;

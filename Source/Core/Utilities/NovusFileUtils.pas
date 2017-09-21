@@ -15,6 +15,10 @@ Type
     class function IsFileReadonly(fName : string) : boolean;
     class function MoveDir(aFromDirectory, aToDirectory: String): Boolean;
     class function CopyDir(aFromDirectory, aToDirectory: String): Boolean;
+    /// <summary>
+    ///   Extracts the extension part of a full file name without "."
+    /// </summary>
+    class function ExtractFileExtA(aFileExt: String): String;
     class function AbsoluteFilePath(aFilename: String): String;
      /// <summary>
     ///   Uses IncludeTrailingPathDelimiter, if filename is blank returns blank.
@@ -149,6 +153,13 @@ begin
   lpFileName := PCHAR(aFilename);
   cResult := GetFullPathName(lpFileName , MAX_PATH, lpBuffer, lpFileName );
   result := ExtractFilePath(lpBuffer);
+end;
+
+class function TNovusFileUtils.ExtractFileExtA(aFileExt: String): String;
+begin
+  Result := '';
+  if Trim(Result) = '' then Exit;
+  Result := Copy(ExtractFileExt(aFileExt), 2, Length(aFileExt));
 end;
 
 class function TNovusFileUtils.TrailingBackSlash(const aFilename: string): string;

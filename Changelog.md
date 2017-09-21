@@ -1,4 +1,8 @@
-9//08/2017
+21/09/2017
+
+* New function TNovusFileUtils.ExtractFileExtA(aFileExt: String): String;
+
+9/08/2017
 
 * TNovusparser class was crashing if input file was blank.
 

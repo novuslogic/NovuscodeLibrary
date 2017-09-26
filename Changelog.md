@@ -1,3 +1,7 @@
+26/09/2017
+
+* Updated class function ExtractFileExtA(aFileExt: String): String;
+
 21/09/2017
 
 * New function TNovusFileUtils.ExtractFileExtA(aFileExt: String): String;

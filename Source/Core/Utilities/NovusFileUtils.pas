@@ -158,8 +158,8 @@ end;
 class function TNovusFileUtils.ExtractFileExtA(aFileExt: String): String;
 begin
   Result := '';
-  if Trim(Result) = '' then Exit;
-  Result := Copy(ExtractFileExt(aFileExt), 2, Length(aFileExt));
+  if Trim(aFileExt) = '' then Exit;
+  Result := Copy(ExtractFileExt(aFileExt), 2, Length(ExtractFileExt(aFileExt)));
 end;
 
 class function TNovusFileUtils.TrailingBackSlash(const aFilename: string): string;

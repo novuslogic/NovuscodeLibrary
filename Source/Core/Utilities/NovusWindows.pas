@@ -5,6 +5,25 @@ interface
 
 uses Windows, sysutils, Classes, NovusUtilities, Registry, Messages, TlHelp32;
 
+Const
+  IS_TEXT_UNICODE_ASCII16 = $1;
+  IS_TEXT_UNICODE_REVERSE_ASCII16 = $10;
+  IS_TEXT_UNICODE_STATISTICS = $2;
+  IS_TEXT_UNICODE_REVERSE_STATISTICS = $20;
+  IS_TEXT_UNICODE_CONTROLS = $4;
+  IS_TEXT_UNICODE_REVERSE_CONTROLS = $40;
+  IS_TEXT_UNICODE_SIGNATURE = $8;
+  IS_TEXT_UNICODE_REVERSE_SIGNATURE = $80;
+  IS_TEXT_UNICODE_ILLEGAL_CHARS = $100;
+  IS_TEXT_UNICODE_ODD_LENGTH = $200;
+  IS_TEXT_UNICODE_DBCS_LEADBYTE = $400;
+  IS_TEXT_UNICODE_NULL_BYTES = $1000;
+  IS_TEXT_UNICODE_UNICODE_MASK = $F;
+  IS_TEXT_UNICODE_REVERSE_MASK = $F0;
+  IS_TEXT_UNICODE_NOT_UNICODE_MASK = $F00;
+  IS_TEXT_UNICODE_NOT_ASCII_MASK = $F000;
+
+
 Type
   TNovusWindows = class(TNovusUtilities)
   protected
@@ -58,8 +77,14 @@ Type
     /// </param>
     class function SetSysEnvironmentVariable(const aVariableName: String;
       aValue: string): Boolean;
-
+    /// <summary>
+    ///   Check if a Process is running
+    /// </summary>
     class function IsProcess32Exists(aFileName: string): Boolean;
+    /// <summary>
+    ///   Check if Unicode exists in string
+    /// </summary>
+    class function IsStringUniCode(aString: String): boolean;
   end;
 
 function CreateEnvironmentBlock(var lpEnvironment: Pointer; hToken: THandle;
@@ -268,5 +293,16 @@ begin
   end;
   CloseHandle(FSnapshotHandle);
 end;
+
+class function TNovusWindows.IsStringUniCode(aString: String): boolean;
+var
+  fOpt : Integer;
+begin
+  Result := False;
+
+  fOpt := IS_TEXT_UNICODE_UNICODE_MASK;
+  if IsTextUnicode(PChar(aString),Length(aString),@fOpt) then Result := True;
+end;
+
 
 end.

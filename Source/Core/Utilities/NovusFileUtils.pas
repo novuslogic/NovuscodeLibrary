@@ -3,9 +3,10 @@ unit NovusFileUtils;
 
 interface
 
-uses StrUtils, NovusUtilities, Windows, SysUtils, SHFolder, ShellApi, ShlObj, Classes;
+uses StrUtils, NovusUtilities, Windows, SysUtils, SHFolder, ShellApi, ShlObj, Classes, NovusWindows;
 
 Type
+
   TNovusFileUtils = class(tNovusUtilities)
   public
     /// <summary>
@@ -27,8 +28,18 @@ Type
     class function GetSpecialFolder(const CSIDL: integer) : string;
     class function IsValidFolder(aFolder: String): Boolean;
     /// <summary>
-    ///   Returns if true or false if a text file
+    ///   Returns the encoding of text file or not text file
     /// </summary>
+    /// <remarks>
+    ///   <para>
+    ///     Result will return -1 if not text file
+    ///   </para>
+    ///   <para>
+    ///     0 = TEncoding.UTF8 <br />1 = TEncoding.UTF7 <br />2 =
+    ///     TEncoding.Unicode <br />3 = TEncoding.Default <br />4 =
+    ///     TEncoding.BigEndianUnicode <br />5 = TEncoding.ASCII
+    ///   </para>
+    /// </remarks>
 {$IFDEF DELPHI2009_UP}
     class function IsTextFile(aFilename: String;var aEncoding: tEncoding): integer;
 {$ENDIF}
@@ -221,63 +232,33 @@ end;
 class function TNovusFileUtils.IsTextFile(aFilename: String;var aEncoding: TEncoding): integer;
 var
   F: TFileStream;
-  Buffer: array [0 .. 1023] of byte;
+  Buffer: TBytes;
   FEncoding: TEncoding;
-  ch: byte;
-Const
-  cNUL = 0; // Null char
-  cBS = 8; // Back Space
-  cCR = 13; // Carriage Return
-  cSUB = 26; // Substitute
-
-  function isControlChar(aCh: byte): boolean;
-  begin
-    Result := (((aCh > cNUL) and (aCh < cBS)) or
-      ((aCh > cCR) and (aCh < cSUB)));
-
-  end;
-
+  FSize: Integer;
 begin
   Result := -1;
   if not FileExists(aFilename) then
     Exit;
 
-  Result := 0;
-
-  Try
+  try
+    FEncoding := NIL;
     F := TFileStream.Create(aFilename, fmOpenRead	or fmShareDenyWrite);
 
     if F.Position < F.Size then
     begin
-      F.Read(Buffer, 1024);
+      FSize := F.Size;
+      if FSize >= 1024 then FSize := 1024;
 
-      for ch in Buffer do
-      begin
-        if not isControlChar(ch) then
-        begin
-          if (Buffer[0] = $EF) and (Buffer[1] = $BB) and (Buffer[2] = $BF) then
-            FEncoding := TEncoding.UTF8
-          else if (Buffer[0] = $FE) and (Buffer[1] = $FF) then
-            FEncoding := TEncoding.Unicode
-          else if (Buffer[0] = 0) and (Buffer[1] = 0) and (Buffer[2] = $FE) and
-            (Buffer[3] = $FF) then
-            FEncoding := TEncoding.BigEndianUnicode
-          else if (Buffer[0] = $2B) and (Buffer[1] = $2F) and (Buffer[2] = $76)
-          then
-            FEncoding := TEncoding.UTF7
-          else
-            FEncoding := TEncoding.Default;
+      SetLength(Buffer, FSize);
+      F.ReadBuffer(Pointer(Buffer)^, Length(Buffer));
 
-          aEncoding := FEncoding;
+      FEncoding := NIL;
 
-          Result := 1;
-
-          break;
-        end;
-      end;
+      Result := TEncoding.GetBufferEncoding(Buffer, FEncoding);
     end;
 
   Finally
+    aEncoding := FEncoding;
     F.Free;
   End;
 end;

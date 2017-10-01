@@ -1,3 +1,12 @@
+01/10/2017
+
+* TNovusFileUtils.IsTextFile now using TEncoding.GetBufferEncoding to return correct Encoding
+
+29/09/2017
+
+* New function TNovusWindows.IsStringUniCode(aString: String): boolean;
+* Fix TNovusFileUtils.IsTextFile Incorrect check for encoding of Unicode
+
 26/09/2017
 
 * Updated class function ExtractFileExtA(aFileExt: String): String;
@@ -10,10 +19,9 @@
 
 * TNovusparser class was crashing if input file was blank.
 
-
 31/08/2017
 
-* New function function IsAvailableKeyEx(aHandle: THandle): TKeyEvent;
+* New function IsAvailableKeyEx(aHandle: THandle): TKeyEvent;
 
 23/08/2017
 
@@ -21,8 +29,8 @@
 * New function TNovusWebUtils.GetMIMEType
 * New function TNovusWebUtils.OpenDefaultWebBrowser
 * New function TNovusWebUtils.WebBrowserLoadFromHTML
-* Moved TNovusIndyUtils.UrlEncode and TNovusIndyUtils.UrlDecode to New TNovusWebUtils Class 
-* New TNovusWebUtils Class 
+* Moved TNovusIndyUtils.UrlEncode and TNovusIndyUtils.UrlDecode to New TNovusWebUtils Class
+* New TNovusWebUtils Class
 
 15/05/2017
 
@@ -42,14 +50,14 @@
 
 * Public release.
 * Fixed NovusTemplate class second token order issue and missing tags
-* Change this file to Markdown 
+* Change this file to Markdown
 
 28/11/2016
 
 * New unit NovusEnvironment
 * New unit NovusDialogs
 
-* New Delphi XE8 packages NovusCodeLibrary_VCLUtils 
+* New Delphi XE8 packages NovusCodeLibrary_VCLUtils
 * New Delphi XE8 packages NovusCodeLibrary_Env
 
 27/10/2015
@@ -63,7 +71,7 @@
 
 19/09/2016
 
-* New packages for Delphi XE8 NovusCodeLibrary_Plugin, NovusCodeLibrary_Parser 
+* New packages for Delphi XE8 NovusCodeLibrary_Plugin, NovusCodeLibrary_Parser
 
 
 18/09/2016
@@ -86,4 +94,4 @@
 
 
 
-                                                                                                                                                                                                                                                           
+

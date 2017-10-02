@@ -1,3 +1,8 @@
+02/10/2017
+
+* New function TNovusFileUtils.FilePathToURL(const aFilePath: string): string; 
+
+
 01/10/2017
 
 * TNovusFileUtils.IsTextFile now using TEncoding.GetBufferEncoding to return correct Encoding

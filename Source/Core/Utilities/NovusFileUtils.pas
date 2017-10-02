@@ -3,7 +3,8 @@ unit NovusFileUtils;
 
 interface
 
-uses StrUtils, NovusUtilities, Windows, SysUtils, SHFolder, ShellApi, ShlObj, Classes, NovusWindows;
+uses StrUtils, NovusUtilities, Windows, SysUtils, SHFolder, ShellApi, ShlObj,
+     Classes, NovusWindows, ComObj, WinInet, ShLwApi;
 
 Type
 
@@ -13,6 +14,11 @@ Type
     ///   Check if file is being used or locked.
     /// </summary>
     class function IsFileInUse(fName : string) : boolean;
+
+    /// <summary>
+    ///   Converts File path to a canonicalized URL.
+    /// </summary>
+    class function FilePathToURL(const aFilePath: string): string;
     class function IsFileReadonly(fName : string) : boolean;
     class function MoveDir(aFromDirectory, aToDirectory: String): Boolean;
     class function CopyDir(aFromDirectory, aToDirectory: String): Boolean;
@@ -263,5 +269,20 @@ begin
   End;
 end;
 {$ENDIF}
+
+class function TNovusFileUtils.FilePathToURL(const aFilePath: string): string;
+var
+  BufferLen: DWORD;
+begin
+  Try
+    BufferLen := INTERNET_MAX_URL_LENGTH;
+    SetLength(Result, BufferLen);
+    UrlCreateFromPath(PChar(aFilePath), PChar(Result), @BufferLen, 0);
+    SetLength(Result, BufferLen);
+  Except
+    raise Exception.Create(TNovusUtilities.GetExceptMess);
+  End;
+end;
+
 
 end.

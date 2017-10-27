@@ -5,19 +5,36 @@ interface
 Uses NovusUtilities, NovusParser, NovusTemplate, SysUtils;
 
 type
+  tEnvironmentTokenType = (ETTToken1, ETTToken2);
+
   tNovusEnvironment = class(tNovusUtilities)
   protected
   private
   public
-    class function ParseGetEnvironmentVar(aInput: String): String;
+
+    /// <summary>
+    ///   Parse enciroment variables in string
+    /// </summary>
+    /// <param name="aInput">
+    ///   input string
+    /// </param>
+    /// <param name="aEnvironmentTokenType">
+    ///   ETTToken1, ETTToken2
+    /// </param>
+    /// <remarks>
+    ///   Defaults to ETTToken2
+    /// </remarks>
+    class function ParseGetEnvironmentVar(aInput: String;
+      aEnvironmentTokenType: tEnvironmentTokenType = ETTToken2): String;
   end;
 
 implementation
 
-class function tNovusEnvironment.ParseGetEnvironmentVar(aInput: String): String;
+class function tNovusEnvironment.ParseGetEnvironmentVar(aInput: String;
+  aEnvironmentTokenType: tEnvironmentTokenType): String;
 Var
   loTemplate: tNovusTemplate;
-  I: INteger;
+  I: Integer;
   FTemplateTag: TTemplateTag;
 begin
   result := aInput;
@@ -28,9 +45,23 @@ begin
   Try
     loTemplate := tNovusTemplate.Create;
 
-    loTemplate.StartToken := '{';
-    loTemplate.EndToken := '}';
-    loTemplate.SecondToken := '%';
+    if True then
+
+      case aEnvironmentTokenType of
+        ETTToken1:
+        begin
+          loTemplate.StartToken := '%';
+          loTemplate.EndToken := '%';
+          loTemplate.SecondToken :=#0;
+        end;
+        ETTToken2:
+        begin
+          loTemplate.StartToken := '{';
+          loTemplate.EndToken := '}';
+           loTemplate.SecondToken := '%';
+        end;
+      end;
+
 
     loTemplate.TemplateDoc.Text := Trim(aInput);
 

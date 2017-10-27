@@ -1,7 +1,10 @@
+27/10/2017
+ 
+ * Updated tNovusEnvironment.ParseGetEnvironmentVar
+
 02/10/2017
 
 * New function TNovusFileUtils.FilePathToURL(const aFilePath: string): string; 
-
 
 01/10/2017
 

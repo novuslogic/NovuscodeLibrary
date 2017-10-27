@@ -26,6 +26,7 @@ Type
     ///   Extracts the extension part of a full file name without "."
     /// </summary>
     class function ExtractFileExtA(aFileExt: String): String;
+
     class function AbsoluteFilePath(aFilename: String): String;
      /// <summary>
     ///   Uses IncludeTrailingPathDelimiter, if filename is blank returns blank.

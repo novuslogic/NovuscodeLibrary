@@ -213,6 +213,9 @@ begin
 
   if FileExists(aFolder) then Exit;
 
+  if extractfilename(aFolder) <> '' then  exit;
+
+
   Result := DirectoryExists(aFolder);
 
   if Result = false then

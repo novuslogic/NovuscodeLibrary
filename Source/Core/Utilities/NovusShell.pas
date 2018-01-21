@@ -141,7 +141,7 @@ var
   ConnSessID: Cardinal;
   Token: THandle;
   hProcess: THandle;
-  pEnv: Pointer;
+ // pEnv: Pointer;
 begin
   liExitCode := -1;
 
@@ -236,7 +236,7 @@ var
   Msg: tagMSG;
   fok: Boolean;
 begin
-  result := 0;
+  //result := 0;
   liExitCode := 0;
 
   FillChar(ShellInfo, SizeOf(ShellInfo), Chr(0));

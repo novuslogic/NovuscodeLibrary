@@ -193,6 +193,13 @@ Var
   I: INteger;
   FTemplateTag: TTemplateTag;
 begin
+  if TemplateTags.Count = 0 then
+    begin
+      FOutputDoc.Text := FTemplateDoc.Text;
+
+      Exit;
+    end;
+
   for I := 0 to TemplateTags.Count - 1 do
   begin
     FTemplateTag := TTemplateTag(TemplateTags.Items[I]);

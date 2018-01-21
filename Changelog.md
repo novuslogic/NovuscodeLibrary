@@ -1,3 +1,9 @@
+21/1/2018
+
+* Fixes class function IsValidFolder(aFolder: String): Boolean; in class NovusFileUtils including extractfilename 
+* Fixed InsertAllTagValues if no tags pass TemplateDoc to OutputDoc in NovusTemplate
+
+
 27/10/2017
  
  * Updated tNovusEnvironment.ParseGetEnvironmentVar

@@ -44,7 +44,11 @@ class function TNovusVersionUtils.GetBuildNumber: String;
 var
   FileInfo: Pointer;
 begin
+  Result := '';
+
   FileInfo := CreateFileInfo(Application.ExeName);
+
+  if FileInfo = NIL then Exit;
 
   Result := Format('%d', [LoWord(GetFixedFileInfo(FileInfo).dwFileVersionLS)]);
 
@@ -55,22 +59,30 @@ class function TNovusVersionUtils.GetFullVersionNumber;
 var
   FileInfo: Pointer;
 begin
+  Result := '';
+
   FileInfo := CreateFileInfo(Application.ExeName);
 
-  Result := Format('%d.%d.%d.%d',
-    [HiWord(GetFixedFileInfo(FileInfo).dwFileVersionMS),
-    LoWord(GetFixedFileInfo(FileInfo).dwFileVersionMS),
-    HiWord(GetFixedFileInfo(FileInfo).dwFileVersionLS),
-    LoWord(GetFixedFileInfo(FileInfo).dwFileVersionLS)]);
+  if FileInfo = NIL then Exit;
 
-  FreeFileInfo(FileInfo);
+  Result := Format('%d.%d.%d.%d',
+        [HiWord(GetFixedFileInfo(FileInfo).dwFileVersionMS),
+        LoWord(GetFixedFileInfo(FileInfo).dwFileVersionMS),
+        HiWord(GetFixedFileInfo(FileInfo).dwFileVersionLS),
+        LoWord(GetFixedFileInfo(FileInfo).dwFileVersionLS)]);
+
+      FreeFileInfo(FileInfo);
 end;
 
 class function TNovusVersionUtils.GetReleaseNumber;
 var
   FileInfo: Pointer;
 begin
+  Result := '';
+
   FileInfo := CreateFileInfo(Application.ExeName);
+
+  if FileInfo = NIL then Exit;
 
   Result := Format('%d', [HiWord(GetFixedFileInfo(FileInfo).dwFileVersionLS)]);
 
@@ -82,6 +94,10 @@ var
   FileInfo: Pointer;
 begin
   FileInfo := CreateFileInfo(Application.ExeName);
+
+  Result := '';
+
+  if FileInfo = NIL then Exit;
 
   Result := Format('%d.%d.%d',
     [HiWord(GetFixedFileInfo(FileInfo).dwFileVersionMS),
@@ -133,6 +149,8 @@ begin
 
   Result := '';
 
+  if FileInfo = NIL then Exit;
+
   if GetTranslationCount(FileInfo) > 0 then
   begin
     Translation := GetTranslation(FileInfo, 0);
@@ -150,6 +168,8 @@ begin
   FileInfo := CreateFileInfo(Application.ExeName);
 
   Result := '';
+
+  if FileInfo = NIL then Exit;
 
   if GetTranslationCount(FileInfo) > 0 then
   begin
@@ -191,6 +211,8 @@ var
   P: pchar;
   Len: UINT;
 begin
+  Result := '';
+
   if not VerQueryValue(FileInfo,
     pchar('\StringFileInfo\' + IntToHex(Translation.Language,
     4) + IntToHex(Translation.CharSet, 4) + '\' + StringName), Pointer(P), Len)

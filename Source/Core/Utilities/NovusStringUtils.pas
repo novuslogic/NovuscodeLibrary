@@ -127,6 +127,14 @@ Type
     class function VarStrNull(const V: OleVariant): string;
     class function IsBoolean(const sValue: string): Boolean;
     class function StrToUInt64(const s: String): UInt64;
+
+    /// <summary>
+    ///   Clears strings and objects from tStringlist
+    /// </summary>
+    /// <param name="aStringlist">
+    ///   a tStringlist
+    /// </param>
+    class procedure ClearStringlist(aStringlist: tStringlist);
   end;
 
 implementation
@@ -973,6 +981,23 @@ begin
     else
       result := VarToStr(V);
   end;
+end;
+
+
+class procedure TNovusStringUtils.ClearStringlist(aStringlist: tStringlist);
+var
+  i: Integer;
+begin
+  for i := 0 to pred(aStringlist.Count) do
+    begin
+      if assigned(aStringlist.Objects[i]) then
+        begin
+          aStringlist.Objects[i].Free;
+          aStringlist.Objects[i] := nil;
+        end;
+        end;
+
+  aStringlist.Clear;
 end;
 
 class function TNovusStringUtils.StrToUInt64(const s: String): UInt64;

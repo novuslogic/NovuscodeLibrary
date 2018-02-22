@@ -1,3 +1,9 @@
+22/02/2018
+
+* Fix nil pointer issue within NovusVersionUtil due to Win64 compiler
+* New class TNovusFileUtils.IsOnlyFolder(aFolder: string): boolean
+* New class procedure TNovusStringUtils.ClearStringlist(aStringlist: tStringlist)
+
 21/1/2018
 
 * Fixes class function IsValidFolder(aFolder: String): Boolean; in class NovusFileUtils including extractfilename 

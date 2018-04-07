@@ -1,3 +1,9 @@
+7/04/2018
+
+* New classes for OpenTools class TNovusOTAManager and TNovusOTAUtils
+* New class for VCL Controls TNovusVCLControlsUtils 
+
+
 22/02/2018
 
 * Fix nil pointer issue within NovusVersionUtil due to Win64 compiler

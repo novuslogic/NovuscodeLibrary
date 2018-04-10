@@ -2,7 +2,7 @@ unit NovusOTAManager;
 
 interface
 
-Uses Classes, VCL.Menus, ToolsAPI, SysUtils, NovusOTAUtils;
+Uses Classes, VCL.Menus, ToolsAPI, SysUtils, NovusOTAUtils, ActnList;
 
 Type
   TNovusOTAManager = Class
@@ -29,10 +29,11 @@ Type
     property Svcs: IOTAServices read FSvcs write FSvcs;
 
     procedure OutputMessage(aMessage: String);
+    procedure DebugOutputMessage(aMessage: String);
 
     function CreateMenuItem(aName, aCaption: String; aMenuItem: tMenuItem;
       aNearMenuName: String = ''; aInsertAfter: Boolean = True;
-      aInsertAsChild: Boolean = False): tMenuItem;
+      aInsertAsChild: Boolean = False; aAction: tAction = nil): tMenuItem;
 
   End;
 
@@ -146,12 +147,19 @@ begin
   tNovusOTAUtils.OutputMessage(aMessage);
 end;
 
+procedure TNovusOTAManager.DebugOutputMessage(aMessage: String);
+begin
+{$IFDEF DEBUG}
+  tNovusOTAUtils.OutputMessage(aMessage);
+{$ENDIF}
+end;
+
 function TNovusOTAManager.CreateMenuItem(aName, aCaption: String;
   aMenuItem: tMenuItem; aNearMenuName: String = ''; aInsertAfter: Boolean = True;
-      aInsertAsChild: Boolean = False): tMenuItem;
+      aInsertAsChild: Boolean = False;aAction: tAction = nil): tMenuItem;
 begin
   result := tNovusOTAUtils.CreateMenuItem(aName, aCaption, aMenuItem,
-    aNearMenuName, aInsertAfter, aInsertAsChild);
+    aNearMenuName, aInsertAfter, aInsertAsChild, aAction);
 end;
 
 end.

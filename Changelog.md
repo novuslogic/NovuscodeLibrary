@@ -1,3 +1,8 @@
+10/04/2018
+
+* Updated TNovusOTAUtils.CreateMenuItem supports TAction
+
+
 7/04/2018
 
 * New classes for OpenTools class TNovusOTAManager and TNovusOTAUtils

@@ -2,75 +2,78 @@ unit NovusOTAUtils;
 
 interface
 
-Uses Classes, ToolsAPI, vcl.menus, vcl.dialogs, NovusVCLControlsUtils, SysUtils;
+Uses Classes, ToolsAPI, vcl.menus, vcl.dialogs, NovusVCLControlsUtils, SysUtils,
+  ActnList;
 
 type
 
+  TMenuBreadcrumbs = array of String;
 
-   TMenuBreadcrumbs = array of String;
+  tNovusOTAUtils = class
+  private
+  protected
+  public
+    class function GetIDEMainMenu: TMainMenu;
+    class function CreateMenuItem(aName, aCaption: String; aMenuItem: tMenuItem;
+      aNearMenuName: String = ''; aInsertAfter: Boolean = True;
+      aInsertAsChild: Boolean = False; aAction: tAction = nil): tMenuItem;
 
-   tNovusOTAUtils  = class
-   private
-   protected
-   public
-     class function GetIDEMainMenu: TMainMenu;
-     class function CreateMenuItem(aName, aCaption : String; aMenuItem: tMenuItem; aNearMenuName: String = '';aInsertAfter: Boolean = True;
-      aInsertAsChild: Boolean = False) : TMenuItem;
+    class procedure OutputMessage(aMessage: String);
 
-     class procedure OutputMessage(aMessage : String);
-
-   end;
+  end;
 
 implementation
 
 class function tNovusOTAUtils.GetIDEMainMenu: TMainMenu;
 begin
-  Result :=(BorlandIDEServices as INTAServices).GetMainMenu;
+  Result := (BorlandIDEServices as INTAServices).GetMainMenu;
 end;
 
-
-
-class function  tNovusOTAUtils.CreateMenuItem(aName, aCaption : String; aMenuItem: tMenuItem; aNearMenuName: String = '';aInsertAfter: Boolean = True;
-      aInsertAsChild: Boolean = False) : TMenuItem;
+class function tNovusOTAUtils.CreateMenuItem(aName, aCaption: String;
+  aMenuItem: tMenuItem; aNearMenuName: String = '';
+  aInsertAfter: Boolean = True; aInsertAsChild: Boolean = False;
+  aAction: tAction = nil): tMenuItem;
 Var
   lINTAServices: INTAServices;
+  MyAction : TAction;
 begin
   Result := nil;
 
-  LINTAServices  := (BorlandIDEServices as INTAServices);
+  lINTAServices := (BorlandIDEServices as INTAServices);
 
   Result := tNovusVCLControlsUtils.FindMenuItembyCaption([aCaption], aMenuItem);
 
   if Result = nil then
+  begin
+    if supports(BorlandIDEServices, INTAServices, lINTAServices) then
     begin
-      if supports(borlandideservices, intaservices, Lintaservices) then
-          begin
-            Result := tmenuitem.create(nil);
-            Result.caption := aCaption;
-            Result.Name := aName;
+      if Assigned(aAction) then
+        if aAction.Caption = aAction.name then aAction.Caption := aCaption;
 
-            if aNearMenuName = ''  then
-              aNearMenuName := 'toolsmenu';
+      Result := tMenuItem.create(nil);
+      Result.caption := aCaption;
 
-            Lintaservices.addactionmenu(aNearMenuName, nil, Result, aInsertAfter,
-                       aInsertAsChild);
+      Result.Name := aName;
 
-            {$IFDEF DEBUG}
-            OutputMessage('InsertMenu: ' + aCaption);
-            {$ENDIF}
-          end;
+      Result.Action := aAction;
+
+      if aNearMenuName = '' then
+        aNearMenuName := 'toolsmenu';
+
+
+      lINTAServices.addactionmenu(aNearMenuName, aAction, Result, aInsertAfter,
+         aInsertAsChild);
+
+      {$ifdef debug}
+      outputmessage('insertmenu: ' + acaption);
+      {$endif}
     end;
+  end;
 end;
 
-class procedure tNovusOTAUtils.OutputMessage(aMessage : String);
+class procedure tNovusOTAUtils.OutputMessage(aMessage: String);
 Begin
   (BorlandIDEServices As IOTAMessageServices).AddTitleMessage(aMessage);
 End;
-
-
-
-
-
-
 
 end.

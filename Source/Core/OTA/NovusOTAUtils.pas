@@ -6,9 +6,6 @@ Uses Classes, ToolsAPI, vcl.menus, vcl.dialogs, NovusVCLControlsUtils, SysUtils,
   ActnList;
 
 type
-
-  TMenuBreadcrumbs = array of String;
-
   tNovusOTAUtils = class
   private
   protected

@@ -12,18 +12,18 @@ type
 
   TNovusVersionUtils = class(TNovusUtilities)
     class function GetFixedFileInfo(FileInfo: Pointer): PVSFixedFileInfo;
-    class function GetFullVersionNumber: string;
-    class function GetReleaseNumber: String;
-    class function GetMagMinVersionNumber: String;
+    class function GetFullVersionNumber(aFileName: String = ''): string;
+    class function GetReleaseNumber(aFileName: String = ''): String;
+    class function GetMagMinVersionNumber(aFileName: String = ''): String;
     class function CreateFileInfo(aFileName: String): Pointer;
     class procedure FreeFileInfo(FileInfo: Pointer);
-    class function GetProductName: String;
-    class function GetLegalCopyright: String;
+    class function GetProductName(aFileName: String = ''): String;
+    class function GetLegalCopyright(aFileName: String = ''): String;
     class function GetTranslationCount(FileInfo: Pointer): UINT;
     class function GetTranslation(FileInfo: Pointer; i: UINT): TTranslation;
     class function GetFileInfoString(FileInfo: Pointer;
       Translation: TTranslation; StringName: string): string;
-    class function GetBuildNumber: String;
+    class function GetBuildNumber(aFilename: string=''): String;
   end;
 
   PTranslations = ^TTranslations;
@@ -40,13 +40,13 @@ begin
     raise Exception.Create('Fixed file info not available');
 end;
 
-class function TNovusVersionUtils.GetBuildNumber: String;
+class function TNovusVersionUtils.GetBuildNumber(aFilename: string = ''): String;
 var
   FileInfo: Pointer;
 begin
   Result := '';
 
-  FileInfo := CreateFileInfo(Application.ExeName);
+  FileInfo := CreateFileInfo(aFilename);
 
   if FileInfo = NIL then Exit;
 
@@ -55,13 +55,13 @@ begin
   FreeFileInfo(FileInfo);
 end;
 
-class function TNovusVersionUtils.GetFullVersionNumber;
+class function TNovusVersionUtils.GetFullVersionNumber(aFileName: String = ''): string;
 var
   FileInfo: Pointer;
 begin
   Result := '';
 
-  FileInfo := CreateFileInfo(Application.ExeName);
+  FileInfo := CreateFileInfo(aFilename);
 
   if FileInfo = NIL then Exit;
 
@@ -74,13 +74,13 @@ begin
       FreeFileInfo(FileInfo);
 end;
 
-class function TNovusVersionUtils.GetReleaseNumber;
+class function TNovusVersionUtils.GetReleaseNumber(aFilename: string=''): string;
 var
   FileInfo: Pointer;
 begin
   Result := '';
 
-  FileInfo := CreateFileInfo(Application.ExeName);
+  FileInfo := CreateFileInfo(aFilename);
 
   if FileInfo = NIL then Exit;
 
@@ -89,11 +89,11 @@ begin
   FreeFileInfo(FileInfo);
 end;
 
-class function TNovusVersionUtils.GetMagMinVersionNumber;
+class function TNovusVersionUtils.GetMagMinVersionNumber(aFilename: string=''): string;
 var
   FileInfo: Pointer;
 begin
-  FileInfo := CreateFileInfo(Application.ExeName);
+  FileInfo := CreateFileInfo(aFilename);
 
   Result := '';
 
@@ -117,6 +117,9 @@ var
   dwDummy: cardinal;
   lpstrPath: pchar;
 begin
+  if Trim(aFilename) = '' then
+    aFilename := Application.ExeName;
+
   lpstrPath := pchar(aFileName);
 
   dwInfoSize := GetFileVersionInfoSize(lpstrPath, dwDummy);
@@ -140,12 +143,12 @@ begin
     FreeMem(FileInfo);
 end;
 
-class function TNovusVersionUtils.GetLegalCopyright;
+class function TNovusVersionUtils.GetLegalCopyright(aFileName: String = ''): string;
 var
   FileInfo: Pointer;
   Translation: TTranslation;
 begin
-  FileInfo := CreateFileInfo(Application.ExeName);
+  FileInfo := CreateFileInfo(aFileName);
 
   Result := '';
 
@@ -160,12 +163,12 @@ begin
   FreeFileInfo(FileInfo);
 end;
 
-class function TNovusVersionUtils.GetProductName;
+class function TNovusVersionUtils.GetProductName(aFileName: String = ''): string;
 var
   FileInfo: Pointer;
   Translation: TTranslation;
 begin
-  FileInfo := CreateFileInfo(Application.ExeName);
+  FileInfo := CreateFileInfo(aFileName);
 
   Result := '';
 

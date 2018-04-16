@@ -85,6 +85,11 @@ Type
     ///   Check if Unicode exists in string
     /// </summary>
     class function IsStringUniCode(aString: String): boolean;
+    /// <summary>
+    ///   Get Current Module Filename
+    /// </summary>
+    class function GetModuleFileName: String;
+
   end;
 
 function CreateEnvironmentBlock(var lpEnvironment: Pointer; hToken: THandle;
@@ -302,6 +307,13 @@ begin
 
   fOpt := IS_TEXT_UNICODE_UNICODE_MASK;
   if IsTextUnicode(PChar(aString),Length(aString),@fOpt) then Result := True;
+end;
+
+class function TNovusWindows.GetModuleFileName: String;
+begin
+  SetLength(result, 255);
+  Windows.GetModuleFileName(hInstance, pChar(result), 255);
+  SetLength(result, StrLen(pChar(result)));
 end;
 
 

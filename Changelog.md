@@ -1,3 +1,8 @@
+16/04/2018
+
+* Class TNovusVersionUtils updated to Filename pass when valid version 
+
+
 10/04/2018
 
 * Updated TNovusOTAUtils.CreateMenuItem supports TAction

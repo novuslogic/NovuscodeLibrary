@@ -2,22 +2,39 @@ unit NovusSimpleXML;
 
 interface
 
-Uses NovusUtilities, JvSimpleXML, SysUtils, classes;
+Uses NovusUtilities, JvSimpleXML, SysUtils, classes, dialogs;
 
 Type
   TNovusSimpleXML = Class(TNovusUtilities)
   private
   protected
   public
+    class function HasProperties(aNode: TJvSimpleXmlElem;
+      aName: string): String;
     class function FindNodeByValue(aNodeList: TJvSimpleXmlElem;
       NodeName: String; NodeValueName, NodeValue: String): TJvSimpleXmlElem;
-    class function FindNode(aNodeList: TJvSimpleXmlElem; NodeName: String;
+    class function FindNode(aNode: TJvSimpleXmlElem; NodeName: String;
       Var Index: Integer): TJvSimpleXmlElem;
     class procedure ListNodeNames(aNodeList: TJvSimpleXmlElem;
       Var aStringList: tStringList);
   end;
 
 implementation
+
+class function TNovusSimpleXML.HasProperties(aNode: TJvSimpleXmlElem;
+  aName: string): string;
+begin
+  Result := '';
+  if not Assigned(aNode) then
+    Exit;
+  if not aNode.HasProperties then
+    Exit;
+  try
+    Result := aNode.Properties.ItemNamed[aName].Value;
+  except
+    Result := '';
+  end;
+end;
 
 class function TNovusSimpleXML.FindNodeByValue(aNodeList: TJvSimpleXmlElem;
   NodeName: String; NodeValueName, NodeValue: String): TJvSimpleXmlElem;
@@ -62,18 +79,24 @@ begin
     aStringList.Add(aNodeList.Items[I].Name);
 end;
 
-class function TNovusSimpleXML.FindNode(aNodeList: TJvSimpleXmlElem;
+class function TNovusSimpleXML.FindNode(aNode: TJvSimpleXmlElem;
   NodeName: String; Var Index: Integer): TJvSimpleXmlElem;
 Var
   I: Integer;
 begin
   Result := NIL;
 
-  For I := Index to aNodeList.Items.Count - 1 do
+  If Uppercase(aNode.Name) = Uppercase(NodeName) then
   begin
-    If Uppercase(aNodeList.Items[I].Name) = Uppercase(NodeName) then
+    Result := aNode;
+    Exit;
+  end;
+
+  For I := Index to aNode.Items.Count - 1 do
+  begin
+    If Uppercase(aNode.Items[I].Name) = Uppercase(NodeName) then
     begin
-      Result := aNodeList.Items[I];
+      Result := aNode.Items[I];
 
       Index := I + 1;
 

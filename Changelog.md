@@ -1,3 +1,9 @@
+16/05/2018
+
+* New function class function TNovusSimpleXML.HasProperties(aNode: TJvSimpleXmlElem; aName: string): string;
+* Adjusted to handle root class function FindNode(aNode: TJvSimpleXmlElem; NodeName: String; Var Index: Integer): TJvSimpleXmlElem;
+
+
 16/04/2018
 
 * Class TNovusVersionUtils updated to Filename pass when valid version 

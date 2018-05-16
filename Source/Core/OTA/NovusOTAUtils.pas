@@ -13,9 +13,12 @@ type
     class function GetIDEMainMenu: TMainMenu;
     class function CreateMenuItem(aName, aCaption: String; aMenuItem: tMenuItem;
       aNearMenuName: String = ''; aInsertAfter: Boolean = True;
-      aInsertAsChild: Boolean = False; aAction: tAction = nil): tMenuItem;
+      aInsertAsChild: Boolean = False; aAction: tAction = nil;
+      aOnClick: TNotifyEvent = NIL): tMenuItem;
 
     class procedure OutputMessage(aMessage: String);
+
+
 
   end;
 
@@ -29,7 +32,7 @@ end;
 class function tNovusOTAUtils.CreateMenuItem(aName, aCaption: String;
   aMenuItem: tMenuItem; aNearMenuName: String = '';
   aInsertAfter: Boolean = True; aInsertAsChild: Boolean = False;
-  aAction: tAction = nil): tMenuItem;
+  aAction: tAction = nil; aOnClick: TNotifyEvent = NIL): tMenuItem;
 Var
   lINTAServices: INTAServices;
   MyAction : TAction;
@@ -51,6 +54,7 @@ begin
       Result.caption := aCaption;
 
       Result.Name := aName;
+      Result.OnClick := aOnClick;
 
       Result.Action := aAction;
 

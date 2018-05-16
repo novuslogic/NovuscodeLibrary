@@ -2,10 +2,11 @@ unit NovusOTAManager;
 
 interface
 
-Uses Classes, VCL.Menus, ToolsAPI, SysUtils, NovusOTAUtils, ActnList;
+Uses Classes, VCL.Menus, ToolsAPI, SysUtils, NovusOTAUtils, ActnList,
+  VCL.dialogs, NovusVCLControlsUtils;
 
 Type
-  TNovusOTAManager = Class
+  TNovusOTAManager = Class(Tobject)
   protected
   private
     FSvcs: IOTAServices;
@@ -13,12 +14,14 @@ Type
     function GetIDEMainMenu: TMainMenu;
   public
     constructor Create; virtual;
-    destructor Destroy; virtual;
+    destructor Destroy; override;
 
     procedure InitManager; virtual;
 
     function CurrentProject: IOTAProject;
     function CurrentProjectName: string;
+
+    function GetIDEFile: tMenuItem;
 
     function CurrentProjectGroup: IOTAProjectGroup;
 
@@ -33,7 +36,8 @@ Type
 
     function CreateMenuItem(aName, aCaption: String; aMenuItem: tMenuItem;
       aNearMenuName: String = ''; aInsertAfter: Boolean = True;
-      aInsertAsChild: Boolean = False; aAction: tAction = nil): tMenuItem;
+      aInsertAsChild: Boolean = False; aAction: tAction = nil;
+      aOnClick: TNotifyEvent = NIL): tMenuItem;
 
   End;
 
@@ -50,6 +54,7 @@ end;
 
 destructor TNovusOTAManager.Destroy;
 begin
+  DebugOutputMessage('TNovusOTAManager.Destroy');
 end;
 
 procedure TNovusOTAManager.InitManager;
@@ -155,11 +160,22 @@ begin
 end;
 
 function TNovusOTAManager.CreateMenuItem(aName, aCaption: String;
-  aMenuItem: tMenuItem; aNearMenuName: String = ''; aInsertAfter: Boolean = True;
-      aInsertAsChild: Boolean = False;aAction: tAction = nil): tMenuItem;
+  aMenuItem: tMenuItem; aNearMenuName: String = '';
+  aInsertAfter: Boolean = True; aInsertAsChild: Boolean = False;
+  aAction: tAction = nil; aOnClick: TNotifyEvent = NIL): tMenuItem;
 begin
   result := tNovusOTAUtils.CreateMenuItem(aName, aCaption, aMenuItem,
-    aNearMenuName, aInsertAfter, aInsertAsChild, aAction);
+    aNearMenuName, aInsertAfter, aInsertAsChild, NIL, aOnClick);
+end;
+
+function TNovusOTAManager.GetIDEFile: tMenuItem;
+begin
+  Result := nil;
+
+  if Not Assigned(IDEMainMenu) then Exit;
+
+  Result := tNovusVCLControlsUtils.FindMenuItembyCaption(['File'],
+    IDEMainMenu.Items);
 end;
 
 end.

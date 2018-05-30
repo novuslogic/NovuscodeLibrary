@@ -267,14 +267,20 @@ var
   Wow64Process: BOOL;
 begin
   result := False;
-  IsWow64Process := GetProcAddress(GetModuleHandle(Kernel32), 'IsWow64Process');
-  if Assigned(IsWow64Process) then
-  begin
-    if IsWow64Process(GetCurrentProcess, Wow64Process) then
+
+  if sizeof(IntPtr) = 8 then   //  is 64Bit App
+    result := true
+  else
     begin
-      result := Wow64Process;
+      IsWow64Process := GetProcAddress(GetModuleHandle(Kernel32), 'IsWow64Process');
+      if Assigned(IsWow64Process) then
+      begin
+        if IsWow64Process(GetCurrentProcess, Wow64Process) then
+        begin
+          result := Wow64Process;
+        end;
+      end;
     end;
-  end;
 end;
 
 class function TNovusWindows.IsProcess32Exists(aFileName: string): Boolean;

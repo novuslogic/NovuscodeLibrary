@@ -1,3 +1,7 @@
+2/06/2018
+
+* Move NovusConsoleUtils class to NovusConsole Class
+
 16/05/2018
 
 * New function class function TNovusSimpleXML.HasProperties(aNode: TJvSimpleXmlElem; aName: string): string;

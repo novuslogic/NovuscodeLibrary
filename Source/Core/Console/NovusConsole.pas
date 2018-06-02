@@ -1,8 +1,8 @@
-unit NovusConsoleUtils;
+unit NovusConsole;
 
 interface
 
-Uses NovusUtilities, Winapi.Windows, SysUtils;
+Uses Winapi.Windows, SysUtils;
 
 type
   TKeyEvent = record
@@ -10,7 +10,7 @@ type
     ScanCode: Word;
   end;
 
-  TNovusConsoleUtils = class(TNovusUtilities)
+  TNovusConsole = class
   private
   protected
   public
@@ -46,17 +46,17 @@ type
 
 implementation
 
-class function TNovusConsoleUtils.GetStdInputHandle: THandle;
+class function TNovusConsole.GetStdInputHandle: THandle;
 begin
   Result := GetStdHandle(STD_INPUT_HANDLE)
 end;
 
-class function TNovusConsoleUtils.GetStdOutputHandle: THandle;
+class function TNovusConsole.GetStdOutputHandle: THandle;
 begin
   Result := GetStdHandle(STD_OUTPUT_HANDLE)
 end;
 
-class function TNovusConsoleUtils.GetAvailableChar(aHandle: THandle): char;
+class function TNovusConsole.GetAvailableChar(aHandle: THandle): char;
 var
   FInputRecord: TInputRecord;
   FNumRead: Cardinal;
@@ -87,7 +87,7 @@ begin
   until false;
 End;
 
-class function TNovusConsoleUtils.IsAvailableKeyEx(aHandle: THandle): TKeyEvent;
+class function TNovusConsole.IsAvailableKeyEx(aHandle: THandle): TKeyEvent;
 Var
   i, numEvents: Cardinal;
   events: Array of TInputRecord;
@@ -112,11 +112,11 @@ Begin
 End;
 
 
-class function TNovusConsoleUtils.IsAvailableKey(aHandle: THandle): Boolean;
+class function TNovusConsole.IsAvailableKey(aHandle: THandle): Boolean;
 Var
   loKeyEvent: TKeyEvent;
 begin
-  loKeyEvent := TNovusConsoleUtils.IsAvailableKeyEx(aHandle);
+  loKeyEvent := TNovusConsole.IsAvailableKeyEx(aHandle);
 
   Result := ((loKeyEvent.KeyCode <>0) or (loKeyEvent.ScanCode <> 0));
 end;

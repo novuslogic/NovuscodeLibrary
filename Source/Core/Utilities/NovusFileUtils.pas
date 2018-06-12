@@ -164,8 +164,29 @@ end;
 class function TNovusFileUtils.CopyDir(aFromDirectory,
   aToDirectory: String): boolean;
 var
-  fos: TSHFileOpStruct;
+  s: TSearchRec;
+//  fos: TSHFileOpStruct;
+  lsInDir , lsOutDir: string;
 begin
+  if FindFirst(IncludeTrailingPathDelimiter(aFromDirectory) + '*',faDirectory, s) = 0 then
+  begin
+    repeat
+      if (s.Name <> '.') and (s.Name <> '..') and ((s.Attr and faDirectory) = faDirectory) then
+      begin
+        lsInDir := IncludeTrailingPathDelimiter(aFromDirectory) + s.Name;
+        lsOutDir := IncludeTrailingPathDelimiter(aToDirectory) + s.Name;
+        // Create new subdirectory in outDir
+        mkdir(lsOutDir);
+        // Recurse into subdirectory in inDir
+        TNovusFileUtils.CopyDir(lsInDir,lsOutDir);
+      end;
+    until FindNext(s) <> 0;
+  end;
+  FindClose(s);
+
+
+
+  (*
   ZeroMemory(@fos, SizeOf(fos));
   with fos do
   begin
@@ -175,6 +196,10 @@ begin
     pTo := PChar(aToDirectory)
   end;
   Result := (0 = ShFileOperation(fos));
+  *)
+
+
+
 end;
 
 class function TNovusFileUtils.AbsoluteFilePath(aFilename: String): String;

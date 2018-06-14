@@ -3,7 +3,7 @@ unit NovusList;
 interface
 
 uses
-  contnrs, NovusInfrastructre;
+  contnrs, NovusInfrastructre, Dialogs;
 
 type
   TNovusList = class(TNovusInfrastructre)
@@ -17,7 +17,7 @@ type
     procedure Put(Index: Integer; Item: TObject);
     function GetCount: Integer;
   public
-    constructor Create(aClass: TClass); virtual;
+    constructor Create(aClass: TClass = NIL); virtual;
     destructor Destroy; override;
 
     procedure InitClass(aClass: tClass);
@@ -67,9 +67,13 @@ procedure TNovusList.InitClass(aClass: tClass);
 begin
   foParentObject := NIL;
 
-  aClassname := aClass.Classname;
+
+  if aClass <> NIL then
+     aClassname := aClass.Classname;
 
   FList := TObjectList.Create;
+  FList.OwnsObjects := false;
+
   faclass := aClass;
 end;
 
@@ -82,40 +86,52 @@ function TNovusList.Add(AItem: TObject): Integer;
 var
   Test: Boolean;
 begin
-  try
-    Test := AItem is faclass;
-  except
-    on Exception do
-      raise EInvalidCast.Create
-        (Format('NovusList: Cannot add a non-object to a list of %s objects',
-        [faclass.Classname]));
-  end;
-  if Test then
-    Result := FList.Add(AItem)
-  else
-    raise EInvalidCast.Create
-      (Format('NovusList: Cannot add a %s object to a list of %s objects',
-      [AItem.Classname, faclass.Classname]));
+  if (faclass <> NIL) then
+    begin
+      try
+        Test := (AItem is faclass);
+      except
+        on Exception do
+          raise EInvalidCast.Create
+            (Format('NovusList: Cannot add a non-object to a list of %s objects',
+            [faclass.Classname]));
+      end;
+      if Test then
+        Result := FList.Add(AItem)
+      else
+        raise EInvalidCast.Create
+          (Format('NovusList: Cannot add a %s object to a list of %s objects',
+          [AItem.Classname, faclass.Classname]));
+    end
+   else
+     Result := FList.Add(AItem);
 end;
 
 procedure TNovusList.Insert(AItem: TObject; AIndex: Integer);
 var
   Test: Boolean;
 begin
-  try
-    Test := AItem is faclass;
-  except
-    on Exception do
-      raise EInvalidCast.Create
-        (Format('NovusList: Cannot insert a non-object to a list of %s objects',
-        [faclass.Classname]));
-  end;
-  if Test then
-    FList.Insert(AIndex, AItem)
+  if faclass <> nil then
+    begin
+      try
+        Test := AItem is faclass;
+      except
+        on Exception do
+          raise EInvalidCast.Create
+            (Format('NovusList: Cannot insert a non-object to a list of %s objects',
+            [faclass.Classname]));
+      end;
+      if Test then
+        FList.Insert(AIndex, AItem)
+      else
+        raise EInvalidCast.Create
+          (Format('NovusList: Cannot insert a %s object to a list of %s objects',
+          [AItem.Classname, faclass.Classname]));
+
+    end
   else
-    raise EInvalidCast.Create
-      (Format('NovusList: Cannot insert a %s object to a list of %s objects',
-      [AItem.Classname, faclass.Classname]));
+     FList.Insert(AIndex, AItem);
+
 end;
 
 function TNovusList.Delete(AItem: TObject): Boolean;
@@ -139,20 +155,25 @@ procedure TNovusList.Put(Index: Integer; Item: TObject);
 var
   Test: Boolean;
 begin
-  try
-    Test := Item is faclass;
-  except
-    on Exception do
-      raise EInvalidCast.Create
-        (Format('NLSafeList: Cannot put a non-object into a list of %s objects',
-        [faclass.Classname]));
-  end;
-  if Test then
-    FList[Index] := Item
+  if faclass <>  NIL then
+    begin
+      try
+        Test := Item is faclass;
+      except
+        on Exception do
+          raise EInvalidCast.Create
+            (Format('NovusList: Cannot put a non-object into a list of %s objects',
+            [faclass.Classname]));
+      end;
+      if Test then
+        FList[Index] := Item
+      else
+        raise EInvalidCast.Create
+          (Format('NovusList: Cannot put a %s object into a list of %s objects',
+          [TObject(Item).Classname, faclass.Classname]));
+    end
   else
-    raise EInvalidCast.Create
-      (Format('NLSafeList: Cannot put a %s object into a list of %s objects',
-      [TObject(Item).Classname, faclass.Classname]));
+    FList[Index] := Item;
 end;
 
 function TNovusList.GetCount: Integer;

@@ -67,7 +67,7 @@ implementation
 
 class constructor tNovusCommandLine.Create;
 begin
-  FCommandList := TNovusList.Create(tNovusCommandLineParam);
+  FCommandList := TNovusList.Create;
 end;
 
 class destructor tNovusCommandLine.Destroy;

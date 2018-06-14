@@ -1,3 +1,10 @@
+14/06/2018
+
+* TNovusCommandLine support updated TNovuslist
+* TNovuslist fixed memory leak.
+* TNovuslist now supports class pass through in constructor
+
+
 2/06/2018
 
 * Move NovusConsoleUtils class to NovusConsole Class

@@ -3,54 +3,48 @@ unit NovusCommandLine;
 interface
 
 uses
-  NovusConsole, SysUtils, Classes, NovusList;
+  NovusConsole, SysUtils, Classes, NovusList, System.StrUtils, vcl.dialogs;
 
 type
-  INovusCommandLineResult = interface
-  ['{4E2886DD-4120-4376-B778-0D803E621850}']
-    function GetErrors: Boolean;
-    procedure SetErrors(Value: boolean);
-
-    property Errors : boolean read GetErrors write SetErrors;
-
-  end;
-
-   TNovusCommandLineResult = class(TInterfacedObject, INovusCommandLineResult)
-   protected
-   private
-     function GetErrors: Boolean;
-     procedure SetErrors(Value: boolean);
-   public
-     property Errors : boolean read GetErrors write SetErrors;
-   end;
-
-  INovusCommandLineParam = interface
-  ['{0CC48B45-F78D-42A5-9C49-C36C3BEE853E}']
-    function GetCommandName: string;
-    procedure SetCommandName(Value: string);
-
-    property CommandName : string read GetCommandName write SetCommandName;
-
-  end;
-
-  tNovusCommandLineParam = class(TInterfacedObject, INovusCommandLineParam)
+  TNovusCommandLineResult = class(TObject)
   protected
+  private
+    function GetErrors: Boolean;
+    procedure SetErrors(Value: Boolean);
+  public
+    property Errors: Boolean read GetErrors write SetErrors;
+  end;
+
+  tNovusCommandLineParam = class(TObject)
+  protected
+    fsHelp: string;
     fsCommandName: String;
+    fsShortCommandName: String;
   private
     function GetCommandName: string;
     procedure SetCommandName(Value: string);
+    function GetShortCommandName: string;
+    procedure SetShortCommandName(Value: string);
+    function GetHelp: string;
+    procedure SetHelp(Value: string);
   public
-    property CommandName : string read GetCommandName write SetCommandName;
-    function Execute: boolean; virtual;
+    property CommandName: string read GetCommandName write SetCommandName;
+    property ShortCommandName: string read GetShortCommandName
+      write SetShortCommandName;
+    property Help: string read GetHelp write SetHelp;
+    function Execute: Boolean; virtual;
   end;
 
   tNovusCommandLine = class
   protected
-    class var
-      FCommandList: TNovusList;
-      FParamStrList: tStringlist;
+  class var
+    FCommandList: TNovusList;
+    FParamStrList: tStringlist;
+    fiParamIndex: Integer;
   private
-    class function ParamStrToStringList: TStringlist;
+    class function ParamStrToStringList: tStringlist;
+    class function GetNextCommand: string;
+    class function FindCommandName(aName: string): tNovusCommandLineParam;
   public
     class constructor Create;
     class destructor Destroy;
@@ -58,12 +52,14 @@ type
     class function Parse: TNovusCommandLineResult;
 
     class function RegisterCommand(const aCommandName: string;
-            aCommandLineParam: tNovusCommandLineParam): tNovusCommandLineParam;
+      const aShortCommandName: string; const aHelp: String;
+      aCommandLineParam: tNovusCommandLineParam): tNovusCommandLineParam;
+
+
 
   end;
 
 implementation
-
 
 class constructor tNovusCommandLine.Create;
 begin
@@ -72,26 +68,30 @@ end;
 
 class destructor tNovusCommandLine.Destroy;
 begin
-  if Assigned(FParamStrList) then FParamStrList.Free;
+  if Assigned(FParamStrList) then
+    FParamStrList.Free;
 
   FCommandList.Free;
 end;
 
-
 class function tNovusCommandLine.Parse: TNovusCommandLineResult;
+Var
+  lsCommandName: string;
 begin
   Result := NIL;
 
   FParamStrList := tNovusCommandLine.ParamStrToStringList;
+  fiParamIndex := 0;
 
+  lsCommandName := tNovusCommandLine.GetNextCommand;
 
 end;
 
-class function tNovusCommandLine.ParamStrToStringList: TStringlist;
+class function tNovusCommandLine.ParamStrToStringList: tStringlist;
 Var
-  i: integer;
+  i: Integer;
 begin
-  Result := TStringlist.Create;
+  Result := tStringlist.Create;
 
   if ParamCount > 0 then
   begin
@@ -100,29 +100,101 @@ begin
   end;
 end;
 
+class function tNovusCommandLine.FindCommandName(aName: string)
+  : tNovusCommandLineParam;
+Var
+  fCommandLineParam: tNovusCommandLineParam;
+  i: Integer;
+begin
+  Result := NIL;
+  For i := 0 to FCommandList.count - 1 do
+  begin
+    fCommandLineParam := FCommandList.items[i] as tNovusCommandLineParam;
 
-//  tNovusCommandLine
+    if (Uppercase(fCommandLineParam.CommandName) = Uppercase(aName)) or
+      (Uppercase(fCommandLineParam.ShortCommandName) = Uppercase(aName)) then
+    begin
+      Result := fCommandLineParam;
+
+      break;
+    end;
+
+  end;
+end;
+
+class function tNovusCommandLine.GetNextCommand: string;
+Var
+  i: integer;
+  lsParamValue: string;
+  lCommandLineParam: tNovusCommandLineParam;
+begin
+  Result := '';
+
+  for I := 0 to FParamStrList.Count -1 do
+    begin
+      lsParamValue := FParamStrList.Strings[i];
+
+      if lsParamValue = '' then
+        begin
+          Inc(fiParamIndex, 1);
+          continue;
+        end;
+       if StartsStr('--', lsParamValue) then
+          Delete(lsParamValue, 1, 2)
+        else if StartsStr('@', lsParamValue) then
+          Delete(lsParamValue, 1, 1)
+        else if StartsStr('/', lsParamValue) then
+          Delete(lsParamValue, 1, 1)
+        else if StartsStr('-', lsParamValue) then
+          Delete(lsParamValue, 1, 1);
+
+      lCommandLineParam := tNovusCommandLine.FindCommandName(lsParamValue);
+
+      Inc(fiParamIndex, 1);
+
+
+
+
+
+
+
+    end;
+
+  (*
+  if StartsStr('--', Value) then
+    Delete(Value, 1, 2)
+  else if StartsStr('-', Value) then
+    Delete(Value, 1, 1)
+  else if StartsStr('/', Value) then
+    Delete(Value, 1, 1)
+  *)
+    // FCommandList
+end;
+
+// tNovusCommandLine
 
 class function tNovusCommandLine.RegisterCommand(const aCommandName: string;
-            aCommandLineParam: tNovusCommandLineParam): tNovusCommandLineParam;
+  const aShortCommandName: string; const aHelp: String;
+  aCommandLineParam: tNovusCommandLineParam): tNovusCommandLineParam;
 begin
 
-  if not Assigned(aCommandLineParam) then aCommandLineParam := tNovusCommandLineParam.Create;
-
+  if not Assigned(aCommandLineParam) then
+    aCommandLineParam := tNovusCommandLineParam.Create;
 
   aCommandLineParam.CommandName := aCommandName;
+  aCommandLineParam.ShortCommandName := aShortCommandName;
+  aCommandLineParam.Help := aHelp;
 
-
-  FCommandList.Add(FCommandList);
+  FCommandList.Add(aCommandLineParam);
 end;
 
 
 
-//  tNovusCommandLineParam
+// tNovusCommandLineParam
 
 function tNovusCommandLineParam.GetCommandName: string;
 begin
-  result := fsCommandName;
+  Result := fsCommandName;
 end;
 
 procedure tNovusCommandLineParam.SetCommandName(Value: string);
@@ -130,9 +202,29 @@ begin
   fsCommandName := Value;
 end;
 
-function tNovusCommandLineParam.Execute: boolean;
+function tNovusCommandLineParam.GetShortCommandName: string;
+begin
+  Result := fsShortCommandName;
+end;
+
+procedure tNovusCommandLineParam.SetShortCommandName(Value: string);
+begin
+  fsShortCommandName := Value;
+end;
+
+function tNovusCommandLineParam.Execute: Boolean;
 begin
 
+end;
+
+procedure tNovusCommandLineParam.SetHelp(Value: string);
+begin
+  fsHelp := Value;
+end;
+
+function tNovusCommandLineParam.GetHelp: string;
+begin
+  Result := fsHelp;
 end;
 
 
@@ -144,7 +236,7 @@ begin
 
 end;
 
-procedure TNovusCommandLineResult.SetErrors(Value: boolean);
+procedure TNovusCommandLineResult.SetErrors(Value: Boolean);
 begin
 
 end;

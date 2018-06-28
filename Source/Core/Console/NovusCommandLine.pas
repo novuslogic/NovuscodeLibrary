@@ -6,34 +6,36 @@ uses
   NovusConsole, SysUtils, Classes, NovusList, System.StrUtils, vcl.dialogs;
 
 type
-   INovusCommandLineResult = interface
+  INovusCommandLineResult = interface
     ['{4E2886DD-4120-4376-B778-0D803E621850}']
     function GetErrors: Boolean;
     procedure SetErrors(Value: Boolean);
     function GetErrorMessages: TStringlist;
-    procedure SetErrorMessages(Value: TStringList);
-    function GetIsCommandEmpty: boolean;
+    procedure SetErrorMessages(Value: TStringlist);
+    function GetIsCommandEmpty: Boolean;
     procedure SetIsCommandEmpty(Value: Boolean);
 
     procedure AddError(aErrorMessage: string);
 
-    property IsCommandEmpty: boolean read GetIsCommandEmpty write SetIsCommandEmpty;
+    property IsCommandEmpty: Boolean read GetIsCommandEmpty
+      write SetIsCommandEmpty;
     property Errors: Boolean read GetErrors write SetErrors;
-    property ErrorMessages: TStringList read GetErrorMessages write SetErrorMessages;
+    property ErrorMessages: TStringlist read GetErrorMessages
+      write SetErrorMessages;
 
   end;
 
   TNovusCommandLineResult = class(TInterfacedObject, INovusCommandLineResult)
   protected
-    fbIsCommandEmpty: boolean;
-    fbErrors: boolean;
+    fbIsCommandEmpty: Boolean;
+    fbErrors: Boolean;
     fErrorMessages: TStringlist;
   private
     function GetErrors: Boolean;
     procedure SetErrors(Value: Boolean);
     function GetErrorMessages: TStringlist;
-    procedure SetErrorMessages(Value: TStringList);
-    function GetIsCommandEmpty: boolean;
+    procedure SetErrorMessages(Value: TStringlist);
+    function GetIsCommandEmpty: Boolean;
     procedure SetIsCommandEmpty(Value: Boolean);
   public
     constructor Create;
@@ -41,31 +43,47 @@ type
 
     procedure AddError(aErrorMessage: string);
 
-    property IsCommandEmpty: boolean read GetIsCommandEmpty write SetIsCommandEmpty;
+    property IsCommandEmpty: Boolean read GetIsCommandEmpty
+      write SetIsCommandEmpty;
     property Errors: Boolean read GetErrors write SetErrors;
-    property ErrorMessages: TStringList read GetErrorMessages write SetErrorMessages;
+    property ErrorMessages: TStringlist read GetErrorMessages
+      write SetErrorMessages;
   end;
 
   INovusCommandLineOption = interface
     ['{2195EF48-095A-4AF1-94F6-3B8B953584CF}']
     function GetOptionName: string;
     procedure SetOptionName(Value: string);
+    procedure SetRequired(Value: Boolean);
+    function GetRequired: Boolean;
+    function GetHelp: string;
+    procedure SetHelp(Value: string);
 
     function Execute: Boolean;
 
-    property OptionName: string  read GetOptionName write SetOptionName;
+    property OptionName: string read GetOptionName write SetOptionName;
+    property Required: Boolean read GetRequired write SetRequired;
+    property Help: string read GetHelp write SetHelp;
   end;
 
   tNovusCommandLineOption = class(TInterfacedObject, INovusCommandLineOption)
   protected
     fsOptionName: string;
+    fsHelp: string;
+    fbRequired: Boolean;
   private
     function GetOptionName: string;
     procedure SetOptionName(Value: string);
+    procedure SetRequired(Value: Boolean);
+    function GetRequired: Boolean;
+    function GetHelp: string;
+    procedure SetHelp(Value: string);
   public
     function Execute: Boolean; virtual;
 
-    property OptionName: string  read GetOptionName write SetOptionName;
+    property OptionName: string read GetOptionName write SetOptionName;
+    property Required: Boolean read GetRequired write SetRequired;
+    property Help: string read GetHelp write SetHelp;
   end;
 
   INovusCommandLineCommand = interface
@@ -76,21 +94,29 @@ type
     procedure SetShortCommandName(Value: string);
     function GetHelp: string;
     procedure SetHelp(Value: string);
+    procedure SetRequired(Value: Boolean);
+    function GetRequired: Boolean;
 
     property CommandName: string read GetCommandName write SetCommandName;
     property ShortCommandName: string read GetShortCommandName
       write SetShortCommandName;
     property Help: string read GetHelp write SetHelp;
 
-    function Execute: Boolean;
-    function Parse(var aParamIndex: integer): Boolean;
+    property Required: Boolean read GetRequired write SetRequired;
 
-    function RegisterOption(const aOptionName: string;
-      aCommandLineOption: tNovusCommandLineOption): tNovusCommandLineOption;
+    function IsOptionsExists: Boolean;
+
+    function Execute: Boolean;
+    function Parse(aValue: string): Boolean;
+
+    function RegisterOption(const aOptionName: string; const aHelp: String;
+      const aRequired: Boolean; aCommandLineOption: tNovusCommandLineOption)
+      : tNovusCommandLineOption;
   end;
 
   tNovusCommandLineCommand = class(TInterfacedObject, INovusCommandLineCommand)
   protected
+    fbRequired: Boolean;
     fsHelp: string;
     fsCommandName: String;
     fsShortCommandName: String;
@@ -102,6 +128,8 @@ type
     procedure SetShortCommandName(Value: string);
     function GetHelp: string;
     procedure SetHelp(Value: string);
+    procedure SetRequired(Value: Boolean);
+    function GetRequired: Boolean;
   public
     constructor Create; virtual;
     destructor Destroy;
@@ -110,23 +138,26 @@ type
     property ShortCommandName: string read GetShortCommandName
       write SetShortCommandName;
     property Help: string read GetHelp write SetHelp;
-    function Execute: Boolean; virtual;
-    function Parse(var aParamIndex: integer): Boolean;
+    property Required: Boolean read GetRequired write SetRequired;
 
-    function RegisterOption(const aOptionName: string;
-      aCommandLineOption: tNovusCommandLineOption): tNovusCommandLineOption;
+    function Execute: Boolean; virtual;
+    function Parse(aValue: string): Boolean;
+
+    function IsOptionsExists: Boolean;
+
+    function RegisterOption(const aOptionName: string; const aHelp: String;
+      const aRequired: Boolean; aCommandLineOption: tNovusCommandLineOption): tNovusCommandLineOption;
 
   end;
-
 
   tNovusCommandLine = class
   protected
   class var
-    FCommandList: TNovusList;
-    FParamStrList: tStringlist;
+    FCommandList: tNovuslist;
+    FParamStrList: TStringlist;
     fiParamIndex: Integer;
   private
-    class function ParamStrToStringList: tStringlist;
+    class function ParamStrToStringList: TStringlist;
     class function InternalParse: TNovusCommandLineResult;
     class function FindCommandName(aName: string): tNovusCommandLineCommand;
   public
@@ -137,9 +168,8 @@ type
 
     class function RegisterCommand(const aCommandName: string;
       const aShortCommandName: string; const aHelp: String;
+      const aRequired: Boolean;
       aCommandLineCommand: tNovusCommandLineCommand): tNovusCommandLineCommand;
-
-
 
   end;
 
@@ -147,7 +177,7 @@ implementation
 
 class constructor tNovusCommandLine.Create;
 begin
-  FCommandList := TNovusList.Create;
+  FCommandList := tNovuslist.Create;
 end;
 
 class destructor tNovusCommandLine.Destroy;
@@ -169,14 +199,11 @@ begin
   Result := tNovusCommandLine.InternalParse;
 end;
 
-
-
-
-class function tNovusCommandLine.ParamStrToStringList: tStringlist;
+class function tNovusCommandLine.ParamStrToStringList: TStringlist;
 Var
   i: Integer;
 begin
-  Result := tStringlist.Create;
+  Result := TStringlist.Create;
 
   if ParamCount > 0 then
   begin
@@ -210,46 +237,49 @@ end;
 class function tNovusCommandLine.InternalParse: TNovusCommandLineResult;
 Var
   lsParamValue: string;
-  lNovusCommandLineCommand: tNovusCommandLineCommand;
+  lCommand: tNovusCommandLineCommand;
 begin
   Result := TNovusCommandLineResult.Create;
 
-  if FParamStrList.Count = 0 then
-    begin
-      Result.IsCommandEmpty := true;
+  if FParamStrList.count = 0 then
+  begin
+    Result.IsCommandEmpty := true;
 
-      Exit;
-    end;
+    Exit;
+  end;
 
   fiParamIndex := 0;
-  While(fiParamIndex < FParamStrList.Count -1)  do
+  While (fiParamIndex < FParamStrList.count - 1) do
+  begin
+    lsParamValue := Trim(FParamStrList.Strings[fiParamIndex]);
+
+    if lsParamValue = '' then
     begin
-      lsParamValue := Trim(FParamStrList.Strings[fiParamIndex]);
-
-      if lsParamValue = '' then
-        begin
-          continue;
-        end;
-
-       if StartsStr('--', lsParamValue) then
-          Delete(lsParamValue, 1, 2)
-        else if StartsStr('@', lsParamValue) then
-          Delete(lsParamValue, 1, 1)
-        else if StartsStr('/', lsParamValue) then
-          Delete(lsParamValue, 1, 1)
-        else if StartsStr('-', lsParamValue) then
-          Delete(lsParamValue, 1, 1);
-
-      lNovusCommandLineCommand := tNovusCommandLine.FindCommandName(lsParamValue);
-      if Assigned(lNovusCommandLineCommand) then
-        begin
-          if not lNovusCommandLineCommand.Parse(fiParamIndex) then ;
-        end
-      else inc(fiParamIndex);
-
-      Result.AddError('Unknown command line option: ' + FParamStrList.Strings[fiParamIndex]);
-
+      continue;
     end;
+
+    if StartsStr('--', lsParamValue) then
+      Delete(lsParamValue, 1, 2)
+    else if StartsStr('@', lsParamValue) then
+      Delete(lsParamValue, 1, 1)
+    else if StartsStr('/', lsParamValue) then
+      Delete(lsParamValue, 1, 1)
+    else if StartsStr('-', lsParamValue) then
+      Delete(lsParamValue, 1, 1);
+
+    lCommand := tNovusCommandLine.FindCommandName(lsParamValue);
+
+    if Assigned(lCommand) then
+    begin
+      if lCommand.IsOptionsExists then;
+
+      // if not lCommand.Parse(fiParamIndex, FParamStrList) then ;
+    end;
+    // else inc(fiParamIndex);
+
+    // Result.AddError('Unknown command line option: ' + FParamStrList.Strings[fiParamIndex]);
+    inc(fiParamIndex);
+  end;
 
 end;
 
@@ -257,6 +287,7 @@ end;
 
 class function tNovusCommandLine.RegisterCommand(const aCommandName: string;
   const aShortCommandName: string; const aHelp: String;
+  const aRequired: Boolean;
   aCommandLineCommand: tNovusCommandLineCommand): tNovusCommandLineCommand;
 begin
 
@@ -266,6 +297,7 @@ begin
   aCommandLineCommand.CommandName := aCommandName;
   aCommandLineCommand.ShortCommandName := aShortCommandName;
   aCommandLineCommand.Help := aHelp;
+  aCommandLineCommand.Required := aRequired;
 
   FCommandList.Add(aCommandLineCommand);
 end;
@@ -296,13 +328,20 @@ end;
 
 function tNovusCommandLineCommand.Execute: Boolean;
 begin
-  result := false;
+  Result := false;
 end;
 
-
-function tNovusCommandLineCommand.Parse(var aParamIndex: Integer): Boolean;
+function tNovusCommandLineCommand.IsOptionsExists: Boolean;
 begin
-  result := false;
+  Result := (fCommandLineOptionList.count <> 0);
+end;
+
+function tNovusCommandLineCommand.Parse(aValue: string): Boolean;
+var
+  lsValue: String;
+begin
+
+  Result := false;
 end;
 
 procedure tNovusCommandLineCommand.SetHelp(Value: string);
@@ -315,10 +354,9 @@ begin
   Result := fsHelp;
 end;
 
-
 constructor tNovusCommandLineCommand.Create;
 begin
-  fCommandLineOptionList:= tNovuslist.Create;
+  fCommandLineOptionList := tNovuslist.Create;
 end;
 
 destructor tNovusCommandLineCommand.Destroy;
@@ -327,7 +365,7 @@ begin
 end;
 
 function tNovusCommandLineCommand.RegisterOption(const aOptionName: string;
-      aCommandLineOption: tNovusCommandLineOption): tNovusCommandLineOption;
+  const aHelp: string; const aRequired: boolean;aCommandLineOption: tNovusCommandLineOption): tNovusCommandLineOption;
 var
   fCommandLineOption: tNovusCommandLineOption;
 begin
@@ -337,17 +375,28 @@ begin
   else
     fCommandLineOption := tNovusCommandLineOption.Create;
 
+  fCommandLineOption := tNovusCommandLineOption.Create;
+  fCommandLineOption.OptionName := aOptionName;
+  fCommandLineOption.Help := aHelp;
+  fCommandLineOption.Required := aRequired;
 
-  fCommandLineOption:= tNovusCommandLineOption.Create;
-  fCommandLineOption.OptionName:= aOptionName;
   fCommandLineOptionList.Add(fCommandLineOption);
 end;
 
+procedure tNovusCommandLineCommand.SetRequired(Value: Boolean);
+begin
+  fbRequired := Value;
+end;
+
+function tNovusCommandLineCommand.GetRequired: Boolean;
+begin
+  Result := fbRequired;
+end;
 
 // tNovusCommandlineResult
 constructor TNovusCommandLineResult.Create;
 begin
-  fErrorMessages:= TStringlist.Create;
+  fErrorMessages := TStringlist.Create;
 end;
 
 destructor TNovusCommandLineResult.Destroy;
@@ -355,9 +404,9 @@ begin
   fErrorMessages.Free;
 end;
 
-function TNovusCommandLineResult.GetIsCommandEmpty: boolean;
+function TNovusCommandLineResult.GetIsCommandEmpty: Boolean;
 begin
-  result := fbIsCommandEmpty;
+  Result := fbIsCommandEmpty;
 end;
 
 procedure TNovusCommandLineResult.SetIsCommandEmpty(Value: Boolean);
@@ -367,7 +416,7 @@ end;
 
 function TNovusCommandLineResult.GetErrors: Boolean;
 begin
-  result := fbErrors;
+  Result := fbErrors;
 end;
 
 procedure TNovusCommandLineResult.SetErrors(Value: Boolean);
@@ -377,14 +426,13 @@ end;
 
 function TNovusCommandLineResult.GetErrorMessages: TStringlist;
 begin
-  result := fErrorMessages;
+  Result := fErrorMessages;
 end;
 
-procedure TNovusCommandLineResult.SetErrorMessages(Value: TStringList);
+procedure TNovusCommandLineResult.SetErrorMessages(Value: TStringlist);
 begin
   fErrorMessages := Value;
 end;
-
 
 procedure TNovusCommandLineResult.AddError(aErrorMessage: string);
 begin
@@ -392,10 +440,10 @@ begin
   fErrorMessages.Add(aErrorMessage)
 end;
 
-//tNovusCommandLineOption
+// tNovusCommandLineOption
 function tNovusCommandLineOption.GetOptionName: string;
 begin
-  result := fsOptionName;
+  Result := fsOptionName;
 end;
 
 procedure tNovusCommandLineOption.SetOptionName(Value: string);
@@ -403,9 +451,29 @@ begin
   fsOptionName := Value;
 end;
 
+procedure tNovusCommandLineOption.SetRequired(Value: Boolean);
+begin
+  fbRequired := Value;
+end;
+
+function tNovusCommandLineOption.GetRequired: Boolean;
+begin
+  Result := fbRequired;
+end;
+
+function tNovusCommandLineOption.GetHelp: string;
+begin
+  Result := fsHelp;
+end;
+
+procedure tNovusCommandLineOption.SetHelp(Value: string);
+begin
+  fsHelp := Value;
+end;
+
 function tNovusCommandLineOption.Execute: Boolean;
 begin
-  result := false;
+  Result := false;
 end;
 
 end.

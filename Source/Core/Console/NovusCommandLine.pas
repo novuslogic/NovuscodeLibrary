@@ -58,12 +58,15 @@ type
     function GetRequired: Boolean;
     function GetHelp: string;
     procedure SetHelp(Value: string);
+    function GetValue: string;
+    procedure SetValue(Value: string);
 
     function Execute: Boolean;
 
     property OptionName: string read GetOptionName write SetOptionName;
     property Required: Boolean read GetRequired write SetRequired;
     property Help: string read GetHelp write SetHelp;
+    property Value: string read GetValue write SetValue;
   end;
 
   tNovusCommandLineOption = class(TInterfacedObject, INovusCommandLineOption)
@@ -71,6 +74,7 @@ type
     fsOptionName: string;
     fsHelp: string;
     fbRequired: Boolean;
+    fsValue: string;
   private
     function GetOptionName: string;
     procedure SetOptionName(Value: string);
@@ -78,12 +82,15 @@ type
     function GetRequired: Boolean;
     function GetHelp: string;
     procedure SetHelp(Value: string);
+    function GetValue: string;
+    procedure SetValue(Value: string);
   public
     function Execute: Boolean; virtual;
 
     property OptionName: string read GetOptionName write SetOptionName;
     property Required: Boolean read GetRequired write SetRequired;
     property Help: string read GetHelp write SetHelp;
+    property Value: string read GetValue write SetValue;
   end;
 
   INovusCommandLineCommand = interface
@@ -107,7 +114,7 @@ type
     function IsOptionsExists: Boolean;
 
     function Execute: Boolean;
-    function Parse(aValue: string): Boolean;
+    function Parse: Boolean;
 
     function RegisterOption(const aOptionName: string; const aHelp: String;
       const aRequired: Boolean; aCommandLineOption: tNovusCommandLineOption)
@@ -141,12 +148,15 @@ type
     property Required: Boolean read GetRequired write SetRequired;
 
     function Execute: Boolean; virtual;
-    function Parse(aValue: string): Boolean;
+    function Parse: Boolean;
 
     function IsOptionsExists: Boolean;
 
     function RegisterOption(const aOptionName: string; const aHelp: String;
       const aRequired: Boolean; aCommandLineOption: tNovusCommandLineOption): tNovusCommandLineOption;
+
+    property OptionList: tNovuslist
+       read fCommandLineOptionList write fCommandLineOptionList;
 
   end;
 
@@ -237,7 +247,9 @@ end;
 class function tNovusCommandLine.InternalParse: TNovusCommandLineResult;
 Var
   lsParamValue: string;
-  lCommand: tNovusCommandLineCommand;
+  lCommand, lLastCommand: tNovusCommandLineCommand;
+  liOptionIndex: Integer;
+  liOption : tNovusCommandLineOption;
 begin
   Result := TNovusCommandLineResult.Create;
 
@@ -249,7 +261,9 @@ begin
   end;
 
   fiParamIndex := 0;
-  While (fiParamIndex < FParamStrList.count - 1) do
+  liOptionIndex := 0;
+  lLastCommand := NIL;
+  While (fiParamIndex <= FParamStrList.count - 1) do
   begin
     lsParamValue := Trim(FParamStrList.Strings[fiParamIndex]);
 
@@ -267,17 +281,38 @@ begin
     else if StartsStr('-', lsParamValue) then
       Delete(lsParamValue, 1, 1);
 
-    lCommand := tNovusCommandLine.FindCommandName(lsParamValue);
-
-    if Assigned(lCommand) then
+   lCommand := tNovusCommandLine.FindCommandName(lsParamValue);
+   if Assigned(lCommand) then
     begin
-      if lCommand.IsOptionsExists then;
+      if (lLastCommand <> lCommand) then
+        begin
 
-      // if not lCommand.Parse(fiParamIndex, FParamStrList) then ;
-    end;
-    // else inc(fiParamIndex);
+          lLastCommand := lCommand;
+          liOptionIndex := 0;
+        end;
 
-    // Result.AddError('Unknown command line option: ' + FParamStrList.Strings[fiParamIndex]);
+    end
+   else
+   if assigned(llastcommand) then
+     begin
+       if llastCommand.IsOptionsExists then
+         begin
+          if (liOptionIndex <=lLastCommand.OptionList.Count -1) then
+            begin
+              liOption := tNovusCommandLineOption(lLastCommand.OptionList.Items[liOPtionIndex]);
+
+              liOption.Value := lsParamValue;
+            end
+          else
+            begin
+              Result.AddError('Unknown command line option: ' + FParamStrList.Strings[fiParamIndex]);
+              break;
+            end;
+
+          Inc(liOptionIndex);
+        end;
+     end;
+
     inc(fiParamIndex);
   end;
 
@@ -336,12 +371,9 @@ begin
   Result := (fCommandLineOptionList.count <> 0);
 end;
 
-function tNovusCommandLineCommand.Parse(aValue: string): Boolean;
-var
-  lsValue: String;
+function tNovusCommandLineCommand.Parse: Boolean;
 begin
-
-  Result := false;
+  Result := Execute;
 end;
 
 procedure tNovusCommandLineCommand.SetHelp(Value: string);
@@ -474,6 +506,16 @@ end;
 function tNovusCommandLineOption.Execute: Boolean;
 begin
   Result := false;
+end;
+
+function tNovusCommandLineOption.GetValue: string;
+begin
+ result := fsValue;
+end;
+
+procedure tNovusCommandLineOption.SetValue(Value: string);
+begin
+ fsValue := Value;
 end;
 
 end.

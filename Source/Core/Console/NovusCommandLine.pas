@@ -3,7 +3,7 @@ unit NovusCommandLine;
 interface
 
 uses
-  NovusConsole, SysUtils, Classes, NovusList, System.StrUtils, vcl.dialogs;
+  NovusConsole, SysUtils, Classes, NovusList, System.StrUtils;
 
 type
   INovusCommandLineResult = interface
@@ -128,6 +128,7 @@ type
 
     property Required: Boolean read GetRequired write SetRequired;
 
+    function FindOptionByName(aOptionName: string): INovusCommandLineOption;
     function IsOptionsExists: Boolean;
     procedure AddError(aErrorMessage: string);
 
@@ -175,6 +176,7 @@ type
     function Execute: Boolean; virtual;
     function Parse: Boolean;
 
+    function FindOptionByName(aOptionName: string): INovusCommandLineOption;
     function IsOptionsExists: Boolean;
     procedure AddError(aErrorMessage: string);
 
@@ -382,6 +384,8 @@ begin
           if not lLastCommand.Execute then
           begin
             Result.AddError(lLastCommand.ErrorMessages.Text);
+
+            Result.Errors := true;
           end;
        end;
   end;
@@ -455,6 +459,18 @@ begin
   Result := (fCommandLineOptionList.count <> 0);
 end;
 
+function tNovusCommandLineCommand.FindOptionByName(aOptionName: string): INovusCommandLineOption;
+Var
+  fNovusCommandLineOption: tObject;
+begin
+  Result := NIL;
+
+  fNovusCommandLineOption := fCommandLineOptionList.FindItem(aOptionName);
+
+  if Assigned(fNovusCommandLineOption) then
+      Result := tNovusCommandLineOption(fNovusCommandLineOption);
+end;
+
 function tNovusCommandLineCommand.Parse: Boolean;
 begin
   Result := Execute;
@@ -489,7 +505,6 @@ function tNovusCommandLineCommand.RegisterOption(const aOptionName: string;
 var
   fCommandLineOption: tNovusCommandLineOption;
 begin
-
   if Assigned(aCommandLineOption) then
     fCommandLineOption := aCommandLineOption
   else
@@ -500,7 +515,7 @@ begin
   fCommandLineOption.Help := aHelp;
   fCommandLineOption.Required := aRequired;
 
-  fCommandLineOptionList.Add(fCommandLineOption);
+  fCommandLineOptionList.Add(aOptionName, fCommandLineOption);
 end;
 
 procedure tNovusCommandLineCommand.SetRequired(Value: Boolean);

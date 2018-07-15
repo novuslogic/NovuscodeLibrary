@@ -3,19 +3,32 @@ unit NovusList;
 interface
 
 uses
-  contnrs, NovusInfrastructre, Dialogs;
+  contnrs, NovusInfrastructre, Classes, Generics.Collections, NovusUtilities;
 
 type
+  tHashItem = class(TObject)
+  protected
+  private
+    fiIndex: Integer;
+    fsKey: string;
+  public
+    property Index: Integer read fiIndex write fiIndex;
+    property Key: string read fsKey write fsKey;
+  end;
+
+
   TNovusList = class(TNovusInfrastructre)
   protected
     foParentObject: TObject;
     fsaClassname: String;
     faclass: TClass;
     FList: TObjectList;
+    FHash: TDictionary<String,tHashItem>;
   private
     function Get(Index: Integer): TObject;
     procedure Put(Index: Integer; Item: TObject);
     function GetCount: Integer;
+    function InternalAdd(AItem: TObject): Integer;
   public
     constructor Create(aClass: TClass = NIL); virtual;
     destructor Destroy; override;
@@ -24,14 +37,17 @@ type
 
     procedure Insert(AItem: TObject; AIndex: Integer);
 
-    function Add(AItem: TObject): Integer;
+    function Add(AItem: TObject): Integer; overload;
+    function Add(aKey: string; AItem: TObject): Integer; overload;
     function Delete(AItem: TObject): Boolean;
     function Equals(AList: TNovusList): Boolean;
+    procedure Clear;
+    procedure CopyFrom(aNovusList: TNovusList);
+    function FindItem(aKey: string): TObject;
+
     property Count: Integer read GetCount;
     property Items[Index: Integer]: TObject read Get write Put; default;
-    procedure Clear;
 
-    procedure CopyFrom(aNovusList: TNovusList);
 
     property List: TObjectList read FList write FList;
 
@@ -59,6 +75,8 @@ destructor TNovusList.Destroy;
 begin
   Clear;
 
+  FHash.Clear;
+  FHash.Free;
   FList.Free;
   inherited Destroy;
 end;
@@ -70,6 +88,8 @@ begin
 
   if aClass <> NIL then
      aClassname := aClass.Classname;
+
+  FHash:= TDictionary<String, tHashItem>.Create;
 
   FList := TObjectList.Create;
   FList.OwnsObjects := false;
@@ -83,6 +103,25 @@ begin
 end;
 
 function TNovusList.Add(AItem: TObject): Integer;
+begin
+  Result := InternalAdd(AItem);
+end;
+
+
+function TNovusList.Add(aKey: string; AItem: TObject): Integer;
+Var
+   FHashItem : tHashItem;
+begin
+  Result := InternalAdd(AItem);
+
+  FHashItem := tHashItem.Create;
+  FHashItem.Index := Result;
+  FHashItem.Key := aKey;
+
+  FHash.Add(aKey, FHashItem);
+end;
+
+function TNovusList.InternalAdd(AItem: TObject): Integer;
 var
   Test: Boolean;
 begin
@@ -197,6 +236,27 @@ end;
 procedure TNovusList.Clear;
 begin
   FList.Clear;
+end;
+
+function TNovusList.FindItem(aKey: string): TObject;
+Var
+  FHashItem : tHashItem;
+  pIndex: Pointer;
+begin
+  Result := NIL;
+
+  Try
+  if FHash.TryGetValue(Akey,FHashItem ) then
+    begin
+      Result := FList.Items[FHashItem.Index];
+    end;
+  Except
+     on Exception do
+          raise EInvalidCast.Create
+            (Format('NovusList: Exception FindItem %s ',
+            [TNovusUtilities.GetExceptMess]));
+
+  End;
 end;
 
 procedure TNovusList.CopyFrom(aNovusList: TNovusList);

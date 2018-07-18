@@ -10,15 +10,19 @@ type
     ['{4E2886DD-4120-4376-B778-0D803E621850}']
     function GetErrors: Boolean;
     procedure SetErrors(Value: Boolean);
+    function GetExitCode: Integer;
+    procedure SetExitCode(Value: Integer);
     function GetErrorMessages: TStringlist;
     procedure SetErrorMessages(Value: TStringlist);
     function GetIsCommandEmpty: Boolean;
     procedure SetIsCommandEmpty(Value: Boolean);
 
-    procedure AddError(aErrorMessage: string);
+    procedure AddError(aErrorMessage: string; aExitCode: Integer = 0);
 
     property IsCommandEmpty: Boolean read GetIsCommandEmpty
       write SetIsCommandEmpty;
+
+    property ExitCode: Integer read GetExitCode write SetExitCode;
     property Errors: Boolean read GetErrors write SetErrors;
     property ErrorMessages: TStringlist read GetErrorMessages
       write SetErrorMessages;
@@ -27,12 +31,15 @@ type
 
   TNovusCommandLineResult = class(TInterfacedObject, INovusCommandLineResult)
   protected
+    fiExitCode:integer;
     fbIsCommandEmpty: Boolean;
     fbErrors: Boolean;
     fErrorMessages: TStringlist;
   private
     function GetErrors: Boolean;
     procedure SetErrors(Value: Boolean);
+    function GetExitCode: Integer;
+    procedure SetExitCode(Value: Integer);
     function GetErrorMessages: TStringlist;
     procedure SetErrorMessages(Value: TStringlist);
     function GetIsCommandEmpty: Boolean;
@@ -41,7 +48,7 @@ type
     constructor Create;
     destructor Destroy;
 
-    procedure AddError(aErrorMessage: string);
+    procedure AddError(aErrorMessage: string; aExitCode: Integer = 0);
 
     property IsCommandEmpty: Boolean read GetIsCommandEmpty
       write SetIsCommandEmpty;
@@ -569,9 +576,21 @@ begin
   fErrorMessages := Value;
 end;
 
-procedure TNovusCommandLineResult.AddError(aErrorMessage: string);
+function TNovusCommandLineResult.GetExitCode: integer;
+begin
+  result := fiExitCode;
+end;
+
+procedure TNovusCommandLineResult.SetExitCode(Value: integer);
+begin
+  fiExitCode := Value;
+end;
+
+
+procedure TNovusCommandLineResult.AddError(aErrorMessage: string; aExitCode: Integer);
 begin
   fbErrors := true;
+  aExitCode := aExitCode;
   fErrorMessages.Add(aErrorMessage)
 end;
 

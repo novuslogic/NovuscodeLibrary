@@ -6,6 +6,8 @@ uses
   NovusConsole, SysUtils, Classes, NovusList, System.StrUtils;
 
 type
+  INovusCommandLineCommand = interface;
+
   INovusCommandLineResult = interface
     ['{4E2886DD-4120-4376-B778-0D803E621850}']
     function GetErrors: Boolean;
@@ -16,12 +18,14 @@ type
     procedure SetErrorMessages(Value: TStringlist);
     function GetIsCommandEmpty: Boolean;
     procedure SetIsCommandEmpty(Value: Boolean);
+    function GetHelp: String;
 
-    procedure AddError(aErrorMessage: string; aExitCode: Integer = 0);
+    procedure AddError(aErrorMessage: string; aExitCode: Integer = 0); overload;
+    procedure AddError(aCommand: INovusCommandLineCommand); overload;
 
     property IsCommandEmpty: Boolean read GetIsCommandEmpty
       write SetIsCommandEmpty;
-
+    property Help: String read GetHelp;
     property ExitCode: Integer read GetExitCode write SetExitCode;
     property Errors: Boolean read GetErrors write SetErrors;
     property ErrorMessages: TStringlist read GetErrorMessages
@@ -34,10 +38,12 @@ type
     fiExitCode:integer;
     fbIsCommandEmpty: Boolean;
     fbErrors: Boolean;
+    fsHelp: string;
     fErrorMessages: TStringlist;
   private
     function GetErrors: Boolean;
     procedure SetErrors(Value: Boolean);
+    function GetHelp: String;
     function GetExitCode: Integer;
     procedure SetExitCode(Value: Integer);
     function GetErrorMessages: TStringlist;
@@ -48,10 +54,14 @@ type
     constructor Create;
     destructor Destroy;
 
-    procedure AddError(aErrorMessage: string; aExitCode: Integer = 0);
+    procedure AddError(aErrorMessage: string; aExitCode: Integer = 0); overload;
+    procedure AddError(aCommand: INovusCommandLineCommand); overload;
+
 
     property IsCommandEmpty: Boolean read GetIsCommandEmpty
       write SetIsCommandEmpty;
+
+    property Help: String read GetHelp;
     property Errors: Boolean read GetErrors write SetErrors;
     property ErrorMessages: TStringlist read GetErrorMessages
       write SetErrorMessages;
@@ -127,6 +137,10 @@ type
     function GetRequired: Boolean;
     function GetErrorMessages: TStringlist;
     procedure SetErrorMessages(Value: TStringlist);
+    function GetOptionList: tNovuslist;
+    procedure SetOptionList(Value: tNovuslist);
+    function GetExitCode: Integer;
+    procedure SetExitCode(Value: Integer);
 
     property CommandName: string read GetCommandName write SetCommandName;
     property ShortCommandName: string read GetShortCommandName
@@ -137,7 +151,7 @@ type
 
     function FindOptionByName(aOptionName: string): INovusCommandLineOption;
     function IsOptionsExists: Boolean;
-    procedure AddError(aErrorMessage: string);
+    procedure AddError(aErrorMessage: string; aExitCode: Integer = 0);
 
     function Execute: Boolean;
     function Parse: Boolean;
@@ -149,10 +163,16 @@ type
     property ErrorMessages: TStringlist read GetErrorMessages
       write SetErrorMessages;
 
+    property ExitCode: Integer read GetExitCode write SetExitCode;
+
+    property OptionList: tNovuslist read GetOptionList
+      write SetOptionList;
+
   end;
 
   tNovusCommandLineCommand = class(TInterfacedObject, INovusCommandLineCommand)
   protected
+    fiExitCode: integer;
     fErrorMessages: TStringlist;
     fbRequired: Boolean;
     fsHelp: string;
@@ -160,6 +180,8 @@ type
     fsShortCommandName: String;
     fCommandLineOptionList: tNovuslist;
   private
+    function GetOptionList: tNovuslist;
+    procedure SetOptionList(Value: tNovuslist);
     function GetCommandName: string;
     procedure SetCommandName(Value: string);
     function GetShortCommandName: string;
@@ -170,6 +192,8 @@ type
     function GetRequired: Boolean;
     function GetErrorMessages: TStringlist;
     procedure SetErrorMessages(Value: TStringlist);
+    function GetExitCode: Integer;
+    procedure SetExitCode(Value: Integer);
   public
     constructor Create; virtual;
     destructor Destroy;
@@ -185,17 +209,20 @@ type
 
     function FindOptionByName(aOptionName: string): INovusCommandLineOption;
     function IsOptionsExists: Boolean;
-    procedure AddError(aErrorMessage: string);
+    procedure AddError(aErrorMessage: string; aExitCode: Integer = 0);
 
     function RegisterOption(const aOptionName: string; const aHelp: String;
       const aRequired: Boolean; aCommandLineOption: tNovusCommandLineOption)
       : tNovusCommandLineOption;
 
-    property OptionList: tNovuslist read fCommandLineOptionList
-      write fCommandLineOptionList;
+
+    property OptionList: tNovuslist read GetOptionList
+      write SetOptionList;
 
     property ErrorMessages: TStringlist read GetErrorMessages
       write SetErrorMessages;
+
+    property ExitCode: Integer read GetExitCode write SetExitCode;
   end;
 
   tNovusCommandLine = class
@@ -285,7 +312,7 @@ end;
 class function tNovusCommandLine.InternalParse: TNovusCommandLineResult;
 Var
   lsParamValue: string;
-  lCommand, lLastCommand: tNovusCommandLineCommand;
+  lCommand, lLastCommand: INovusCommandLineCommand;
   liOptionIndex: Integer;
   liOption: tNovusCommandLineOption;
 begin
@@ -329,7 +356,7 @@ begin
         begin
           if not lLastCommand.Execute then
           begin
-            Result.AddError(lLastCommand.ErrorMessages.Text);
+            Result.AddError(lLastCommand);
 
             break;
           end;
@@ -389,11 +416,8 @@ begin
      if not Result.Errors then
        begin
           if not lLastCommand.Execute then
-          begin
-            Result.AddError(lLastCommand.ErrorMessages.Text);
+              Result.AddError(lLastCommand);
 
-            Result.Errors := true;
-          end;
        end;
   end;
 
@@ -421,8 +445,10 @@ end;
 
 
 // tNovusCommandLineCommand
-procedure tNovusCommandLineCommand.AddError(aErrorMessage: string);
+procedure tNovusCommandLineCommand.AddError(aErrorMessage: string; aExitCode: Integer);
 begin
+  fiExitCode := aExitCode;
+
   fErrorMessages.Add(aErrorMessage)
 end;
 
@@ -444,6 +470,16 @@ end;
 procedure tNovusCommandLineCommand.SetCommandName(Value: string);
 begin
   fsCommandName := Value;
+end;
+
+function tNovusCommandLineCommand.GetOptionList: tNovuslist;
+begin
+  Result := fCommandLineOptionList;
+end;
+
+procedure tNovusCommandLineCommand.SetOptionList(Value: tNovuslist);
+begin
+  fCommandLineOptionList := Value;
 end;
 
 function tNovusCommandLineCommand.GetShortCommandName: string;
@@ -535,6 +571,16 @@ begin
   Result := fbRequired;
 end;
 
+procedure tNovusCommandLineCommand.SetExitCode(Value: Integer);
+begin
+  fiExitCode := Value;
+end;
+
+function tNovusCommandLineCommand.GetExitCode: integer;
+begin
+  Result := fiExitCode;
+end;
+
 // tNovusCommandlineResult
 constructor TNovusCommandLineResult.Create;
 begin
@@ -586,12 +632,28 @@ begin
   fiExitCode := Value;
 end;
 
+function TNovusCommandLineResult.GetHelp: string;
+begin
+  Result := fsHelp;
+end;
+
 
 procedure TNovusCommandLineResult.AddError(aErrorMessage: string; aExitCode: Integer);
 begin
   fbErrors := true;
-  aExitCode := aExitCode;
+  fiExitCode := aExitCode;
+
   fErrorMessages.Add(aErrorMessage)
+end;
+
+
+procedure TNovusCommandLineResult.AddError(aCommand: INovusCommandLineCommand);
+begin
+  if Not Assigned(aCommand) then Exit;
+  fbErrors := true;
+  fsHelp := aCommand.Help;
+  fErrorMessages.Add(aCommand.ErrorMessages.Text);
+  fiExitCode := aCommand.ExitCode;
 end;
 
 // tNovusCommandLineOption

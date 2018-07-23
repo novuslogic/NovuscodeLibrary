@@ -378,6 +378,12 @@ begin
 
           liOption.Value := lsParamValue;
 
+          if (liOption.Value = '') and (liOption.Required = true) then
+            begin
+              Result.AddError('Required Option [' + liOption.OptionName + '] was not specified');
+              break;
+            end
+          else
           if not liOption.Execute then
           begin
             Result.AddError(liOption.ErrorMessages.Text);
@@ -413,12 +419,37 @@ begin
 
   if Assigned(lLastCommand) then
   begin
+     if lLastCommand.IsOptionsExists then
+      begin
+        liOptionIndex := 0;
+        While (liOptionIndex <= lLastCommand.OptionList.count - 1) do
+        begin
+          liOption := tNovusCommandLineOption(lLastCommand.OptionList.items
+            [liOptionIndex]);
+
+          if (liOption.Value = '') and (liOption.Required = true) then
+            begin
+              Result.AddError('Required Option [' + liOption.OptionName + '] was not specified');
+              break;
+            end;
+
+          inc(liOptionIndex);
+        end;
+
+        if Result.Errors then
+          Result.AddError(lLastCommand);
+
+      end;
+
      if not Result.Errors then
        begin
           if not lLastCommand.Execute then
               Result.AddError(lLastCommand);
 
-       end;
+       end
+     else Result.AddError(lLastCommand);
+
+
   end;
 
 end;

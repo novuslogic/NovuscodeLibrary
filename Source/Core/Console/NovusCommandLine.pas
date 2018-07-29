@@ -144,6 +144,8 @@ type
     function GetCommandList: TNovusList;
     procedure SetCommandList(Value: TNovusList);
 
+    function IsOptionsRequried: boolean;
+
     property CommandName: string read GetCommandName write SetCommandName;
     property ShortCommandName: string read GetShortCommandName
       write SetShortCommandName;
@@ -151,7 +153,7 @@ type
 
     property Required: Boolean read GetRequired write SetRequired;
 
-    function FindCommandByName(aCommandName: string): INovusCommandLineCommand;
+    function FindCommandName(aCommandName: string): INovusCommandLineCommand;
 
     function FindOptionByName(aOptionName: string): INovusCommandLineOption;
     function IsOptionsExists: Boolean;
@@ -208,7 +210,7 @@ type
     destructor Destroy;
 
 
-    function FindCommandByName(aCommandName: string): INovusCommandLineCommand;
+    function FindCommandName(aCommandName: string): INovusCommandLineCommand;
 
     property CommandName: string read GetCommandName write SetCommandName;
     property ShortCommandName: string read GetShortCommandName
@@ -221,6 +223,9 @@ type
 
     function FindOptionByName(aOptionName: string): INovusCommandLineOption;
     function IsOptionsExists: Boolean;
+
+    function IsOptionsRequried: boolean;
+
     procedure AddError(aErrorMessage: string; aExitCode: Integer = 0);
 
     function RegisterOption(const aOptionName: string; const aHelp: String;
@@ -253,7 +258,7 @@ type
   private
     class function ParamStrToStringList: TStringlist;
     class function InternalParse: TNovusCommandLineResult;
-    class function FindCommandName(aName: string): INovusCommandLineCommand;
+    class function FindCommandName(aCommandName: string): INovusCommandLineCommand;
   public
     class constructor Create;
     class destructor Destroy;
@@ -306,21 +311,20 @@ begin
   end;
 end;
 
-class function tNovusCommandLine.FindCommandName(aName: string)
-  : INovusCommandLineCommand;
+class function tNovusCommandLine.FindCommandName(aCommandName: string): INovusCommandLineCommand;
 Var
-  fCommandLineParam: tNovusCommandLineCommand;
+  fCommand: tNovusCommandLineCommand;
   i: Integer;
 begin
   Result := NIL;
   For i := 0 to FCommandList.count - 1 do
   begin
-    fCommandLineParam := FCommandList.items[i] as tNovusCommandLineCommand;
+    fCommand:= FCommandList.items[i] as tNovusCommandLineCommand;
 
-    if (Uppercase(fCommandLineParam.CommandName) = Uppercase(aName)) or
-      (Uppercase(fCommandLineParam.ShortCommandName) = Uppercase(aName)) then
+    if (Uppercase(fCommand.CommandName) = Uppercase(aCommandName)) or
+      (Uppercase(fCommand.ShortCommandName) = Uppercase(aCommandName)) then
     begin
-      Result := fCommandLineParam;
+      Result := fCommand;
 
       break;
     end;
@@ -333,7 +337,8 @@ Var
   lsParamValue: string;
   lCommand, lLastCommand: INovusCommandLineCommand;
   liOptionIndex: Integer;
-  liOption: tNovusCommandLineOption;
+  lOption: tNovusCommandLineOption;
+  fbOptionsRequried: boolean;
 begin
   Result := TNovusCommandLineResult.Create;
 
@@ -346,6 +351,7 @@ begin
 
   fiParamIndex := 0;
   liOptionIndex := 0;
+  fbOptionsRequried := false;
   lLastCommand := NIL;
   While (fiParamIndex <= FParamStrList.count - 1) do
   begin
@@ -367,7 +373,7 @@ begin
       Delete(lsParamValue, 1, 1);
 
     lCommand := tNovusCommandLine.FindCommandName(lsParamValue);
-    if Assigned(lCommand) then
+    if Assigned(lCommand) and (fbOptionsRequried = false) then
     begin
       if (lLastCommand <> lCommand) then
       begin
@@ -383,29 +389,33 @@ begin
 
         lLastCommand := lCommand;
         liOptionIndex := 0;
+        fbOptionsRequried := lLastCommand.IsOptionsRequried;
       end;
-
     end
-    else if Assigned(lLastCommand) then
+    else
+    if Assigned(lLastCommand) then
     begin
+      fbOptionsRequried := false;
+
+
       if lLastCommand.IsOptionsExists then
       begin
         if (liOptionIndex <= lLastCommand.OptionList.count - 1) then
         begin
-          liOption := tNovusCommandLineOption(lLastCommand.OptionList.items
+          lOption := tNovusCommandLineOption(lLastCommand.OptionList.items
             [liOptionIndex]);
 
-          liOption.Value := lsParamValue;
+          lOption.Value := lsParamValue;
 
-          if (liOption.Value = '') and (liOption.Required = true) then
+          if (lOption.Value = '') and (lOption.Required = true) then
           begin
-            Result.AddError('Required Option [' + liOption.OptionName +
+            Result.AddError('Required Option [' + lOption.OptionName +
               '] was not specified');
             break;
           end
-          else if not liOption.Execute then
+          else if not lOption.Execute then
           begin
-            Result.AddError(liOption.ErrorMessages.Text);
+            Result.AddError(lOption.ErrorMessages.Text);
 
             break;
           end;
@@ -443,12 +453,12 @@ begin
       liOptionIndex := 0;
       While (liOptionIndex <= lLastCommand.OptionList.count - 1) do
       begin
-        liOption := tNovusCommandLineOption(lLastCommand.OptionList.items
+        lOption := tNovusCommandLineOption(lLastCommand.OptionList.items
           [liOptionIndex]);
 
-        if (liOption.Value = '') and (liOption.Required = true) then
+        if (lOption.Value = '') and (lOption.Required = true) then
         begin
-          Result.AddError('Required Option [' + liOption.OptionName +
+          Result.AddError('Required Option [' + lOption.OptionName +
             '] was not specified');
           break;
         end;
@@ -553,6 +563,25 @@ begin
   Result := (fOptionList.count <> 0);
 end;
 
+function tNovusCommandLineCommand.IsOptionsRequried: boolean;
+var
+  lOption: TNovusCommandLineOption;
+  I: Integer;
+begin
+  Result := false;
+
+  for I := 0 to OptionList.Count -1 do
+    begin
+      lOption := tNovusCommandLineOption(OptionList.items[i]);
+      if lOption.Required = true then
+        begin
+          Result := true;
+          Break;
+        end;
+
+    end;
+end;
+
 function tNovusCommandLineCommand.FindOptionByName(aOptionName: string)
   : INovusCommandLineOption;
 Var
@@ -566,15 +595,25 @@ begin
     Result := tNovusCommandLineOption(fNovusCommandLineOption);
 end;
 
-function tNovusCommandLineCommand.FindCommandByName(aCommandName: string): INovusCommandLineCommand;
+function tNovusCommandLineCommand.FindCommandName(aCommandName: string): INovusCommandLineCommand;
 Var
-  fCommand: tObject;
+  fCommand: INovusCommandLineCommand;
+  I: INteger;
 begin
   Result := NIL;
 
-  FCommand := FCommandList.FindItem(aCommandName);
-  if Assigned(FCommand) then
-    Result := tNovusCommandLineCommand(FCommand);
+  For i := 0 to FCommandList.count - 1 do
+  begin
+    fCommand:= FCommandList.items[i] as tNovusCommandLineCommand;
+
+    if (Uppercase(fCommand.CommandName) = Uppercase(aCommandName)) or
+      (Uppercase(fCommand.ShortCommandName) = Uppercase(aCommandName)) then
+    begin
+      Result := fCommand;
+
+      break;
+    end;
+  end;
 end;
 
 function tNovusCommandLineCommand.Parse: Boolean;

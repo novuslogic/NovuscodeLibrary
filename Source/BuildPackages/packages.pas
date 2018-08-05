@@ -1,26 +1,11 @@
-{********************************************************************}
-{                                                                    }
-{           packages.pas                                             }
-{                                                                    }
-{           Apache License                                           }
-{           Version 2.0, January 2004                                }
-{           License at http://www.apache.org/licenses/               }
-{                                                                    }
-{                                                                    }
-{           Copyright (c) 2017 Novuslogic Software                   }
-{           http://www.novuslogic.com                                }
-{                                                                    }
-{********************************************************************} 
+Uses CodeImatic, Delphi;
 
-Uses Zcodegen, Delphi;
-
-procedure BuldDelphiPackages(aCompilerVersion: integer);
+procedure BuldDelphiPackages(aDelphiVersion:  TDelphiVersion);
 begin
-  Output.Log('Delphi Common Directory:' + GetBDSCOMMONDIR(aCompilerVersion));
-    
-  
-  if Zcodegen('packages.zcproject', 'packages.zcconfig', Format('DELPHIVER="%s";LIBSUFFIX="%s"', [GetDelphiCompilerVersion(aCompilerVersion), GetDelphiPackageVersion(aCompilerVersion)]), wd, '') <> 0 then
+  if codegen('packages.zcproject', 'packages.zcconfig', Format('DELPHIVER="%s";LIBSUFFIX="%s"', [GetDelphiCompilerVersion(aDelphiVersion),
+          GetDelphiPackageVersion(aDelphiVersion)]), wd, '') <> 0 then
      RaiseException(erCustomError, 'failed.');  
+ 
 end;
 
 procedure BuildDelphiXEPackages;
@@ -182,7 +167,7 @@ begin
       
     end;
 
-  if not Task.RunTargets(['BuildDelphiXEPackages', 
+  if not Task.RunTargets([(*'BuildDelphiXEPackages', 
         'BuildDelphiXE2Packages', 
         'BuildDelphiXE3Packages', 
         'BuildDelphiXE4Packages',
@@ -191,10 +176,10 @@ begin
         'BuildDelphiXE7Packages',
         'BuildDelphiXE8Packages',
         'BuildDelphi10Packages',
-        'BuildDelphi10_1Packages',
+        'BuildDelphi10_1Packages',*)
         'BuildDelphi10_2Packages']) then 
     RaiseException(erCustomError, 'missing procedure.'); 
-   
+
 
   
 end.

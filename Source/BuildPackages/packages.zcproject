@@ -339,4 +339,26 @@
     <package_name>NovusCodeLibrary_VCLUtils</package_name>
     <MainSource>NovusCodeLibrary_VCLUtils.dpk</MainSource>
   </projectitem>
+
+
+  <projectitem name = "NovusCodeLibrary_Console.dpk">
+    <template>[%templatepath%]package.dpk</template>
+    <properties></properties>
+    <overrideoutput>true</overrideoutput>
+    <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
+    <package_description>NovusCodeLibrary Runtime - Console</package_description>
+    <package_requires>Console_requires.pas</package_requires>
+    <package_contains>Console_contains.pas</package_contains>
+    <package_name>NovusCodeLibrary_Console</package_name>
+  </projectitem>
+
+  <projectitem name = "NovusCodeLibrary_Console.dproj">
+    <template>[%templatepath%]package.dproj</template>
+    <properties></properties>
+    <overrideoutput>true</overrideoutput>
+    <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
+    <package_description>NovusCodeLibrary Runtime - Console</package_description>
+    <package_name>NovusCodeLibrary_Console</package_name>
+    <MainSource>NovusCodeLibrary_Console.dpk</MainSource>
+  </projectitem>
 </project>

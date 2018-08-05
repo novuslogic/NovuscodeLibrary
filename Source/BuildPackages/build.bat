@@ -1,0 +1,1 @@
+codeimatic.build -project packages.zaproject -projectconfig packages.zapconfig

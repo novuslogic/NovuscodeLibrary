@@ -1,3 +1,9 @@
+05/08/2018
+
+* Updated CreatePackages to latest of CodeImatic.build and CodeImatic.codegen
+* New Package NovusCodeLibrary_Console Console and CLI Library.
+
+
 14/06/2018
 
 * TNovusCommandLine support updated TNovuslist

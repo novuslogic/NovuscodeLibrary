@@ -37,6 +37,8 @@ How to install
 
 9. NovusCodeLibrary_XML.dproj - XML functions library. Requires http://jvcl.delphi-jedi.org/
 
+10. NovusCodeLibrary_Console.dproj - Console and CLI Library
+
 Changelog
 ---------
 

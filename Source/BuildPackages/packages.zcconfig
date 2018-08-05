@@ -2,8 +2,8 @@
 <projectconfig>
    <properties> 
      <outputpath>D:\Projects\NovuscodeLibrary\Source\Packages\</outputpath>
-     <propertiespath>D:\Projects\NovuscodeLibrary\Scripts\Properties\</propertiespath>
-     <templatepath>D:\Projects\NovuscodeLibrary\Scripts\Templates\</templatepath>
+     <propertiespath>D:\Projects\NovuscodeLibrary\Source\BuildPackages\Properties\</propertiespath>
+     <templatepath>D:\Projects\NovuscodeLibrary\Source\BuildPackages\Templates\</templatepath>
    </properties>
   
 </projectconfig>

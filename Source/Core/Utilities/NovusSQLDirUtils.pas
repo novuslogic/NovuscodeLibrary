@@ -42,8 +42,6 @@ begin
     ADatabase.Params.Values[szPASSWORD] := APassword;
   end;
 
-  // Provider=SQLOLEDB.11;Persist Security Info=False;User ID=sa;Initial Catalog=tourworkpad;Data Source=127.0.0.1;
-
   if TSDServerType(AServerType) = stOLEDB then
   begin
     ADatabase.Params.Add('INIT COM=FALSE');
@@ -75,6 +73,10 @@ begin
       ADatabase.Remotedatabase := ARemoteDatabase
     else
       ADatabase.Remotedatabase := AServerName + ':' + ARemoteDatabase;
+
+    if APort <> 0 then
+        ADatabase.Params.Add('Port='+ IntToStr(aPort));
+
 
     If ASQLLibrary <> '' then
       ADatabase.Params.Add('Firebird API Library=' + ASQLLibrary);

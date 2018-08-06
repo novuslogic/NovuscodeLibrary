@@ -1,3 +1,11 @@
+06/08/2018 
+
+* Fixed class procedure SetupSDDatabase(Const ADatabase: tsddatabase;
+      AServerName: String; ARemoteDatabase: String; AAliasName: String;
+      AServerType: TSDServerType; AUserName, APassword: string;
+      AParams: tStringList; ASQLLibrary: string; ALoginPrompt: Boolean = False;
+      APort: Integer = 0); pass Port to Firebird and Interbase TSDServerType
+
 05/08/2018
 
 * Updated CreatePackages to latest of CodeImatic.build and CodeImatic.codegen

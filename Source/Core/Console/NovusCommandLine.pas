@@ -153,6 +153,9 @@ type
 
     property Required: Boolean read GetRequired write SetRequired;
 
+    procedure RegisterObject(aObject: TObject);
+    function  FindRegisterObject(aClassName: String): TObject;
+
     function FindCommandName(aCommandName: string): INovusCommandLineCommand;
 
     function FindOptionByName(aOptionName: string): INovusCommandLineOption;
@@ -188,6 +191,7 @@ type
     fsShortCommandName: String;
     fOptionList: tNovuslist;
     fCommandList: TNovusList;
+    fObjectList: TNovusList;
   private
     function GetOptionList: tNovuslist;
     procedure SetOptionList(Value: tNovuslist);
@@ -227,6 +231,9 @@ type
     function IsOptionsRequried: boolean;
 
     procedure AddError(aErrorMessage: string; aExitCode: Integer = 0);
+
+    procedure RegisterObject(aObject: TObject);
+    function  FindRegisterObject(aClassName: String): TObject;
 
     function RegisterOption(const aOptionName: string; const aHelp: String;
       const aRequired: Boolean; aCommandLineOption: tNovusCommandLineOption)
@@ -616,6 +623,18 @@ begin
   end;
 end;
 
+
+procedure tNovusCommandLineCommand.RegisterObject(aObject: TObject);
+begin
+  fObjectList.Add(aObject.ClassName,aObject );
+end;
+
+
+function  tNovusCommandLineCommand.FindRegisterObject(aClassName: String): TObject;
+begin
+  Result := fObjectList.FindItem(aClassName);
+end;
+
 function tNovusCommandLineCommand.Parse: Boolean;
 begin
   Result := Execute;
@@ -635,10 +654,12 @@ constructor tNovusCommandLineCommand.Create;
 begin
   fOptionList := tNovuslist.Create;
   fErrorMessages := TStringlist.Create;
+  fObjectList:= TNovusList.Create;
 end;
 
 destructor tNovusCommandLineCommand.Destroy;
 begin
+  fObjectList.Free;
   fErrorMessages.Free;
   fOptionList.Free;
   fCommandList := NIL;

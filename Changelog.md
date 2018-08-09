@@ -1,3 +1,8 @@
+09/08/2018
+
+* New function  tNovusCommandLineCommand.FindRegisterObject(aClassName: String): TObject;
+* New procedure tNovusCommandLineCommand.RegisterObject(aObject: TObject);
+
 06/08/2018 
 
 * Fixed class procedure SetupSDDatabase(Const ADatabase: tsddatabase;

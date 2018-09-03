@@ -1,3 +1,9 @@
+04/09/2018
+
+Fixed class function tNovusJSONUtils.InJSONArrayToInt64(const aElement: string;
+  const aJSONArray: TJSONArray): Int64; NULL Crashing 
+
+
 09/08/2018
 
 * New function  tNovusCommandLineCommand.FindRegisterObject(aClassName: String): TObject;

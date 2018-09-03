@@ -58,28 +58,38 @@ end;
 class function tNovusJSONUtils.InJSONArrayToDate(const aElement: string;
   const aJSONArray: TJSONArray): tDateTime;
 begin
-  Result := TNovusDateUtils.JSONDateToDatetime(InJSONArray(aElement, aJSONArray)
-    .JsonValue.ToString);
+  Result := 0;
+
+  if InJSONArray(aElement, aJSONArray) <> NIL then
+     Result := TNovusDateUtils.JSONDateToDatetime(InJSONArray(aElement, aJSONArray)
+      .JsonValue.ToString);
 end;
 
 class function tNovusJSONUtils.InJSONArrayToInt64(const aElement: string;
   const aJSONArray: TJSONArray): Int64;
 begin
-  Result := TNovusStringUtils.Str2Int64(InJSONArray(aElement, aJSONArray)
-    .JsonValue.Value);
+  Result := 0;
+  if InJSONArray(aElement, aJSONArray) <> NIL then
+    Result := TNovusStringUtils.Str2Int64(InJSONArray(aElement, aJSONArray)
+      .JsonValue.Value);
+
 end;
 
 class function tNovusJSONUtils.InJSONArrayToString(const aElement: string;
   const aJSONArray: TJSONArray): String;
 begin
-  Result := InJSONArray(aElement, aJSONArray).JsonValue.Value;
+  Result := '';
+  if InJSONArray(aElement, aJSONArray) <> NIL then
+    Result := InJSONArray(aElement, aJSONArray).JsonValue.Value;
 end;
 
 class function tNovusJSONUtils.InJSONArrayToCurrency(const aElement: string;
   const aJSONArray: TJSONArray): Currency;
 begin
-  Result := TNovusStringUtils.Str2Curr(InJSONArray(aElement, aJSONArray)
-    .JsonValue.Value);
+  Result := 0;
+  if InJSONArray(aElement, aJSONArray) <> NIL then
+    Result := TNovusStringUtils.Str2Curr(InJSONArray(aElement, aJSONArray)
+      .JsonValue.Value);
 end;
 
 end.

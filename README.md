@@ -49,9 +49,7 @@ Licence
 -------
 [Apache License Version 2.0](LICENSE)
 
-Slack Channel
--------------
-[#novuscodelibrary](https://novuslogic.slack.com/messages/novuscodelibrary/)
+
 
 
 

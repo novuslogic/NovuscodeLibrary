@@ -23,7 +23,14 @@ Type
       const aJSONArray: TJSONArray): String;
     class function InJSONArrayToCurrency(const aElement: string;
       const aJSONArray: TJSONArray): Currency;
-
+    class function InJSONArrayToInteger(const aElement: string;
+        const aJSONArray: TJSONArray): Integer;
+    class function InJSONArrayToDateTime(const aElement: string;
+        const aJSONArray: TJSONArray): TDateTime;
+    class function InJSONArrayToBoolean(const aElement: string;
+        const aJSONArray: TJSONArray): Boolean;
+    class function InJSONArrayToDouble(const aElement: string;
+        const aJSONArray: TJSONArray): Double;
   end;
 
 implementation
@@ -75,6 +82,16 @@ begin
 
 end;
 
+class function tNovusJSONUtils.InJSONArrayToInteger(const aElement: string;
+  const aJSONArray: TJSONArray): Integer;
+begin
+  Result := 0;
+  if InJSONArray(aElement, aJSONArray) <> NIL then
+    Result := TNovusStringUtils.Str2Int(InJSONArray(aElement, aJSONArray)
+      .JsonValue.Value);
+
+end;
+
 class function tNovusJSONUtils.InJSONArrayToString(const aElement: string;
   const aJSONArray: TJSONArray): String;
 begin
@@ -92,4 +109,34 @@ begin
       .JsonValue.Value);
 end;
 
+class function tNovusJSONUtils.InJSONArrayToDateTime(const aElement: string;
+        const aJSONArray: TJSONArray): TDateTime;
+begin
+  Result := 0;
+  if InJSONArray(aElement, aJSONArray) <> NIL then
+    Result := TNovusStringUtils.Str2DateTime(InJSONArray(aElement, aJSONArray)
+      .JsonValue.Value);
+end;
+
+class function tNovusJSONUtils.InJSONArrayToBoolean(const aElement: string;
+        const aJSONArray: TJSONArray): Boolean;
+begin
+  Result := false;
+  if InJSONArray(aElement, aJSONArray) <> NIL then
+    Result := TNovusStringUtils.StrToBoolean(InJSONArray(aElement, aJSONArray)
+      .JsonValue.Value);
+end;
+
+class function tNovusJSONUtils.InJSONArrayToDouble(const aElement: string;
+        const aJSONArray: TJSONArray): Double;
+begin
+   Result := 0;
+  if InJSONArray(aElement, aJSONArray) <> NIL then
+    Result := TNovusStringUtils.Str2Float(InJSONArray(aElement, aJSONArray)
+      .JsonValue.Value);
+end;
+
+
+
 end.
+

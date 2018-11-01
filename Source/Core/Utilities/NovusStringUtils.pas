@@ -84,6 +84,10 @@ Type
       var iPos: Integer; var sLastToken: String): string;
     class function GetStrTokenA(const s, sDelim: string;
       var iPos: Integer): string;
+    /// <summary>
+    /// Boolean To String
+    /// </summary>
+    class function Bool2Str(aValue: Boolean): String;
 
     class function GetStrRes(const Index: Integer): String;
     /// <summary>
@@ -549,6 +553,12 @@ begin
   end
 end;
 
+
+class function TNovusStringUtils.Bool2Str(aValue: Boolean): String;
+begin
+  Result := 'False';
+  if aValue = True then Result := 'True';
+end;
 
 class function TNovusStringUtils.GetStrTokenA(const s, sDelim: string;
   var iPos: Integer): string;

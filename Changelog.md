@@ -1,3 +1,8 @@
+22/10/2018
+
+* Add NovusJOSNUtils unit to NovusLibrary_core Package Delphi10_2
+
+
 04/09/2018
 
 Fixed class function tNovusJSONUtils.InJSONArrayToInt64(const aElement: string;

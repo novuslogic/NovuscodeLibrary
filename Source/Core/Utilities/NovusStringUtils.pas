@@ -1,4 +1,4 @@
-{$I ..\..\core\NovusCodeLibrary.inc}
+f{$I ..\..\core\NovusCodeLibrary.inc}
 unit NovusStringUtils;
 
 interface

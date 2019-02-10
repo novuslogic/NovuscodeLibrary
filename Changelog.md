@@ -1,3 +1,10 @@
+10/02/2019
+
+* New class tNovuscURLUtils based on curl4delphi by Mikhail Merkuryev 
+* New function TNovusWebUtils.GetURLFilename
+* Replaced TNovusWebUtils.UrlEncode and TNovusWebUtils.UrlDecode with System.Net.URLClient.TURI equivalent functions.
+* Support for Delphi 10.3  / C++Builder Rio
+
 22/10/2018
 
 * Add NovusJOSNUtils unit to NovusLibrary_core Package Delphi10_2

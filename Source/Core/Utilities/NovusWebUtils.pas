@@ -4,7 +4,7 @@ unit NovusWebUtils;
 interface
 
 Uses Classes, NovusUtilities, SysUtils, SHDocVw, VCL.forms, NovusShell,
-     ActiveX, NovusNumUtils, UrlMon, Windows;
+     ActiveX, NovusNumUtils, UrlMon, Windows, System.Net.URLClient;
 
 Type
   TMIMEType = record
@@ -105,9 +105,13 @@ Type
     /// </remarks>
     class function GetMIMEType(aURL: String): string;
     class function OpenDefaultWebBrowser(const aURL: string): Integer;
-    class function UrlEncode(const aDecodedStr: String; Pluses: Boolean): String;
+    class function UrlEncode(const aDecodedStr: String; aPluses: Boolean  = false): String;
     class function UrlDecode(const aEncodedStr: String): String;
     class procedure WebBrowserLoadFromHTML(aWebBrowser: TWebBrowser; aHTML: tStringlist);
+     /// <summary>
+    ///   Return Filename from URL path
+    /// </summary>
+    class function GetURLFilename(const aURLPath:String;Const Delimiter:String='/'):String;
   end;
 
 
@@ -172,11 +176,11 @@ begin
 end;
 
 
-class function TNovusWebUtils.UrlEncode(const aDecodedStr: String;
-  Pluses: Boolean): String;
+class function TNovusWebUtils.UrlEncode(const aDecodedStr: String; aPluses: Boolean): String;
 var
   I: Integer;
 begin
+ (*
   Result := '';
   if Length(aDecodedStr) > 0 then
     for I := 1 to Length(aDecodedStr) do
@@ -193,12 +197,16 @@ begin
           Result := Result + '+';
       end;
     end;
+    *)
+
+   Result := System.Net.URLClient.TURI.UrlEncode(aDecodedStr, aPluses);
 end;
 
 class function TNovusWebUtils.UrlDecode(const aEncodedStr: String): String;
 var
   I: Integer;
 begin
+  (*
   Result := '';
   if Length(aEncodedStr) > 0 then
   begin
@@ -219,6 +227,8 @@ begin
       I := Succ(I);
     end;
   end;
+  *)
+  Result := System.Net.URLClient.TURI.URLDecode(aEncodedStr);
 end;
 
 
@@ -248,6 +258,15 @@ begin
        sl.Free;
      end;
    end;
+end;
+
+class function TNovusWebUtils.GetURLFilename(const aURLPath:String;Const Delimiter:String='/'):String;
+var
+  I: Integer;
+begin
+    I := LastDelimiter(Delimiter, aURLPath);
+    Result := Copy(aURLPath, I + 1, MaxInt);
+    Result := TNovusWebUtils.UrlDecode(Result);
 end;
 
 end.

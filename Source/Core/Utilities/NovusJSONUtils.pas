@@ -40,7 +40,7 @@ class function tNovusJSONUtils.InJSONArray(const aElement: string;
 Var
   I: Integer;
 begin
-  Result := NIL;
+  `Result := NIL;
 
   if Not Assigned(aJSONArray) then
     Exit;

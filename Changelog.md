@@ -1,3 +1,7 @@
+12/02/2019 
+
+* Renamed property ErrorMessage to HTTPMessage in class tNovuscURLUtils
+
 10/02/2019
 
 * New class tNovuscURLUtils based on curl4delphi by Mikhail Merkuryev 

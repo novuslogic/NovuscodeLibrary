@@ -9,7 +9,7 @@ Uses
 type
   tNovuscURLUtils = class(TNovusUtilities)
   private
-    fsErrorMessage: String;
+    fsHTTPMessage: String;
     fsHeader: UnicodeString;
   protected
   public
@@ -27,9 +27,9 @@ type
           ClientP : pointer;
           DlTotal, DlNow, UlTotal, UlNow : TCurlOff) : integer;  cdecl;  static;
 
-    property ErrorMessage: String
-      read fsErrorMessage
-      write fsErrorMessage;
+    property HTTPMessage: String
+      read fsHTTPMessage
+      write fsHTTPMessage;
 
     property Header: UnicodeString
       read fsHeader
@@ -41,7 +41,7 @@ implementation
 
 constructor tNovuscURLUtils.Create;
 begin
-  fsErrorMessage := '';
+  fsHTTPMessage := '';
 end;
 
 destructor tNovuscURLUtils.Destroy;
@@ -93,17 +93,17 @@ begin
     try
      Fcurl.Perform;
      if Fcurl.ResponseCode <> HTTP_OK then
-        fsErrorMessage := Format('HTTP error %d.', [Fcurl.ResponseCode])
+        fsHTTPMessage := Format('HTTP error %d.', [Fcurl.ResponseCode])
     else result := True;
   except
     on e : ECurlError do
       if e.Code = CURLE_ABORTED_BY_CALLBACK
-        then fsErrorMessage := 'Operation stopped.'
-        else fsErrorMessage := e.Message;
+        then fsHTTPMessage := 'Operation stopped.'
+        else fsHTTPMessage := e.Message;
     on e : Exception do
-      fsErrorMessage := e.Message;
+      fsHTTPMessage := e.Message;
     else
-      fsErrorMessage := 'Unknown error';
+      fsHTTPMessage := 'Unknown error';
   end;
   Finally
     FCurl := NIL;

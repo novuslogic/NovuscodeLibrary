@@ -9,8 +9,9 @@ Uses
 type
   tNovuscURLUtils = class(TNovusUtilities)
   private
-    fsHTTPMessage: String;
-    fsHeader: UnicodeString;
+    fsHTTPResponse: String;
+    fiHTTPResponseCode: longint;
+    fsHTTPHeader: UnicodeString;
   protected
   public
     constructor Create;
@@ -27,13 +28,17 @@ type
           ClientP : pointer;
           DlTotal, DlNow, UlTotal, UlNow : TCurlOff) : integer;  cdecl;  static;
 
-    property HTTPMessage: String
-      read fsHTTPMessage
-      write fsHTTPMessage;
+    property HTTPResponse: String
+      read fsHTTPResponse
+      write fsHTTPResponse;
 
-    property Header: UnicodeString
-      read fsHeader
-      write fsHeader;
+    property HTTPResponseCode: longint
+      read fiHTTPResponseCode
+      write fiHTTPResponseCode;
+
+    property HTTPHeader: UnicodeString
+      read fsHTTPHeader
+      write fsHTTPHeader;
   end;
 
 
@@ -41,7 +46,8 @@ implementation
 
 constructor tNovuscURLUtils.Create;
 begin
-  fsHTTPMessage := '';
+  fsHTTPResponse := '';
+  fiHTTPResponseCode := 0;
 end;
 
 destructor tNovuscURLUtils.Destroy;
@@ -92,18 +98,21 @@ begin
     Fcurl.SetOpt(CURLOPT_SSL_VERIFYHOST, 0);
     try
      Fcurl.Perform;
-     if Fcurl.ResponseCode <> HTTP_OK then
-        fsHTTPMessage := Format('HTTP error %d.', [Fcurl.ResponseCode])
-    else result := True;
+
+     HTTPResponseCode := Fcurl.ResponseCode;
+
+     if Fcurl.ResponseCode = HTTP_OK then
+       result := True
+     else fsHTTPResponse :=  Format('HTTP error %d.', [Fcurl.ResponseCode]);
   except
     on e : ECurlError do
       if e.Code = CURLE_ABORTED_BY_CALLBACK
-        then fsHTTPMessage := 'Operation stopped.'
-        else fsHTTPMessage := e.Message;
+        then fsHTTPResponse  := 'Operation stopped.'
+        else fsHTTPResponse  := e.Message;
     on e : Exception do
-      fsHTTPMessage := e.Message;
+      fsHTTPResponse  := e.Message;
     else
-      fsHTTPMessage := 'Unknown error';
+      fsHTTPResponse  := 'Unknown error';
   end;
   Finally
     FCurl := NIL;

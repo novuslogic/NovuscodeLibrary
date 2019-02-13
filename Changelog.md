@@ -1,3 +1,9 @@
+13/02/2019
+
+* Rename HTTPMessage to HTTPResponse in class tNovuscURLUtils
+* Add New property HTTPResponseCode in class tNovuscURLUtils
+
+
 12/02/2019 
 
 * Renamed property ErrorMessage to HTTPMessage in class tNovuscURLUtils

@@ -3,7 +3,7 @@ NovuscodeLibrary
 
 A Delphi library of utility functions and non-visual classes.
 
-Support for Delphi XE - Delphi 10.2
+Support for Delphi XE - Delphi 10.3
 
 Library Features
 --------

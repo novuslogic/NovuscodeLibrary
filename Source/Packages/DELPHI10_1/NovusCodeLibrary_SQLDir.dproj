@@ -1,6 +1,6 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
-        <ProjectGuid>{BE63F371-E0B9-42F6-B5F1-E4A07E12E035}</ProjectGuid>
+        <ProjectGuid>{A7D03D6A-2C99-40E3-BFDC-8C7F40420B56}</ProjectGuid>
         <MainSource>NovusCodeLibrary_SQLDir.dpk</MainSource>
         <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
         <DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
@@ -60,7 +60,7 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
-        <DllSuffix>240</DllSuffix>
+        <DllSuffix></DllSuffix>
         <DCC_DcuOutput>..\..\..\units\$(ProductVersion)\$(Platform)\$(Config)</DCC_DcuOutput>
         <DCC_UnitSearchPath>..\..\..\units\$(ProductVersion)\$(Platform)\$(Config);$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <SanitizedProjectName>NovusCodeLibrary_SQLDir</SanitizedProjectName>

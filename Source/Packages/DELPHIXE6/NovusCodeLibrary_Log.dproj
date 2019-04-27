@@ -1,6 +1,6 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
-        <ProjectGuid>{72A4C685-5B60-4214-9416-22C8C95BB0FA}</ProjectGuid>
+        <ProjectGuid>{B09BBEC4-18F9-422F-BC13-18820B8785AC}</ProjectGuid>
         <MainSource>NovusCodeLibrary_Log.dpk</MainSource>
         <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
         <DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
@@ -60,7 +60,7 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
-        <DllSuffix>200</DllSuffix>
+        <DllSuffix></DllSuffix>
         <DCC_DcuOutput>..\..\..\units\$(ProductVersion)\$(Platform)\$(Config)</DCC_DcuOutput>
         <DCC_UnitSearchPath>..\..\..\units\$(ProductVersion)\$(Platform)\$(Config);$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <SanitizedProjectName>NovusCodeLibrary_Log</SanitizedProjectName>

@@ -361,4 +361,50 @@
     <package_name>NovusCodeLibrary_Console</package_name>
     <MainSource>NovusCodeLibrary_Console.dpk</MainSource>
   </projectitem>
+
+
+  <projectitem name = "NovusCodeLibrary_WebUtils.dpk">
+    <template>[%templatepath%]package.dpk</template>
+    <properties></properties>
+    <overrideoutput>true</overrideoutput>
+    <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
+    <package_description>NovusCodeLibrary Runtime - WebUtils</package_description>
+    <package_requires>Web_requires.pas</package_requires>
+    <package_contains>Web_contains.pas</package_contains>
+    <package_name>NovusCodeLibrary_WebUtils</package_name>
+  </projectitem>
+
+  <projectitem name = "NovusCodeLibrary_WebUtils.dproj">
+    <template>[%templatepath%]package.dproj</template>
+    <properties></properties>
+    <overrideoutput>true</overrideoutput>
+    <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
+    <package_description>NovusCodeLibrary Runtime - WebUtils</package_description>
+    <package_name>NovusCodeLibrary_WebUtils</package_name>
+    <MainSource>NovusCodeLibrary_WebUtils.dpk</MainSource>
+  </projectitem>
+
+   <projectitem name = "NovusCodeLibrary_cURLUtils.dpk">
+    <template>[%templatepath%]package.dpk</template>
+    <properties></properties>
+    <overrideoutput>true</overrideoutput>
+    <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
+    <package_description>NovusCodeLibrary Runtime - cURLUtils</package_description>
+    <package_requires>cURL_requires.pas</package_requires>
+    <package_contains>cURL_contains.pas</package_contains>
+    <package_name>NovusCodeLibrary_cURLUtils</package_name>
+  </projectitem>
+
+  <projectitem name = "NovusCodeLibrary_cURLUtils.dproj">
+    <template>[%templatepath%]package.dproj</template>
+    <properties></properties>
+    <overrideoutput>true</overrideoutput>
+    <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
+    <package_description>NovusCodeLibrary Runtime - cURLUtils</package_description>
+    <package_name>NovusCodeLibrary_cURLUtils</package_name>
+    <MainSource>NovusCodeLibrary_cURLUtils.dpk</MainSource>
+  </projectitem>
+ 
+
+
 </project>

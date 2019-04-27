@@ -1,12 +1,15 @@
-Uses CodeImatic, Delphi;
+Uses CodeImatic, 
+     Delphi;
+
 
 procedure BuldDelphiPackages(aDelphiVersion:  TDelphiVersion);
 begin
-  if codegen('packages.zcproject', 'packages.zcconfig', Format('DELPHIVER="%s";LIBSUFFIX="%s"', [GetDelphiCompilerVersion(aDelphiVersion),
+  if codegen('packages.ccproject', 'packages.ccpconfig', Format('DELPHIVER="%s";LIBSUFFIX="%s"', [GetDelphiCompilerVersion(aDelphiVersion),
           GetDelphiPackageVersion(aDelphiVersion)]), wd, '') <> 0 then
      RaiseException(erCustomError, 'failed.');  
  
 end;
+
 
 procedure BuildDelphiXEPackages;
 begin
@@ -84,6 +87,14 @@ begin
 
   BuldDelphiPackages(DELPHI10_2);
 end;
+
+procedure BuildDelphi10_3Packages;
+begin
+  Output.log('Delphi 10.3 Packages ...');
+
+  BuldDelphiPackages(DELPHI10_3);
+end;
+
 
 begin
   Output.log('Building Delphi Packages ...');
@@ -167,7 +178,14 @@ begin
       
     end;
 
-  if not Task.RunTargets([(*'BuildDelphiXEPackages', 
+  with Task.AddTask('BuildDelphi10_3Packages') do
+    begin
+      Criteria.Failed.Abort := True;
+     
+      
+    end; 
+
+  if not Task.RunTargets(['BuildDelphiXEPackages', 
         'BuildDelphiXE2Packages', 
         'BuildDelphiXE3Packages', 
         'BuildDelphiXE4Packages',
@@ -176,9 +194,11 @@ begin
         'BuildDelphiXE7Packages',
         'BuildDelphiXE8Packages',
         'BuildDelphi10Packages',
-        'BuildDelphi10_1Packages',*)
-        'BuildDelphi10_2Packages']) then 
-    RaiseException(erCustomError, 'missing procedure.'); 
+        'BuildDelphi10_1Packages',
+        'BuildDelphi10_2Packages',
+        'BuildDelphi10_3Packages'
+        ]) then 
+    RaiseException(erCustomError, 'Failed RunTargets'); 
 
 
   

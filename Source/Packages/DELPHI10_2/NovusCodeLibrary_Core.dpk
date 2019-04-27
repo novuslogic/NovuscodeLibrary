@@ -26,7 +26,7 @@ package NovusCodeLibrary_Core;
 {$IMAGEBASE $400000}
 {$ENDIF IMPLICITBUILDING}
 {$DESCRIPTION 'NovusCodeLibrary Runtime - Core'}
-{$LIBSUFFIX '250'}
+{$LIBSUFFIX ''}
 {$RUNONLY}
 {$IMPLICITBUILD OFF}
 
@@ -54,7 +54,6 @@ contains
   NovusFileUtils in '..\..\Core\Utilities\NovusFileUtils.pas',
   NovusNumUtils in '..\..\Core\Utilities\NovusNumUtils.pas',
   NovusDateDiffUtil in '..\..\Core\Utilities\NovusDateDiffUtil.pas',
-  NovusGUIDEx in '..\..\Core\Utilities\NovusGUIDEx.pas',
-  NovusJSONUtils in '..\..\Core\Utilities\NovusJSONUtils.pas';
+  NovusGUIDEx in '..\..\Core\Utilities\NovusGUIDEx.pas';
 
 end.

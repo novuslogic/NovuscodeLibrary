@@ -1,1 +1,1 @@
-codeimatic.build -project packages.zaproject -projectconfig packages.zapconfig
+codeimatic.build -project packages.cbproject -projectconfig packages.cbpconfig

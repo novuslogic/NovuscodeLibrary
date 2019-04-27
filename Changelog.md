@@ -1,3 +1,11 @@
+27/04/2019
+
+* Updated BuildPackages to current pre release CodeImatic 
+* Now support Delphi 10.3 and packages
+* New package NovusCodeLibrary_WebUtils.dpk - Web functions library
+* New package NovusCodeLibrary_cURL.dpk - cURL function library. Requires https://github.com/Mercury13/curl4delphi
+
+
 13/02/2019
 
 * Rename HTTPMessage to HTTPResponse in class tNovuscURLUtils
@@ -8,12 +16,14 @@
 
 * Renamed property ErrorMessage to HTTPMessage in class tNovuscURLUtils
 
+
 10/02/2019
 
 * New class tNovuscURLUtils based on curl4delphi by Mikhail Merkuryev 
 * New function TNovusWebUtils.GetURLFilename
 * Replaced TNovusWebUtils.UrlEncode and TNovusWebUtils.UrlDecode with System.Net.URLClient.TURI equivalent functions.
 * Support for Delphi 10.3  / C++Builder Rio
+
 
 22/10/2018
 

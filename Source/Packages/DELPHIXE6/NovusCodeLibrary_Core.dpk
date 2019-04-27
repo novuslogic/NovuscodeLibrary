@@ -26,7 +26,7 @@ package NovusCodeLibrary_Core;
 {$IMAGEBASE $400000}
 {$ENDIF IMPLICITBUILDING}
 {$DESCRIPTION 'NovusCodeLibrary Runtime - Core'}
-{$LIBSUFFIX '200'}
+{$LIBSUFFIX ''}
 {$RUNONLY}
 {$IMPLICITBUILD OFF}
 

@@ -4,7 +4,11 @@ interface
 
 Uses
    NovusUtilities, Curl.Easy, Curl.Lib, Curl.Interfaces, Curl.HttpCodes, System.SysUtils, System.Variants, System.Classes,
-   NovusFileUtils, NovusWebUtils;
+   NovusWebUtils, NovusFileUtils;
+
+/// https://github.com/Mercury13/curl4delphi
+
+
 
 type
   tNovuscURLUtils = class(TNovusUtilities)

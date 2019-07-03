@@ -1,3 +1,13 @@
+03/07/2019
+
+* TNovusLogFile - Replaced Text pointer with tStreamWriter
+* TNovusLogFile - Removed FilePonter property
+* TNovusLogFile - Removed IsFileOpen property
+* TNovusLogFile - Removed IsFileOpen property 
+* TNovusLogFile - Removed function ReadLine: String;
+* TnovusLogFile - Removed procedure ReadAll;
+
+
 27/04/2019
 
 * Updated BuildPackages to current pre release CodeImatic 

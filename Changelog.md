@@ -1,3 +1,8 @@
+14/072019
+
+* Enlarged capture buffer in TNovusShell.WindowsCaptureExecute
+
+
 03/07/2019
 
 * TNovusLogFile - Replaced Text pointer with tStreamWriter

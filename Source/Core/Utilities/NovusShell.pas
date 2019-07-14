@@ -120,7 +120,7 @@ function tNovusShell.WindowsCaptureExecute(aCommandline: String;
   var aOutput: String): Integer;
 
 const
-  CReadBuffer = 2400;
+  CReadBuffer = 124000;
 var
   FSecurityAttributes: TSecurityAttributes;
   hRead: THandle;

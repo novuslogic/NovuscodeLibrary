@@ -1,1 +1,1 @@
-codeimatic.build -project packages.cbproject -projectconfig packages.cbpconfig
+codeimatic.build -project packages.cbproject

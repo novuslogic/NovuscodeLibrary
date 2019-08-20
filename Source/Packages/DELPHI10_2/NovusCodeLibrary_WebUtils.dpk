@@ -26,14 +26,14 @@ package NovusCodeLibrary_WebUtils;
 {$IMAGEBASE $400000}
 {$ENDIF IMPLICITBUILDING}
 {$DESCRIPTION 'NovusCodeLibrary Runtime - WebUtils'}
+{$LIBSUFFIX '250'}
 {$RUNONLY}
 {$IMPLICITBUILD OFF}
 
 requires
   rtl,
   NovusCodeLibrary_Core,
-  NovusCodeLibrary_Env,
-  vclie;
+  NovusCodeLibrary_Env;
 
 contains
   NovusWebUtils in '..\..\Core\Utilities\NovusWebUtils.pas';

@@ -5,4 +5,8 @@
   <projecttask name = "packages">
      <projectfilename>packages.pas</projectfilename>
   </projecttask>
+  <projectconfig>
+    <searchpath>{%CODEIMATIC_BUILD_INCLUDES%}</searchpath>
+    <workingdirectory></workingdirectory>
+  </projectconfig>
 </project>

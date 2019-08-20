@@ -26,7 +26,7 @@ package NovusCodeLibrary_SQLDir;
 {$IMAGEBASE $400000}
 {$ENDIF IMPLICITBUILDING}
 {$DESCRIPTION 'NovusCodeLibrary Runtime - SQLDir'}
-{$LIBSUFFIX ''}
+{$LIBSUFFIX '170'}
 {$RUNONLY}
 {$IMPLICITBUILD OFF}
 
@@ -35,7 +35,7 @@ requires
   vcl,
   NovusCodeLibrary_Core,
   vcldb,
-  SqlDir;
+  SqlDir170;
 
 contains
   NovusSQLDirUtils in '..\..\Core\Utilities\NovusSQLDirUtils.pas';

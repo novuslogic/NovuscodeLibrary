@@ -1,3 +1,10 @@
+20/08/2019
+
+* TNovuslist - New property InsensitiveKey allowing for Insensitive Keys in Dictionary
+* Updated BuildPackages with lastest CodeImatic.build and CodeImatc.codegen
+* Fix all packages Lib Suffix cause by issue in CodeImatc.codegen VarCmdLine.LIBSUFFIX variable being lowercase and being blank
+
+
 14/072019
 
 * Enlarged capture buffer in TNovusShell.WindowsCaptureExecute

@@ -26,7 +26,7 @@ package NovusCodeLibrary_Env;
 {$IMAGEBASE $400000}
 {$ENDIF IMPLICITBUILDING}
 {$DESCRIPTION 'NovusCodeLibrary Runtime - Env'}
-{$LIBSUFFIX ''}
+{$LIBSUFFIX '190'}
 {$RUNONLY}
 {$IMPLICITBUILD OFF}
 

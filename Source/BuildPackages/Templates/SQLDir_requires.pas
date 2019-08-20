@@ -3,4 +3,4 @@ requires
   vcl,
   NovusCodeLibrary_Core,
   vcldb,
-  SqlDir<%VARIABLECMDLINE.libsuffix%>;
+  SqlDir<%VARIABLECMDLINE.LIBSUFFIX%>;

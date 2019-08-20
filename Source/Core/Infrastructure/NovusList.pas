@@ -19,6 +19,7 @@ type
 
   TNovusList = class(TNovusInfrastructre)
   protected
+    fbInSensitiveKey: Boolean;
     foParentObject: TObject;
     fsaClassname: String;
     faclass: TClass;
@@ -56,6 +57,10 @@ type
     property aClassname: string read fsaClassname write fsaClassname;
 
     property oParentObject: TObject read foParentObject write foParentObject;
+
+    property InSensitiveKey: boolean
+       read fbInSensitiveKey
+       write fbInSensitiveKey;
   end;
 
 implementation
@@ -93,6 +98,7 @@ begin
 
   FList := TObjectList.Create;
   FList.OwnsObjects := false;
+  fbInSensitiveKey := false;
 
   faclass := aClass;
 end;
@@ -116,7 +122,11 @@ begin
 
   FHashItem := tHashItem.Create;
   FHashItem.Index := Result;
-  FHashItem.Key := aKey;
+
+  if fbInSensitiveKey then
+    FHashItem.Key := Uppercase(aKey)
+  else
+    FHashItem.Key := aKey;
 
   FHash.Add(aKey, FHashItem);
 end;
@@ -245,16 +255,19 @@ Var
 begin
   Result := NIL;
 
+  if fbInSensitiveKey then
+     aKey := Uppercase(aKey);
+
   Try
-  if FHash.TryGetValue(Akey,FHashItem ) then
-    begin
-      Result := FList.Items[FHashItem.Index];
-    end;
-  Except
-     on Exception do
-          raise EInvalidCast.Create
-            (Format('NovusList: Exception FindItem %s ',
-            [TNovusUtilities.GetExceptMess]));
+    if FHash.TryGetValue(Akey,FHashItem ) then
+      begin
+        Result := FList.Items[FHashItem.Index];
+      end;
+    Except
+       on Exception do
+            raise EInvalidCast.Create
+              (Format('NovusList: Exception FindItem %s ',
+              [TNovusUtilities.GetExceptMess]));
 
   End;
 end;

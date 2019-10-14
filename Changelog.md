@@ -1,3 +1,8 @@
+14/10/2019
+
+* Fixed InsensitiveKey in function TNovusList.Add(aKey: string; AItem: TObject): Integer; where key was not Insensitive
+
+
 20/08/2019
 
 * TNovuslist - New property InsensitiveKey allowing for Insensitive Keys in Dictionary

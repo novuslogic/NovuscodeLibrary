@@ -128,7 +128,9 @@ begin
   else
     FHashItem.Key := aKey;
 
-  FHash.Add(aKey, FHashItem);
+  //FHash.Add(aKey, FHashItem);
+
+  FHash.Add(FHashItem.Key, FHashItem);
 end;
 
 function TNovusList.InternalAdd(AItem: TObject): Integer;

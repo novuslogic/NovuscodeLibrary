@@ -1,4 +1,4 @@
-unit frmNovusForm;
+unit frmVCLNovusForm;
 
 interface
 

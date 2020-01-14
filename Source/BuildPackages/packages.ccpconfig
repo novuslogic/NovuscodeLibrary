@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<projectconfig>
-   <properties> 
-     <outputpath>D:\Projects\NovuscodeLibrary\Source\Packages\</outputpath>
-     <propertiespath>D:\Projects\NovuscodeLibrary\Source\BuildPackages\Properties\</propertiespath>
-     <templatepath>D:\Projects\NovuscodeLibrary\Source\BuildPackages\Templates\</templatepath>
-   </properties>
-  
-</projectconfig>

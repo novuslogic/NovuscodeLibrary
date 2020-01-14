@@ -405,6 +405,13 @@
     <MainSource>NovusCodeLibrary_cURLUtils.dpk</MainSource>
   </projectitem>
  
-
+  <projectconfig>
+   <properties> 
+     <outputpath>D:\Projects\NovuscodeLibrary\Source\Packages\</outputpath>
+     <propertiespath>D:\Projects\NovuscodeLibrary\Source\BuildPackages\Properties\</propertiespath>
+     <templatepath>D:\Projects\NovuscodeLibrary\Source\BuildPackages\Templates\</templatepath>
+   </properties>
+  
+  </projectconfig>
 
 </project>

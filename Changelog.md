@@ -1,3 +1,8 @@
+14/02/2020
+
+* Updated BuildpPackages to latest CodeImatic.codegen
+* Renamed frmNovusForm to frmVCLNovusForm allowing for Firemonkey forms to be used
+
 14/10/2019
 
 * Fixed InsensitiveKey in function TNovusList.Add(aKey: string; AItem: TObject): Integer; where key was not Insensitive

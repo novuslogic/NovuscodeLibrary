@@ -4,7 +4,7 @@ Uses CodeImatic,
 
 procedure BuldDelphiPackages(aDelphiVersion:  TDelphiVersion);
 begin
-  if codegen('packages.ccproject', 'packages.ccpconfig', Format('DELPHIVER="%s";LIBSUFFIX="%s"', [GetDelphiCompilerVersion(aDelphiVersion),
+  if codegen('packages.ccproject', Format('DELPHIVER="%s";LIBSUFFIX="%s"', [GetDelphiCompilerVersion(aDelphiVersion),
           GetDelphiPackageVersion(aDelphiVersion)]), wd, '') <> 0 then
      RaiseException(erCustomError, 'failed.');  
  

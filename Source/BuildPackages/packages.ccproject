@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<project>
+<project version="codeimatic.codegen1.0">>
   <outputconsole>true</outputconsole>
   <messageslogpath></messageslogpath>
   <Createoutputdir>true</Createoutputdir>
   
   <projectitem name = "NovusCodeLibrary_Core.dpk">
-    <template>[%templatepath%]package.dpk</template>
+    <template>[%templatepath%][%VARIABLECMDLINE.PACKAGENAMEDPK%]</template>
     <properties></properties>
     <overrideoutput>true</overrideoutput>
     <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
@@ -16,7 +16,7 @@
   </projectitem>
 
   <projectitem name = "NovusCodeLibrary_Core.dproj">
-    <template>[%templatepath%]package.dproj</template>
+    <template>[%templatepath%][%VARIABLECMDLINE.PACKAGENAMEDPROJ%]</template>
     <properties></properties>
     <overrideoutput>true</overrideoutput>
     <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
@@ -26,7 +26,7 @@
   </projectitem>
   
   <projectitem name = "NovusCodeLibrary_Parser.dpk">
-    <template>[%templatepath%]package.dpk</template>
+    <template>[%templatepath%][%VARIABLECMDLINE.PACKAGENAMEDPK%]</template>
     <properties></properties>
     <overrideoutput>true</overrideoutput>
     <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
@@ -37,7 +37,7 @@
   </projectitem>
 
   <projectitem name = "NovusCodeLibrary_Parser.dproj">
-    <template>[%templatepath%]package.dproj</template>
+    <template>[%templatepath%][%VARIABLECMDLINE.PACKAGENAMEDPROJ%]</template>
     <properties></properties>
     <overrideoutput>true</overrideoutput>
     <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
@@ -47,7 +47,7 @@
   </projectitem>
   
   <projectitem name = "NovusCodeLibrary_Log.dpk">
-    <template>[%templatepath%]package.dpk</template>
+    <template>[%templatepath%][%VARIABLECMDLINE.PACKAGENAMEDPK%]</template>
     <properties></properties>
     <overrideoutput>true</overrideoutput>
     <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
@@ -58,7 +58,7 @@
   </projectitem>
 
   <projectitem name = "NovusCodeLibrary_Log.dproj">
-    <template>[%templatepath%]package.dproj</template>
+    <template>[%templatepath%][%VARIABLECMDLINE.PACKAGENAMEDPROJ%]</template>
     <properties></properties>
     <overrideoutput>true</overrideoutput>
     <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
@@ -68,7 +68,7 @@
   </projectitem>
 
   <projectitem name = "NovusCodeLibrary_Indy.dpk">
-    <template>[%templatepath%]package.dpk</template>
+    <template>[%templatepath%][%VARIABLECMDLINE.PACKAGENAMEDPK%]</template>
     <properties></properties>
     <overrideoutput>true</overrideoutput>
     <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
@@ -79,7 +79,7 @@
   </projectitem>
 
   <projectitem name = "NovusCodeLibrary_Indy.dproj">
-    <template>[%templatepath%]package.dproj</template>
+    <template>[%templatepath%][%VARIABLECMDLINE.PACKAGENAMEDPROJ%]</template>
     <properties></properties>
     <overrideoutput>true</overrideoutput>
     <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
@@ -89,7 +89,7 @@
   </projectitem>
 
   <projectitem name = "NovusCodeLibrary_Indy.dpk">
-    <template>[%templatepath%]package.dpk</template>
+    <template>[%templatepath%][%VARIABLECMDLINE.PACKAGENAMEDPK%]</template>
     <properties></properties>
     <overrideoutput>true</overrideoutput>
     <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
@@ -100,7 +100,7 @@
   </projectitem>
 
   <projectitem name = "NovusCodeLibrary_Indy.dproj">
-    <template>[%templatepath%]package.dproj</template>
+    <template>[%templatepath%][%VARIABLECMDLINE.PACKAGENAMEDPROJ%]</template>
     <properties></properties>
     <overrideoutput>true</overrideoutput>
     <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
@@ -110,7 +110,7 @@
   </projectitem>
 
   <projectitem name = "NovusCodeLibrary_XML.dpk">
-    <template>[%templatepath%]package.dpk</template>
+    <template>[%templatepath%][%VARIABLECMDLINE.PACKAGENAMEDPK%]</template>
     <properties></properties>
     <overrideoutput>true</overrideoutput>
     <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
@@ -121,7 +121,7 @@
   </projectitem>
 
   <projectitem name = "NovusCodeLibrary_XML.dproj">
-    <template>[%templatepath%]package.dproj</template>
+    <template>[%templatepath%][%VARIABLECMDLINE.PACKAGENAMEDPROJ%]</template>
     <properties></properties>
     <overrideoutput>true</overrideoutput>
     <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
@@ -131,7 +131,7 @@
   </projectitem>
   
  <projectitem name = "NovusCodeLibrary_SQLDir.dpk">
-    <template>[%templatepath%]package.dpk</template>
+    <template>[%templatepath%][%VARIABLECMDLINE.PACKAGENAMEDPK%]</template>
     <properties></properties>
     <overrideoutput>true</overrideoutput>
     <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
@@ -142,7 +142,7 @@
   </projectitem>
 
   <projectitem name = "NovusCodeLibrary_SQLDir.dproj">
-    <template>[%templatepath%]package.dproj</template>
+    <template>[%templatepath%][%VARIABLECMDLINE.PACKAGENAMEDPROJ%]</template>
     <properties></properties>
     <overrideoutput>true</overrideoutput>
     <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
@@ -152,7 +152,7 @@
   </projectitem>
 
   <projectitem name = "NovusCodeLibrary_Parser.dpk">
-    <template>[%templatepath%]package.dpk</template>
+    <template>[%templatepath%][%VARIABLECMDLINE.PACKAGENAMEDPK%]</template>
     <properties></properties>
     <overrideoutput>true</overrideoutput>
     <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
@@ -163,7 +163,7 @@
   </projectitem>
 
   <projectitem name = "NovusCodeLibrary_Parser.dproj">
-    <template>[%templatepath%]package.dproj</template>
+    <template>[%templatepath%][%VARIABLECMDLINE.PACKAGENAMEDPROJ%]</template>
     <properties></properties>
     <overrideoutput>true</overrideoutput>
     <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
@@ -173,7 +173,7 @@
   </projectitem>
   
   <projectitem name = "NovusCodeLibrary_Log.dpk">
-    <template>[%templatepath%]package.dpk</template>
+    <template>[%templatepath%][%VARIABLECMDLINE.PACKAGENAMEDPK%]</template>
     <properties></properties>
     <overrideoutput>true</overrideoutput>
     <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
@@ -184,7 +184,7 @@
   </projectitem>
 
   <projectitem name = "NovusCodeLibrary_Log.dproj">
-    <template>[%templatepath%]package.dproj</template>
+    <template>[%templatepath%][%VARIABLECMDLINE.PACKAGENAMEDPROJ%]</template>
     <properties></properties>
     <overrideoutput>true</overrideoutput>
     <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
@@ -194,7 +194,7 @@
   </projectitem>
 
   <projectitem name = "NovusCodeLibrary_Indy.dpk">
-    <template>[%templatepath%]package.dpk</template>
+    <template>[%templatepath%][%VARIABLECMDLINE.PACKAGENAMEDPK%]</template>
     <properties></properties>
     <overrideoutput>true</overrideoutput>
     <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
@@ -205,7 +205,7 @@
   </projectitem>
 
   <projectitem name = "NovusCodeLibrary_Indy.dproj">
-    <template>[%templatepath%]package.dproj</template>
+    <template>[%templatepath%][%VARIABLECMDLINE.PACKAGENAMEDPROJ%]</template>
     <properties></properties>
     <overrideoutput>true</overrideoutput>
     <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
@@ -215,7 +215,7 @@
   </projectitem>
 
   <projectitem name = "NovusCodeLibrary_Indy.dpk">
-    <template>[%templatepath%]package.dpk</template>
+    <template>[%templatepath%][%VARIABLECMDLINE.PACKAGENAMEDPK%]</template>
     <properties></properties>
     <overrideoutput>true</overrideoutput>
     <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
@@ -226,7 +226,7 @@
   </projectitem>
 
   <projectitem name = "NovusCodeLibrary_Indy.dproj">
-    <template>[%templatepath%]package.dproj</template>
+    <template>[%templatepath%][%VARIABLECMDLINE.PACKAGENAMEDPROJ%]</template>
     <properties></properties>
     <overrideoutput>true</overrideoutput>
     <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
@@ -236,7 +236,7 @@
   </projectitem>
 
   <projectitem name = "NovusCodeLibrary_XML.dpk">
-    <template>[%templatepath%]package.dpk</template>
+    <template>[%templatepath%][%VARIABLECMDLINE.PACKAGENAMEDPK%]</template>
     <properties></properties>
     <overrideoutput>true</overrideoutput>
     <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
@@ -247,7 +247,7 @@
   </projectitem>
 
   <projectitem name = "NovusCodeLibrary_XML.dproj">
-    <template>[%templatepath%]package.dproj</template>
+    <template>[%templatepath%][%VARIABLECMDLINE.PACKAGENAMEDPROJ%]</template>
     <properties></properties>
     <overrideoutput>true</overrideoutput>
     <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
@@ -257,7 +257,7 @@
   </projectitem>
   
  <projectitem name = "NovusCodeLibrary_SQLDir.dpk">
-    <template>[%templatepath%]package.dpk</template>
+    <template>[%templatepath%][%VARIABLECMDLINE.PACKAGENAMEDPK%]</template>
     <properties></properties>
     <overrideoutput>true</overrideoutput>
     <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
@@ -268,7 +268,7 @@
   </projectitem>
 
   <projectitem name = "NovusCodeLibrary_SQLDir.dproj">
-    <template>[%templatepath%]package.dproj</template>
+    <template>[%templatepath%][%VARIABLECMDLINE.PACKAGENAMEDPROJ%]</template>
     <properties></properties>
     <overrideoutput>true</overrideoutput>
     <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
@@ -278,7 +278,7 @@
   </projectitem>
 
   <projectitem name = "NovusCodeLibrary_Plugin.dpk">
-    <template>[%templatepath%]package.dpk</template>
+    <template>[%templatepath%][%VARIABLECMDLINE.PACKAGENAMEDPK%]</template>
     <properties></properties>
     <overrideoutput>true</overrideoutput>
     <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
@@ -289,7 +289,7 @@
   </projectitem>
 
   <projectitem name = "NovusCodeLibrary_Plugin.dproj">
-    <template>[%templatepath%]package.dproj</template>
+    <template>[%templatepath%][%VARIABLECMDLINE.PACKAGENAMEDPROJ%]</template>
     <properties></properties>
     <overrideoutput>true</overrideoutput>
     <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
@@ -299,7 +299,7 @@
   </projectitem>
  
   <projectitem name = "NovusCodeLibrary_Env.dpk">
-    <template>[%templatepath%]package.dpk</template>
+    <template>[%templatepath%][%VARIABLECMDLINE.PACKAGENAMEDPK%]</template>
     <properties></properties>
     <overrideoutput>true</overrideoutput>
     <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
@@ -310,7 +310,7 @@
   </projectitem>
 
   <projectitem name = "NovusCodeLibrary_Env.dproj">
-    <template>[%templatepath%]package.dproj</template>
+    <template>[%templatepath%][%VARIABLECMDLINE.PACKAGENAMEDPROJ%]</template>
     <properties></properties>
     <overrideoutput>true</overrideoutput>
     <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
@@ -320,7 +320,7 @@
   </projectitem>
 
    <projectitem name = "NovusCodeLibrary_VCLUtils.dpk">
-    <template>[%templatepath%]package.dpk</template>
+    <template>[%templatepath%][%VARIABLECMDLINE.PACKAGENAMEDPK%]</template>
     <properties></properties>
     <overrideoutput>true</overrideoutput>
     <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
@@ -331,7 +331,7 @@
   </projectitem>
 
   <projectitem name = "NovusCodeLibrary_VCLUtils.dproj">
-    <template>[%templatepath%]package.dproj</template>
+    <template>[%templatepath%][%VARIABLECMDLINE.PACKAGENAMEDPROJ%]</template>
     <properties></properties>
     <overrideoutput>true</overrideoutput>
     <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
@@ -342,7 +342,7 @@
 
 
   <projectitem name = "NovusCodeLibrary_Console.dpk">
-    <template>[%templatepath%]package.dpk</template>
+    <template>[%templatepath%][%VARIABLECMDLINE.PACKAGENAMEDPK%]</template>
     <properties></properties>
     <overrideoutput>true</overrideoutput>
     <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
@@ -353,7 +353,7 @@
   </projectitem>
 
   <projectitem name = "NovusCodeLibrary_Console.dproj">
-    <template>[%templatepath%]package.dproj</template>
+    <template>[%templatepath%][%VARIABLECMDLINE.PACKAGENAMEDPROJ%]</template>
     <properties></properties>
     <overrideoutput>true</overrideoutput>
     <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
@@ -364,7 +364,7 @@
 
 
   <projectitem name = "NovusCodeLibrary_WebUtils.dpk">
-    <template>[%templatepath%]package.dpk</template>
+    <template>[%templatepath%][%VARIABLECMDLINE.PACKAGENAMEDPK%]</template>
     <properties></properties>
     <overrideoutput>true</overrideoutput>
     <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
@@ -375,7 +375,7 @@
   </projectitem>
 
   <projectitem name = "NovusCodeLibrary_WebUtils.dproj">
-    <template>[%templatepath%]package.dproj</template>
+    <template>[%templatepath%][%VARIABLECMDLINE.PACKAGENAMEDPROJ%]</template>
     <properties></properties>
     <overrideoutput>true</overrideoutput>
     <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
@@ -385,7 +385,7 @@
   </projectitem>
 
    <projectitem name = "NovusCodeLibrary_cURLUtils.dpk">
-    <template>[%templatepath%]package.dpk</template>
+    <template>[%templatepath%][%VARIABLECMDLINE.PACKAGENAMEDPK%]</template>
     <properties></properties>
     <overrideoutput>true</overrideoutput>
     <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
@@ -396,7 +396,7 @@
   </projectitem>
 
   <projectitem name = "NovusCodeLibrary_cURLUtils.dproj">
-    <template>[%templatepath%]package.dproj</template>
+    <template>[%templatepath%][%VARIABLECMDLINE.PACKAGENAMEDPROJ%]</template>
     <properties></properties>
     <overrideoutput>true</overrideoutput>
     <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>

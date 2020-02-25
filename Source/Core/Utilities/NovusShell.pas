@@ -67,7 +67,7 @@ type
     /// <summary>
     /// Run an console application and capture output
     /// </summary>
-    function RunCaptureCommand(const aCommandline: string;
+    function RunCommandCapture(const aCommandline: string;
       var aOutput: string): Integer;
 
     function RunCommandSilent(const aCommandline: string;
@@ -93,7 +93,7 @@ begin
   inherited;
 end;
 
-function tNovusShell.RunCaptureCommand(const aCommandline: string;
+function tNovusShell.RunCommandCapture(const aCommandline: string;
   var aOutput: String): Integer;
 begin
   result := WindowsCaptureExecute(aCommandline, aOutput);

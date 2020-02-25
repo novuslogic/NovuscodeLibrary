@@ -397,7 +397,7 @@ begin
 
     FTemplateTag.TagName := FStrParser.Items[0];
 
-    For X := 1 to FStrParser.WordCount - 1 do
+    For X := 1 to FStrParser.Count - 1 do
       FTemplateTag.Values.Add(FStrParser.Items[X]);
 
     FStrParser.Free;

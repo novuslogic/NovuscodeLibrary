@@ -1,7 +1,25 @@
-14/02/2020
+25/02/2020
+
+* Rebuild of NovusCommandLine class
+  
+22/02/2020
+
+* Removed NovusBasicStrParser from NovusCodeLibrary_Parser Package
+* Removed NovusBasicStrParser unit
+
+22/01/2020
+
+* Fixed blank line issue ErrorMessage in TNovusCommandLineResult
+
+15/01/2020
+
+* rename RunCaptureCommand to RunCommandCapture to keep name consistent with in shell class.
+  
+
+14/01/2020
 
 * Updated BuildpPackages to latest CodeImatic.codegen
-* Renamed frmNovusForm to frmVCLNovusForm allowing for Firemonkey forms to be used
+* Renamed frmNovusForm to frmVCLNovusForm allowing for Firemonkey forms to be used.
 
 14/10/2019
 

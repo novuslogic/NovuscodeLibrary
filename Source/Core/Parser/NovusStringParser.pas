@@ -8,18 +8,19 @@ Uses NovusUtilities, NovusStringUtils, NovusParser, Classes,
 type
   tNovusStringParser = Class(tNovusParser)
   private
+    fbIncludeWordSeparatorSet: Boolean;
     FItems: TStringList;
     stText: String;
-    stWordCount: Integer;
     stFindString: String;
     stFindPosition: Integer;
 
-    procedure GetWordCount;
+    procedure ParseString(aIncludeWordSeparatorSet: Boolean);
     procedure SetText(const Value: String);
+    function GetCount: Integer;
 
   Public
 
-    constructor Create(AText: String);
+    constructor Create(AText: String; aIncludeWordSeparatorSet: Boolean = false);
     destructor Destroy; override;
 
     function Replace(fromStr, toStr: String): Integer;
@@ -30,21 +31,24 @@ type
 
     property Text: String read stText write SetText;
 
-    property WordCount: Integer read stWordCount;
+    property Count: Integer read GetCount;
 
     property Items: TStringList read FItems write FItems;
+
+    property IncludeWordSeparatorSet: boolean
+      read fbIncludeWordSeparatorSet write fbIncludeWordSeparatorSet;
   end;
 
 implementation
 
-constructor tNovusStringParser.Create(AText: String);
+constructor tNovusStringParser.Create(AText: String; aIncludeWordSeparatorSet: Boolean = false);
 begin
   FItems := TStringList.Create;
 
   stText := AText;
   stFindPosition := 1;
   stFindString := '';
-  GetWordCount;
+  ParseString(aIncludeWordSeparatorSet);
 end;
 
 destructor tNovusStringParser.Destroy;
@@ -52,11 +56,16 @@ begin
   inherited Destroy;
 end;
 
+function tNovusStringParser.GetCount: Integer;
+begin
+  result := Items.Count;
+end;
+
 procedure tNovusStringParser.SetText(const Value: String);
 begin
   stText := Value;
   stFindPosition := 1;
-  GetWordCount;
+  ParseString(fbIncludeWordSeparatorSet);
 end;
 
 function tNovusStringParser.FindFirst(search: String): Integer;
@@ -141,7 +150,7 @@ begin
   Result := count;
 end;
 
-procedure tNovusStringParser.GetWordCount;
+procedure tNovusStringParser.ParseString(aIncludeWordSeparatorSet: Boolean);
 const
   LF = #10;
   TAB = #9;
@@ -155,9 +164,7 @@ var
   index: Integer;
   inWord: Boolean;
 begin
-  WordSeparatorSet := [LF, TAB, CR, BLANK, SEMICOL];
-
-  stWordCount := 0;
+  WordSeparatorSet := [LF, TAB, CR, BLANK, SEMICOL, EQUALS];
 
   inWord := false;
 
@@ -172,7 +179,11 @@ begin
       begin
         FItems.Add(lsWord);
 
-        Inc(stWordCount);
+        if aIncludeWordSeparatorSet then
+          begin
+            FItems.Add(stText[index]);
+          end;
+
         lsWord := '';
       end;
 
@@ -189,8 +200,6 @@ begin
   if inWord then
   begin
     FItems.Add(lsWord);
-
-    Inc(stWordCount);
   end;
 end;
 

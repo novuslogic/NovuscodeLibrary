@@ -94,7 +94,8 @@ begin
 
   For I := Index to aNode.Items.Count - 1 do
   begin
-    If Uppercase(aNode.Items[I].Name) = Uppercase(NodeName) then
+   // If Uppercase(aNode.Items[I].Name) = Uppercase(NodeName) then
+    if SameText(Uppercase(aNode.Items[I].Name),Uppercase(NodeName)) then
     begin
       Result := aNode.Items[I];
 

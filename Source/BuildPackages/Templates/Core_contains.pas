@@ -1,16 +1,6 @@
 contains
-  NovusUtilities in '..\..\core\Utilities\NovusUtilities.pas',
-  NovusWindows in '..\..\Core\Utilities\NovusWindows.pas',
-  NovusVersionUtils in '..\..\Core\Utilities\NovusVersionUtils.pas',
-  NovusDateStringUtils in '..\..\Core\Utilities\NovusDateStringUtils.pas',
-  NovusDateUtils in '..\..\Core\Utilities\NovusDateUtils.pas',
-  NovusStringUtils in '..\..\Core\Utilities\NovusStringUtils.pas',
   NovusInfrastructre in '..\..\Core\Infrastructure\NovusInfrastructre.pas',
   NovusBO in '..\..\Core\Infrastructure\NovusBO.pas',
   NovusBOField in '..\..\Core\Infrastructure\NovusBOField.pas',
   NovusBOMap in '..\..\Core\Infrastructure\NovusBOMap.pas',
-  NovusList in '..\..\Core\Infrastructure\NovusList.pas',
-  NovusFileUtils in '..\..\Core\Utilities\NovusFileUtils.pas',
-  NovusNumUtils in '..\..\Core\Utilities\NovusNumUtils.pas',
-  NovusDateDiffUtil in '..\..\Core\Utilities\NovusDateDiffUtil.pas',
-  NovusGUIDEx in '..\..\Core\Utilities\NovusGUIDEx.pas';
+  NovusList in '..\..\Core\Infrastructure\NovusList.pas';

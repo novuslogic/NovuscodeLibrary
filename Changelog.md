@@ -1,3 +1,10 @@
+16/03/2020
+
+* Split Utilities units from package NovusCodeLibrary_Core into NovusCodeLibrary_Utils
+* New unit NovusVariants
+* New function class function TNovusVariants.VarToVarRec(aValue: variant): TVarRec;
+* Upgraded BuildPackages
+
 25/02/2020
 
 * Rebuild of NovusCommandLine class

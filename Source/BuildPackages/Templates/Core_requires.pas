@@ -1,8 +1,5 @@
 requires
   rtl,
   vcl,
-  xmlrtl,
-  DbxCommonDriver,
-  dbrtl,
-  inet,
-  soaprtl;
+  NovusCodeLibrary_Utils,
+  DbxCommonDriver;

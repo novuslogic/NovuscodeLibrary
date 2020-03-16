@@ -24,6 +24,28 @@
     <package_name>NovusCodeLibrary_Core</package_name>
     <MainSource>NovusCodeLibrary_Core.dpk</MainSource>
   </projectitem>
+
+  <projectitem name = "NovusCodeLibrary_Utils.dpk">
+    <template>[%templatepath%][%VARIABLECMDLINE.PACKAGENAMEDPK%]</template>
+    <properties></properties>
+    <overrideoutput>true</overrideoutput>
+    <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
+    <package_description>NovusCodeLibrary Runtime - Utilities</package_description>
+    <package_requires>Utils_requires.pas</package_requires>
+    <package_contains>Utils_contains.pas</package_contains>
+    <package_name>NovusCodeLibrary_Utils</package_name>
+  </projectitem>
+
+  <projectitem name = "NovusCodeLibrary_Utils.dproj">
+    <template>[%templatepath%][%VARIABLECMDLINE.PACKAGENAMEDPROJ%]</template>
+    <properties></properties>
+    <overrideoutput>true</overrideoutput>
+    <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
+    <package_description>NovusCodeLibrary Runtime - Utilities</package_description>
+    <package_name>NovusCodeLibrary_Utils</package_name>
+    <MainSource>NovusCodeLibrary_Utils.dpk</MainSource>
+  </projectitem>
+  
   
   <projectitem name = "NovusCodeLibrary_Parser.dpk">
     <template>[%templatepath%][%VARIABLECMDLINE.PACKAGENAMEDPK%]</template>

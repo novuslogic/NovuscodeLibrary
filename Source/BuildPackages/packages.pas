@@ -6,15 +6,47 @@ procedure BuldDelphiPackages(aDelphiVersion:  TDelphiVersion; aPackageName: stri
 Var
   lsPackageNamedpk: string;
   lsPackageNamedproj: string;
+  lVariableCmdLineList: TVariableCmdLineList;
+  lVariableCmdLine: TVariableCmdLine;
 begin
   //package.dpk
   lsPackageNamedpk := aPackageName + '.dpk';
   //package.dproj
   lsPackageNamedproj := aPackageName + '.dproj';
+
+
+  try
+    lVariableCmdLineList:= TVariableCmdLineList.Create;
+
+
+    lVariableCmdLine:= TVariableCmdLine.Create;
+    lVariableCmdLine.VariableName := 'DELPHIVER';
+    lVariableCmdLine.Value := GetDelphiCompilerVersion(aDelphiVersion);
+    lVariableCmdLineList.Add(lVariableCmdLine);
+
+    lVariableCmdLine:= TVariableCmdLine.Create;
+    lVariableCmdLine.VariableName := 'LIBSUFFIX';
+    lVariableCmdLine.Value := GetDelphiPackageVersion(aDelphiVersion);
+    lVariableCmdLineList.Add(lVariableCmdLine);
+
+    lVariableCmdLine:= TVariableCmdLine.Create;
+    lVariableCmdLine.VariableName := 'PACKAGENAMEDPK';
+    lVariableCmdLine.Value := lsPackageNamedpk;
+    lVariableCmdLineList.Add(lVariableCmdLine);
+
+
+    lVariableCmdLine:= TVariableCmdLine.Create;
+    lVariableCmdLine.VariableName := 'PACKAGENAMEDPROJ';
+    lVariableCmdLine.Value := lsPackageNamedproj;
+    lVariableCmdLineList.Add(lVariableCmdLine);
+
+    if codegenex('packages.ccproject', lVariableCmdLineList, wd, '', false, '') <> 0 then
+      RaiseException(erCustomError, 'failed.');  
+  finally
+    lVariableCmdLineList.Free;
+  end;
   
-  if codegen('packages.ccproject', Format('DELPHIVER="%s";LIBSUFFIX="%s";PACKAGENAMEDPK="%s";PACKAGENAMEDPROJ="%s"', [GetDelphiCompilerVersion(aDelphiVersion),
-          GetDelphiPackageVersion(aDelphiVersion), lsPackageNamedpk, lsPackageNamedproj]), wd, '') <> 0 then
-     RaiseException(erCustomError, 'failed.');  
+  
  
 end;
 
@@ -25,6 +57,7 @@ begin
 
   BuldDelphiPackages(DELPHIXE, 'package');
 end;  
+
 
 procedure BuildDelphiXE2Packages;
 begin
@@ -193,7 +226,7 @@ begin
       
     end; 
 
-  if not Task.RunTargets(['BuildDelphiXEPackages', 
+  if not Task.RunTargets(['BuildDelphiXEPackages',
         'BuildDelphiXE2Packages', 
         'BuildDelphiXE3Packages', 
         'BuildDelphiXE4Packages',

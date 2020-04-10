@@ -2,4 +2,4 @@ requires
   rtl,
   Jcl,
   JvSystem,
-  NovusCodeLibrary_Core;
+  NovusCodeLibrary_Object;

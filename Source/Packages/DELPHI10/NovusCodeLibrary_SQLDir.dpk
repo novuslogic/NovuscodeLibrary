@@ -33,7 +33,7 @@ package NovusCodeLibrary_SQLDir;
 requires
   rtl,
   vcl,
-  NovusCodeLibrary_Core,
+  NovusCodeLibrary_Object,
   vcldb,
   SqlDir230;
 

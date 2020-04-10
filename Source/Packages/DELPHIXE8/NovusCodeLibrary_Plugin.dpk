@@ -33,7 +33,7 @@ package NovusCodeLibrary_Plugin;
 requires
   rtl,
   vcl,
-  NovusCodeLibrary_Core;
+  NovusCodeLibrary_Object;
 
 contains
   NovusPlugin in '..\..\Core\Plugin\NovusPlugin.pas';

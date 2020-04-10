@@ -32,7 +32,7 @@ package NovusCodeLibrary_Console;
 
 requires
   rtl,
-  NovusCodeLibrary_Core;
+  NovusCodeLibrary_Object;
 
 contains
   NovusCommandLine in '..\..\core\Console\NovusCommandLine.pas',

@@ -3,27 +3,6 @@
   <outputconsole>true</outputconsole>
   <messageslogpath></messageslogpath>
   <Createoutputdir>true</Createoutputdir>
-  
-  <projectitem name = "NovusCodeLibrary_Core.dpk">
-    <template>[%templatepath%][%VARIABLECMDLINE.PACKAGENAMEDPK%]</template>
-    <properties></properties>
-    <overrideoutput>true</overrideoutput>
-    <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
-    <package_description>NovusCodeLibrary Runtime - Core</package_description>
-    <package_requires>Core_requires.pas</package_requires>
-    <package_contains>Core_contains.pas</package_contains>
-    <package_name>NovusCodeLibrary_Core</package_name>
-  </projectitem>
-
-  <projectitem name = "NovusCodeLibrary_Core.dproj">
-    <template>[%templatepath%][%VARIABLECMDLINE.PACKAGENAMEDPROJ%]</template>
-    <properties></properties>
-    <overrideoutput>true</overrideoutput>
-    <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
-    <package_description>NovusCodeLibrary Runtime - Core</package_description>
-    <package_name>NovusCodeLibrary_Core</package_name>
-    <MainSource>NovusCodeLibrary_Core.dpk</MainSource>
-  </projectitem>
 
   <projectitem name = "NovusCodeLibrary_Utils.dpk">
     <template>[%templatepath%][%VARIABLECMDLINE.PACKAGENAMEDPK%]</template>
@@ -46,6 +25,27 @@
     <MainSource>NovusCodeLibrary_Utils.dpk</MainSource>
   </projectitem>
   
+  <projectitem name = "NovusCodeLibrary_Object.dpk">
+    <template>[%templatepath%][%VARIABLECMDLINE.PACKAGENAMEDPK%]</template>
+    <properties></properties>
+    <overrideoutput>true</overrideoutput>
+    <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
+    <package_description>NovusCodeLibrary Runtime - Object</package_description>
+    <package_requires>Object_requires.pas</package_requires>
+    <package_contains>Object_contains.pas</package_contains>
+    <package_name>NovusCodeLibrary_Object</package_name>
+  </projectitem>
+
+  <projectitem name = "NovusCodeLibrary_Object.dproj">
+    <template>[%templatepath%][%VARIABLECMDLINE.PACKAGENAMEDPROJ%]</template>
+    <properties></properties>
+    <overrideoutput>true</overrideoutput>
+    <output>[%outputpath%][%VARIABLECMDLINE.DELPHIVER%]\</output>
+    <package_description>NovusCodeLibrary Runtime - Object</package_description>
+    <package_name>NovusCodeLibrary_Object</package_name>
+    <MainSource>NovusCodeLibrary_Object.dpk</MainSource>
+  </projectitem>
+
   
   <projectitem name = "NovusCodeLibrary_Parser.dpk">
     <template>[%templatepath%][%VARIABLECMDLINE.PACKAGENAMEDPK%]</template>

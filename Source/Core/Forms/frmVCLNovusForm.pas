@@ -7,7 +7,7 @@ uses
   Dialogs, NovusUtilities, StdCtrls;
 
 type
-  ThiNovusForm = class(TForm)
+  ThiVCLNovusForm = class(TForm)
     procedure FormShow(Sender: TObject);
     procedure FormKeyPress(Sender: TObject; var Key: Char);
     procedure FormCreate(Sender: TObject);
@@ -35,19 +35,19 @@ type
 
   end;
 
-  ThiNovusFormClass = class of ThiNovusForm;
+  ThiVCLNovusFormClass = class of ThiVCLNovusForm;
 
 var
-  hiNovusForm: ThiNovusForm;
+  hiVCLNovusForm: ThiVCLNovusForm;
 
 implementation
 
-procedure ThiNovusForm.FormCreate(Sender: TObject);
+procedure ThiVCLNovusForm.FormCreate(Sender: TObject);
 begin
   IgnoreInitWindow := false;
 end;
 
-procedure ThiNovusForm.FormKeyPress(Sender: TObject; var Key: Char);
+procedure ThiVCLNovusForm.FormKeyPress(Sender: TObject; var Key: Char);
 begin
   if UseFormKeyPress = false then
     Exit;
@@ -62,23 +62,23 @@ begin
   end;
 end;
 
-procedure ThiNovusForm.FormShow(Sender: TObject);
+procedure ThiVCLNovusForm.FormShow(Sender: TObject);
 begin
   if not fbIgnoreInitWindow then
     InitWindow;
 end;
 
-function ThiNovusForm.InitWindow: Boolean;
+function ThiVCLNovusForm.InitWindow: Boolean;
 begin
   Result := True;
 end;
 
-procedure ThiNovusForm.SetupWindow;
+procedure ThiVCLNovusForm.SetupWindow;
 begin
   //
 end;
 
-procedure ThiNovusForm.Handle_WM_CLOSEWINDOW(var msg: TMessage);
+procedure ThiVCLNovusForm.Handle_WM_CLOSEWINDOW(var msg: TMessage);
 begin
   { }
 end;

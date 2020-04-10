@@ -32,7 +32,7 @@ package NovusCodeLibrary_WebUtils;
 
 requires
   rtl,
-  NovusCodeLibrary_Core,
+  NovusCodeLibrary_Object,
   NovusCodeLibrary_Env;
 
 contains

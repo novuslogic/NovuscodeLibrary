@@ -1,3 +1,12 @@
+02/04/2020
+
+* frmVCLNovusForm added to package NovusCodeLibaryVCLUtils
+* New NovuscodeLibraryProjectGroup.groupproj for Delphi 10.3
+
+18/03/2020
+
+* NovusInfrastructure Package has been renamed to NovusObject Package
+
 16/03/2020
 
 * Split Utilities units from package NovusCodeLibrary_Core into NovusCodeLibrary_Utils

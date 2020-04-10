@@ -34,10 +34,10 @@ requires
   rtl,
   Jcl,
   JvSystem,
-  NovusCodeLibrary_Core;
+  NovusCodeLibrary_Object;
 
 contains
   NovusSimpleXML in '..\..\Core\Utilities\jvcl\NovusSimpleXML.pas',
-  NovusXMLBO in '..\..\Core\Infrastructure\NovusXMLBO.pas';
+  NovusXMLBO in '..\..\Core\Object\jvcl\NovusXMLBO.pas';
 
 end.

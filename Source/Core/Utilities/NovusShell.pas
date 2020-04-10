@@ -226,6 +226,8 @@ begin
   result := liExitCode;
 end;
 
+
+// https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showwindow
 function tNovusShell.WindowsShellExecute(const aOperation: String;
   const aCommandline: string; const aDirectory: string;
   const aParameters: String; const aShow: Integer): Integer;

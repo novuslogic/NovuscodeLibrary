@@ -1,5 +1,5 @@
 requires
   rtl,
-  NovusCodeLibrary_Core,
+  NovusCodeLibrary_Object,
   NovusCodeLibrary_WebUtils,
   NovusCodeLibrary_Env;

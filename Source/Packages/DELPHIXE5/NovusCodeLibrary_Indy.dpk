@@ -33,7 +33,7 @@ package NovusCodeLibrary_Indy;
 requires
   rtl,
   vcl,
-  NovusCodeLibrary_Core,
+  NovusCodeLibrary_Object,
   IndyCore,
   IndySystem;
 

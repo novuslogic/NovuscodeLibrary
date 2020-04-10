@@ -1,0 +1,12 @@
+ Volume in drive D is DATA
+ Volume Serial Number is 0C0B-3CE9
+
+ Directory of D:\Projects\NovuscodeLibrary\Samples\Windows\Shell\Win32\Debug
+
+28/03/2020  10:58 PM    <DIR>          .
+28/03/2020  10:58 PM    <DIR>          ..
+28/03/2020  11:10 PM             8,200 main.dcu
+28/03/2020  11:10 PM         2,549,214 ShellDemo.exe
+28/03/2020  11:11 PM                 0 Tmp.Txt
+               3 File(s)      2,557,414 bytes
+               2 Dir(s)  46,865,956,864 bytes free

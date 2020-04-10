@@ -6,6 +6,7 @@ interface
 uses SysUtils, Classes, Windows, Messages, typinfo;
 
 Const
+  CR = #13#10;
   DosDelimSet: set of Char = ['\', ':', #0];
   StMaxFileLen = 260;
 
@@ -15,6 +16,7 @@ Const
 Type
   TNovusUtilities = class(TObject)
   public
+    class function GetLastSysErrorMess: string;
     class function CopyObject(Src, Dest: TObject;
       Related: Boolean = FALSE): Boolean;
     class function AppRootDirectory: String;
@@ -177,10 +179,11 @@ class function TNovusUtilities.GetParamValue(const aParamKey: string;
   var aValue: string): Boolean;
 var
   lparamloop: Integer;
-  I: Integer;
   liPos: Integer;
 begin
   aValue := '';
+
+  Result := False;
 
   if paramcount > 0 then
     for lparamloop := 1 to paramcount do
@@ -197,5 +200,11 @@ begin
     end;
 
 end;
+
+class function TNovusUtilities.GetLastSysErrorMess: string;
+begin
+  Result := SysErrorMessage(GetLastError);
+end;
+
 
 end.

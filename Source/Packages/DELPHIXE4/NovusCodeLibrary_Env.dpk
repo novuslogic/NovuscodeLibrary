@@ -32,7 +32,7 @@ package NovusCodeLibrary_Env;
 
 requires
   rtl,
-  NovusCodeLibrary_Core,
+  NovusCodeLibrary_Object,
   NovusCodeLibrary_Parser;
 
 contains

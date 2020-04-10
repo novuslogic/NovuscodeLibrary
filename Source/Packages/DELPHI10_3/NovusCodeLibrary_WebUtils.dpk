@@ -32,8 +32,9 @@ package NovusCodeLibrary_WebUtils;
 
 requires
   rtl,
-  NovusCodeLibrary_Core,
-  NovusCodeLibrary_Env;
+  NovusCodeLibrary_Object,
+  NovusCodeLibrary_Env,
+  vclie;
 
 contains
   NovusWebUtils in '..\..\Core\Utilities\NovusWebUtils.pas';

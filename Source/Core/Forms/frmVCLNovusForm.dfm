@@ -1,9 +1,9 @@
-object hiNovusForm: ThiNovusForm
+object hiVCLNovusForm: ThiVCLNovusForm
   Left = 285
   Top = 224
   Caption = 'hiVCLNovusForm'
   ClientHeight = 404
-  ClientWidth = 642
+  ClientWidth = 644
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText

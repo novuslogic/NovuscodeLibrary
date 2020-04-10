@@ -1,4 +1,4 @@
 requires
   rtl,
-  NovusCodeLibrary_Core,
+  NovusCodeLibrary_Object,
   NovusCodeLibrary_Env;

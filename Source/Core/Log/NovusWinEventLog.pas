@@ -2,13 +2,13 @@ unit NovusWinEventLog;
 
 interface
 
-Uses Windows, Registry, SysUtils, NovusInfrastructre, VCL.Forms;
+Uses Windows, Registry, SysUtils, NovusObject, VCL.Forms;
 
 type
   TEventType = (etError, etWarning, etInformation, etAuditSuccess,
     etAuditFailure, etNone);
 
-  TNovusWinEventLog = class(tNovusInfrastructre)
+  TNovusWinEventLog = class(tNovusObject)
   private
   protected
     FsApplicationName: String;

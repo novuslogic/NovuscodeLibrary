@@ -198,6 +198,8 @@ resourcestring
   key = 'SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment';
 
 begin
+  reg := NIL;
+
   Try
     result := False;
 
@@ -224,8 +226,8 @@ begin
     end;
 
   Finally
-
-    reg.Free;
+    if Assigned(reg) then
+      reg.Free;
   End;
 end;
 

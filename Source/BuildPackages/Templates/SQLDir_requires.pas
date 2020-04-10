@@ -1,6 +1,6 @@
 requires
   rtl,
   vcl,
-  NovusCodeLibrary_Core,
+  NovusCodeLibrary_Object,
   vcldb,
   SqlDir<%VARIABLECMDLINE.LIBSUFFIX%>;

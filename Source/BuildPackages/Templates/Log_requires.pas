@@ -1,4 +1,4 @@
 requires
   rtl,
   vcl,
-  NovusCodeLibrary_Core;
+  NovusCodeLibrary_Object;

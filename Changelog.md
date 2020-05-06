@@ -1,3 +1,9 @@
+06/06/2020
+
+* New NovusVariants class procedure TNovusVariants.DisposeVarRec(aVarRec: TVarRec);
+* An upgrade to class function TNovusVariants.VarToVarRec(aValue: variant): TVarRec;
+
+
 02/04/2020
 
 * frmVCLNovusForm added to package NovusCodeLibaryVCLUtils

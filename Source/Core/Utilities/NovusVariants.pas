@@ -2,7 +2,7 @@ unit NovusVariants;
 
 interface
 
-uses NovusUtilities, variants;
+uses NovusUtilities, variants, SysUtils;
 
 type
   TNovusVariants = class(TNovusUtilities)
@@ -10,37 +10,42 @@ type
   private
   public
     class function VarToVarRec(aValue: variant): TVarRec;
+    class procedure DisposeVarRec(aVarRec: TVarRec);
   end;
 
 implementation
 
-class function TNovusVariants.VarToVarRec(aValue: variant): TVarRec;
-var
-  VString: PShortString;
-  VWideString: PWideString;
-  VVariant: PVariant;
+class procedure TNovusVariants.DisposeVarRec(aVarRec: TVarRec);
 begin
-   New(VString);
-   VString^ := String(aValue);
-   Result.VType := vtString;
-   Result.VString := VString;
-   Dispose(VString);
+  case aVarRec.VType of
+    vtUnicodeString: Dispose(aVarRec.VUnicodeString);
+    vtString: Dispose(aVarRec.VString)
+  end;
+end;
 
-
-            (*
-
+class function TNovusVariants.VarToVarRec(aValue: variant): TVarRec;
+Var
+  U: UnicodeString;
+begin
   case VarType(aValue) of
        vtInteger:       ;
        vtBoolean:       ;
        vtChar:          ;
        vtExtended:      ;
+       varUString:
+         begin
+           U := aValue;
+
+           New(Result.VUnicodeString);
+           Result.VType := vtUnicodeString;
+           Result.VUnicodeString := Pointer(U);
+         end;
+
        vtString:
           begin
-            New(VString);
-            VString^ := String(aValue);
+            New(Result.VString);
             Result.VType := vtString;
-            Result.VString := VString;
-            Dispose(VString);
+            Result.VString^ := VarToStr(aValue);
           end;
 
        vtPointer:        ;
@@ -49,34 +54,15 @@ begin
        vtWideChar:       ;
        vtAnsiString:     ;
        vtCurrency:       ;
-       vtVariant:
-         begin
-           New(VVariant);
-           VVariant^ := aValue;
-           Result.VType := vtVariant;
-           Result.VVariant := VVariant;
-           Dispose(VVariant);
-         end;
-       vtInterface:     ;
-       vtWideString:
-         begin
-           New(VWideString);
-           VWideString^ := String(aValue);
-           Result.VType := vtWideString;
-           Result.VWideString := VWideString;
-           Dispose(VWideString);
-         end;
+       vtVariant:        ;
+       vtInterface:      ;
+       vtWideString:     ;
 
        vtInt64:         ;
        vtUnicodeString: ;
   else
-    begin
       Raise Exception.Create('TNovusVariants.VarToVarRec: Unrecognized variant type');
-    end;
-
   end;
-         *)
-
 end;
 
 end.

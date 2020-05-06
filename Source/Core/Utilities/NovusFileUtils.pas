@@ -208,6 +208,8 @@ var
   lpBuffer: array [0 .. MAX_PATH] of char;
   cResult: Cardinal;
 begin
+  cResult := 0;
+
   lpFileName := PChar(aFilename);
   cResult := GetFullPathName(lpFileName, MAX_PATH, lpBuffer, lpFileName);
   Result := ExtractFilePath(lpBuffer);

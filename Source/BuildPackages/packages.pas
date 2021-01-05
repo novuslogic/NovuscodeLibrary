@@ -137,6 +137,15 @@ begin
 end;
 
 
+procedure BuildDelphi10_4Packages;
+begin
+  Output.log('Delphi 10.4 Packages ...');
+
+  BuldDelphiPackages(DELPHI10_4, 'package');
+end;
+
+
+
 begin
   Output.log('Building Delphi Packages ...');
 
@@ -226,6 +235,13 @@ begin
       
     end; 
 
+  with Task.AddTask('BuildDelphi10_4Packages') do
+    begin
+      Criteria.Failed.Abort := True;
+     
+      
+    end;   
+
   if not Task.RunTargets(['BuildDelphiXEPackages',
         'BuildDelphiXE2Packages', 
         'BuildDelphiXE3Packages', 
@@ -237,7 +253,8 @@ begin
         'BuildDelphi10Packages',
         'BuildDelphi10_1Packages',
         'BuildDelphi10_2Packages',
-        'BuildDelphi10_3Packages'
+        'BuildDelphi10_3Packages',
+        'BuildDelphi10_4Packages'
         ]) then 
     RaiseException(erCustomError, 'Failed RunTargets'); 
 

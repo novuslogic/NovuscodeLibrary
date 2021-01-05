@@ -43,6 +43,7 @@ type
     function Delete(AItem: TObject): Boolean;
     function Equals(AList: TNovusList): Boolean;
     procedure Clear;
+
     procedure CopyFrom(aNovusList: TNovusList);
     function FindItem(aKey: string): TObject;
 
@@ -202,6 +203,7 @@ begin
   end;
 end;
 
+
 procedure TNovusList.Put(Index: Integer; Item: TObject);
 var
   Test: Boolean;
@@ -246,8 +248,14 @@ begin
 end;
 
 procedure TNovusList.Clear;
+Var
+  I: Integer;
 begin
+  While(FList.Count <>0) do
+     Delete(FList[0]);
+
   FList.Clear;
+  FHash.Clear;
 end;
 
 function TNovusList.FindItem(aKey: string): TObject;

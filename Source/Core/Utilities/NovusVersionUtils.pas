@@ -122,7 +122,8 @@ begin
 
   lpstrPath := pchar(aFileName);
 
-  dwInfoSize := GetFileVersionInfoSize(lpstrPath, dwDummy);
+  //dwInfoSize := GetFileVersionInfoSize(lpstrPath, dwDummy);
+  dwInfoSize := GetFileVersionInfoSizeW(lpstrPath, dwDummy);
 
   if dwInfoSize = 0 then
   begin

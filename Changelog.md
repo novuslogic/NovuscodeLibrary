@@ -1,3 +1,10 @@
+05/10/2021
+
+* Updated to Delphi 10.4 
+* [Rename Infrastructure folder to BusinessObject and move to it own package from](https://github.com/novuslogic/NovuscodeLibrary/issues/2)
+* Fixed memory bug in tnovuslist.clear
+* Removed  function IsOptionsExists: Boolean 
+
 06/06/2020
 
 * New NovusVariants class procedure TNovusVariants.DisposeVarRec(aVarRec: TVarRec);

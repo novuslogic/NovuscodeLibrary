@@ -1,6 +1,6 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
-        <ProjectGuid>{9D07226C-942E-4C70-B626-8289CA71EEA5}</ProjectGuid>
+        <ProjectGuid>{7230C19D-17DF-42A5-A98F-92CEB7019964}</ProjectGuid>
         <MainSource>NovusCodeLibrary_Env.dpk</MainSource>
         <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
         <DCC_DCCCompiler>DCC32</DCC_DCCCompiler>

@@ -1,5 +1,11 @@
-05/10/2021
+08/01/2021
 
+* new procedure tNovusPlugin.ClearPluginList;
+* New function tNovusPlugin.GetPluginlist(aIndex: Integer): PPluginInfo;
+
+* tNovusPlugin Class internal fPlugins: Tlist refactored to fPluginList
+
+05/10/2021
 
 * Updated to Delphi 10.4 
 * Updated DelphiVersions.inc with Delphi 10.4 support

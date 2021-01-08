@@ -2,7 +2,7 @@ unit NovusPlugin;
 
 interface
 
-Uses Windows, SysUtils, Classes;
+Uses Windows, SysUtils, Classes, NovusUtilities;
 
 const
   func_GetPluginObject = 'GetPluginObject';
@@ -24,6 +24,7 @@ type
 
   TPluginInfo = record
     FileName: string;
+    PluginName: String;
     Handle: Thandle;
     Plugin: INovusPlugin;
     GetPluginObjectFunc: TGetPluginObject;
@@ -32,12 +33,15 @@ type
   TNovusPlugins = class(Tobject)
   private
   protected
-    fPlugins: TList;
+    fPluginList: TList;
     function GetPlugins(Index: integer): INovusPlugin;
     function GetPluginCount: integer;
   public
     constructor Create;
     destructor Destroy; override;
+
+    procedure ClearPluginList;
+    function GetPluginlist(aIndex: Integer): PPluginInfo;
 
     function FindPlugin(const aPluginName: string;
       out aPlugin: INovusPlugin): boolean;
@@ -54,15 +58,15 @@ uses System.Generics.Defaults;
 
 constructor TNovusPlugins.Create;
 begin
-  fPlugins := TList.Create;
+  fPluginList := TList.Create;
 end;
 
 destructor TNovusPlugins.Destroy;
 begin
-  if (fPlugins <> nil) then
+  if (fPluginList <> nil) then
   begin
     UnloadAllPlugins;
-    fPlugins.Free;
+    fPluginList.Free;
   end;
 end;
 
@@ -82,24 +86,30 @@ begin
   if PluginCount = 0 then
     Exit;
 
-  FPluginInfo := fPlugins[aIndex];
+  FPluginInfo := fPluginList[aIndex];
   if (FPluginInfo^.Handle = 0) then
     Exit;
 
   try
-    FPluginInfo^.Plugin.Finalize;
+    Try
+      FPluginInfo^.Plugin.Finalize;
 
-    lHandle := FPluginInfo^.Handle;
+      lHandle := FPluginInfo^.Handle;
 
-    FPluginInfo^.Plugin := nil;
+      FPluginInfo^.Plugin := nil;
 
-    if (lHandle <> 0) then
-      FreeLibrary(lHandle);
+      if (lHandle <> 0) then
+        FreeLibrary(lHandle);
+    Except
+      raise Exception.Create('Unloaded error:' + TNovusUtilities.GetExceptMess);
+    End;
 
   finally
     Dispose(FPluginInfo);
 
-    fPlugins.Delete(aIndex);
+    FPluginInfo := nil;
+
+    fPluginList.Delete(aIndex);
   end;
 end;
 
@@ -128,16 +138,14 @@ begin
     @FPluginInfo^.GetPluginObjectFunc := ptr;
     FPlugin := FPluginInfo.GetPluginObjectFunc();
     FPluginInfo^.Plugin := FPlugin;
-    FPlugin := nil;
+    FPluginInfo^.PluginName := FPlugin.PluginName;
 
     if FindPlugin(FPluginInfo^.Plugin.PluginName, FPlugin) then
       raise Exception.Create('Plugin Loaded already');
 
-    FPlugin := nil;
-
     FPluginInfo^.Plugin.Initialize;
 
-    fPlugins.Add(FPluginInfo);
+    fPluginList.Add(FPluginInfo);
 
     Result := True;
   Except
@@ -168,14 +176,29 @@ begin
     end;
 end;
 
+
+function TNovusPlugins.GetPluginlist(aIndex: Integer): PPluginInfo;
+begin
+  Result := NIl;
+
+  if (aIndex = fPluginList.Count) or (aIndex < 0) then Exit;
+
+  Result := fPluginList[aIndex];
+end;
+
 function TNovusPlugins.GetPlugins(Index: integer): INovusPlugin;
 begin
-  Result := PPluginInfo(fPlugins[Index])^.Plugin;
+  Result := PPluginInfo(fPluginList[Index])^.Plugin;
 end;
 
 function TNovusPlugins.GetPluginCount: integer;
 begin
-  Result := fPlugins.Count;
+  Result := fPluginList.Count;
+end;
+
+procedure TNovusPlugins.ClearPluginList;
+begin
+  fPluginList.Clear;
 end;
 
 end.

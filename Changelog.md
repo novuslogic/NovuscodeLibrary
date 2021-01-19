@@ -1,6 +1,11 @@
+19/01/2021
+
+* New function TNovusUtilities.RegExMatch(aInput: string; aPattern: string; aInversed: boolean= false): String;
+* New procedure TNovusStringUtils.LeftTrim(aStr: String): String;
+
 08/01/2021
 
-* new procedure tNovusPlugin.ClearPluginList;
+* New procedure tNovusPlugin.ClearPluginList;
 * New function tNovusPlugin.GetPluginlist(aIndex: Integer): PPluginInfo;
 
 * tNovusPlugin Class internal fPlugins: Tlist refactored to fPluginList

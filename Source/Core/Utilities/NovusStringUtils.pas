@@ -3,7 +3,7 @@
 
 interface
 
-uses Windows, sysutils, NovusUtilities, Classes, variants;
+uses Windows, sysutils, NovusUtilities, Classes, variants, System.RegularExpressions;
 
 Const
   Cr = #13;
@@ -48,6 +48,8 @@ Type
 Type
   TNovusStringUtils = class(TNovusUtilities)
   public
+    class function RightTrim(aStr: String): String;
+    class function LeftTrim(aStr: String): String;
     class function FormatMessStrOptions(aString: String;
       aFormatOptions: Integer): String;
     class function MemoryStreamToString(Stream: TMemoryStream): string;
@@ -1041,6 +1043,16 @@ begin
       inc(P);
     until false;
   end;
+end;
+
+class function TNovusStringUtils.LeftTrim(aStr: String): String;
+begin
+  Result := TRegEx.Replace(aStr, '^\s+', '');
+end;
+
+class function TNovusStringUtils.RightTrim(aStr: String): String;
+begin
+  Result := TRegEx.Replace(aStr, '\s+$', '');
 end;
 
 end.

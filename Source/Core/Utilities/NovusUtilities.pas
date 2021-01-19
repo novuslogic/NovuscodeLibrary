@@ -3,7 +3,7 @@ unit NovusUtilities;
 
 interface
 
-uses SysUtils, Classes, Windows, Messages, typinfo;
+uses SysUtils, Classes, Windows, Messages, typinfo, System.RegularExpressions;
 
 Const
   CR = #13#10;
@@ -30,6 +30,7 @@ Type
     class function IsProperty(aObject: TObject; aPropertyName: string): Boolean;
     class function GetParamValue(const aParamKey: string;
       var aValue: string): Boolean;
+    class function RegExMatch(aInput: string; aPattern: string; aInversed: boolean= false): String;
   end;
 
 implementation
@@ -205,6 +206,38 @@ class function TNovusUtilities.GetLastSysErrorMess: string;
 begin
   Result := SysErrorMessage(GetLastError);
 end;
+
+class function TNovusUtilities.RegExMatch(aInput: string; aPattern: string; aInversed: boolean= false): String;
+var
+  fMatch: tMatch;
+  fGroup: tGroup;
+begin
+  ZeroMemory(@Result,SizeOf(Result));
+
+  if not TRegEx.IsMatch(aInput, aPattern) then Exit;
+
+  Try
+    fMatch := TRegEx.Match(aInput, aPattern);
+
+    if fMatch.Index <= (fMatch.Groups.count - 1) then
+      Result := fMatch.Groups.Item[fMatch.Index].Value
+    else
+      Result := fMatch.Value;
+
+     if aInversed then
+        Result := StringReplace(aInput, result,'',  [rfReplaceAll, rfIgnoreCase]);
+
+  Finally
+    ZeroMemory(@fMatch,SizeOf(fMatch));
+  End;
+
+
+
+
+
+
+end;
+
 
 
 end.

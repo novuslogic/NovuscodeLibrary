@@ -48,7 +48,7 @@ var
   sUppStr: String;
 begin
   sUppStr := UpperCase(Trim(sStr));
-  if TNovusStringUtils.IsNumberStr(sUppStr) then
+  if TNovusStringUtils.IsNumeric(sUppStr) then
   begin
     TNovusStringUtils.Str2LongS(sUppStr, Result);
     If (Result < 1) and (Result > 12) then

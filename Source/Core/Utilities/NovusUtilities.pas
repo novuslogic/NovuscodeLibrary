@@ -30,7 +30,11 @@ Type
     class function IsProperty(aObject: TObject; aPropertyName: string): Boolean;
     class function GetParamValue(const aParamKey: string;
       var aValue: string): Boolean;
-    class function RegExMatch(aInput: string; aPattern: string; aInversed: boolean= false): String;
+
+    class function RegExMatchEx(aInput: string; aPattern: string;
+      aInversed: Boolean; aMatchValue: Boolean): String;
+    class function RegExMatch(aInput: string; aPattern: string;
+      aInversed: Boolean = FALSE): String;
   end;
 
 implementation
@@ -84,7 +88,6 @@ begin
 
   SysUtils.FindClose(SR);
 end;
-
 
 class function TNovusUtilities.CopyObject(Src, Dest: TObject;
   Related: Boolean = FALSE): Boolean;
@@ -184,7 +187,7 @@ var
 begin
   aValue := '';
 
-  Result := False;
+  Result := FALSE;
 
   if paramcount > 0 then
     for lparamloop := 1 to paramcount do
@@ -207,37 +210,47 @@ begin
   Result := SysErrorMessage(GetLastError);
 end;
 
-class function TNovusUtilities.RegExMatch(aInput: string; aPattern: string; aInversed: boolean= false): String;
+class function TNovusUtilities.RegExMatch(aInput: string; aPattern: string;
+  aInversed: Boolean = False): String;
+begin
+  Result := RegExMatchEx(aInput,aPattern,aInversed, false);
+end;
+
+class function TNovusUtilities.RegExMatchEx(aInput: string; aPattern: string;
+      aInversed: Boolean; aMatchValue: Boolean): String;
 var
   fMatch: tMatch;
   fGroup: tGroup;
 begin
-  ZeroMemory(@Result,SizeOf(Result));
+  ZeroMemory(@Result, Sizeof(Result));
 
-  if not TRegEx.IsMatch(aInput, aPattern) then Exit;
+  if not TRegEx.IsMatch(aInput, aPattern) then
+    begin
+      Result := aInput;
+
+      Exit;
+    end;
 
   Try
     fMatch := TRegEx.Match(aInput, aPattern);
 
-    if fMatch.Index <= (fMatch.Groups.count - 1) then
-      Result := fMatch.Groups.Item[fMatch.Index].Value
+    if aMatchValue = false then
+      begin
+        if fMatch.Index <= (fMatch.Groups.Count - 1) then
+          Result := fMatch.Groups.Item[fMatch.Index].Value
+        else
+          Result := fMatch.Value;
+      end
     else
       Result := fMatch.Value;
 
-     if aInversed then
-        Result := StringReplace(aInput, result,'',  [rfReplaceAll, rfIgnoreCase]);
+    if aInversed then
+      Result := StringReplace(aInput, Result, '', [rfReplaceAll, rfIgnoreCase]);
 
   Finally
-    ZeroMemory(@fMatch,SizeOf(fMatch));
+    ZeroMemory(@fMatch, Sizeof(fMatch));
   End;
 
-
-
-
-
-
 end;
-
-
 
 end.

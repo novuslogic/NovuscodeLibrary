@@ -64,10 +64,10 @@ Type
     class procedure ValLongInt(s: ShortString; var LI: Longint;
       var ErrorCode: Integer);
     class function Str2LongS(const s: ShortString; var I: Longint): Boolean;
-    class function IsNumber(AChar: Char): Boolean;
-    class function IsAlpha(AChar: Char): Boolean;
-    class function IsNumberStr(s: String): Boolean;
-    class function IsAlphaStr(s: String): Boolean;
+    class function IsNumericChar(AChar: Char): Boolean;
+    class function IsAlphaChar(AChar: Char): Boolean;
+    class function IsNumeric(s: String): Boolean;
+    class function IsAlpha(s: String): Boolean;
     class procedure GetNames(AText: string; AList: TStringList);
     class function SubstCharSim(P: string; OC, NC: ANSIChar): string;
     /// <summary>
@@ -101,6 +101,8 @@ Type
     /// </remarks>
     class function Str2Int(aStr: String): Integer;
     class function Str2Int64(aStr: String): Int64;
+    class function Str2Uint16(aStr: String): UInt16;
+
     class function StrChInsertL(const s: AnsiString; c: ANSIChar; Pos: Cardinal)
       : AnsiString;
     class function IsIntStr(s: String): Boolean;
@@ -133,6 +135,7 @@ Type
     class function VarStrNull(const V: OleVariant): string;
     class function IsBoolean(const sValue: string): Boolean;
     class function StrToUInt64(const s: String): UInt64;
+    class function StrToUInt8(const s: String): UInt8;
 
     /// <summary>
     ///   Clears strings and objects from tStringlist
@@ -224,6 +227,25 @@ begin
     result := 0;
   end;
 end;
+
+class function TNovusStringUtils.Str2UInt16;
+begin
+  result := 0;
+
+  aStr := StripChar(aStr, #$D);
+  aStr := StripChar(aStr, #$A);
+
+  Try
+    If Trim(aStr) = '' then
+      Exit;
+
+     result := sysutils.StrtoUInt(aStr);
+  Except
+    result := 0;
+  end;
+end;
+
+
 
 class function TNovusStringUtils.ReplaceStrPos;
 var
@@ -318,7 +340,7 @@ begin
   result := P;
 end;
 
-class function TNovusStringUtils.IsNumber;
+class function TNovusStringUtils.IsNumericChar;
 begin
   result := false;
 
@@ -326,7 +348,7 @@ begin
     result := True
 end;
 
-class function TNovusStringUtils.IsAlpha;
+class function TNovusStringUtils.IsAlphaChar;
 begin
   result := false;
 
@@ -391,14 +413,14 @@ begin
   end;
 end;
 
-class function TNovusStringUtils.IsNumberStr;
+class function TNovusStringUtils.IsNumeric;
 var
   I: Longint;
 begin
   result := false;
   for I := 1 to Length(s) do
   begin
-    If Not IsNumber(s[I]) then
+    If Not IsNumericChar(s[I]) then
     begin
       result := false;
 
@@ -409,7 +431,7 @@ begin
   end;
 end;
 
-class function TNovusStringUtils.IsAlphaStr;
+class function TNovusStringUtils.IsAlpha;
 var
   I: Longint;
 begin
@@ -1012,11 +1034,28 @@ begin
   aStringlist.Clear;
 end;
 
-class function TNovusStringUtils.StrToUInt64(const s: String): UInt64;
-var
-  c: Cardinal;
-  P: PChar;
+class function TNovusStringUtils.StrToUInt8(const s: String): UInt8;
 begin
+  Try
+    Result := UInt8(StrToUint(s));
+  Except
+    Result := 0;
+  End;
+end;
+
+
+class function TNovusStringUtils.StrToUInt64(const s: String): UInt64;
+//var
+//  c: Cardinal;
+//  P: PChar;
+begin
+  Try
+    Result := UInt64(StrToUint(s));
+  Except
+    Result := 0;
+  End;
+
+  (*
   P := Pointer(s);
   if P = nil then
   begin
@@ -1043,7 +1082,10 @@ begin
       inc(P);
     until false;
   end;
+  *)
 end;
+
+
 
 class function TNovusStringUtils.LeftTrim(aStr: String): String;
 begin

@@ -1,5 +1,11 @@
-19/01/2021
+26/01/2021
 
+* Renamed TNovusStringUtils.IsAlphaStr to TNovusStringUtils.IsAlpha
+* Renamed TNovusStringUtils.IsAlpha to TNovusStringUtils.IsAlphaChar
+* Renamed TNovusStringUtils.IsNumber to TNovusStringUtils.IsNumericChar
+* Updated function TNovusStringUtils.StrToUInt64(const s: String): UInt64; internally to StrToUint 
+* New function TNovusUtilities.RegExMatchEx(aInput: string; aPattern: string;
+      aInversed: Boolean; aMatchValue: Boolean): String;
 * New function TNovusUtilities.RegExMatch(aInput: string; aPattern: string; aInversed: boolean= false): String;
 * New procedure TNovusStringUtils.LeftTrim(aStr: String): String;
 
@@ -10,7 +16,7 @@
 
 * tNovusPlugin Class internal fPlugins: Tlist refactored to fPluginList
 
-05/10/2021
+05/01/2021
 
 * Updated to Delphi 10.4 
 * Updated DelphiVersions.inc with Delphi 10.4 support

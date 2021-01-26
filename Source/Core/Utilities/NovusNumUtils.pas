@@ -3,13 +3,14 @@ unit NovusNumUtils;
 
 interface
 
-uses Windows, sysutils, Forms, NovusUtilities;
+uses Windows, sysutils, NovusUtilities;
 
 Type
   TNovusNumUtils = class(TNovusUtilities)
   protected
   public
     class function HexToInt64(HexStr: String): Int64;
+    class function HexToUint16(HexStr: String): UInt16;
     class function Int64ToBin(IValue: Int64; NumBits: word = 64): string;
     class function BinToInt64(BinStr: string): Int64;
   end;
@@ -91,5 +92,34 @@ begin
 
   result := RetVar;
 end;
+
+class function TNovusNumUtils.HexToUInt16(HexStr: String): Uint16;
+var
+  RetVar: uInt16;
+  i: byte;
+begin
+  HexStr := UpperCase(HexStr);
+  if HexStr[length(HexStr)] = 'H' then
+    Delete(HexStr, length(HexStr), 1);
+  RetVar := 0;
+
+  for i := 1 to length(HexStr) do
+  begin
+    RetVar := RetVar shl 4;
+    if HexStr[i] in ['0' .. '9'] then
+      RetVar := RetVar + (byte(HexStr[i]) - 48)
+    else if HexStr[i] in ['A' .. 'F'] then
+      RetVar := RetVar + (byte(HexStr[i]) - 55)
+    else
+    begin
+      RetVar := 0;
+      Break;
+    end;
+  end;
+
+  result := RetVar;
+end;
+
+
 
 end.

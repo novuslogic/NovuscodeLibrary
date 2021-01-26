@@ -23,7 +23,7 @@ How to install
 
 2. NovusCodeLibrary_Env.dpk - Environment functions library. 
 
-3. NovusCodeLibrary_Indy.dpk - Indy functions library. Requires http://ww2.indyproject.org/index.en.aspx
+3. NovusCodeLibrary_Indy.dpk - Indy functions library. Requires http://indyproject.org
 
 4. NovusCodeLibrary_Log.dpk - Log functions library.
 

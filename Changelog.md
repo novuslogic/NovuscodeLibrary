@@ -1,5 +1,11 @@
 26/01/2021
 
+* New function class function TNovusNumUtils.BinToUInt64(BinStr: string): UInt64;
+* New function class function HexToUint8(HexStr: String): UInt8;
+* New function class function HexToUInt64(HexStr: String): UInt64;
+
+26/01/2021
+
 * Renamed TNovusStringUtils.IsAlphaStr to TNovusStringUtils.IsAlpha
 * Renamed TNovusStringUtils.IsAlpha to TNovusStringUtils.IsAlphaChar
 * Renamed TNovusStringUtils.IsNumber to TNovusStringUtils.IsNumericChar

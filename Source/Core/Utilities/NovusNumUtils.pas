@@ -11,6 +11,8 @@ Type
   public
     class function HexToInt64(HexStr: String): Int64;
     class function HexToUInt64(HexStr: String): UInt64;
+    class function StrToUInt64(aStr: String): UInt64;
+    class function StrToUInt8(aStr: String): UInt8;
     class function HexToUint16(HexStr: String): UInt16;
     class function HexToUint8(HexStr: String): UInt8;
     class function Int64ToBin(IValue: Int64; NumBits: word = 64): string;
@@ -53,6 +55,9 @@ var
   i: byte;
   RetVar: Int64;
 begin
+  Result := 0;
+  if Trim(BinStr) = '' then Exit;
+
   BinStr := UpperCase(BinStr);
   if BinStr[length(BinStr)] = 'B' then
     Delete(BinStr, length(BinStr), 1);
@@ -75,6 +80,9 @@ var
   i: byte;
   RetVar: UInt64;
 begin
+  Result := 0;
+  if Trim(BinStr) = '' then Exit;
+
   BinStr := UpperCase(BinStr);
   if BinStr[length(BinStr)] = 'B' then
     Delete(BinStr, length(BinStr), 1);
@@ -97,6 +105,9 @@ var
   i: byte;
   RetVar: UInt8;
 begin
+  Result := 0;
+  if Trim(BinStr) = '' then Exit;
+
   BinStr := UpperCase(BinStr);
   if BinStr[length(BinStr)] = 'B' then
     Delete(BinStr, length(BinStr), 1);
@@ -120,6 +131,9 @@ var
   RetVar: Int64;
   i: byte;
 begin
+  Result := 0;
+  if Trim(HexStr) = '' then Exit;
+
   HexStr := UpperCase(HexStr);
   if HexStr[length(HexStr)] = 'H' then
     Delete(HexStr, length(HexStr), 1);
@@ -147,6 +161,9 @@ var
   RetVar: UInt64;
   i: byte;
 begin
+  Result := 0;
+  if Trim(HexStr) = '' then Exit;
+
   HexStr := UpperCase(HexStr);
   if HexStr[length(HexStr)] = 'H' then
     Delete(HexStr, length(HexStr), 1);
@@ -170,11 +187,42 @@ begin
 end;
 
 
+class function TNovusNumUtils.StrToUInt64(aStr: String): UInt64;
+begin
+  Result := 0;
+  if Trim(aStr) = '' then Exit;
+
+  Try
+    Result := StrToUInt(aStr);
+  Except
+    Result := 0;
+  End;
+
+end;
+
+class function TNovusNumUtils.StrToUInt8(aStr: String): UInt8;
+begin
+  Result := 0;
+  if Trim(aStr) = '' then Exit;
+
+  Try
+    Result := StrToUInt(aStr);
+  Except
+    Result := 0;
+  End;
+
+end;
+
+
+
 class function TNovusNumUtils.HexToUInt16(HexStr: String): Uint16;
 var
   RetVar: uInt16;
   i: byte;
 begin
+  Result := 0;
+  if Trim(HexStr) = '' then Exit;
+
   HexStr := UpperCase(HexStr);
   if HexStr[length(HexStr)] = 'H' then
     Delete(HexStr, length(HexStr), 1);
@@ -202,6 +250,9 @@ var
   RetVar: uInt8;
   i: byte;
 begin
+  Result := 0;
+  if Trim(HexStr) = '' then Exit;
+
   HexStr := UpperCase(HexStr);
   if HexStr[length(HexStr)] = 'H' then
     Delete(HexStr, length(HexStr), 1);

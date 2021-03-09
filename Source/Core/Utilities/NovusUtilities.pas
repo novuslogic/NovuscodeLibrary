@@ -32,7 +32,7 @@ Type
       var aValue: string): Boolean;
 
     class function RegExMatchEx(aInput: string; aPattern: string;
-      aInversed: Boolean; aMatchValue: Boolean): String;
+      aInversed: Boolean; aMatchValue: Boolean; aIgnoreCase: boolean = true): String;
     class function RegExMatch(aInput: string; aPattern: string;
       aInversed: Boolean = FALSE): String;
   end;
@@ -217,22 +217,38 @@ begin
 end;
 
 class function TNovusUtilities.RegExMatchEx(aInput: string; aPattern: string;
-      aInversed: Boolean; aMatchValue: Boolean): String;
+      aInversed: Boolean; aMatchValue: Boolean; aIgnoreCase: boolean = true): String;
 var
   fMatch: tMatch;
   fGroup: tGroup;
 begin
   ZeroMemory(@Result, Sizeof(Result));
 
-  if not TRegEx.IsMatch(aInput, aPattern) then
-    begin
-      Result := aInput;
 
-      Exit;
+  if aIgnoreCase then
+    begin
+      if not TRegEx.IsMatch(aInput, aPattern, [roIgnoreCase]) then
+        begin
+          Result := aInput;
+
+          Exit;
+        end;
+    end
+  else
+    begin
+      if not TRegEx.IsMatch(aInput, aPattern) then
+        begin
+          Result := aInput;
+
+          Exit;
+        end;
     end;
 
   Try
-    fMatch := TRegEx.Match(aInput, aPattern);
+    if aIgnoreCase then
+      fMatch := TRegEx.Match(aInput, aPattern, [roIgnoreCase])
+    else
+      fMatch := TRegEx.Match(aInput, aPattern);
 
     if aMatchValue = false then
       begin
@@ -245,7 +261,12 @@ begin
       Result := fMatch.Value;
 
     if aInversed then
-      Result := StringReplace(aInput, Result, '', [rfReplaceAll, rfIgnoreCase]);
+      begin
+        if aIgnoreCase then
+          Result := StringReplace(aInput, Result, '', [rfReplaceAll, rfIgnoreCase])
+        else
+          Result := StringReplace(aInput, Result, '', [rfReplaceAll]);
+      end;
 
   Finally
     ZeroMemory(@fMatch, Sizeof(fMatch));

@@ -1,3 +1,7 @@
+
+* New option IgnoreCase in function TNovusUtilities.RegExMatchEx default on
+* New function class unction TNovusNumUtils.StrToUInt64(aStr: String): UInt64;
+
 26/01/2021
 
 * New function class function TNovusNumUtils.BinToUInt64(BinStr: string): UInt64;

@@ -1,6 +1,15 @@
+28/03/2021
+
+* New function class function TNovusFileUtils.ExtractName(aFullFileName: String): String
+* Rename class from TGuidExUtils to TNovusGuidEx
+* New function class function TNovusNumUtils.ReverseBytesOrder(aBytes: TBytes): tBytes
+* New function class function TNovusNumUtils.HexStrToBytes(aHexStr: String): tBytes
+* New function class function TNovusNumUtils.CreateWord(const aHiByte, aLoByte: byte): word
+
+09/03/2021
 
 * New option IgnoreCase in function TNovusUtilities.RegExMatchEx default on
-* New function class unction TNovusNumUtils.StrToUInt64(aStr: String): UInt64;
+* New function class function TNovusNumUtils.StrToUInt64(aStr: String): UInt64;
 
 26/01/2021
 

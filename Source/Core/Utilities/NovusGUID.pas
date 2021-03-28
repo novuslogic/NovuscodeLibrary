@@ -1,11 +1,11 @@
-unit NovusGUIDEx;
+unit NovusGUID;
 
 interface
 
 uses SysUtils, NovusUtilities;
 
 type
-  TGuidExUtils = class(TNovusUtilities)
+  TNovusGuid = class(TNovusUtilities)
     class function NewGuid: TGuid;
     class function EqualGuids(Guid1, Guid2: TGuid): boolean;
     class function NewGuidString: String;
@@ -21,39 +21,39 @@ implementation
 
 uses NovusStringUtils;
 
-class function TGuidExUtils.EmptyGuid: TGuid;
+class function TNovusGuid.EmptyGuid: TGuid;
 begin
   result := FromString('{00000000-0000-0000-0000-000000000000}');
 end;
 
-class function TGuidExUtils.EqualGuids(Guid1, Guid2: TGuid): boolean;
+class function TNovusGuid.EqualGuids(Guid1, Guid2: TGuid): boolean;
 begin
   result := IsEqualGUID(Guid1, Guid2);
 end;
 
-class function TGuidExUtils.FromString(Value: string): TGuid;
+class function TNovusGuid.FromString(Value: string): TGuid;
 begin
   result := StringToGuid(Value);
 end;
 
-class function TGuidExUtils.IsEmptyGuid(Guid: TGuid): boolean;
+class function TNovusGuid.IsEmptyGuid(Guid: TGuid): boolean;
 begin
   result := EqualGuids(Guid, EmptyGuid);
 end;
 
-class function TGuidExUtils.NewGuidString: String;
+class function TNovusGuid.NewGuidString: String;
 begin
-  result := TGuidExUtils.ToString(TGuidExUtils.NewGuid);
+  result := TNovusGuid.ToString(TNovusGuid.NewGuid);
 end;
 
-class function TGuidExUtils.NewGuidNoBracketsString: String;
+class function TNovusGuid.NewGuidNoBracketsString: String;
 begin
-  result := tNovusStringUtils.StripChar(TGuidExUtils.NewGuidString, '{');
+  result := tNovusStringUtils.StripChar(TNovusGuid.NewGuidString, '{');
 
   result := tNovusStringUtils.StripChar(result, '}')
 end;
 
-class function TGuidExUtils.NewGuid: TGuid;
+class function TNovusGuid.NewGuid: TGuid;
 var
   Guid: TGuid;
 begin
@@ -61,12 +61,12 @@ begin
   result := Guid;
 end;
 
-class function TGuidExUtils.ToQuotedString(Guid: TGuid): string;
+class function TNovusGuid.ToQuotedString(Guid: TGuid): string;
 begin
   result := QuotedStr(ToString(Guid));
 end;
 
-class function TGuidExUtils.ToString(Guid: TGuid): string;
+class function TNovusGuid.ToString(Guid: TGuid): string;
 begin
   result := GuidToString(Guid);
 end;

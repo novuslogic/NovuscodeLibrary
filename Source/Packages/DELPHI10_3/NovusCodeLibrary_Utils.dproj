@@ -961,7 +961,7 @@
         <DCCReference Include="..\..\Core\Utilities\NovusFileUtils.pas"/>
         <DCCReference Include="..\..\Core\Utilities\NovusNumUtils.pas"/>
         <DCCReference Include="..\..\Core\Utilities\NovusDateDiffUtil.pas"/>
-        <DCCReference Include="..\..\Core\Utilities\NovusGUIDEx.pas"/>
+        <DCCReference Include="..\..\Core\Utilities\NovusGUID.pas"/>
         <DCCReference Include="..\..\Core\Utilities\NovusVariants.pas"/>
         <BuildConfiguration Include="Debug">
             <Key>Cfg_2</Key>

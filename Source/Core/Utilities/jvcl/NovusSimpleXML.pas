@@ -2,7 +2,7 @@ unit NovusSimpleXML;
 
 interface
 
-Uses NovusUtilities, JvSimpleXML, SysUtils, classes, dialogs;
+Uses NovusUtilities, JvSimpleXML, SysUtils, classes{, dialogs};
 
 Type
   TNovusSimpleXML = Class(TNovusUtilities)

@@ -3,7 +3,7 @@ unit NovusTemplate;
 interface
 
 Uses NovusParser, Novuslist, Classes, SysUtils, NovusStringUtils,
-  NovusStringParser;
+   NovusStringParser;
 
 type
   TOnGetTagValueEvent = procedure(Sender: TObject; Var ATagValue: String)
@@ -97,13 +97,14 @@ type
     FTemplateDoc: tStringList;
     FOutputDoc: tStringList;
     FParserStream: TMemoryStream;
+    fsLastMessage: String;
   public
     constructor Create;
     destructor Destroy; override;
 
     procedure LoadParserStream;
 
-    procedure ParseTemplate;
+    function ParseTemplate : Boolean;
 
     procedure InsertAllTagValues;
 
@@ -136,9 +137,12 @@ type
 
     property IgnoreBlankValue: Boolean read fbIgnoreBlankValue write fbIgnoreBlankValue;
 
+    property LastMessage: String read fsLastMessage write fsLastMessage;
   end;
 
 implementation
+
+Uses NovusUtilities;
 
 // novustemplate
 
@@ -215,31 +219,39 @@ begin
   end;
 end;
 
-procedure TNovusTemplate.ParseTemplate;
+function TNovusTemplate.ParseTemplate: boolean;
 begin
-  TemplateTags.Clear;
+  Try
+    TemplateTags.Clear;
 
-  LoadParserStream;
+    LoadParserStream;
 
-  Reset;
+    Reset;
 
-  while True do
-  begin
-    while not(Token in [toEOF, FStartToken, FSecondToken]) do
+    while True do
+    begin
+      while not(Token in [toEOF, FStartToken, FSecondToken]) do
+        SkipToken(FStartToken, FSecondToken);
+
+      if Token = toEOF then
+        Break;
+
+      if (FSecondToken = #0) then
+        CreateTemplateTag
+      else if GetLastToken(-1) = FStartToken then
+        CreateTemplateTag;
+
       SkipToken(FStartToken, FSecondToken);
+    end;
 
-    if Token = toEOF then
-      Break;
+    FOutputDoc.Assign(FTemplateDoc);
 
-    if (FSecondToken = #0) then
-      CreateTemplateTag
-    else if GetLastToken(-1) = FStartToken then
-      CreateTemplateTag;
+    Result := True;
+  Except
+    fsLastMessage := TNovusUtilities.GetExceptMess;
+    Result := False;
+  End;
 
-    SkipToken(FStartToken, FSecondToken);
-  end;
-
-  FOutputDoc.Assign(FTemplateDoc);
 end;
 
 procedure TNovusTemplate.LoadParserStream;

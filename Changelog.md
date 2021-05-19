@@ -1,3 +1,8 @@
+
+* Removed validation code from TNovusFileUtils.IsValidFolder 
+* New property in TNovusTemplate class Lastmessage 
+* Changed function TNovusTemplate.ParseTemplate: boolean; from procedure
+
 28/03/2021
 
 * Rename TNovusGuidEx to TNovusGuid and unit name.

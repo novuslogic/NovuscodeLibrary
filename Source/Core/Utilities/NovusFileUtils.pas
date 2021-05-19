@@ -259,6 +259,7 @@ begin
 
   Result := DirectoryExists(aFolder);
 
+  (*
   if Result = False then
   begin
     S := aFolder;
@@ -274,6 +275,7 @@ begin
     until I = 0;
     Result := True;
   end;
+  *)
 end;
 
 {$IFDEF DELPHI2009_UP}

@@ -1,3 +1,9 @@
+25/06/2021
+
+* Updated all version of Packages 
+* Added NovusCodeLibrary_Env Package  to  NovusCodeLibrary_Indy Package.
+
+19/05/2021
 
 * Removed validation code from TNovusFileUtils.IsValidFolder 
 * New property in TNovusTemplate class Lastmessage 

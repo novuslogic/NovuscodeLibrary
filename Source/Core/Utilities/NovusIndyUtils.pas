@@ -3,76 +3,25 @@ unit NovusIndyUtils;
 
 interface
 
-uses SysUtils, NovusNumUtils, Winsock, IdTCPClient, NovusUtilities;
+uses SysUtils, NovusNumUtils, Winsock, IdTCPClient, NovusUtilities, IdSSLOpenSSL,
+     IdHttp, IdStack, IdGlobal, classes, NovusWebUtils, System.IOUtils,
+     NovusFileUtils;
 
 Type
   TNovusIndyUtils = class(tNovusUtilities)
   protected
   public
-  (*
-    moved to NovusWebUtils unit
-
-    class function UrlEncode(const DecodedStr: String; Pluses: Boolean): String;
-    class function UrlDecode(const EncodedStr: String): String;
-    *)
     /// <summary>
     /// Check if tcp port is open.
     /// </summary>
     class function IsTCPPortUsed(aPort: Word; aAddress: AnsiString): Boolean;
+    /// <summary>
+    ///  Downloads files from the Internet and saves them to a file.
+    /// </summary>
+    class function URLDownloadToFile(aURL: String; aDownloadPath: String): Integer;
   end;
 
 implementation
-
-(*
-class function TNovusIndyUtils.UrlEncode(const DecodedStr: String;
-  Pluses: Boolean): String;
-var
-  I: Integer;
-begin
-  Result := '';
-  if Length(DecodedStr) > 0 then
-    for I := 1 to Length(DecodedStr) do
-    begin
-      if not(DecodedStr[I] in ['0' .. '9', 'a' .. 'z', 'A' .. 'Z', ' ']) then
-        Result := Result + '%' + IntToHex(Ord(DecodedStr[I]), 2)
-      else if not(DecodedStr[I] = ' ') then
-        Result := Result + DecodedStr[I]
-      else
-      begin
-        if not Pluses then
-          Result := Result + '%20'
-        else
-          Result := Result + '+';
-      end;
-    end;
-end;
-
-class function TNovusIndyUtils.UrlDecode(const EncodedStr: String): String;
-var
-  I: Integer;
-begin
-  Result := '';
-  if Length(EncodedStr) > 0 then
-  begin
-    I := 1;
-    while I <= Length(EncodedStr) do
-    begin
-      if EncodedStr[I] = '%' then
-      begin
-        Result := Result +
-          Chr(TNovusNumUtils.HexToInt64(EncodedStr[I + 1] + EncodedStr[I + 2]));
-        I := Succ(Succ(I));
-      end
-      else if EncodedStr[I] = '+' then
-        Result := Result + ' '
-      else
-        Result := Result + EncodedStr[I];
-
-      I := Succ(I);
-    end;
-  end;
-end;
-*)
 
 class function TNovusIndyUtils.IsTCPPortUsed(aPort: Word;
   aAddress: AnsiString): Boolean;
@@ -95,5 +44,59 @@ begin
     freeAndNil(LTcpClient);
   end;
 end;
+
+class function TNovusIndyUtils.URLDownloadToFile(aURL: String; aDownloadPath: String): Integer;
+var
+  fHTTP: TIdHTTP;
+  fIOHandler: TIdSSLIOHandlerSocketOpenSSL;
+  FResponse:  TMemoryStream;
+  lsFilename: String;
+begin
+  Result := -1;
+
+  lsFilename := TNovusWebUtils.GetURLFilename(aURL);
+
+  if Trim(lsFilename) = '' then Exit;
+
+  Result := -2;
+
+  If not DirectoryExists(TNovusFileUtils.TrailingBackSlash(aDownloadPath)) then Exit;
+
+
+  try
+    fHttp := tIDHttp.Create(NIL);
+    FIOHandler := TIdSSLIOHandlerSocketOpenSSL.Create(FHttp);
+
+    fIOHandler.SSLOptions.method := sslvSSLv3;
+    fIOHandler.SSLOptions.SSLVersions := [sslvTLSv1,sslvTLSv1_1,sslvTLSv1_2];
+
+    fIOHandler.ReadTimeout := IdTimeoutInfinite;
+    fIOHandler.ConnectTimeout := IdTimeoutInfinite;
+
+    FHttp.IOHandler := FIOHandler;
+
+    FResponse := TMemoryStream.Create;
+
+    FHttp.Get(aURL, FResponse);
+
+    FResponse.SaveToFile(TNovusFileUtils.TrailingBackSlash(aDownloadPath) + lsFilename);
+
+    result := 200;
+
+  finally
+    fIOHandler.Free;
+    fHttp.Free;
+    FResponse.Free;
+  end;
+
+
+
+
+
+
+
+end;
+
+
 
 end.

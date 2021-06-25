@@ -6,6 +6,7 @@ interface
 Uses Classes, NovusUtilities, SysUtils, SHDocVw, VCL.forms, NovusShell,
      ActiveX, NovusNumUtils, UrlMon, Windows, System.Net.URLClient;
 
+
 Type
   TMIMEType = record
     Extension: String;
@@ -14,7 +15,10 @@ Type
   end;
 
 
+
 Const
+  BINDF_GETNEWESTVERSION = 16;
+
   MIMETypes: array[0..63] of TMIMEType =
   (
    (Extension : 'aac';Kindofdocument: 'AAC audio file'; MimeType : 'audio/aac')  ,
@@ -112,6 +116,8 @@ Type
     ///   Return Filename from URL path
     /// </summary>
     class function GetURLFilename(const aURLPath:String;Const Delimiter:String='/'):String;
+
+
   end;
 
 
@@ -264,9 +270,11 @@ class function TNovusWebUtils.GetURLFilename(const aURLPath:String;Const Delimit
 var
   I: Integer;
 begin
-    I := LastDelimiter(Delimiter, aURLPath);
-    Result := Copy(aURLPath, I + 1, MaxInt);
-    Result := TNovusWebUtils.UrlDecode(Result);
+  I := LastDelimiter(Delimiter, aURLPath);
+  Result := Copy(aURLPath, I + 1, MaxInt);
+  Result := TNovusWebUtils.UrlDecode(Result);
 end;
+
+
 
 end.

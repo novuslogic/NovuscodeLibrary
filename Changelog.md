@@ -1,3 +1,8 @@
+27/06/2021
+
+* New function TNovusIndyUtils.URLDownloadToFile(aURL: String;
+  aDownloadPath: String): TDownloadResponse;
+
 25/06/2021
 
 * Updated all version of Packages 

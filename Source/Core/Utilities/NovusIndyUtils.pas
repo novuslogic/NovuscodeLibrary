@@ -3,22 +3,34 @@ unit NovusIndyUtils;
 
 interface
 
-uses SysUtils, NovusNumUtils, Winsock, IdTCPClient, NovusUtilities, IdSSLOpenSSL,
-     IdHttp, IdStack, IdGlobal, classes, NovusWebUtils, System.IOUtils,
-     NovusFileUtils;
+uses SysUtils, NovusNumUtils, Winsock, IdTCPClient, NovusUtilities,
+  IdSSLOpenSSL,
+  IdHttp, IdStack, IdGlobal, classes, NovusWebUtils, System.IOUtils,
+  NovusFileUtils;
 
 Type
-  TNovusIndyUtils = class(tNovusUtilities)
-  protected
-  public
+  TDownloadResponse = record
+    fbResult: Boolean;
+    fiErrorCode: Integer;
+    fsErrorMessage: String;
+
+    property Result: Boolean read fbResult write fbResult;
+    property ErrorCode: Integer read fiErrorCode write fiErrorCode;
+    property ErrorMessage: String read fsErrorMessage write fsErrorMessage;
+  end;
+
+    TNovusIndyUtils = class(tNovusUtilities)
+    protected
+    public
     /// <summary>
     /// Check if tcp port is open.
     /// </summary>
     class function IsTCPPortUsed(aPort: Word; aAddress: AnsiString): Boolean;
     /// <summary>
-    ///  Downloads files from the Internet and saves them to a file.
+    /// Downloads files from the Internet and saves them to a file.
     /// </summary>
-    class function URLDownloadToFile(aURL: String; aDownloadPath: String): Integer;
+    class function URLDownloadToFile(aURL: String; aDownloadPath: String)
+      : TDownloadResponse;
   end;
 
 implementation
@@ -45,58 +57,70 @@ begin
   end;
 end;
 
-class function TNovusIndyUtils.URLDownloadToFile(aURL: String; aDownloadPath: String): Integer;
+class function TNovusIndyUtils.URLDownloadToFile(aURL: String;
+  aDownloadPath: String): TDownloadResponse;
 var
   fHTTP: TIdHTTP;
   fIOHandler: TIdSSLIOHandlerSocketOpenSSL;
-  FResponse:  TMemoryStream;
+  FResponse: TMemoryStream;
   lsFilename: String;
 begin
-  Result := -1;
+  Result.Result := false;
+
+  Result.ErrorCode := -1;
 
   lsFilename := TNovusWebUtils.GetURLFilename(aURL);
 
-  if Trim(lsFilename) = '' then Exit;
+  if Trim(lsFilename) = '' then
+    Exit;
 
-  Result := -2;
+  Result.ErrorCode := -2;
 
-  If not DirectoryExists(TNovusFileUtils.TrailingBackSlash(aDownloadPath)) then Exit;
-
+  If not DirectoryExists(TNovusFileUtils.TrailingBackSlash(aDownloadPath)) then
+    Exit;
 
   try
-    fHttp := tIDHttp.Create(NIL);
-    FIOHandler := TIdSSLIOHandlerSocketOpenSSL.Create(FHttp);
+    fHTTP := TIdHTTP.Create(NIL);
+    fIOHandler := TIdSSLIOHandlerSocketOpenSSL.Create(fHTTP);
+    try
+      fIOHandler.SSLOptions.method := sslvSSLv3;
+      fIOHandler.SSLOptions.SSLVersions :=
+        [sslvTLSv1, sslvTLSv1_1, sslvTLSv1_2];
 
-    fIOHandler.SSLOptions.method := sslvSSLv3;
-    fIOHandler.SSLOptions.SSLVersions := [sslvTLSv1,sslvTLSv1_1,sslvTLSv1_2];
+      fIOHandler.ReadTimeout := IdTimeoutInfinite;
+      fIOHandler.ConnectTimeout := IdTimeoutInfinite;
 
-    fIOHandler.ReadTimeout := IdTimeoutInfinite;
-    fIOHandler.ConnectTimeout := IdTimeoutInfinite;
+      fHTTP.IOHandler := fIOHandler;
 
-    FHttp.IOHandler := FIOHandler;
+      FResponse := TMemoryStream.Create;
 
-    FResponse := TMemoryStream.Create;
+      fHTTP.Get(aURL, FResponse);
 
-    FHttp.Get(aURL, FResponse);
+      Result.Result := (fHTTP.Response.ResponseCode = 200);
 
-    FResponse.SaveToFile(TNovusFileUtils.TrailingBackSlash(aDownloadPath) + lsFilename);
+      if Result.Result then
+        FResponse.SaveToFile(TNovusFileUtils.TrailingBackSlash(aDownloadPath) +
+          lsFilename);
 
-    result := 200;
+    except
+      on E: EIdHTTPProtocolException do
+      begin
+        Result.Result := false;
 
+        Result.ErrorCode := E.ErrorCode;
+        Result.ErrorMessage := E.ErrorMessage;
+        fHTTP.Disconnect;
+      end;
+
+    end;
   finally
+    fHTTP.Disconnect;
+
     fIOHandler.Free;
-    fHttp.Free;
+    fHTTP.Free;
     FResponse.Free;
   end;
 
-
-
-
-
-
-
 end;
-
-
 
 end.

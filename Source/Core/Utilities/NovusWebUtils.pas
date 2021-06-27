@@ -183,57 +183,12 @@ end;
 
 
 class function TNovusWebUtils.UrlEncode(const aDecodedStr: String; aPluses: Boolean): String;
-var
-  I: Integer;
 begin
- (*
-  Result := '';
-  if Length(aDecodedStr) > 0 then
-    for I := 1 to Length(aDecodedStr) do
-    begin
-      if not(aDecodedStr[I] in ['0' .. '9', 'a' .. 'z', 'A' .. 'Z', ' ']) then
-        Result := Result + '%' + IntToHex(Ord(aDecodedStr[I]), 2)
-      else if not(aDecodedStr[I] = ' ') then
-        Result := Result + aDecodedStr[I]
-      else
-      begin
-        if not Pluses then
-          Result := Result + '%20'
-        else
-          Result := Result + '+';
-      end;
-    end;
-    *)
-
-   Result := System.Net.URLClient.TURI.UrlEncode(aDecodedStr, aPluses);
+  Result := System.Net.URLClient.TURI.UrlEncode(aDecodedStr, aPluses);
 end;
 
 class function TNovusWebUtils.UrlDecode(const aEncodedStr: String): String;
-var
-  I: Integer;
 begin
-  (*
-  Result := '';
-  if Length(aEncodedStr) > 0 then
-  begin
-    I := 1;
-    while I <= Length(aEncodedStr) do
-    begin
-      if aEncodedStr[I] = '%' then
-      begin
-        Result := Result +
-          Chr(TNovusNumUtils.HexToInt64(aEncodedStr[I + 1] + aEncodedStr[I + 2]));
-        I := Succ(Succ(I));
-      end
-      else if aEncodedStr[I] = '+' then
-        Result := Result + ' '
-      else
-        Result := Result + aEncodedStr[I];
-
-      I := Succ(I);
-    end;
-  end;
-  *)
   Result := System.Net.URLClient.TURI.URLDecode(aEncodedStr);
 end;
 

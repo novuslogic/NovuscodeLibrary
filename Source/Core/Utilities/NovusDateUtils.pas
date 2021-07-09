@@ -191,7 +191,9 @@ begin
     fwDay := TNovusStringUtils.Str2Int(Copy(lsJSONValue, 9, 2));
     fwHour := TNovusStringUtils.Str2Int(Copy(lsJSONValue, 12, 2));
     fwMinute := TNovusStringUtils.Str2Int(Copy(lsJSONValue, 15, 2));
-    fwSecond := TNovusStringUtils.Str2Int(Copy(lsJSONValue, 18, 2));
+
+    fwSecond := TNovusStringUtils.Str2Int(Copy(TNovusStringUtils.StripChar(lsJSONValue, 'Z'), 18, 2));
+
     fwMillisecond :=
       Round(TNovusStringUtils.Str2Float(Copy(lsJSONValue, 19, 4)));
 

@@ -1,3 +1,8 @@
+9/07.20201
+
+* Fixed function TNovusDateUtils.JSONDateToDatetime for Z char in seconds it get striped
+
+
 27/06/2021
 
 * New function TNovusIndyUtils.URLDownloadToFile(aURL: String;

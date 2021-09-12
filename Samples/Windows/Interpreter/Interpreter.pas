@@ -203,7 +203,6 @@ class function tEndKeyword.Init(aTokenType: tTokenType): tKeyword;
 begin
   Result := tEndKeyword.Create(aTokenType);
 end;
-
 //tForKeyword
 class function tForKeyword.Init(aTokenType: tTokenType): tKeyword;
 begin
@@ -221,20 +220,17 @@ class function tXorKeyword.Init(aTokenType: tTokenType): tKeyword;
 begin
   Result := tXorKeyword.Create(aTokenType);
 end;
-
 //tNotKeyword
 class function tNotKeyword.Init(aTokenType: tTokenType): tKeyword;
 begin
   Result := tNotKeyword.Create(aTokenType);
 end;
 
-
 //tDivKeyword
 class function tDivKeyword.Init(aTokenType: tTokenType): tKeyword;
 begin
   Result := tDivKeyword.Create(aTokenType);
 end;
-
 //tModKeyword
 class function tModKeyword.Init(aTokenType: tTokenType): tKeyword;
 begin
@@ -258,7 +254,6 @@ class function tTrueKeyword.Init(aTokenType: tTokenType): tKeyword;
 begin
   Result := tTrueKeyword.Create(aTokenType);
 end;
-
 //tFalseKeyword
 class function tFalseKeyword.Init(aTokenType: tTokenType): tKeyword;
 begin
@@ -270,7 +265,6 @@ class function tWhileKeyword.Init(aTokenType: tTokenType): tKeyword;
 begin
   Result := tWhileKeyword.Create(aTokenType);
 end;
-
 //tUntilKeyword
 class function tUntilKeyword.Init(aTokenType: tTokenType): tKeyword;
 begin
@@ -320,14 +314,11 @@ begin
    AddKeyword('else', tElseKeyword.Init(tElseTokenType.Init));
    AddKeyword('True', tTrueKeyword.Init(tTrueTokenType.Init));
    AddKeyword('False', tFalseKeyword.Init(tFalseTokenType.Init));
-
    AddKeyword('while', tWhileKeyword.Init(tWhileTokenType.Init));
    AddKeyword('until', tUntilKeyword.Init(tUntilTokenType.Init));
    AddKeyword('break', tBreakKeyword.Init(tBreakTokenType.Init));
-
    AddKeyword('repeat', tRepeatKeyword.Init(tRepeatTokenType.Init));
    AddKeyword('downto', tDownToKeyword.Init(tDownToTokenType.Init));
-
    AddKeyword('function', tFunctionKeyword.Init(tFunctionTokenType.Init));
 end;
 

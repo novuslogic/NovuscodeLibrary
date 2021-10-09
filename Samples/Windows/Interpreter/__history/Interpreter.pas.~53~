@@ -1,39 +1,18 @@
-unit NovusInterpreter;
+unit Interpreter;
 
 interface
 
-uses Novuslist, NovusObject;
+Uses NovusInterpreter, NovusParser;
 
 type
-  tTokenType = class(tobject)
-  private
-  protected
-  public
-    class function Init: tTokenType; virtual;
-  end;
-
-  tKeyword = class(tobject)
-  private
-  protected
-    foTokenType: tTokenType;
-    fiIndex: Integer;
-    fsKeyName: String;
-  public
-    property Index: Integer
-      read fiIndex
-      write fiIndex;
-
-    property KeyName: String
-      read fsKeyName
-      write fsKeyName;
-
-    constructor Create(aTokenType: tTokenType);
-    destructor Destroy; override;
-
-    class function Init(aTokenType: tTokenType): tKeyword; virtual;
-  end;
-
   tEndofStreamTokenType = class(tTokenType)
+  protected
+  private
+  public
+    class function Init: tTokenType; override;
+  end;
+
+  tCommentsTokenType = class(tTokenType)
   protected
   private
   public
@@ -384,85 +363,329 @@ type
   end;
 
 
-  tNovusInterpreter = class(tNovusObject)
+
+
+
+
+  tIfKeyword = class(tKeyword)
   private
   protected
-    fKeyWordslist: tNovuslist;
   public
-    constructor Create;
-    destructor Destroy; override;
-    procedure AddKeywords; virtual;
-    function AddKeyword(aKeyName: String;aKeyword: tkeyword): tkeyword;
+    class function Init(aTokenType: tTokenType): tKeyword; override;
+  end;
+
+  tCommentsKeyword =  class(tKeyword)
+  private
+  protected
+  public
+    class function Init(aTokenType: tTokenType): tKeyword; override;
+  end;
+
+  tDoKeyword =  class(tKeyword)
+  private
+  protected
+  public
+    class function Init(aTokenType: tTokenType): tKeyword; override;
+  end;
+
+  tTokeyword = class(tKeyword)
+  private
+  protected
+  public
+    class function Init(aTokenType: tTokenType): tKeyword; override;
+  end;
+
+  tOrKeyword = class(tKeyword)
+  private
+  protected
+  public
+    class function Init(aTokenType: tTokenType): tKeyword; override;
+  end;
+
+  tOfKeyword = class(tKeyword)
+  private
+  protected
+  public
+    class function Init(aTokenType: tTokenType): tKeyword; override;
+  end;
+
+  tEndKeyword  = class(tKeyword)
+  private
+  protected
+  public
+    class function Init(aTokenType: tTokenType): tKeyword; override;
+  end;
+
+  tForKeyword = class(tKeyword)
+  private
+  protected
+  public
+    class function Init(aTokenType: tTokenType): tKeyword; override;
+  end;
+
+  tAndKeyword = class(tKeyword)
+  private
+  protected
+  public
+    class function Init(aTokenType: tTokenType): tKeyword; override;
+  end;
+
+  tXorKeyword = class(tKeyword)
+  private
+  protected
+  public
+    class function Init(aTokenType: tTokenType): tKeyword; override;
+  end;
+
+  tNotKeyword = class(tKeyword)
+  private
+  protected
+  public
+    class function Init(aTokenType: tTokenType): tKeyword; override;
+  end;
+
+  tDivKeyword = class(tKeyword)
+  private
+  protected
+  public
+    class function Init(aTokenType: tTokenType): tKeyword; override;
+  end;
+
+  tModKeyword = class(tKeyword)
+  private
+  protected
+  public
+    class function Init(aTokenType: tTokenType): tKeyword; override;
+  end;
+
+  tThenKeyword = class(tKeyword)
+  private
+  protected
+  public
+    class function Init(aTokenType: tTokenType): tKeyword; override;
+  end;
+
+  tElseKeyword = class(tKeyword)
+  private
+  protected
+  public
+    class function Init(aTokenType: tTokenType): tKeyword; override;
+  end;
+
+  tTrueKeyword = class(tKeyword)
+  private
+  protected
+  public
+    class function Init(aTokenType: tTokenType): tKeyword; override;
+  end;
+
+  tFalseKeyword = class(tKeyword)
+  private
+  protected
+  public
+    class function Init(aTokenType: tTokenType): tKeyword; override;
+  end;
+
+  tWhileKeyword = class(tKeyword)
+  private
+  protected
+  public
+    class function Init(aTokenType: tTokenType): tKeyword; override;
+  end;
+
+  tUntilKeyword = class(tKeyword)
+  private
+  protected
+  public
+    class function Init(aTokenType: tTokenType): tKeyword; override;
+  end;
+
+  tBreakKeyword = class(tKeyword)
+  private
+  protected
+  public
+    class function Init(aTokenType: tTokenType): tKeyword; override;
+  end;
+
+  tRepeatKeyword = class(tKeyword)
+  private
+  protected
+  public
+    class function Init(aTokenType: tTokenType): tKeyword; override;
+  end;
+
+  TDowntoKeyword = class(tKeyword)
+  private
+  protected
+  public
+    class function Init(aTokenType: tTokenType): tKeyword; override;
+  end;
+
+  tFunctionKeyword = class(tKeyword)
+  private
+  protected
+  public
+    class function Init(aTokenType: tTokenType): tKeyword; override;
+  end;
+
+  tInterpreter = class(tNovusInterpreter)
+  private
+  protected
+    fbIsMultiLineComment: boolean;
+    function SkipCommentsToken: Char;
+  public
+    function NextToken: Char; override;
+    procedure AddKeywords; override;
+
+    property IsMultiLineComment: boolean
+      read IsMultiLineComment;
   end;
 
 implementation
 
-constructor tNovusInterpreter.Create;
+//tIfKeyword
+class function tIfKeyword.Init(aTokenType: tTokenType): tKeyword;
 begin
-  fKeyWordslist := tNovuslist.Create(tKeyword);
-
-  AddKeywords;
+  Result := tIfKeyword.Create(aTokenType);
 end;
 
-destructor tNovusInterpreter.Destroy;
+//tDoKeyword
+class function tDoKeyword.Init(aTokenType: tTokenType): tKeyword;
 begin
-  fKeyWordslist.Free;
-
-  inherited Destroy;
+  Result := tDoKeyword.Create(aTokenType);
 end;
 
-
-
-procedure tNovusInterpreter.AddKeywords;
+//tCommentskeyword
+class function tCommentskeyword.Init(aTokenType: tTokenType): tKeyword;
 begin
-
+  Result := tCommentskeyword.Create(aTokenType);
 end;
 
-function tNovusInterpreter.AddKeyword(aKeyName: String;aKeyword: tkeyword): tkeyword;
-Var
-  liIndex: Integer;
+//tTokeyword
+class function tTokeyword.Init(aTokenType: tTokenType): tKeyword;
 begin
-  Result := NIL;
-
-  if Assigned(aKeyword) then
-    begin
-      liIndex := fKeyWordslist.Add(aKeyName, aKeyword);
-
-      Result := aKeyword;
-
-      Result.Index := liIndex;
-      Result.KeyName := aKeyName;
-    end;
+  Result := tTokeyword.Create(aTokenType);
 end;
 
-// tTokenType
-class function tTokenType.Init: tTokenType;
+//tOrKeyword
+class function tOrKeyword.Init(aTokenType: tTokenType): tKeyword;
 begin
-  Result := NIL;
+  Result := tOrKeyword.Create(aTokenType);
 end;
 
-// tKeyword
-class function tKeyword.Init(aTokenType: tTokenType): tKeyword;
+//tOfKeyword
+class function tOfKeyword.Init(aTokenType: tTokenType): tKeyword;
 begin
-  Result := NIL;
+  Result := tOfKeyword.Create(aTokenType);
 end;
 
-constructor tKeyword.Create(aTokenType: tTokenType);
+//tEndKeyword
+class function tEndKeyword.Init(aTokenType: tTokenType): tKeyword;
 begin
-  foTokenType := aTokenType;
+  Result := tEndKeyword.Create(aTokenType);
+end;
+//tForKeyword
+class function tForKeyword.Init(aTokenType: tTokenType): tKeyword;
+begin
+  Result := tForKeyword.Create(aTokenType);
 end;
 
-destructor tKeyword.Destroy;
+//tAndKeyword
+class function tAndKeyword.Init(aTokenType: tTokenType): tKeyword;
 begin
-  if Assigned(foTokenType) then foTokenType.Free;
+  Result := tAndKeyword.Create(aTokenType);
+end;
 
-  inherited Destroy;
+// tXorKeyword
+class function tXorKeyword.Init(aTokenType: tTokenType): tKeyword;
+begin
+  Result := tXorKeyword.Create(aTokenType);
+end;
+//tNotKeyword
+class function tNotKeyword.Init(aTokenType: tTokenType): tKeyword;
+begin
+  Result := tNotKeyword.Create(aTokenType);
+end;
+
+//tDivKeyword
+class function tDivKeyword.Init(aTokenType: tTokenType): tKeyword;
+begin
+  Result := tDivKeyword.Create(aTokenType);
+end;
+//tModKeyword
+class function tModKeyword.Init(aTokenType: tTokenType): tKeyword;
+begin
+  Result := tModKeyword.Create(aTokenType);
+end;
+
+//tThenKeyword
+class function tThenKeyword.Init(aTokenType: tTokenType): tKeyword;
+begin
+  Result := tModKeyword.Create(aTokenType);
+end;
+
+//tElseKeyword
+class function tElseKeyword.Init(aTokenType: tTokenType): tKeyword;
+begin
+  Result := tElseKeyword.Create(aTokenType);
+end;
+
+//tTrueKeyword
+class function tTrueKeyword.Init(aTokenType: tTokenType): tKeyword;
+begin
+  Result := tTrueKeyword.Create(aTokenType);
+end;
+//tFalseKeyword
+class function tFalseKeyword.Init(aTokenType: tTokenType): tKeyword;
+begin
+  Result := tTrueKeyword.Create(aTokenType);
+end;
+
+//tWhileKeyword
+class function tWhileKeyword.Init(aTokenType: tTokenType): tKeyword;
+begin
+  Result := tWhileKeyword.Create(aTokenType);
+end;
+//tUntilKeyword
+class function tUntilKeyword.Init(aTokenType: tTokenType): tKeyword;
+begin
+  Result := tUntilKeyword.Create(aTokenType);
+end;
+
+//tBreakKeyword
+class function tBreakKeyword.Init(aTokenType: tTokenType): tKeyword;
+begin
+  Result := tBreakKeyword.Create(aTokenType);
+end;
+
+//tRepeatKeyword
+class function tRepeatKeyword.Init(aTokenType: tTokenType): tKeyword;
+begin
+  Result := tRepeatKeyword.Create(aTokenType);
+end;
+
+//TDowntoKeyword
+class function TDowntoKeyword.Init(aTokenType: tTokenType): tKeyword;
+begin
+  Result := TDowntoKeyword.Create(aTokenType);
+end;
+
+//tFunctionKeyword
+class function tFunctionKeyword.Init(aTokenType: tTokenType): tKeyword;
+begin
+  Result := tFunctionKeyword.Create(aTokenType);
 end;
 
 // tEndofStreamTokenType
 class function tEndofStreamTokenType.Init: tTokenType;
 begin
   Result := tEndofStreamTokenType.Create;
+end;
+
+// tCommentsTokenType
+class function tCommentsTokenType.Init: tTokenType;
+begin
+  Result := tCommentsTokenType.Create;
 end;
 
 // tFloatTokenType
@@ -761,5 +984,96 @@ class function tIdentifierTokenType.Init: tTokenType;
 begin
   Result := tIdentifierTokenType.Create;
 end;
+
+function tInterpreter.SkipCommentsToken: Char;
+Var
+  Fch: char;
+begin
+  if Token = '/' then
+    begin
+      if PeekJustNextToken = '/' then
+        begin
+          Result := SkipToEOL;
+
+          Exit;
+        end
+      else
+      if PeekJustNextToken = '*' then
+        begin
+          fbIsMultiLineComment := true;
+
+          Fch := NextToken;
+          while True do
+             begin
+             while (Fch <> '*') and (Fch <> toEOL) do
+                FCh := NextToken;
+             if FCh = toEOL then
+                exit;
+             FCh := NextToken;
+             if FCh = '/' then
+                begin
+                Fch := NextToken;
+                fbIsMultiLineComment := False;
+                break;
+                end;
+
+             end;
+          end;
+
+
+
+    end;
+end;
+
+
+function tInterpreter.NextToken: Char;
+begin
+  SkipCommentsToken;
+
+
+  Result := inherited ;
+
+
+
+
+
+
+end;
+
+
+
+
+procedure tInterpreter.AddKeywords;
+begin
+   AddKeyword(tCommentsKeyword.Init(tCommentsTokenType.Init));
+   AddKeyword('if', tIfKeyword.Init(tIfTokenType.Init));
+   AddKeyword('do', tDoKeyword.Init(tDoTokenType.Init));
+   AddKeyword('to', TToKeyword.Init(tToTokenType.Init));
+   AddKeyword('or', TOrKeyword.Init(tOrTokenType.Init));
+   AddKeyword('of', TOfKeyword.Init(tOfTokenType.Init));
+   AddKeyword('end', TendKeyword.Init(tEndTokenType.Init));
+   AddKeyword('for', TforKeyword.Init(tForTokenType.Init));
+   AddKeyword('and', TandKeyword.Init(tForTokenType.Init));
+   AddKeyword('xor', TxorKeyword.Init(tXorTokenType.Init));
+   AddKeyword('not', TNotKeyword.Init(tNotTokenType.Init));
+   AddKeyword('div', TDivKeyword.Init(tDivTokenType.Init));
+   AddKeyword('mod', TModKeyword.Init(tModTokenType.Init));
+
+   AddKeyword('then', TThenKeyword.Init(tThenTokenType.Init));
+   AddKeyword('else', tElseKeyword.Init(tElseTokenType.Init));
+   AddKeyword('True', tTrueKeyword.Init(tTrueTokenType.Init));
+   AddKeyword('False', tFalseKeyword.Init(tFalseTokenType.Init));
+   AddKeyword('while', tWhileKeyword.Init(tWhileTokenType.Init));
+   AddKeyword('until', tUntilKeyword.Init(tUntilTokenType.Init));
+   AddKeyword('break', tBreakKeyword.Init(tBreakTokenType.Init));
+   AddKeyword('repeat', tRepeatKeyword.Init(tRepeatTokenType.Init));
+   AddKeyword('downto', tDownToKeyword.Init(tDownToTokenType.Init));
+   AddKeyword('function', tFunctionKeyword.Init(tFunctionTokenType.Init));
+end;
+
+
+
+
+
 
 end.

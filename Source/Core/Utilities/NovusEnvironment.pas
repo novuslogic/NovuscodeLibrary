@@ -65,7 +65,7 @@ begin
 
     loTemplate.TemplateDoc.Text := Trim(aInput);
 
-    loTemplate.ParseTemplate;
+    loTemplate.Execute;
 
     For I := 0 to loTemplate.TemplateTags.Count - 1 do
     begin

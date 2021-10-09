@@ -1147,6 +1147,8 @@ begin
   fCommandLineOption.Required := aRequired;
 
   fOptionsList.Add(aOptionName, fCommandLineOption);
+
+  result := fCommandLineOption;
 end;
 
 procedure tNovusCommandLineCommand.SetRequired(Value: boolean);

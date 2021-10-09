@@ -1,4 +1,17 @@
-9/07.20201
+09/10/2021
+
+* New function function TNovusParser.SkipToEOLAsString: string; 
+* Changed string to char function TNovusParser.SkipToEOL: Char; 
+
+* New function tNovusParser.PeekJustNextToken: Char;
+* New function TNovusParser.PeekNextToken(aTokenPos: integer): Char;
+* New function TNovusParser.SkipBlanksEx(var aTokenPos: Integer; var aSourceLineNo: Integer): char;
+
+* function TNovusTemplate.Execute: Boolean; replaces TNovusTemplate.ParseTemplate
+* function TNovusTemplate.ParseTemplate : Boolean; is now deprecated;
+* function tNovusEnvironment.ParseGetEnvironmentVar upateded for TNovusTemplate.Execute
+
+9/07/20201
 
 * Fixed function TNovusDateUtils.JSONDateToDatetime for Z char in seconds it get striped
 

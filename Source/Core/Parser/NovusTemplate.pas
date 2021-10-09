@@ -98,13 +98,16 @@ type
     FOutputDoc: tStringList;
     FParserStream: TMemoryStream;
     fsLastMessage: String;
+
+    function InternalParseTemplate : Boolean;
   public
     constructor Create;
     destructor Destroy; override;
 
     procedure LoadParserStream;
 
-    function ParseTemplate : Boolean;
+    function ParseTemplate : Boolean; deprecated;
+    function Execute: Boolean;
 
     procedure InsertAllTagValues;
 
@@ -192,6 +195,16 @@ begin
     Result := True;
 end;
 
+function TNovusTemplate.Execute: Boolean;
+begin
+  Result := InternalParseTemplate;
+end;
+
+function TNovusTemplate.ParseTemplate: Boolean;
+begin
+  Result := InternalParseTemplate;
+end;
+
 procedure TNovusTemplate.InsertAllTagValues;
 Var
   I: INteger;
@@ -219,7 +232,7 @@ begin
   end;
 end;
 
-function TNovusTemplate.ParseTemplate: boolean;
+function TNovusTemplate.InternalParseTemplate: boolean;
 begin
   Try
     TemplateTags.Clear;

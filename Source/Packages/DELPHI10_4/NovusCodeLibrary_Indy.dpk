@@ -37,7 +37,8 @@ requires
   NovusCodeLibrary_Env,
   NovusCodeLibrary_WebUtils,
   IndyCore,
-  IndySystem;
+  IndySystem,
+  IndyProtocols;
 
 contains
   NovusIndyUtils in '..\..\Core\Utilities\NovusIndyUtils.pas';

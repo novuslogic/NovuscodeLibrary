@@ -2,25 +2,25 @@ unit NovusParser;
 
 interface
 
-Uses NovusStringUtils, Classes, SysUtils, NovusBO;
+Uses NovusStringUtils, Classes, SysUtils, NovusBO, NovusObject;
 
 const
   toEOL = char(6);
   toBOF = char(7);
+  TAB = #09;
 
 type
   TSysCharSet = set of Char;
 
-  TNovusParser = class(TNovusBO)
+  TNovusParser = class(TNovusObject)
   private
-    FParseLines: TStringList;
-    FParseString: string;
-    FLineTokens: Integer;
+    FsParseString: string;
     FiSourceLineNo: Integer;
     FiSourcePos: Integer;
     FiTokenPos: Integer;
     FToken: Char;
 
+    function SkipBlanksEx(var aTokenPos: Integer; var aSourceLineNo: Integer): Char;
     procedure SkipBlanks;
     procedure SetSourceLineNo(Value: Integer);
 
@@ -33,17 +33,23 @@ type
     destructor Destroy; override;
 
     procedure Reset;
-    function LoadFromFile(const FileName: string): Boolean;
-    function LoadFromStream(const Stream: TMemoryStream): Boolean;
+
+    function LoadFromString(const aInput: string): boolean;
+    function LoadFromFile(const aFileName: string): Boolean;
+    function LoadFromStream(const aStream: TMemoryStream): Boolean;
     function SkipToEOF: string;
-    function SkipToEOL: string;
+    function SkipToEOLAsString: string; overload;
+    function SkipToEOL: Char; overload;
+
+    function NextToken: Char;
+
     function SkipToken(AStartToken: char = #0; ASecondToken : Char  = #0): Char;
     function SkipTokenString: string;
     function SkipToNonAlpha: String;
     function SkipToToken(const AToken: Char; ASecondToken: Char = #0): string; overload;
     function SkipToToken(const AToken: TSysCharSet): string; overload;
     function SkipToTokenString(const ATokenString: string): string;
-    property ParseString: string read GetParseString;
+
     property SourceLineNo: Integer read FiSourceLineNo write SetSourceLineNo;
     property SourcePos: Integer read GetSourcePos write FiSourcePos;
     property Token: Char read FToken write FToken;
@@ -55,6 +61,10 @@ type
     function GetToken(const s, sDelim: string; var iPos: integer): string;
 
     function GetLastToken(aoffset: Integer = 0): Char;
+    function PeekNextToken(aTokenPos: integer): Char;
+    function PeekJustNextToken: Char;
+
+    property ParseString: string read GetParseString;
   end;
 
 implementation
@@ -66,7 +76,7 @@ end;
 
 destructor TNovusParser.destroy;
 begin
-  FParseLines.Free;
+  //FParseLines.Free;
 
   inherited destroy;
 end;
@@ -92,71 +102,118 @@ begin
      end
 end;
 
-
-function TNovusParser.LoadFromFile(const FileName: string): Boolean;
-//var
-//  Stream: TMemoryStream;
+function TNovusParser.LoadFromString(const aInput: string): Boolean;
 begin
-  Result := False;
-  if not FileExists(FileName) then  Exit;
-  FParseLines.LoadFromFile(FileName);
-
-  FParseString := FParseLines.Text;
-
-  FToken := toBOF;
-  Result := True;
-end;
-
-function TNovusParser.LoadFromStream(const Stream: TMemoryStream): Boolean;
-begin
-  Result := False;
-  if not(assigned(Stream)) then Exit;
-
-  Stream.Seek(0, soFromBeginning);
-  FParseLines.LoadFromStream(Stream);
-
-  FParseString := FParseLines.Text;
+  fsParseString := aInput;
 
   FToken := toBOF;
   Result := True;
 end;
 
 
-
-procedure TNovusParser.SkipBlanks;
+function TNovusParser.LoadFromFile(const aFileName: string): Boolean;
+var
+  LParseLines: tStringList;
 begin
-  if Trim(FParseString) = '' then Exit;
+  Result := False;
+  if not FileExists(aFileName) then  Exit;
+
+  Try
+    LParseLines:= tStringList.Create;
+
+    LParseLines.LoadFromFile(aFileName);
+
+    fsParseString := LParseLines.Text;
+  Finally
+    LParseLines.Free;
+  End;
+
+  FToken := toBOF;
+  Result := True;
+end;
+
+function TNovusParser.LoadFromStream(const aStream: TMemoryStream): Boolean;
+Var
+  LParseLines: tStringList;
+begin
+ Result := False;
+  if not(assigned(aStream)) then Exit;
+
+  aStream.Seek(0, soFromBeginning);
+  Try
+    LParseLines := tStringList.Create;
+
+    LParseLines.LoadFromStream(aStream);
+
+    fsParseString := LParseLines.Text;
+  Finally
+    LParseLines.Free;
+  End;
+
+
+  FToken := toBOF;
+  Result := True;
+end;
+
+function TNovusParser.SkipBlanksEx(var aTokenPos: Integer; var aSourceLineNo: Integer): char;
+begin
+  if Trim(ParseString) = '' then Exit;
 
   while True do
   begin
-    FToken := FParseString[FiTokenPos];
+    Result := ParseString[aTokenPos];
+    case Result of
+      #10:
+        begin
+          Inc(aSourceLineNo);
+//          FLineTokens := FiTokenPos;
+        end;
+      toEOF, #33..#255:
+        Exit;
+    end;
+    Inc(aTokenPos);
+  end;
+end;
+
+procedure TNovusParser.SkipBlanks;
+begin
+  FToken := SkipBlanksEx(FiTokenPos, FiSourceLineNo);
+  (*
+  if Trim(ParseString) = '' then Exit;
+
+  while True do
+  begin
+    FToken := ParseString[FiTokenPos];
     case FToken of
       #10:
         begin
           Inc(FiSourceLineNo);
-          FLineTokens := FiTokenPos;
+         // FLineTokens := FiTokenPos;
         end;
       toEOF, #33..#255:
         Exit;
     end;
     Inc(FiTokenPos);
   end;
+  *)
 end;
 
 
-function TNovusParser.GetParseString: string;
-begin
-  Result := Copy(FParseString, 1, Length(FParseString) - 1);
-end;
+//function TNovusParser.GetParseString: string;
+//begin
+ // Result := Copy(ParseString, 1, Length(ParseString) - 1);
+//end;
 
 function TNovusParser.GetSourcePos: Integer;
 begin
-  Result := FiSourcePos - FLineTokens;
+//  Result := FiSourcePos - FLineTokens;
+
+  Result := FiSourcePos - FiTokenPos;
 end;
 
 function TNovusParser.GetTokenString: string;
 begin
-  Result := Copy(FParseString, FiSourcePos, FiTokenPos - FiSourcePos);
+  Result := Copy(ParseString, FiSourcePos, FiTokenPos - FiSourcePos);
   if (Result <> '') and (Result[Length(Result)] in [toEOF, toEOL]) then
     Result := Copy(Result, 1, Length(Result) - 1);
 end;
@@ -165,29 +222,61 @@ end;
 function TNovusParser.SkipToEOF: string;
 begin
   FiSourcePos := FiTokenPos;
-  while not (FParseString[FiTokenPos] = toEOF) do
+  while not (ParseString[FiTokenPos] = toEOF) do
     Inc(FiTokenPos);
   FToken := toEOF;
   Result := GetTokenString;
 end;
 
-function TNovusParser.SkipToEOL: string;
+function TNovusParser.SkipToEOLAsString: string;
 begin
   FiSourcePos := FiTokenPos;
-  while not (FParseString[FiTokenPos] in [toEOF, #10]) do
+  while not (ParseString[FiTokenPos] in [toEOF, #10]) do
     Inc(FiTokenPos);
-  if FParseString[FiTokenPos] = toEOF then
+  if ParseString[FiTokenPos] = toEOF then
     FToken := toEOF
   else
     FToken := toEOL;
   Result := GetTokenString;
 end;
 
+function TNovusParser.NextToken: Char;
+begin
+  FToken := ParseString[FiTokenPos];
+
+  case FToken of
+      #10:
+        begin
+          Inc(FiSourceLineNo);
+
+        end;
+      toEOF:
+        Exit;
+    end;
+
+  Inc(FiTokenPos);
+
+  Result := FToken;
+end;
+
+function TNovusParser.SkipToEOL: char;
+begin
+  FiSourcePos := FiTokenPos;
+  while not (ParseString[FiTokenPos] in [toEOF, #10]) do
+    Inc(FiTokenPos);
+  if ParseString[FiTokenPos] = toEOF then
+    FToken := toEOF
+  else
+    FToken := toEOL;
+  Result := FToken;
+end;
+
+
 function TNovusParser.SkipToken(AStartToken: char = #0; ASecondToken : Char  = #0): Char;
 const
   KeySet = ['A'..'Z', 'a'..'z', '0'..'9', '_'];
 begin
-  If Trim(FParseString) = '' then
+  If Trim(ParseString) = '' then
     begin
       FToken := toEOF;
 
@@ -196,36 +285,36 @@ begin
 
   SkipBlanks;
   FiSourcePos := FiTokenPos;
-  if FParseString[FiTokenPos] = toEOF then
+  if ParseString[FiTokenPos] = toEOF then
     FToken := toEOF
   else
-  if FParseString[FiTokenPos] in KeySet then
+  if ParseString[FiTokenPos] in KeySet then
   begin
-    while FParseString[FiTokenPos] in KeySet do
+    while ParseString[FiTokenPos] in KeySet do
       Inc(FiTokenPos);
     FToken := toSymbol;
   end
   else
   if (AStartToken <> #0) and (ASecondToken <> #0) and
-     (FParseString[FiTokenPos] = AStartToken) then
+     (ParseString[FiTokenPos] = AStartToken) then
     begin
-      FToken := FParseString[FiTokenPos];
+      FToken := ParseString[FiTokenPos];
 
-      If FParseString[FiTokenPos + 1] = ASecondToken then
+      If ParseString[FiTokenPos + 1] = ASecondToken then
         begin
           Inc(FiTokenPos);
 
-          FToken := FParseString[FiTokenPos];
+          FToken := ParseString[FiTokenPos];
 
           Inc(FiTokenPos);
         end
       else
         begin
-          while FParseString[FiTokenPos] in KeySet do
+          while ParseString[FiTokenPos] in KeySet do
             Inc(FiTokenPos);
 
           if (AStartToken <> #0) and (ASecondToken <> #0) and
-             (FParseString[FiTokenPos] = AStartToken) then
+             (ParseString[FiTokenPos] = AStartToken) then
              Inc(FiTokenPos);
 
           FToken := toSymbol;
@@ -233,7 +322,7 @@ begin
      end
   else
   begin
-    FToken := FParseString[FiTokenPos];
+    FToken := ParseString[FiTokenPos];
     Inc(FiTokenPos);
   end;
   Result := FToken;
@@ -250,17 +339,17 @@ function TNovusParser.SkipToToken(const AToken: Char; ASecondToken: Char = #0): 
 begin
   FiSourcePos := FiTokenPos;
 
-  while not (FParseString[FiTokenPos] in [toEOF, AToken, ASecondToken]) do
+  while not (ParseString[FiTokenPos] in [toEOF, AToken, ASecondToken]) do
   begin
-    if FParseString[FiTokenPos] = #10 then
+    if ParseString[FiTokenPos] = #10 then
     begin
       Inc(FiSourceLineNo);
-      FLineTokens := FiTokenPos;
+//      FLineTokens := FiTokenPos;
     end;
     Inc(FiTokenPos);
   end;
 
-  if FParseString[FiTokenPos] = toEOF then
+  if ParseString[FiTokenPos] = toEOF then
     FToken := toEOF
   else
   if ASecondToken <> #0 then
@@ -277,19 +366,19 @@ end;
 function TNovusParser.SkipToNonAlpha: string;
 begin
   FiSourcePos := FiTokenPos;
-  while not (FParseString[FiTokenPos] in [toEOF, #32..#44, #46..#47,
+  while not (ParseString[FiTokenPos] in [toEOF, #32..#44, #46..#47,
       #58..#64, #91..#94,#96, #123..#126, #$D, #$A]) do
   begin
-    if FParseString[FiTokenPos] = #10 then
+    if ParseString[FiTokenPos] = #10 then
     begin
       Inc(FiSourceLineNo);
-      FLineTokens := FiTokenPos;
+//      FLineTokens := FiTokenPos;
     end;
     Inc(FiTokenPos);
   end;
-  if FParseString[FiTokenPos] = toEOF then
+  if ParseString[FiTokenPos] = toEOF then
     FToken := toEOF
-  else  FToken := FParseString[FiTokenPos];
+  else  FToken := ParseString[FiTokenPos];
 
   Result := GetTokenString;
   if FToken <> toEOF then
@@ -300,19 +389,19 @@ end;
 function TNovusParser.SkipToToken(const AToken: TSysCharSet): string;
 begin
   FiSourcePos := FiTokenPos;
-  while not ((FParseString[FiTokenPos] = toEOF) or (FParseString[FiTokenPos] in AToken)) do
+  while not ((ParseString[FiTokenPos] = toEOF) or (ParseString[FiTokenPos] in AToken)) do
   begin
-    if FParseString[FiTokenPos] = #10 then
+    if ParseString[FiTokenPos] = #10 then
     begin
       Inc(FiSourceLineNo);
-      FLineTokens := FiTokenPos;
+      //FLineTokens := FiTokenPos;
     end;
     Inc(FiTokenPos);
   end;
-  if FParseString[FiTokenPos] = toEOF then
+  if ParseString[FiTokenPos] = toEOF then
     FToken := toEOF
   else
-    FToken := FParseString[FiTokenPos];
+    FToken := ParseString[FiTokenPos];
   Result := GetTokenString;
   if FToken <> toEOF then
     SkipToken;
@@ -327,21 +416,21 @@ var
 begin
   FiSourcePos := FiTokenPos;
   CmpToken := '';
-  while not (FParseString[FiTokenPos] = toEOF) do
+  while not (ParseString[FiTokenPos] = toEOF) do
   begin
-    if FParseString[FiTokenPos] = #10 then
+    if ParseString[FiTokenPos] = #10 then
     begin
       Inc(FiSourceLineNo);
-      FLineTokens := FiTokenPos;
+      //FLineTokens := FiTokenPos;
     end;
-    CmpToken := Concat(CmpToken, FParseString[FiTokenPos]);
+    CmpToken := Concat(CmpToken, ParseString[FiTokenPos]);
     if Length(CmpToken) > Length(ATokenString) then
       CmpToken := Copy(CmpToken, 2, Length(ATokenString));
     if UpperCase(CmpToken) = UpperCase(ATokenString) then
       Break;
     Inc(FiTokenPos);
   end;
-  FToken := FParseString[FiTokenPos];
+  FToken := ParseString[FiTokenPos];
   Result := GetTokenString;
   if FToken <> toEOF then
     SkipToken;
@@ -349,8 +438,8 @@ end;
 
 procedure TNovusParser.Reset;
 begin
-  if Assigned(FParseLines) then FParseLines.Free;
-  FParseLines:= TStringList.Create;
+  //if Assigned(ParseLines) then FParseLines.Free;
+ // FParseLines:= TStringList.Create;
 
   FiSourceLineNo := 1;
   FiSourcePos := 1;
@@ -365,12 +454,12 @@ begin
 
   while True do
   begin
-    FToken := FParseString[FiTokenPos];
+    FToken := ParseString[FiTokenPos];
     case FToken of
       #10:
         begin
           Inc(FiSourceLineNo);
-          FLineTokens := FiTokenPos;
+
         end;
       toEOF:
         Exit;
@@ -391,9 +480,58 @@ begin
   FiPrevTokenPos := FiTokenPos -1 + aOffset;
   if FiPrevTokenPos < 0 then Exit;
 
-  Result := FParseString[FiPrevTokenPos];
+  Result := ParseString[FiPrevTokenPos];
 end;
 
+
+function tNovusParser.GetParseString: string;
+begin
+  Result := Copy(fsParseString, 1, Length(fsParseString) - 1);
+end;
+
+function tNovusParser.PeekJustNextToken: Char;
+begin
+  if (ParseString[TokenPos] = toEOF) then
+    begin
+      Result := toEOF;
+      Exit;
+    end;
+
+  Result := ParseString[TokenPos];
+end;
+
+function tNovusParser.PeekNextToken(aTokenPos: integer): Char;
+const
+  KeySet = ['A'..'Z', 'a'..'z', '0'..'9', '_'];
+Var
+  liSourcePos: Integer;
+begin
+  liSourcePos := 0;
+
+  If Trim(ParseString) = '' then
+    begin
+      Result := toEOF;
+
+      Exit;
+    end;
+
+  Result := SkipBlanksEx(aTokenPos, liSourcePos);
+
+  if ParseString[aTokenPos] = toEOF then
+    Result := toEOF
+  else
+  if ParseString[aTokenPos] in KeySet then
+  begin
+    while ParseString[aTokenPos] in KeySet do
+      Inc(aTokenPos);
+    result := toSymbol;
+  end
+  else
+  begin
+    Result := ParseString[aTokenPos];
+    Inc(aTokenPos);
+  end;
+end;
 
 
 

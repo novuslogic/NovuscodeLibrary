@@ -3,8 +3,9 @@ program InterpreterTest1;
 uses
   Vcl.Forms,
   Main in 'Main.pas' {MainForm},
-  NovusInterpreter in '..\..\..\Source\Core\Interpreter\NovusInterpreter.pas',
-  Interpreter in 'Interpreter.pas';
+  NovusInterpreter in '..\..\..\Source\Core\Parser\NovusInterpreter.pas',
+  Interpreter in 'Interpreter.pas',
+  NovusParser in '..\..\..\Source\Core\Parser\NovusParser.pas';
 
 {$R *.res}
 

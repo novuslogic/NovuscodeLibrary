@@ -5,11 +5,22 @@ interface
 uses Novuslist, NovusObject, NovusParser, System.Classes;
 
 type
+  tNovusInterpreter = class;
+
   tTokenType = class(tobject)
   private
   protected
+    foInterpreter: tNovusInterpreter;
   public
-    class function Init: tTokenType; virtual;
+    constructor Create(aInterpreter: tNovusInterpreter);
+
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; virtual;
+
+    function ParseNextToken: Char; virtual;
+
+    property oInterpreter: tNovusInterpreter
+       read foInterpreter
+       write foInterpreter;
   end;
 
   tKeyword = class(tobject)
@@ -129,10 +140,23 @@ end;
 
 
 // tTokenType
-class function tTokenType.Init: tTokenType;
+constructor tTokenType.Create(aInterpreter: tNovusInterpreter);
+begin
+  foInterpreter := aInterpreter;
+end;
+
+
+class function tTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
   Result := NIL;
 end;
+
+function tTokenType.ParseNextToken: Char;
+begin
+  result := #0;
+end;
+
+
 
 // tKeyword
 class function tKeyword.Init(aTokenType: tTokenType): tKeyword;

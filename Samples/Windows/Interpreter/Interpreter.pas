@@ -9,357 +9,359 @@ type
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tCommentsTokenType = class(tTokenType)
   protected
   private
+    fbIsMultiLineComment: boolean;
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
+    function ParseNextToken: Char; override;
   end;
 
   tIdentifierTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tFloatTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tIntegerTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tStringTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tPlusTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tMinusTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tMultTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tDivideTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tPowerTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tDivTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tModTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tLessThanTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tLessThanOrEqualTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tMoreThanTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tMoreThanOrEqualTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tNotEqualTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tRightParenthesisTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tLeftParenthesisTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tLeftBracketTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tRightBracketTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tLeftCurleyBracketTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tRightCurleyBracketTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tEqualsTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tEquivalenceTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tApostrophyTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tDollarTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tSemicolonTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tColonTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tCommaTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tAndTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tOrTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tNotTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tXorTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tEndTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tIfTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tThenTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tElseTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tFalseTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tTrueTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tForTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tDoTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tToTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tDownToTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tWhileTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tRepeatTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tUntilTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tOfTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tBreakTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
   tFunctionTokenType = class(tTokenType)
   protected
   private
   public
-    class function Init: tTokenType; override;
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
   end;
 
 
@@ -677,320 +679,359 @@ begin
 end;
 
 // tEndofStreamTokenType
-class function tEndofStreamTokenType.Init: tTokenType;
+class function tEndofStreamTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tEndofStreamTokenType.Create;
+  Result := tEndofStreamTokenType.Create(aInterpreter);
 end;
 
 // tCommentsTokenType
-class function tCommentsTokenType.Init: tTokenType;
+class function tCommentsTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tCommentsTokenType.Create;
+  Result := tCommentsTokenType.Create(aInterpreter);
+end;
+
+function tCommentsTokenType.ParseNextToken: Char;
+Var
+  Fch: char;
+begin
+  With foInterpreter do
+    begin
+      if Token = '/' then
+        begin
+          if PeekJustNextToken = '/' then
+            begin
+              Result := SkipToEOL;
+
+              Exit;
+            end
+          else
+          if PeekJustNextToken = '*' then
+            begin
+              fbIsMultiLineComment := true;
+
+              Fch := NextToken;
+              while True do
+                 begin
+                 while (Fch <> '*') and (Fch <> toEOL) do
+                    FCh := NextToken;
+                 if FCh = toEOL then
+                    exit;
+                 FCh := NextToken;
+                 if FCh = '/' then
+                  begin
+                    Fch := NextToken;
+                    fbIsMultiLineComment := False;
+
+                     break;
+                  end;
+
+                 end;
+              end;
+        end;
+    end;
 end;
 
 // tFloatTokenType
-class function tFloatTokenType.Init: tTokenType;
+class function tFloatTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tFloatTokenType.Create;
+  Result := tFloatTokenType.Create(aInterpreter);
 end;
 
 // tIntegerTokenType
-class function tIntegerTokenType.Init: tTokenType;
+class function tIntegerTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tIntegerTokenType.Create;
+  Result := tIntegerTokenType.Create(aInterpreter);
 end;
 
 // tStringTokenType
-class function tStringTokenType.Init: tTokenType;
+class function tStringTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tStringTokenType.Create;
+  Result := tStringTokenType.Create(aInterpreter);
 end;
 
 // tPlusTokenType
-class function tPlusTokenType.Init: tTokenType;
+class function tPlusTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tPlusTokenType.Create;
+  Result := tPlusTokenType.Create(aInterpreter);
 end;
 
 // tMinusTokenType
-class function tMinusTokenType.Init: tTokenType;
+class function tMinusTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tMinusTokenType.Create;
+  Result := tMinusTokenType.Create(aInterpreter);
 end;
 
 // tMultTokenType
-class function tMultTokenType.Init: tTokenType;
+class function tMultTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tMultTokenType.Create;
+  Result := tMultTokenType.Create(aInterpreter);
 end;
 
 // tDivideTokenType
-class function tDivideTokenType.Init: tTokenType;
+class function tDivideTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tDivideTokenType.Create;
+  Result := tDivideTokenType.Create(aInterpreter);
 end;
 
 // tPowerTokenType
-class function tPowerTokenType.Init: tTokenType;
+class function tPowerTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tPowerTokenType.Create;
+  Result := tPowerTokenType.Create(aInterpreter);
 end;
 
 // tDivTokenType
-class function tDivTokenType.Init: tTokenType;
+class function tDivTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tDivTokenType.Create;
+  Result := tDivTokenType.Create(aInterpreter);
 end;
 
 // tModTokenType
-class function tModTokenType.Init: tTokenType;
+class function tModTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tModTokenType.Create;
+  Result := tModTokenType.Create(aInterpreter);
 end;
 
 // tLessThanTokenType
-class function tLessThanTokenType.Init: tTokenType;
+class function tLessThanTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tLessThanTokenType.Create;
+  Result := tLessThanTokenType.Create(aInterpreter);
 end;
 
 
 // tLessThanOrEqualTokenType
-class function tLessThanOrEqualTokenType.Init: tTokenType;
+class function tLessThanOrEqualTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tLessThanOrEqualTokenType.Create;
+  Result := tLessThanOrEqualTokenType.Create(aInterpreter);
 end;
 
 // tMoreThanTokenType
-class function tMoreThanTokenType.Init: tTokenType;
+class function tMoreThanTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tMoreThanTokenType.Create;
+  Result := tMoreThanTokenType.Create(aInterpreter);
 end;
 
 // tMoreThanOrEqualTokenType
-class function tMoreThanOrEqualTokenType.Init: tTokenType;
+class function tMoreThanOrEqualTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tMoreThanOrEqualTokenType.Create;
+  Result := tMoreThanOrEqualTokenType.Create(aInterpreter);
 end;
 
 // tNotEqualTokenType
-class function tNotEqualTokenType.Init: tTokenType;
+class function tNotEqualTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tMoreThanOrEqualTokenType.Create;
+  Result := tMoreThanOrEqualTokenType.Create(aInterpreter);
 end;
 
 // tRightParenthesisTokenType
-class function tRightParenthesisTokenType.Init: tTokenType;
+class function tRightParenthesisTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tRightParenthesisTokenType.Create;
+  Result := tRightParenthesisTokenType.Create(aInterpreter);
 end;
 
 // tLeftParenthesisTokenType
-class function tLeftParenthesisTokenType.Init: tTokenType;
+class function tLeftParenthesisTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tLeftParenthesisTokenType.Create;
+  Result := tLeftParenthesisTokenType.Create(aInterpreter);
 end;
 
 // tLeftBracketTokenType
-class function tLeftBracketTokenType.Init: tTokenType;
+class function tLeftBracketTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tLeftBracketTokenType.Create;
+  Result := tLeftBracketTokenType.Create(aInterpreter);
 end;
 
 // tRightBracketTokenType
-class function tRightBracketTokenType.Init: tTokenType;
+class function tRightBracketTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tRightBracketTokenType.Create;
+  Result := tRightBracketTokenType.Create(aInterpreter);
 end;
 
 // tLeftCurleyBracketTokenType
-class function tLeftCurleyBracketTokenType.Init: tTokenType;
+class function tLeftCurleyBracketTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tRightBracketTokenType.Create;
+  Result := tRightBracketTokenType.Create(aInterpreter);
 end;
 
 // tRightCurleyBracketTokenType
-class function tRightCurleyBracketTokenType.Init: tTokenType;
+class function tRightCurleyBracketTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tRightCurleyBracketTokenType.Create;
+  Result := tRightCurleyBracketTokenType.Create(aInterpreter);
 end;
 
 // tEqualsTokenType
-class function tEqualsTokenType.Init: tTokenType;
+class function tEqualsTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tEqualsTokenType.Create;
+  Result := tEqualsTokenType.Create(aInterpreter);
 end;
 
 // tEquivalenceTokenType
-class function tEquivalenceTokenType.Init: tTokenType;
+class function tEquivalenceTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tEquivalenceTokenType.Create;
+  Result := tEquivalenceTokenType.Create(aInterpreter);
 end;
 
 // tApostrophyTokenType
-class function tApostrophyTokenType.Init: tTokenType;
+class function tApostrophyTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tApostrophyTokenType.Create;
+  Result := tApostrophyTokenType.Create(aInterpreter);
 end;
 
 // tDollarTokenType
-class function tDollarTokenType.Init: tTokenType;
+class function tDollarTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tDollarTokenType.Create;
+  Result := tDollarTokenType.Create(aInterpreter);
 end;
 
 // tSemicolonTokenType
-class function tSemicolonTokenType.Init: tTokenType;
+class function tSemicolonTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tSemicolonTokenType.Create;
+  Result := tSemicolonTokenType.Create(aInterpreter);
 end;
 
 // tColonTokenType
-class function tColonTokenType.Init: tTokenType;
+class function tColonTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tColonTokenType.Create;
+  Result := tColonTokenType.Create(aInterpreter);
 end;
 
 // tCommaTokenType
-class function tCommaTokenType.Init: tTokenType;
+class function tCommaTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tCommaTokenType.Create;
+  Result := tCommaTokenType.Create(aInterpreter);
 end;
 
 // tAndTokenType
-class function tAndTokenType.Init: tTokenType;
+class function tAndTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tAndTokenType.Create;
+  Result := tAndTokenType.Create(aInterpreter);
 end;
 
 // tOrTokenType
-class function tOrTokenType.Init: tTokenType;
+class function tOrTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tOrTokenType.Create;
+  Result := tOrTokenType.Create(aInterpreter);
 end;
 
 // tNotTokenType
-class function tNotTokenType.Init: tTokenType;
+class function tNotTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tNotTokenType.Create;
+  Result := tNotTokenType.Create(aInterpreter);
 end;
 
 // tXorTokenType
-class function tXorTokenType.Init: tTokenType;
+class function tXorTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tXorTokenType.Create;
+  Result := tXorTokenType.Create(aInterpreter);
 end;
 
 // tEndTokenType
-class function tEndTokenType.Init: tTokenType;
+class function tEndTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tEndTokenType.Create;
+  Result := tEndTokenType.Create(aInterpreter);
 end;
 
 // tIfTokenType
-class function tIfTokenType.Init: tTokenType;
+class function tIfTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tIfTokenType.Create;
+  Result := tIfTokenType.Create(aInterpreter);
 end;
 
 // tThenTokenType
-class function tThenTokenType.Init: tTokenType;
+class function tThenTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tThenTokenType.Create;
+  Result := tThenTokenType.Create(aInterpreter);
 end;
 
 // tElseTokenType
-class function tElseTokenType.Init: tTokenType;
+class function tElseTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tElseTokenType.Create;
+  Result := tElseTokenType.Create(aInterpreter);
 end;
 
 // tFalseTokenType
-class function tFalseTokenType.Init: tTokenType;
+class function tFalseTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tFalseTokenType.Create;
+  Result := tFalseTokenType.Create(aInterpreter);
 end;
 
 // tTrueTokenType
-class function tTrueTokenType.Init: tTokenType;
+class function tTrueTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tTrueTokenType.Create;
+  Result := tTrueTokenType.Create(aInterpreter);
 end;
 
 // tForTokenType
-class function tForTokenType.Init: tTokenType;
+class function tForTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tForTokenType.Create;
+  Result := tForTokenType.Create(aInterpreter);
 end;
 
 // tDoTokenType
-class function tDoTokenType.Init: tTokenType;
+class function tDoTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tDoTokenType.Create;
+  Result := tDoTokenType.Create(aInterpreter);
 end;
 
 // tToTokenType
-class function tToTokenType.Init: tTokenType;
+class function tToTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tToTokenType.Create;
+  Result := tToTokenType.Create(aInterpreter);
 end;
 
 // tDownToTokenType
-class function tDownToTokenType.Init: tTokenType;
+class function tDownToTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tDownToTokenType.Create;
+  Result := tDownToTokenType.Create(aInterpreter);
 end;
 
 // tWhileTokenType
-class function tWhileTokenType.Init: tTokenType;
+class function tWhileTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tWhileTokenType.Create;
+  Result := tWhileTokenType.Create(aInterpreter);
 end;
 
 // tRepeatTokenType
-class function tRepeatTokenType.Init: tTokenType;
+class function tRepeatTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tRepeatTokenType.Create;
+  Result := tRepeatTokenType.Create(aInterpreter);
 end;
 
 // tUntilTokenType
-class function tUntilTokenType.Init: tTokenType;
+class function tUntilTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tUntilTokenType.Create;
+  Result := tUntilTokenType.Create(aInterpreter);
 end;
 
 
 // tOfTokenType
-class function tOfTokenType.Init: tTokenType;
+class function tOfTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tOfTokenType.Create;
+  Result := tOfTokenType.Create(aInterpreter);
 end;
 
 // tBreakTokenType
-class function tBreakTokenType.Init: tTokenType;
+class function tBreakTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tBreakTokenType.Create;
+  Result := tBreakTokenType.Create(aInterpreter);
 end;
 
 
 // tFunctionTokenType
-class function tFunctionTokenType.Init: tTokenType;
+class function tFunctionTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tFunctionTokenType.Create;
+  Result := tFunctionTokenType.Create(aInterpreter);
 end;
 
 // tIdentifierTokenType
-class function tIdentifierTokenType.Init: tTokenType;
+class function tIdentifierTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
 begin
-  Result := tIdentifierTokenType.Create;
+  Result := tIdentifierTokenType.Create(aInterpreter);
 end;
 
 function tInterpreter.SkipCommentsToken: Char;
 Var
   Fch: char;
 begin
-  Fch := #0;
-
   if Token = '/' then
     begin
       if PeekJustNextToken = '/' then
@@ -1022,9 +1063,6 @@ begin
 
              end;
           end;
-
-
-
     end;
 end;
 
@@ -1048,30 +1086,30 @@ end;
 
 procedure tInterpreter.AddKeywords;
 begin
-   AddKeyword(tCommentsKeyword.Init(tCommentsTokenType.Init));
-   AddKeyword('if', tIfKeyword.Init(tIfTokenType.Init));
-   AddKeyword('do', tDoKeyword.Init(tDoTokenType.Init));
-   AddKeyword('to', TToKeyword.Init(tToTokenType.Init));
-   AddKeyword('or', TOrKeyword.Init(tOrTokenType.Init));
-   AddKeyword('of', TOfKeyword.Init(tOfTokenType.Init));
-   AddKeyword('end', TendKeyword.Init(tEndTokenType.Init));
-   AddKeyword('for', TforKeyword.Init(tForTokenType.Init));
-   AddKeyword('and', TandKeyword.Init(tForTokenType.Init));
-   AddKeyword('xor', TxorKeyword.Init(tXorTokenType.Init));
-   AddKeyword('not', TNotKeyword.Init(tNotTokenType.Init));
-   AddKeyword('div', TDivKeyword.Init(tDivTokenType.Init));
-   AddKeyword('mod', TModKeyword.Init(tModTokenType.Init));
+   AddKeyword(tCommentsKeyword.Init(tCommentsTokenType.Init(Self)));
+   AddKeyword('if', tIfKeyword.Init(tIfTokenType.Init(Self)));
+   AddKeyword('do', tDoKeyword.Init(tDoTokenType.Init(Self)));
+   AddKeyword('to', TToKeyword.Init(tToTokenType.Init(Self)));
+   AddKeyword('or', TOrKeyword.Init(tOrTokenType.Init(Self)));
+   AddKeyword('of', TOfKeyword.Init(tOfTokenType.Init(Self)));
+   AddKeyword('end', TendKeyword.Init(tEndTokenType.Init(Self)));
+   AddKeyword('for', TforKeyword.Init(tForTokenType.Init(Self)));
+   AddKeyword('and', TandKeyword.Init(tForTokenType.Init(Self)));
+   AddKeyword('xor', TxorKeyword.Init(tXorTokenType.Init(Self)));
+   AddKeyword('not', TNotKeyword.Init(tNotTokenType.Init(Self)));
+   AddKeyword('div', TDivKeyword.Init(tDivTokenType.Init(Self)));
+   AddKeyword('mod', TModKeyword.Init(tModTokenType.Init(Self)));
 
-   AddKeyword('then', TThenKeyword.Init(tThenTokenType.Init));
-   AddKeyword('else', tElseKeyword.Init(tElseTokenType.Init));
-   AddKeyword('True', tTrueKeyword.Init(tTrueTokenType.Init));
-   AddKeyword('False', tFalseKeyword.Init(tFalseTokenType.Init));
-   AddKeyword('while', tWhileKeyword.Init(tWhileTokenType.Init));
-   AddKeyword('until', tUntilKeyword.Init(tUntilTokenType.Init));
-   AddKeyword('break', tBreakKeyword.Init(tBreakTokenType.Init));
-   AddKeyword('repeat', tRepeatKeyword.Init(tRepeatTokenType.Init));
-   AddKeyword('downto', tDownToKeyword.Init(tDownToTokenType.Init));
-   AddKeyword('function', tFunctionKeyword.Init(tFunctionTokenType.Init));
+   AddKeyword('then', TThenKeyword.Init(tThenTokenType.Init(Self)));
+   AddKeyword('else', tElseKeyword.Init(tElseTokenType.Init(Self)));
+   AddKeyword('True', tTrueKeyword.Init(tTrueTokenType.Init(Self)));
+   AddKeyword('False', tFalseKeyword.Init(tFalseTokenType.Init(Self)));
+   AddKeyword('while', tWhileKeyword.Init(tWhileTokenType.Init(Self)));
+   AddKeyword('until', tUntilKeyword.Init(tUntilTokenType.Init(Self)));
+   AddKeyword('break', tBreakKeyword.Init(tBreakTokenType.Init(Self)));
+   AddKeyword('repeat', tRepeatKeyword.Init(tRepeatTokenType.Init(Self)));
+   AddKeyword('downto', tDownToKeyword.Init(tDownToTokenType.Init(Self)));
+   AddKeyword('function', tFunctionKeyword.Init(tFunctionTokenType.Init(Self)));
 end;
 
 

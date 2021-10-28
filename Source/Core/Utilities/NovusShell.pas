@@ -118,7 +118,6 @@ end;
 
 function tNovusShell.WindowsCaptureExecute(aCommandline: String;
   var aOutput: String): Integer;
-
 const
   CReadBuffer = 124000;
 var

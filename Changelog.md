@@ -1,3 +1,8 @@
+28/10/2021
+
+* Upgraded function TNovusParser.SkipToEOL(aRestColumnPos: boolean = True): char
+* New property TNovusParser.ColumnPos: Integer
+
 09/10/2021
 
 * New function function TNovusParser.SkipToEOLAsString: string; 

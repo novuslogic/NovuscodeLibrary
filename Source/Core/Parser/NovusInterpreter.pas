@@ -7,10 +7,20 @@ uses Novuslist, NovusObject, NovusParser, System.Classes;
 type
   tNovusInterpreter = class;
 
+  tToken = class(tobject)
+  private
+  protected
+  public
+  end;
+
   tTokenType = class(tobject)
   private
   protected
     foInterpreter: tNovusInterpreter;
+    fiStartSourceLineNo: Integer;
+    fiStartColumnPos: Integer;
+    fiEndSourceLineNo: Integer;
+    fiEndColumnPos: Integer;
   public
     constructor Create(aInterpreter: tNovusInterpreter);
 
@@ -21,6 +31,23 @@ type
     property oInterpreter: tNovusInterpreter
        read foInterpreter
        write foInterpreter;
+
+    property StartSourceLineNo: Integer
+      read  fiStartSourceLineNo
+      write fiStartSourceLineNo;
+
+    property StartColumnPos: Integer
+      read fiStartColumnPos
+      write fiStartColumnPos;
+
+    property EndSourceLineNo: Integer
+      read  fiEndSourceLineNo
+      write fiEndSourceLineNo;
+
+    property EndColumnPos: Integer
+      read fiEndColumnPos
+      write fiEndColumnPos;
+
   end;
 
   tKeyword = class(tobject)
@@ -42,6 +69,11 @@ type
     destructor Destroy; override;
 
     class function Init(aTokenType: tTokenType): tKeyword; virtual;
+
+    property oTokenType: tTokenType
+      read foTokenType
+      write foTokenType;
+
   end;
 
 
@@ -56,6 +88,8 @@ type
     procedure AddKeywords; virtual;
     function AddKeyword(aKeyName: String;aKeyword: tkeyword): tkeyword; overload;
     function AddKeyword(aKeyword: tkeyword): tkeyword; overload;
+    function FindKeyword(aKeyName: String): tkeyword;
+
 
     function ParseNextToken: Char; virtual;
 
@@ -78,8 +112,6 @@ begin
   inherited Destroy;
 end;
 
-
-
 procedure tNovusInterpreter.AddKeywords;
 begin
 end;
@@ -92,6 +124,16 @@ end;
 function tNovusInterpreter.AddKeyword(aKeyword: tkeyword): tkeyword;
 begin
   Result := InternalAddKeyword(aKeyword.ClassName,aKeyword);
+end;
+
+function tNovusInterpreter.FindKeyword(aKeyName: String): tkeyword;
+var
+  lokeyword: tkeyword;
+begin
+  Result := NIL;
+
+  lokeyword := fKeyWordslist.FindItem(aKeyname)  as tkeyword ;
+  if Assigned(lokeyword) then Result := lokeyword;
 end;
 
 
@@ -130,11 +172,17 @@ begin
       while not(Token in [toEOF]) do
           ParseNextToken;
 
+
+
+
       if Token = toEOF then
         begin
           Result := True;
           Break;
         end;
+
+
+
     end;
 end;
 

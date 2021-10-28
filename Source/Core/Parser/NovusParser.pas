@@ -18,6 +18,7 @@ type
     FiSourceLineNo: Integer;
     FiSourcePos: Integer;
     FiTokenPos: Integer;
+    FiColumnPos: Integer;
     FToken: Char;
 
     function SkipBlanksEx(var aTokenPos: Integer; var aSourceLineNo: Integer): Char;
@@ -39,7 +40,7 @@ type
     function LoadFromStream(const aStream: TMemoryStream): Boolean;
     function SkipToEOF: string;
     function SkipToEOLAsString: string; overload;
-    function SkipToEOL: Char; overload;
+    function SkipToEOL(aRestColumnPos: boolean = True): Char; overload;
 
     function NextToken: Char;
 
@@ -52,6 +53,7 @@ type
 
     property SourceLineNo: Integer read FiSourceLineNo write SetSourceLineNo;
     property SourcePos: Integer read GetSourcePos write FiSourcePos;
+    property ColumnPos: Integer read fiColumnPos write fiColumnPos;
     property Token: Char read FToken write FToken;
 
     property TokenString: string read GetTokenString;
@@ -166,7 +168,7 @@ begin
       #10:
         begin
           Inc(aSourceLineNo);
-//          FLineTokens := FiTokenPos;
+          FiColumnPos := 1;
         end;
       toEOF, #33..#255:
         Exit;
@@ -198,16 +200,8 @@ begin
   *)
 end;
 
-
-//function TNovusParser.GetParseString: string;
-//begin
- // Result := Copy(ParseString, 1, Length(ParseString) - 1);
-//end;
-
 function TNovusParser.GetSourcePos: Integer;
 begin
-//  Result := FiSourcePos - FLineTokens;
-
   Result := FiSourcePos - FiTokenPos;
 end;
 
@@ -248,26 +242,48 @@ begin
       #10:
         begin
           Inc(FiSourceLineNo);
+          FiColumnPos := 1;
+          Inc(FiTokenPos);
 
+          Result := FToken;
+
+          Exit;
         end;
       toEOF:
         Exit;
     end;
 
   Inc(FiTokenPos);
+  inc(FiColumnPos);
 
   Result := FToken;
 end;
 
-function TNovusParser.SkipToEOL: char;
+function TNovusParser.SkipToEOL(aRestColumnPos: boolean = True): char;
 begin
   FiSourcePos := FiTokenPos;
   while not (ParseString[FiTokenPos] in [toEOF, #10]) do
-    Inc(FiTokenPos);
+    begin
+      Inc(FiTokenPos);
+      Inc(fiColumnPos);
+    end;
   if ParseString[FiTokenPos] = toEOF then
-    FToken := toEOF
+    begin
+      FToken := toEOF;
+
+    end
   else
-    FToken := toEOL;
+    begin
+      FToken := toEOL;
+      Inc(FiTokenPos); // #10
+
+
+      if aRestColumnPos then
+        fiColumnPos := 1;
+
+      Inc(fiSourceLineNo);
+    end;
+
   Result := FToken;
 end;
 
@@ -344,7 +360,7 @@ begin
     if ParseString[FiTokenPos] = #10 then
     begin
       Inc(FiSourceLineNo);
-//      FLineTokens := FiTokenPos;
+      FiColumnPos := 1;
     end;
     Inc(FiTokenPos);
   end;
@@ -372,7 +388,7 @@ begin
     if ParseString[FiTokenPos] = #10 then
     begin
       Inc(FiSourceLineNo);
-//      FLineTokens := FiTokenPos;
+      FiColumnPos := 1;
     end;
     Inc(FiTokenPos);
   end;
@@ -394,7 +410,7 @@ begin
     if ParseString[FiTokenPos] = #10 then
     begin
       Inc(FiSourceLineNo);
-      //FLineTokens := FiTokenPos;
+      FiColumnPos := 1;
     end;
     Inc(FiTokenPos);
   end;
@@ -421,7 +437,7 @@ begin
     if ParseString[FiTokenPos] = #10 then
     begin
       Inc(FiSourceLineNo);
-      //FLineTokens := FiTokenPos;
+      FiColumnPos := 1;
     end;
     CmpToken := Concat(CmpToken, ParseString[FiTokenPos]);
     if Length(CmpToken) > Length(ATokenString) then
@@ -438,12 +454,11 @@ end;
 
 procedure TNovusParser.Reset;
 begin
-  //if Assigned(ParseLines) then FParseLines.Free;
- // FParseLines:= TStringList.Create;
-
   FiSourceLineNo := 1;
   FiSourcePos := 1;
   FiTokenPos := 1;
+  FiColumnPos := 1;
+
   FToken := toBOF;
 end;
 
@@ -451,6 +466,7 @@ procedure TNovusParser.SetSourceLineNo(Value: Integer);
 begin
   FiSourceLineNo := 1;
   FiTokenPos := 1;
+  FiColumnPos := 1;
 
   while True do
   begin
@@ -459,7 +475,7 @@ begin
       #10:
         begin
           Inc(FiSourceLineNo);
-
+          FiColumnPos := 1;
         end;
       toEOF:
         Exit;

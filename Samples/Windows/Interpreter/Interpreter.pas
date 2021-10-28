@@ -2,7 +2,7 @@ unit Interpreter;
 
 interface
 
-Uses NovusInterpreter, NovusParser;
+Uses NovusInterpreter, NovusParser, System.Classes;
 
 type
   tEndofStreamTokenType = class(tTokenType)
@@ -692,7 +692,7 @@ end;
 
 function tCommentsTokenType.ParseNextToken: Char;
 Var
-  Fch: char;
+  lch: char;
 begin
   With foInterpreter do
     begin
@@ -700,7 +700,18 @@ begin
         begin
           if PeekJustNextToken = '/' then
             begin
-              Result := SkipToEOL;
+              StartSourceLineNo := SourceLineNo;
+              StartColumnPos := ColumnPos;
+
+              Result := SkipToEOL(false);
+              EndSourceLineNo := StartSourceLineNo;
+
+              EndColumnPos := ColumnPos;
+
+              if Result = toEOL then
+                begin
+                  ColumnPos := 1;
+                end;
 
               Exit;
             end
@@ -708,21 +719,27 @@ begin
           if PeekJustNextToken = '*' then
             begin
               fbIsMultiLineComment := true;
+              StartSourceLineNo := SourceLineNo;
+              StartColumnPos := ColumnPos;
 
-              Fch := NextToken;
+              lch := NextToken;
               while True do
                  begin
-                 while (Fch <> '*') and (Fch <> toEOL) do
-                    FCh := NextToken;
-                 if FCh = toEOL then
+                 while (lch <> '*') and (lch <> toEOF) do
+                    lch := NextToken;
+                 if lch = toEOF then
                     exit;
-                 FCh := NextToken;
-                 if FCh = '/' then
+                 lch := NextToken;
+                 if lch = '/' then
                   begin
-                    Fch := NextToken;
+                    //lch := NextToken;
                     fbIsMultiLineComment := False;
 
-                     break;
+                    EndSourceLineNo := SourceLineNo;
+                    EndColumnPos := ColumnPos;
+
+
+                    break;
                   end;
 
                  end;
@@ -1030,40 +1047,16 @@ end;
 
 function tInterpreter.SkipCommentsToken: Char;
 Var
-  Fch: char;
+  foCommentsKeyword: tKeyword;
+  lch: Char;
 begin
-  if Token = '/' then
-    begin
-      if PeekJustNextToken = '/' then
-        begin
-          Result := SkipToEOL;
+  foCommentsKeyword := FindKeyword(tCommentsKeyword.classname);
+  if Assigned(foCommentsKeyword) then
+   lch := foCommentsKeyword.oTokenType.ParseNextToken;
 
-          Exit;
-        end
-      else
-      if PeekJustNextToken = '*' then
-        begin
-          fbIsMultiLineComment := true;
 
-          Fch := NextToken;
-          while True do
-             begin
-             while (Fch <> '*') and (Fch <> toEOL) do
-                FCh := NextToken;
-             if FCh = toEOL then
-                exit;
-             FCh := NextToken;
-             if FCh = '/' then
-              begin
-                Fch := NextToken;
-                fbIsMultiLineComment := False;
 
-                 break;
-              end;
-
-             end;
-          end;
-    end;
+  Result := Token;
 end;
 
 

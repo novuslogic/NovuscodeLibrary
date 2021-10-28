@@ -52,7 +52,6 @@ begin
 
     End;
   Finally
-
     loShell.Free;
   End;
 end;

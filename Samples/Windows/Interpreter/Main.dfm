@@ -24,9 +24,9 @@ object MainForm: TMainForm
     Height = 401
     Anchors = [akLeft, akTop, akBottom]
     Lines.Strings = (
-      '// A comment'
-      '/* A com'
-      'ment */'
+      '//A comment'
+      '/*A com'
+      'ment ....*/'
       'x = 3.1415'
       'y = 0.23456'
       'z = 3.12E6'

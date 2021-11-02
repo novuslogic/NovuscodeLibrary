@@ -2,7 +2,7 @@ unit Interpreter;
 
 interface
 
-Uses NovusInterpreter, NovusParser, System.Classes;
+Uses NovusInterpreter, NovusParser, System.Classes, System.SysUtils;
 
 type
   tEndofStreamTokenType = class(tTokenType)
@@ -19,6 +19,9 @@ type
   public
     class function Init(aInterpreter: tNovusInterpreter): tTokenType; override;
     function ParseNextToken: Char; override;
+
+    property IsMultiLineComment: boolean
+      read fbIsMultiLineComment;
   end;
 
   tIdentifierTokenType = class(tTokenType)
@@ -379,8 +382,12 @@ type
   tCommentsKeyword =  class(tKeyword)
   private
   protected
+    function GetIsMultiLineComment: boolean;
   public
     class function Init(aTokenType: tTokenType): tKeyword; override;
+
+    property IsMultiLineComment: boolean
+      read GetIsMultiLineComment;
   end;
 
   tDoKeyword =  class(tKeyword)
@@ -537,6 +544,8 @@ type
     function SkipCommentsToken: Char;
   public
     function ParseNextToken: Char; override;
+    function Execute: Boolean; override;
+
     procedure AddKeywords; override;
 
     property IsMultiLineComment: boolean
@@ -561,6 +570,11 @@ end;
 class function tCommentskeyword.Init(aTokenType: tTokenType): tKeyword;
 begin
   Result := tCommentskeyword.Create(aTokenType);
+end;
+
+function tCommentskeyword.GetIsMultiLineComment: boolean;
+begin
+  Result :=  (foTokenType as tCommentsTokenType).IsMultiLineComment;
 end;
 
 //tTokeyword
@@ -693,6 +707,8 @@ end;
 function tCommentsTokenType.ParseNextToken: Char;
 Var
   lch: char;
+  lsRawToken: String;
+  loToken: tToken;
 begin
   With foInterpreter do
     begin
@@ -700,6 +716,10 @@ begin
         begin
           if PeekJustNextToken = '/' then
             begin
+              loToken := tToken.Create(Self);
+
+              StartTokenPos := TokenPos -1;
+
               StartSourceLineNo := SourceLineNo;
               StartColumnPos := ColumnPos;
 
@@ -708,10 +728,14 @@ begin
 
               EndColumnPos := ColumnPos;
 
-              if Result = toEOL then
-                begin
-                  ColumnPos := 1;
-                end;
+              if Result = toEOL then ColumnPos := 1;
+
+              EndTokenPos := TokenPos;
+
+              loToken.RawToken := CopyParseString(StartTokenPos, TokenPos);
+
+              oInterpreter.AddToken(loToken);
+
 
               Exit;
             end
@@ -719,6 +743,8 @@ begin
           if PeekJustNextToken = '*' then
             begin
               fbIsMultiLineComment := true;
+
+              StartTokenPos := TokenPos -1 ;
               StartSourceLineNo := SourceLineNo;
               StartColumnPos := ColumnPos;
 
@@ -732,12 +758,16 @@ begin
                  lch := NextToken;
                  if lch = '/' then
                   begin
-                    //lch := NextToken;
+                    loToken := tToken.Create(self);
+
                     fbIsMultiLineComment := False;
 
                     EndSourceLineNo := SourceLineNo;
                     EndColumnPos := ColumnPos;
 
+                    loToken.RawToken := CopyParseString(StartTokenPos, TokenPos);
+
+                    oInterpreter.AddToken(loToken);
 
                     break;
                   end;
@@ -1054,7 +1084,7 @@ begin
   if Assigned(foCommentsKeyword) then
    lch := foCommentsKeyword.oTokenType.ParseNextToken;
 
-
+  fbIsMultiLineComment := tCommentsKeyword(foCommentsKeyword as tCommentsKeyword).IsMultiLineComment;
 
   Result := Token;
 end;
@@ -1064,14 +1094,12 @@ function tInterpreter.ParseNextToken: Char;
 begin
   SkipCommentsToken;
 
-
   Result := inherited ;
+end;
 
-
-
-
-
-
+function tInterpreter.Execute: Boolean;
+begin
+  Result := inherited ;
 end;
 
 

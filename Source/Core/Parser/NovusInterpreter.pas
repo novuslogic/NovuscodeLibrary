@@ -7,16 +7,32 @@ uses Novuslist, NovusObject, NovusParser, System.Classes;
 type
   tNovusInterpreter = class;
 
+  tTokenType = class;
+
   tToken = class(tobject)
   private
+    fsRawToken: string;
+    foTokenType: tTokenType;
   protected
   public
+    constructor Create(aTokenType: tTokenType);
+    destructor Destroy; override;
+
+    property RawToken: string
+      read fsRawToken
+      write fsRawToken;
+
+    property oTokenType: tTokenType
+      read foTokenType
+      write foTokenType;
   end;
 
   tTokenType = class(tobject)
   private
   protected
     foInterpreter: tNovusInterpreter;
+    fiStartTokenPos: Integer;
+    fiEndTokenPos: Integer;
     fiStartSourceLineNo: Integer;
     fiStartColumnPos: Integer;
     fiEndSourceLineNo: Integer;
@@ -47,6 +63,14 @@ type
     property EndColumnPos: Integer
       read fiEndColumnPos
       write fiEndColumnPos;
+
+    property StartTokenPos: Integer
+      read fiStartTokenPos
+      write fiStartTokenPos;
+
+    property EndTokenPos: Integer
+      read fiEndTokenPos
+      write fiEndTokenPos;
 
   end;
 
@@ -80,7 +104,8 @@ type
   tNovusInterpreter = class(tNovusParser)
   private
   protected
-    fKeyWordslist: tNovuslist;
+    foTokenList: tNovusList;
+    foKeywordslist: tNovuslist;
     function InternalAddKeyword(aKeyName: String;aKeyword: tkeyword): tkeyword;
   public
     constructor Create;
@@ -89,25 +114,29 @@ type
     function AddKeyword(aKeyName: String;aKeyword: tkeyword): tkeyword; overload;
     function AddKeyword(aKeyword: tkeyword): tkeyword; overload;
     function FindKeyword(aKeyName: String): tkeyword;
+    function AddToken(aToken: tToken): tToken; overload;
 
 
     function ParseNextToken: Char; virtual;
 
-    function Execute: Boolean;
+    function Execute: Boolean; virtual;
   end;
 
 implementation
 
 constructor tNovusInterpreter.Create;
 begin
-  fKeyWordslist := tNovuslist.Create(tKeyword);
+  foKeywordslist := tNovuslist.Create(tKeyword);
+  foTokenList := tNovusList.Create(tToken);
+
 
   AddKeywords;
 end;
 
 destructor tNovusInterpreter.Destroy;
 begin
-  fKeyWordslist.Free;
+  foKeyWordslist.Free;
+  foTokenList.Free;
 
   inherited Destroy;
 end;
@@ -126,13 +155,21 @@ begin
   Result := InternalAddKeyword(aKeyword.ClassName,aKeyword);
 end;
 
+
+function  tNovusInterpreter.AddToken(aToken: tToken): tToken;
+begin
+  foTokenList.Add(aToken);
+
+  Result := aToken;
+end;
+
 function tNovusInterpreter.FindKeyword(aKeyName: String): tkeyword;
 var
   lokeyword: tkeyword;
 begin
   Result := NIL;
 
-  lokeyword := fKeyWordslist.FindItem(aKeyname)  as tkeyword ;
+  lokeyword := foKeyWordslist.FindItem(aKeyname)  as tkeyword ;
   if Assigned(lokeyword) then Result := lokeyword;
 end;
 
@@ -146,7 +183,7 @@ begin
 
   if Assigned(aKeyword) then
     begin
-      liIndex := fKeyWordslist.Add(aKeyName, aKeyword);
+      liIndex := foKeywordslist.Add(aKeyName, aKeyword);
 
       Result := aKeyword;
 
@@ -172,17 +209,11 @@ begin
       while not(Token in [toEOF]) do
           ParseNextToken;
 
-
-
-
       if Token = toEOF then
         begin
           Result := True;
           Break;
         end;
-
-
-
     end;
 end;
 
@@ -223,6 +254,22 @@ begin
 
   inherited Destroy;
 end;
+
+// tToken
+constructor tToken.Create(aTokenType: tTokenType);
+begin
+  foTokenType := aTokenType;
+end;
+
+destructor tToken.Destroy;
+begin
+  foTokenType := NIL;
+
+  inherited Destroy;
+end;
+
+
+
 
 
 end.

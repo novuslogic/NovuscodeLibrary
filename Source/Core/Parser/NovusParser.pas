@@ -42,6 +42,8 @@ type
     function SkipToEOLAsString: string; overload;
     function SkipToEOL(aRestColumnPos: boolean = True): Char; overload;
 
+    function CopyParseString(aStartTokenPos, aEndTokenPos: Integer): String;
+
     function NextToken: Char;
 
     function SkipToken(AStartToken: char = #0; ASecondToken : Char  = #0): Char;
@@ -52,9 +54,10 @@ type
     function SkipToTokenString(const ATokenString: string): string;
 
     property SourceLineNo: Integer read FiSourceLineNo write SetSourceLineNo;
-    property SourcePos: Integer read GetSourcePos write FiSourcePos;
+   // property SourcePos: Integer read GetSourcePos write FiSourcePos;
     property ColumnPos: Integer read fiColumnPos write fiColumnPos;
     property Token: Char read FToken write FToken;
+
 
     property TokenString: string read GetTokenString;
 
@@ -258,6 +261,12 @@ begin
 
   Result := FToken;
 end;
+
+function TNovusParser.CopyParseString(aStartTokenPos, aEndTokenPos: Integer): String;
+begin
+  Result := Copy(fsParseString, aStartTokenPos,aEndTokenPos - aStartTokenPos);
+end;
+
 
 function TNovusParser.SkipToEOL(aRestColumnPos: boolean = True): char;
 begin

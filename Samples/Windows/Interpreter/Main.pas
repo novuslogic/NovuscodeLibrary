@@ -43,7 +43,6 @@ end;
 procedure TMainForm.ParseButtonClick(Sender: TObject);
 Var
   LInterpreter: tInterpreter;
-
 begin
   Try
     LInterpreter:= tInterpreter.Create;

@@ -56,8 +56,8 @@ type
 
   TTemplateTag = class(TTag)
   private
-    FiSourceLineNo: INteger;
-    FiSourcePos: INteger;
+    FiSourceLineNo: Integer;
+    FiSourcePos: Integer;
   protected
   public
     property SourceLineNo: INteger read FiSourceLineNo write FiSourceLineNo;

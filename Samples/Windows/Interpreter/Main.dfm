@@ -3,7 +3,7 @@ object MainForm: TMainForm
   Top = 0
   Caption = 'InterpreterTest1'
   ClientHeight = 470
-  ClientWidth = 941
+  ClientWidth = 1044
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,7 +13,7 @@ object MainForm: TMainForm
   OldCreateOrder = False
   OnShow = FormShow
   DesignSize = (
-    941
+    1044
     470)
   PixelsPerInch = 96
   TextHeight = 13
@@ -62,10 +62,10 @@ object MainForm: TMainForm
   object LexStringGrid: TStringGrid
     Left = 417
     Top = 30
-    Width = 450
+    Width = 592
     Height = 401
     Anchors = [akLeft, akTop, akRight, akBottom]
-    ColCount = 3
+    ColCount = 4
     DefaultColWidth = 142
     DefaultRowHeight = 20
     FixedCols = 0

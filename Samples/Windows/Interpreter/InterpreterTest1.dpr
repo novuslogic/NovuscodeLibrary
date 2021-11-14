@@ -5,7 +5,10 @@ uses
   Main in 'Main.pas' {MainForm},
   NovusInterpreter in '..\..\..\Source\Core\Parser\NovusInterpreter.pas',
   Interpreter in 'Interpreter.pas',
-  NovusParser in '..\..\..\Source\Core\Parser\NovusParser.pas';
+  NovusParser in '..\..\..\Source\Core\Parser\NovusParser.pas',
+  NovusList in '..\..\..\Source\Core\Object\NovusList.pas',
+  NovusObject in '..\..\..\Source\Core\Object\NovusObject.pas',
+  NovusBO in '..\..\..\Source\Core\Object\NovusBO.pas';
 
 {$R *.res}
 

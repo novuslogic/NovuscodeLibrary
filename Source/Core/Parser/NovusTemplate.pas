@@ -379,7 +379,7 @@ begin
 
   FTemplateTag.SourceLineNo := SourceLineNo;
 
-  FTemplateTag.SourcePos := SourcePos;
+  FTemplateTag.SourcePos := GetSourcePos;
 
   If FEndToken <> #0 then
     fsTag := SkipToToken(FEndToken, FSecondToken)

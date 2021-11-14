@@ -540,11 +540,15 @@ type
   tInterpreter = class(tNovusInterpreter)
   private
   protected
+    foLog: tstringList;
     fbIsMultiLineComment: boolean;
     function SkipCommentsToken: Char;
   public
+    constructor Create; overload;
+    destructor Destroy; override;
+
     function ParseNextToken: Char; override;
-    function Execute: Boolean; override;
+    procedure Execute; override;
 
     procedure AddKeywords; override;
 
@@ -709,6 +713,9 @@ Var
   lch: char;
   lsRawToken: String;
   loToken: tToken;
+  liStartTokenPos,
+  liStartSourceLineNo,
+  liStartColumnPos:integer;
 begin
   With foInterpreter do
     begin
@@ -718,21 +725,21 @@ begin
             begin
               loToken := tToken.Create(Self);
 
-              StartTokenPos := TokenPos -1;
+              loToken.StartTokenPos := TokenPos -1;
 
-              StartSourceLineNo := SourceLineNo;
-              StartColumnPos := ColumnPos;
+              loToken.StartSourceLineNo := SourceLineNo;
+              loToken.StartColumnPos := ColumnPos;
 
               Result := SkipToEOL(false);
-              EndSourceLineNo := StartSourceLineNo;
+              loToken.EndSourceLineNo := loToken.StartSourceLineNo;
 
-              EndColumnPos := ColumnPos;
+              loToken.EndColumnPos := ColumnPos;
 
               if Result = toEOL then ColumnPos := 1;
 
-              EndTokenPos := TokenPos;
+              loToken.EndTokenPos := TokenPos;
 
-              loToken.RawToken := CopyParseString(StartTokenPos, TokenPos);
+              loToken.RawToken := CopyParseString(loToken.StartTokenPos, TokenPos);
 
               oInterpreter.AddToken(loToken);
 
@@ -744,9 +751,9 @@ begin
             begin
               fbIsMultiLineComment := true;
 
-              StartTokenPos := TokenPos -1 ;
-              StartSourceLineNo := SourceLineNo;
-              StartColumnPos := ColumnPos;
+              liStartTokenPos := TokenPos -1 ;
+              liStartSourceLineNo := SourceLineNo;
+              liStartColumnPos := ColumnPos;
 
               lch := NextToken;
               while True do
@@ -762,10 +769,14 @@ begin
 
                     fbIsMultiLineComment := False;
 
-                    EndSourceLineNo := SourceLineNo;
-                    EndColumnPos := ColumnPos;
+                    loToken.StartTokenPos := liStartTokenPos;
+                    loToken.StartSourceLineNo := liStartSourceLineNo;
+                    loToken.StartColumnPos := liStartColumnPos;
 
-                    loToken.RawToken := CopyParseString(StartTokenPos, TokenPos);
+                    loToken.EndSourceLineNo := SourceLineNo;
+                    loToken.EndColumnPos := ColumnPos;
+
+                    loToken.RawToken := CopyParseString(loToken.StartTokenPos, TokenPos);
 
                     oInterpreter.AddToken(loToken);
 
@@ -1090,6 +1101,22 @@ begin
 end;
 
 
+// tInterpreter
+constructor tInterpreter.Create;
+begin
+  foLog := tstringList.Create;
+
+  inherited Create;
+end;
+
+destructor tInterpreter.Destroy;
+begin
+  foLog.Free;
+
+  inherited Destroy;
+end;
+
+
 function tInterpreter.ParseNextToken: Char;
 begin
   SkipCommentsToken;
@@ -1097,9 +1124,14 @@ begin
   Result := inherited ;
 end;
 
-function tInterpreter.Execute: Boolean;
+procedure tInterpreter.Execute;
 begin
-  Result := inherited ;
+  inherited ;
+
+  if fbIsMultiLineComment then
+    begin
+      foLog.Add('detected unterminated comment, expecting "*/"');
+    end;
 end;
 
 

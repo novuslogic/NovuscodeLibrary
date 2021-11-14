@@ -5,6 +5,10 @@ interface
 uses Novuslist, NovusObject, NovusParser, System.Classes;
 
 type
+  tTokenList = class(tNovusList)
+
+  end;
+
   tNovusInterpreter = class;
 
   tTokenType = class;
@@ -13,6 +17,12 @@ type
   private
     fsRawToken: string;
     foTokenType: tTokenType;
+    fiStartTokenPos: Integer;
+    fiEndTokenPos: Integer;
+    fiStartSourceLineNo: Integer;
+    fiStartColumnPos: Integer;
+    fiEndSourceLineNo: Integer;
+    fiEndColumnPos: Integer;
   protected
   public
     constructor Create(aTokenType: tTokenType);
@@ -25,28 +35,6 @@ type
     property oTokenType: tTokenType
       read foTokenType
       write foTokenType;
-  end;
-
-  tTokenType = class(tobject)
-  private
-  protected
-    foInterpreter: tNovusInterpreter;
-    fiStartTokenPos: Integer;
-    fiEndTokenPos: Integer;
-    fiStartSourceLineNo: Integer;
-    fiStartColumnPos: Integer;
-    fiEndSourceLineNo: Integer;
-    fiEndColumnPos: Integer;
-  public
-    constructor Create(aInterpreter: tNovusInterpreter);
-
-    class function Init(aInterpreter: tNovusInterpreter): tTokenType; virtual;
-
-    function ParseNextToken: Char; virtual;
-
-    property oInterpreter: tNovusInterpreter
-       read foInterpreter
-       write foInterpreter;
 
     property StartSourceLineNo: Integer
       read  fiStartSourceLineNo
@@ -71,7 +59,23 @@ type
     property EndTokenPos: Integer
       read fiEndTokenPos
       write fiEndTokenPos;
+  end;
 
+  tTokenType = class(tobject)
+  private
+  protected
+    foInterpreter: tNovusInterpreter;
+
+  public
+    constructor Create(aInterpreter: tNovusInterpreter);
+
+    class function Init(aInterpreter: tNovusInterpreter): tTokenType; virtual;
+
+    function ParseNextToken: Char; virtual;
+
+    property oInterpreter: tNovusInterpreter
+       read foInterpreter
+       write foInterpreter;
   end;
 
   tKeyword = class(tobject)
@@ -104,11 +108,11 @@ type
   tNovusInterpreter = class(tNovusParser)
   private
   protected
-    foTokenList: tNovusList;
+    foTokenList: tTokenList;
     foKeywordslist: tNovuslist;
     function InternalAddKeyword(aKeyName: String;aKeyword: tkeyword): tkeyword;
   public
-    constructor Create;
+    constructor Create; virtual;
     destructor Destroy; override;
     procedure AddKeywords; virtual;
     function AddKeyword(aKeyName: String;aKeyword: tkeyword): tkeyword; overload;
@@ -119,7 +123,11 @@ type
 
     function ParseNextToken: Char; virtual;
 
-    function Execute: Boolean; virtual;
+    procedure Execute; virtual;
+
+    property oTokenList: tTokenList
+      read foTokenList;
+
   end;
 
 implementation
@@ -127,7 +135,7 @@ implementation
 constructor tNovusInterpreter.Create;
 begin
   foKeywordslist := tNovuslist.Create(tKeyword);
-  foTokenList := tNovusList.Create(tToken);
+  foTokenList := tTokenList.Create(tToken);
 
 
   AddKeywords;
@@ -199,9 +207,8 @@ begin
 end;
 
 
-function tNovusInterpreter.Execute: Boolean;
+procedure tNovusInterpreter.Execute;
 begin
-  Result := False;
   Reset;
 
   while True do
@@ -211,7 +218,6 @@ begin
 
       if Token = toEOF then
         begin
-          Result := True;
           Break;
         end;
     end;

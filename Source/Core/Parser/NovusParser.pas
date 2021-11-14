@@ -26,7 +26,7 @@ type
     procedure SetSourceLineNo(Value: Integer);
 
     function GetParseString: string;
-    function GetSourcePos: Integer;
+
     function GetTokenString: string;
   protected
   public
@@ -52,6 +52,8 @@ type
     function SkipToToken(const AToken: Char; ASecondToken: Char = #0): string; overload;
     function SkipToToken(const AToken: TSysCharSet): string; overload;
     function SkipToTokenString(const ATokenString: string): string;
+
+    function GetSourcePos: Integer;
 
     property SourceLineNo: Integer read FiSourceLineNo write SetSourceLineNo;
    // property SourcePos: Integer read GetSourcePos write FiSourcePos;

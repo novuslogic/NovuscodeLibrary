@@ -110,6 +110,9 @@
         <DCCReference Include="..\..\..\Source\Core\Parser\NovusInterpreter.pas"/>
         <DCCReference Include="Interpreter.pas"/>
         <DCCReference Include="..\..\..\Source\Core\Parser\NovusParser.pas"/>
+        <DCCReference Include="..\..\..\Source\Core\Object\NovusList.pas"/>
+        <DCCReference Include="..\..\..\Source\Core\Object\NovusObject.pas"/>
+        <DCCReference Include="..\..\..\Source\Core\Object\NovusBO.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

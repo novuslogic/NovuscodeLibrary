@@ -6,6 +6,8 @@ uses
   contnrs, NovusObject, Classes, Generics.Collections, NovusUtilities;
 
 type
+  TNovusList = class;
+
   tHashItem = class(TObject)
   protected
   private
@@ -37,6 +39,8 @@ type
     procedure InitClass(aClass: tClass);
 
     procedure Insert(AItem: TObject; AIndex: Integer);
+
+    function GetEnumerator: TlistEnumerator;
 
     function Add(AItem: TObject): Integer; overload;
     function Add(aKey: string; AItem: TObject): Integer; overload;
@@ -290,6 +294,11 @@ begin
 
   for I := 0 to aNovusList.Count - 1 do
     Add(aNovusList.Items[I]);
+end;
+
+function TNovusList.GetEnumerator: TlistEnumerator;
+begin
+  Result := FList.GetEnumerator;
 end;
 
 end.

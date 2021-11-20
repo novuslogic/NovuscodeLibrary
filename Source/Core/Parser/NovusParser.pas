@@ -22,7 +22,7 @@ type
     FToken: Char;
 
     function SkipBlanksEx(var aTokenPos: Integer; var aSourceLineNo: Integer): Char;
-    procedure SkipBlanks;
+
     procedure SetSourceLineNo(Value: Integer);
 
     function GetParseString: string;
@@ -34,6 +34,8 @@ type
     destructor Destroy; override;
 
     procedure Reset;
+
+    procedure SkipBlanks;
 
     function LoadFromString(const aInput: string): boolean;
     function LoadFromFile(const aFileName: string): Boolean;

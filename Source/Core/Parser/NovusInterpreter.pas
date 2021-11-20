@@ -2,7 +2,7 @@ unit NovusInterpreter;
 
 interface
 
-uses Novuslist, NovusObject, NovusParser, System.Classes;
+uses Novuslist, NovusObject, NovusParser, System.Classes, vcl.dialogs;
 
 type
   tTokenList = class(tNovusList)
@@ -11,12 +11,12 @@ type
 
   tNovusInterpreter = class;
 
-  tTokenType = class;
+  tParserCell = class;
 
   tToken = class(tobject)
   private
     fsRawToken: string;
-    foTokenType: tTokenType;
+    foParserCell: tParserCell;
     fiStartTokenPos: Integer;
     fiEndTokenPos: Integer;
     fiStartSourceLineNo: Integer;
@@ -25,16 +25,16 @@ type
     fiEndColumnPos: Integer;
   protected
   public
-    constructor Create(aTokenType: tTokenType);
+    constructor Create(aParserCell: tParserCell);
     destructor Destroy; override;
 
     property RawToken: string
       read fsRawToken
       write fsRawToken;
 
-    property oTokenType: tTokenType
-      read foTokenType
-      write foTokenType;
+    property oParserCell: tParserCell
+      read foParserCell
+      write foParserCell;
 
     property StartSourceLineNo: Integer
       read  fiStartSourceLineNo
@@ -61,15 +61,14 @@ type
       write fiEndTokenPos;
   end;
 
-  tTokenType = class(tobject)
+  tParserCell = class(tobject)
   private
   protected
     foInterpreter: tNovusInterpreter;
-
   public
     constructor Create(aInterpreter: tNovusInterpreter);
 
-    class function Init(aInterpreter: tNovusInterpreter): tTokenType; virtual;
+    class function Init(aInterpreter: tNovusInterpreter): tParserCell; virtual;
 
     function ParseNextToken: Char; virtual;
 
@@ -81,7 +80,7 @@ type
   tKeyword = class(tobject)
   private
   protected
-    foTokenType: tTokenType;
+    foParserCell: tParserCell;
     fiIndex: Integer;
     fsKeyName: String;
   public
@@ -93,14 +92,14 @@ type
       read fsKeyName
       write fsKeyName;
 
-    constructor Create(aTokenType: tTokenType);
+    constructor Create(aParserCell: tParserCell);
     destructor Destroy; override;
 
-    class function Init(aTokenType: tTokenType): tKeyword; virtual;
+    class function Init(aParserCell: tParserCell): tKeyword; virtual;
 
-    property oTokenType: tTokenType
-      read foTokenType
-      write foTokenType;
+    property oParserCell: tParserCell
+      read foParserCell
+      write foParserCell;
 
   end;
 
@@ -203,8 +202,10 @@ end;
 
 function tNovusInterpreter.ParseNextToken: Char;
 begin
-  Result := SkipToken;
+  Result := NextToken;
 end;
+
+
 
 
 procedure tNovusInterpreter.Execute;
@@ -214,7 +215,9 @@ begin
   while True do
     begin
       while not(Token in [toEOF]) do
+        begin
           ParseNextToken;
+        end;
 
       if Token = toEOF then
         begin
@@ -224,19 +227,19 @@ begin
 end;
 
 
-// tTokenType
-constructor tTokenType.Create(aInterpreter: tNovusInterpreter);
+// tParserCell
+constructor tParserCell.Create(aInterpreter: tNovusInterpreter);
 begin
   foInterpreter := aInterpreter;
 end;
 
 
-class function tTokenType.Init(aInterpreter: tNovusInterpreter): tTokenType;
+class function tParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
 begin
   Result := NIL;
 end;
 
-function tTokenType.ParseNextToken: Char;
+function tParserCell.ParseNextToken: Char;
 begin
   result := #0;
 end;
@@ -244,32 +247,32 @@ end;
 
 
 // tKeyword
-class function tKeyword.Init(aTokenType: tTokenType): tKeyword;
+class function tKeyword.Init(aParserCell: tParserCell): tKeyword;
 begin
   Result := NIL;
 end;
 
-constructor tKeyword.Create(aTokenType: tTokenType);
+constructor tKeyword.Create(aParserCell: tParserCell);
 begin
-  foTokenType := aTokenType;
+  foParserCell := aParserCell;
 end;
 
 destructor tKeyword.Destroy;
 begin
-  if Assigned(foTokenType) then foTokenType.Free;
+  if Assigned(foParserCell) then foParserCell.Free;
 
   inherited Destroy;
 end;
 
 // tToken
-constructor tToken.Create(aTokenType: tTokenType);
+constructor tToken.Create(aParserCell: tParserCell);
 begin
-  foTokenType := aTokenType;
+  foParserCell := aParserCell;
 end;
 
 destructor tToken.Destroy;
 begin
-  foTokenType := NIL;
+  foParserCell := NIL;
 
   inherited Destroy;
 end;

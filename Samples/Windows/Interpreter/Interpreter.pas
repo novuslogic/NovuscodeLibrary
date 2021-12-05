@@ -31,7 +31,7 @@ type
     class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
   end;
 
-  tFloaParserCell = class(tParserCell)
+  tFloatParserCell = class(tParserCell)
   protected
   private
   public
@@ -540,6 +540,9 @@ type
   tInterpreter = class(tNovusInterpreter)
   private
   protected
+    fiStartTokenPos: Integer;
+    fiStartSourceLineNo: Integer;
+    fiStartColumnPos: Integer;
     foLog: tstringList;
     fbIsMultiLineComment: boolean;
     function SkipCommentsToken: Char;
@@ -743,7 +746,6 @@ begin
 
               oInterpreter.AddToken(loToken);
 
-
               Exit;
             end
           else
@@ -789,10 +791,10 @@ begin
     end;
 end;
 
-// tFloaParserCell
-class function tFloaParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+// tFloatParserCell
+class function tFloatParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
 begin
-  Result := tFloaParserCell.Create(aInterpreter);
+  Result := tFloatParserCell.Create(aInterpreter);
 end;
 
 // tIntegerParserCell
@@ -1123,7 +1125,14 @@ begin
 
   SkipBlanks;
 
+  fiStartTokenPos := TokenPos -1 ;
+  fiStartSourceLineNo := SourceLineNo;
+  fiStartColumnPos := ColumnPos;
+
   Result := inherited ;
+
+  GetKeyword;
+
 end;
 
 procedure tInterpreter.Execute;
@@ -1135,9 +1144,6 @@ begin
       foLog.Add('detected unterminated comment, expecting "*/"');
     end;
 end;
-
-
-
 
 procedure tInterpreter.AddKeywords;
 begin

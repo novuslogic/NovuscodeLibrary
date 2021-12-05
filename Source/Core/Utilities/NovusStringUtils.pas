@@ -1,5 +1,6 @@
 {$I ..\..\core\NovusCodeLibrary.inc}
-unit NovusStringUtils;
+
+unit NovusStringUtils;
 
 interface
 
@@ -1098,4 +1099,4 @@ begin
 end;
 
 end.
-
+

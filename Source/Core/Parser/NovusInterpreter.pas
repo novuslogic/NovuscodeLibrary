@@ -2,7 +2,8 @@ unit NovusInterpreter;
 
 interface
 
-uses Novuslist, NovusObject, NovusParser, System.Classes, NovusStringUtils;
+uses Novuslist, NovusObject, NovusParser, System.Classes, NovusStringUtils,
+     System.AnsiStrings;
 
 type
   tTokenList = class(tNovusList);
@@ -122,6 +123,9 @@ type
   tNovusInterpreter = class(tNovusParser)
   private
   protected
+    fiStartTokenPos: Integer;
+    fiStartSourceLineNo: Integer;
+    fiStartColumnPos: Integer;
     foTokenList: tTokenList;
     foKeywordslist: tNovuslist;
     foOperatorslist: tNovuslist;
@@ -150,6 +154,18 @@ type
 
     property oTokenList: tTokenList
       read foTokenList;
+
+    property StartTokenPos: Integer
+      read fiStartTokenPos
+      write fiStartTokenPos;
+
+    property StartSourceLineNo: Integer
+      read fiStartSourceLineNo
+      write fiStartSourceLineNo;
+
+    property StartColumnPos: Integer
+      read fiStartColumnPos
+      write fiStartColumnPos;
 
   end;
 
@@ -299,12 +315,16 @@ begin
 end;
 
 
+
+
+
 procedure tNovusInterpreter.GetKeyword;
 var
   lch: char;
   lsKeyName: String;
   lokeyword: tkeyword;
   loOperator: tOperator;
+  loToken: tToken;
 begin
   lsKeyName := '';
   lokeyword := nil;
@@ -356,6 +376,43 @@ begin
 
 
                end;
+
+
+             loToken := tToken.Create(NIL);
+
+             loToken.StartTokenPos := StartTokenPos;
+
+             loToken.StartSourceLineNo := StartSourceLineNo;
+             loToken.StartColumnPos := StartColumnPos;
+
+             lch := NextToken;
+             while (lch in ['a'..'z','A'..'Z','_']) do
+               lch := NextToken;
+
+
+
+             loToken.EndSourceLineNo := Self.SourceLineNo;
+
+             loToken.EndColumnPos := ColumnPos;
+
+             loToken.EndTokenPos := TokenPos -1;
+
+             loToken.RawToken := Trim(CopyParseString(loToken.StartTokenPos, loToken.EndTokenPos));
+
+              (*
+              Result := SkipToEOL(false);
+              loToken.EndSourceLineNo := loToken.StartSourceLineNo;
+
+              loToken.EndColumnPos := ColumnPos;
+
+              if Result = toEOL then ColumnPos := 1;
+
+              loToken.EndTokenPos := TokenPos;
+
+              loToken.RawToken := CopyParseString(loToken.StartTokenPos, TokenPos);
+
+              oInterpreter.AddToken(loToken);
+             *)
 
 
 

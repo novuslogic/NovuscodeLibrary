@@ -41,6 +41,13 @@ begin
            Result.VUnicodeString := Pointer(U);
          end;
 
+       varOleStr:
+         begin
+            New(Result.VString);
+            Result.VType := vtString;
+            Result.VString^ := VarToStr(aValue);
+         end;
+
        vtString:
           begin
             New(Result.VString);
@@ -61,7 +68,7 @@ begin
        vtInt64:         ;
        vtUnicodeString: ;
   else
-      Raise Exception.Create('TNovusVariants.VarToVarRec: Unrecognized variant type');
+      Raise Exception.Create('TNovusVariants.VarToVarRec: Unrecognized variant type:'+ IntToStr(aValue));
   end;
 end;
 

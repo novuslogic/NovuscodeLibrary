@@ -540,9 +540,6 @@ type
   tInterpreter = class(tNovusInterpreter)
   private
   protected
-    fiStartTokenPos: Integer;
-    fiStartSourceLineNo: Integer;
-    fiStartColumnPos: Integer;
     foLog: tstringList;
     fbIsMultiLineComment: boolean;
     function SkipCommentsToken: Char;

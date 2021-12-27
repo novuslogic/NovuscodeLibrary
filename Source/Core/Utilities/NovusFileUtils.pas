@@ -27,6 +27,11 @@ Type
     /// </summary>
     class function ExtractFileExtA(aFileExt: String): String;
 
+    /// <summary>
+    /// Is just filename only
+    /// </summary>
+    class function IsJustFilenameOnly(aFilename: String): Boolean;
+
     class function AbsoluteFilePath(aFilename: String): String;
     /// <summary>
     /// Uses IncludeTrailingPathDelimiter, if filename is blank returns blank.
@@ -34,7 +39,6 @@ Type
     class function TrailingBackSlash(const aFilename: string): string;
     class function GetSpecialFolder(const CSIDL: integer): string;
     class function IsOnlyFolder(aFolder: string): boolean;
-
     /// <summary>
     ///  Is Valid folder
     /// </summary>
@@ -258,28 +262,9 @@ begin
   if not TNovusFileUtils.IsOnlyFolder(aFolder) then Exit;
 
   Result := DirectoryExists(aFolder);
-
-  (*
-  if Result = False then
-  begin
-    S := aFolder;
-    repeat
-      I := LastDelimiter('\/', S);
-      MoveFile(nil, PChar(S));
-      if (GetLastError = ERROR_ALREADY_EXISTS) or
-        ((GetFileAttributes(PChar(Copy(S, I + 1, MaxInt)))
-        = INVALID_FILE_ATTRIBUTES) and (GetLastError = ERROR_INVALID_NAME)) then
-        Exit;
-      if I > 0 then
-        S := Copy(S, 1, I - 1);
-    until I = 0;
-    Result := True;
-  end;
-  *)
 end;
 
 {$IFDEF DELPHI2009_UP}
-
 class function TNovusFileUtils.IsTextFile(aFilename: String;
   var aEncoding: tEncoding): integer;
 var
@@ -352,6 +337,11 @@ end;
 class function TNovusFileUtils.ExtractName(aFullFileName: String): String;
 begin
   Result := stringreplace(extractfilename(aFullFileName), ExtractFileExt(aFullFileName), '', [rfIgnoreCase]);
+end;
+
+class function TNovusFileUtils.IsJustFilenameOnly(aFilename: String): Boolean;
+begin
+  Result := (Trim(extractfilename(aFilename)) = trim(aFilename));
 end;
 
 end.

@@ -1,3 +1,8 @@
+28/12/2021
+
+* New Support for OleStr in TNovusVariants.VarToVarRec 
+* New function class function TNovusFileUtils.IsJustFilenameOnly(aFilename: String): Boolean;
+
 28/10/2021
 
 * Upgraded function TNovusParser.SkipToEOL(aRestColumnPos: boolean = True): char

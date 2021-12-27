@@ -51,6 +51,7 @@ type
     function SkipToken(AStartToken: char = #0; ASecondToken : Char  = #0): Char;
     function SkipTokenString: string;
     function SkipToNonAlpha: String;
+
     function SkipToToken(const AToken: Char; ASecondToken: Char = #0): string; overload;
     function SkipToToken(const AToken: TSysCharSet): string; overload;
     function SkipToTokenString(const ATokenString: string): string;
@@ -413,6 +414,8 @@ begin
   if FToken <> toEOF then
     SkipToken;
 end;
+
+
 
 
 function TNovusParser.SkipToToken(const AToken: TSysCharSet): string;

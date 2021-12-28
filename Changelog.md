@@ -1,5 +1,6 @@
 28/12/2021
 
+* More support for String types in TNovusVariants.VarToVarRec 
 * New Support for OleStr in TNovusVariants.VarToVarRec 
 * New function class function TNovusFileUtils.IsJustFilenameOnly(aFilename: String): Boolean;
 

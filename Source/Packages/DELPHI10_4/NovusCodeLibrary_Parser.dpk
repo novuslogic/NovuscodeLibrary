@@ -37,7 +37,6 @@ requires
 contains
   NovusTemplate in '..\..\Core\Parser\NovusTemplate.pas',
   NovusParser in '..\..\Core\Parser\NovusParser.pas',
-  NovusStringParser in '..\..\Core\Parser\NovusStringParser.pas',
-  NovusInterpreter in '..\..\Core\Parser\NovusInterpreter.pas';
+  NovusStringParser in '..\..\Core\Parser\NovusStringParser.pas';
 
 end.

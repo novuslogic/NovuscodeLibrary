@@ -6,7 +6,7 @@ interface
 Uses NovusObject, Activex, ComObj, Classes, SysUtils,
   NovusBOField, NovusBOMap, NovusUtilities, DBXJson, DB, NovusDateUtils,
 {$IFDEF DELPHIXE6_UP}
-  JSON,
+  JSON, System.Variants,
 {$ENDIF}
   NovusStringUtils, NovusDateStringUtils;
 
@@ -393,12 +393,20 @@ begin
       else if loBOField is TNovusBOStringField then
         loJSONObject.AddPair(TJSONPair.Create(loBOField.FieldName,
           TJSONString.Create(loBOField.Value)))
-      else if loBOField is TNovusBOIntegerField then
-        loJSONObject.AddPair(TJSONPair.Create(loBOField.FieldName,
-          TJSONNumber.Create(loBOField.Value)))
+      else
+      if loBOField is TNovusBOIntegerField then
+      {$IFDEF DELPHI11_UP}
+         loJSONObject.AddPair(TJSONPair.Create(loBOField.FieldName, TJSONNumber.Create(VarToStr(loBOField.Value))))
+      {$ELSE}
+         loJSONObject.AddPair(TJSONPair.Create(loBOField.FieldName, TJSONNumber.Create(loBOField.Value)))
+      {$ENDIF}
       else if loBOField is TNovusBOFloatField then
-        loJSONObject.AddPair(TJSONPair.Create(loBOField.FieldName,
-          TJSONNumber.Create(loBOField.Value)))
+      {$IFDEF DELPHI11_UP}
+         loJSONObject.AddPair(TJSONPair.Create(loBOField.FieldName, TJSONNumber.Create(VarToStr(loBOField.Value))))
+      {$ELSE}
+         loJSONObject.AddPair(TJSONPair.Create(loBOField.FieldName, TJSONNumber.Create(loBOField.Value)))
+      {$ENDIF}
+
       else if loBOField is TNovusBOBooleanField then
         loJSONObject.AddPair(TJSONPair.Create(loBOField.FieldName,
           TJSONString.Create(tNovusStringUtils.BooleanToStr(TNovusBOBooleanField
@@ -406,8 +414,11 @@ begin
       else if loBOField is TNovusBOSmallintField then
       begin
         if Not TNovusBOSmallintField(loBOField).UseAsBoolean then
-          loJSONObject.AddPair(TJSONPair.Create(loBOField.FieldName,
-            TJSONNumber.Create(loBOField.Value)))
+        {$IFDEF DELPHI11_UP}
+           loJSONObject.AddPair(TJSONPair.Create(loBOField.FieldName, TJSONNumber.Create(VarToStr(loBOField.Value))))
+        {$ELSE}
+           loJSONObject.AddPair(TJSONPair.Create(loBOField.FieldName, TJSONNumber.Create(loBOField.Value)))
+        {$ENDIF}
         else
           loJSONObject.AddPair(TJSONPair.Create(loBOField.FieldName,
             TJSONString.Create(tNovusStringUtils.BooleanToStr

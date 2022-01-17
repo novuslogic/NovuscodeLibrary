@@ -1,3 +1,13 @@
+17/01/2022
+
+* Updated to Delphi 11
+* Updated DelphiVersions.inc with Delphi 11 support
+
+3/1/2022
+
+* Rename IgnoreBlankValue to SwapTagNameBlankValue this function Insert Tagname when blank value on InsertAllTagValues function
+
+
 28/12/2021
 
 * More support for String types in TNovusVariants.VarToVarRec 

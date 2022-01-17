@@ -13,8 +13,12 @@
 {********************************************************************}
 
 
-(* http://docwiki.embarcadero.com/RADStudio/Sydney/en/Compiler_Versions *)
+(* http://docwiki.embarcadero.com/RADStudio/Alexandria/en/Compiler_Versions *)
 
+(* Delphi 11 / C++Builder Delphi 11 Alexandria / D28 *)
+{$IFDEF VER350}
+   {$DEFINE DELPHI11}
+{$ENDIF}
 
 (* Delphi 10.4  / C++Builder Sydney / D27 *)
 {$IFDEF VER340}
@@ -98,6 +102,20 @@
 {$IFDEF VER185}
    {$DEFINE DELPHI2007_1}
 {$ENDIF}
+
+{$IFDEF DELPHI11}
+   {$DEFINE DELPHI11_UP}
+   {$DEFINE DELPHI10_4_UP}
+   {$DEFINE DELPHI10_3_UP}
+   {$DEFINE DELPHI10_2_UP}
+   {$DEFINE DELPHI10_1_UP}
+   {$DEFINE DELPHI10_UP}
+   {$DEFINE DELPHIXE8_UP}
+   {$DEFINE DELPHIXE7_UP}
+   {$DEFINE DELPHIXE6_UP}
+   {$DEFINE DELPHI2009_UP}
+{$ENDIF}
+
 
 {$IFDEF DELPHI10_4}
    {$DEFINE DELPHI10_4_UP}

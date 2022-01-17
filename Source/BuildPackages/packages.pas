@@ -46,7 +46,6 @@ begin
     lVariableCmdLineList.Free;
   end;
   
-  
  
 end;
 
@@ -142,6 +141,14 @@ begin
   Output.log('Delphi 10.4 Packages ...');
 
   BuldDelphiPackages(DELPHI10_4, 'package');
+end;
+
+
+procedure BuildDelphi11Packages;
+begin
+  Output.log('Delphi 11 Packages ...');
+
+  BuldDelphiPackages(DELPHI11, 'package');
 end;
 
 
@@ -242,6 +249,13 @@ begin
       
     end;   
 
+  with Task.AddTask('BuildDelphi11Packages') do
+    begin
+      Criteria.Failed.Abort := True;
+     
+      
+    end;     
+
   if not Task.RunTargets(['BuildDelphiXEPackages',
         'BuildDelphiXE2Packages', 
         'BuildDelphiXE3Packages', 
@@ -254,7 +268,8 @@ begin
         'BuildDelphi10_1Packages',
         'BuildDelphi10_2Packages',
         'BuildDelphi10_3Packages',
-        'BuildDelphi10_4Packages'
+        'BuildDelphi10_4Packages',
+        'BuildDelphi11Packages'
         ]) then 
     RaiseException(erCustomError, 'Failed RunTargets'); 
 

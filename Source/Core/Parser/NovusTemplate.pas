@@ -92,7 +92,7 @@ type
     FStartToken: Char;
     FEndToken: Char;
     FSecondToken: Char;
-    fbIgnoreBlankValue: boolean;
+    fbSwapTagNameBlankValue: boolean;
     FTemplateTags: TTemplateTags;
     FTemplateDoc: tStringList;
     FOutputDoc: tStringList;
@@ -138,7 +138,7 @@ type
 
     property SecondToken: Char read FSecondToken write FSecondToken;
 
-    property IgnoreBlankValue: Boolean read fbIgnoreBlankValue write fbIgnoreBlankValue;
+    property SwapTagNameBlankValue: Boolean read fbSwapTagNameBlankValue write fbSwapTagNameBlankValue;
 
     property LastMessage: String read fsLastMessage write fsLastMessage;
   end;
@@ -161,7 +161,7 @@ begin
   FOutputDoc := tStringList.Create;
   FParserStream := TMemoryStream.Create;
 
-  IgnoreBlankValue := False;
+  SwapTagNameBlankValue := False;
 end;
 
 destructor TNovusTemplate.Destroy;
@@ -220,9 +220,6 @@ begin
   for I := 0 to TemplateTags.Count - 1 do
   begin
     FTemplateTag := TTemplateTag(TemplateTags.Items[I]);
-
-    if (IgnoreBlankValue = True) and (FTemplateTag.TagValue = '') then
-      Continue;
 
     if I <= TemplateTags.Count - 2 then
       InsertOutputDoc(FTemplateTag)
@@ -308,9 +305,14 @@ begin
       FTemplateTag.SourcePos - 1, True)
   else
   begin
-    System.Delete(FsInput, (FTemplateTag.SourcePos), Length(lsTagName));
+    if (SwapTagNameBlankValue = True) and (FTemplateTag.TagValue = '') then
+      begin
+        System.Delete(FsInput, (FTemplateTag.SourcePos), Length(lsTagName));
 
-    FOutputDoc.Strings[FTemplateTag.SourceLineNo - 1] := FsInput;
+        FOutputDoc.Strings[FTemplateTag.SourceLineNo - 1] := FsInput;
+      end
+     else
+        FOutputDoc.Strings[FTemplateTag.SourceLineNo - 1] := '';
   end;
 
   if Length(FTemplateTag.TagValue) > Length(lsTagName) then

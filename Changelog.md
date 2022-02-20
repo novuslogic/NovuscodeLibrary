@@ -1,3 +1,8 @@
+20/02/2022
+
+* New unit NovusTokenProcessor in package Parser
+* New procedure procedure TNovusTemplate.Add(aLine: String);
+
 17/01/2022
 
 * Updated to Delphi 11

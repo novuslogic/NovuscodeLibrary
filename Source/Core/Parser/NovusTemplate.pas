@@ -110,6 +110,7 @@ type
     function Execute: Boolean;
 
     procedure InsertAllTagValues;
+    procedure Add(aLine: String);
 
     function InsertOutputDoc(ATemplateTag: TTemplateTag): Boolean;
     function TagValuesAllExists: Boolean;
@@ -203,6 +204,11 @@ end;
 function TNovusTemplate.ParseTemplate: Boolean;
 begin
   Result := InternalParseTemplate;
+end;
+
+procedure TNovusTemplate.Add(aLine: String);
+begin
+  TemplateDoc.Add(aLine)
 end;
 
 procedure TNovusTemplate.InsertAllTagValues;

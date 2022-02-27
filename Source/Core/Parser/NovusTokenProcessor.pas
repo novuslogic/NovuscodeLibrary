@@ -24,6 +24,8 @@ type
      function IsNextTokenOpenBracket: boolean;
      function IsNextTokenSemicolon: boolean;
      function IsNextTokenColon: boolean;
+     function IsNextToken(aToken: String): boolean;
+     function FindToken(aToken: string): Boolean;
 
      function EOF: Boolean;
 
@@ -102,6 +104,16 @@ end;
 function tNovusTokenProcessor.IsNextTokenColon: boolean;
 begin
   Result := GetNextToken = ':';
+end;
+
+function tNovusTokenProcessor.IsNextToken(aToken: String): boolean;
+begin
+  Result := GetNextToken = aToken;
+end;
+
+function tNovusTokenProcessor.FindToken(aToken: string): boolean;
+begin
+  Result := Find(aToken, fiTokenIndex);
 end;
 
 function tNovusTokenProcessor.IsEqualsToken: Boolean;

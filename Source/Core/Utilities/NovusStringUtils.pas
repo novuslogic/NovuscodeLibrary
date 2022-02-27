@@ -49,6 +49,7 @@ Type
 Type
   TNovusStringUtils = class(TNovusUtilities)
   public
+    class function IsAlphaNumeric(aStr: string): boolean;
     class function RightTrim(aStr: String): String;
     class function LeftTrim(aStr: String): String;
     class function FormatMessStrOptions(aString: String;
@@ -91,7 +92,6 @@ Type
     /// Boolean To String
     /// </summary>
     class function Bool2Str(aValue: Boolean): String;
-
     class function GetStrRes(const Index: Integer): String;
     /// <summary>
     /// Convert a String to Integer
@@ -131,7 +131,6 @@ Type
       var AStringList: TStringList);
     class procedure String2Strings(aString: string; var AStrings: TStrings);
     class function FormatMessStr(aString: String): String;
-//    class function TrailingBackSlash(const aFilename: string): string;
     class function VarArrayToStr(const vArray: variant): string;
     class function VarStrNull(const V: OleVariant): string;
     class function IsBoolean(const sValue: string): Boolean;
@@ -1096,6 +1095,12 @@ end;
 class function TNovusStringUtils.RightTrim(aStr: String): String;
 begin
   Result := TRegEx.Replace(aStr, '\s+$', '');
+end;
+
+
+class function TNovusStringUtils.IsAlphaNumeric(aStr: string): boolean;
+begin
+  Result := TRegEx.IsMatch(aStr, '[0-9A-Za-z]$');
 end;
 
 end.

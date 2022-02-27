@@ -1,3 +1,9 @@
+27/02/2022
+
+* New function tNovusStringUtils.IsAlphaNumeric(aStr: string): boolean;
+* New function tNovusTokenProcessor.IsNextToken(aToken: String): boolean;
+* New function tNovusTokenProcessor.FindToken(aToken: String): boolean;
+
 20/02/2022
 
 * New unit NovusTokenProcessor in package Parser

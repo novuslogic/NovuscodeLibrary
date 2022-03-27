@@ -1,3 +1,11 @@
+27/03/2022
+
+* New function class function TNovusStringUtils.FormatStrVar(Const aFormat: string; Const Args: array of Variant): string;
+* Update function tNovusTokenProcessor.GetFirstToken(aIgnoreNextToken: Boolean = false): string; with aIgnoreNextToken Option
+* New function function tNovusTokenProcessor.CurrentToken: string;
+* Rename function tNovusTokenProcessor.Next to tNovusTokenProcessor.NextToken
+* Rename function tNovusTokenProcessor.First to tNovusTokenProcessor.FirstToken
+
 27/02/2022
 
 * New function tNovusStringUtils.IsAlphaNumeric(aStr: string): boolean;

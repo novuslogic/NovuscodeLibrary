@@ -15,9 +15,9 @@ type
 
      function ToString: String; override;
      function IsEqualsToken: Boolean;
-     procedure First;
-     procedure Next;
-     function GetFirstToken: string;
+     procedure FirstToken;
+     procedure NextToken;
+     function GetFirstToken(aIgnoreNextToken: Boolean = false): string;
      function GetNextToken(aIgnoreNextToken: Boolean = false): string; overload;
      function GetNextToken(aTokenIndex: Integer): string; overload;
      function IsNextTokenEquals: boolean;
@@ -26,8 +26,10 @@ type
      function IsNextTokenColon: boolean;
      function IsNextToken(aToken: String): boolean;
      function FindToken(aToken: string): Boolean;
+     function CurrentToken: String;
 
      function EOF: Boolean;
+     function BOF: boolean;
 
      property TokenIndex: Integer
          read fiTokenIndex
@@ -41,6 +43,12 @@ implementation
 constructor tNovusTokenProcessor.Create;
 begin
   fiTokenIndex:= 0;
+end;
+
+
+function tNovusTokenProcessor.BOF: boolean;
+begin
+  Result := (fiTokenIndex = -1);
 end;
 
 function tNovusTokenProcessor.EOF: Boolean;
@@ -57,19 +65,17 @@ begin
   if Count > 0 then
     Result := Trim(Strings[fiTokenIndex]);
 
-  if Not aIgnoreNextToken then
-    begin
-      Inc(fiTokenIndex);
-    end;
+  if aIgnoreNextToken = false then Inc(fiTokenIndex);
 end;
 
 
-function tNovusTokenProcessor.GetFirstToken: string;
+function tNovusTokenProcessor.GetFirstToken(aIgnoreNextToken: Boolean = false): string;
 begin
-  First;
+  fiTokenIndex := 0;
   if Count =0 then Exit;
   Result := Trim(Strings[fiTokenIndex]);
-  Inc(fiTokenIndex);
+
+  if aIgnoreNextToken = false then Inc(fiTokenIndex);
 end;
 
 function tNovusTokenProcessor.GetNextToken(aTokenIndex: Integer): string;
@@ -113,13 +119,14 @@ end;
 
 function tNovusTokenProcessor.FindToken(aToken: string): boolean;
 begin
-  Result := Find(aToken, fiTokenIndex);
+  fiTokenIndex := (Self.IndexOf(aToken));
+  Result := Not BOF;
 end;
 
 function tNovusTokenProcessor.IsEqualsToken: Boolean;
 begin
    Result := False;
-   First;
+   FirstToken;
    while(not EOF) do
      begin
 
@@ -142,12 +149,21 @@ begin
      Result := Result +Trim(Strings[i]);
 end;
 
-procedure tNovusTokenProcessor.First;
+procedure tNovusTokenProcessor.FirstToken;
 begin
   fiTokenIndex :=0;
 end;
 
-procedure tNovusTokenProcessor.Next;
+function tNovusTokenProcessor.CurrentToken: string;
+begin
+  Result := '';
+  if EOF then Exit;
+
+  Result := Strings[fiTokenIndex];
+end;
+
+
+procedure tNovusTokenProcessor.NextToken;
 begin
   Inc(fiTokenIndex);
 

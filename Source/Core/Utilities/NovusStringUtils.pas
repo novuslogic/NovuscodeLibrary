@@ -4,7 +4,8 @@ unit NovusStringUtils;
 
 interface
 
-uses Windows, sysutils, NovusUtilities, Classes, variants, System.RegularExpressions;
+uses Windows, sysutils, NovusUtilities, Classes, variants, System.RegularExpressions,
+     NovusVariants;
 
 Const
   Cr = #13;
@@ -104,6 +105,11 @@ Type
     class function Str2Int64(aStr: String): Int64;
     class function Str2Uint16(aStr: String): UInt16;
 
+    /// <summary>
+    /// Format String using Variant array
+    /// </summary>
+    class function FormatStrVar(Const aFormat: string; Const Args: array of Variant): string;
+
     class function StrChInsertL(const s: AnsiString; c: ANSIChar; Pos: Cardinal)
       : AnsiString;
     class function IsIntStr(s: String): Boolean;
@@ -117,6 +123,10 @@ Type
     class function UpLowerA(AName: String; FirstOnly: Boolean): String;
     class function BooleanToStr(bValue: Boolean): string;
     class function StrToBoolean(const sValue: string): Boolean;
+
+    /// <summary>
+    /// Replace Old to new string
+    /// </summary>
     class function ReplaceStr(Const sString, sOldStr, sNewStr: string;
       ACheckUpper: Boolean = false): string;
 
@@ -1102,6 +1112,22 @@ class function TNovusStringUtils.IsAlphaNumeric(aStr: string): boolean;
 begin
   Result := TRegEx.IsMatch(aStr, '[0-9A-Za-z]$');
 end;
+
+class function TNovusStringUtils.FormatStrVar(Const aFormat: string; Const Args: array of Variant): string;
+var
+  lParams: Array of TVarRec;
+  I: Integer;
+begin
+  Try
+    SetLength(lParams, High(Args) + 1);
+
+    for I := Low(Args) to High(Args) do
+      lParams[I] := TNovusVariants.VarToVarRec(Args[I]);
+  Finally
+    Result := format(aFormat, lParams);
+  End;
+end;
+
 
 end.
 

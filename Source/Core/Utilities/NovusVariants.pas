@@ -32,7 +32,8 @@ begin
        vtBoolean:       ;
        vtChar:          ;
        vtExtended:      ;
-       varUString:
+       varUString,
+       vtUnicodeString:
          begin
            U := aValue;
 
@@ -61,7 +62,7 @@ begin
        vtWideString:     ;
 
        vtInt64:         ;
-       vtUnicodeString: ;
+
   else
       Raise Exception.Create('TNovusVariants.VarToVarRec: Unrecognized variant type: '+ VarTypeAsText(VarType(aValue)) + ':' + IntToStr(VarType(aValue)));
   end;

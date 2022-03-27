@@ -47,12 +47,14 @@ type
     function Delete(AItem: TObject): Boolean;
     function Equals(AList: TNovusList): Boolean;
     procedure Clear;
+    function LastIndex: Integer;
 
     procedure CopyFrom(aNovusList: TNovusList);
     function FindItem(aKey: string): TObject;
 
     property Count: Integer read GetCount;
     property Items[Index: Integer]: TObject read Get write Put; default;
+
 
 
     property List: TObjectList read FList write FList;
@@ -260,6 +262,11 @@ begin
 
   FList.Clear;
   FHash.Clear;
+end;
+
+function TNovusList.LastIndex: Integer;
+begin
+  Result :=Count -1;
 end;
 
 function TNovusList.FindItem(aKey: string): TObject;

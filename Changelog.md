@@ -1,3 +1,7 @@
+24/04/2022
+
+* TNovusDateUtils.JSONDateToDatetime Updated to ISO8601ToDate with Delphi 10.4 or higher
+
 27/03/2022
 
 * New function class function TNovusStringUtils.FormatStrVar(Const aFormat: string; Const Args: array of Variant): string;

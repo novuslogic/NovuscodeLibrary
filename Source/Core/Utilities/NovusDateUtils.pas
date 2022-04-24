@@ -1,4 +1,6 @@
+{$I ..\..\core\NovusCodeLibrary.inc}
 unit NovusDateUtils;
+
 
 interface
 
@@ -184,8 +186,10 @@ var
   lsJSONValue: String;
 begin
   Try
-    lsJSONValue := Trim(TNovusStringUtils.StripChar(aJSONDate, #34 (* " *) ));
-
+    lsJSONValue := Trim(TNovusStringUtils.StripChar(aJSONDate, #34));
+    {$IFDEF DELPHI10_4_UP}
+    result := ISO8601ToDate(lsJSONValue);
+    {$ELSE}
     fwYear := TNovusStringUtils.Str2Int(Copy(lsJSONValue, 1, 4));
     fwMonth := TNovusStringUtils.Str2Int(Copy(lsJSONValue, 6, 2));
     fwDay := TNovusStringUtils.Str2Int(Copy(lsJSONValue, 9, 2));
@@ -199,6 +203,7 @@ begin
 
     Result := EncodeDateTime(fwYear, fwMonth, fwDay, fwHour, fwMinute, fwSecond,
       fwMillisecond);
+    {$ENDIF}
   Except
     Result := 0;
   End;

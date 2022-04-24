@@ -59,8 +59,10 @@ Type
     class function Str2Float(aStr: String): single;
     class function Str2Curr(aStr: String): Currency;
     class function Replicate(c: Char; iLen: Integer): string;
-    class function PadLeft(const s: string; iLen: Integer;
-      const sFillChar: Char): string;
+
+    class function _PadLeft(const s: string; iLen: Integer;
+      const sFillChar: Char): string; deprecated;
+
     class function JustFilename(const aPathName: String): String;
     class function JustPathname(const aPathName: String): String;
     class function Str2DateTime(s: String): tDateTime;
@@ -154,6 +156,14 @@ Type
     ///   a tStringlist
     /// </param>
     class procedure ClearStringlist(aStringlist: tStringlist);
+    /// <summary>
+    ///   Pad Left String by a ch set count length
+    /// </summary>
+    class function PadLeft(const Str: string; Ch: Char; Count: Integer): string;
+    /// <summary>
+    ///   Pad Right String by a ch set count length
+    /// </summary>
+    class function PadRight(const Str: string; Ch: Char; Count: Integer): string;
   end;
 
 implementation
@@ -738,7 +748,7 @@ begin
   end; { if }
 end;
 
-class function TNovusStringUtils.PadLeft(const s: string; iLen: Integer;
+class function TNovusStringUtils._PadLeft(const s: string; iLen: Integer;
   const sFillChar: Char): string;
 var
   iLength: Integer;
@@ -1126,6 +1136,27 @@ begin
   Finally
     Result := format(aFormat, lParams);
   End;
+end;
+
+
+class function TNovusStringUtils.PadLeft(const Str: string; Ch: Char; Count: Integer): string;
+begin
+  if Length(Str) < Count then
+  begin
+    Result := StringOfChar(Ch, Count);
+    Move(Str[1], Result[Count - Length(Str) + 1], Length(Str) * SizeOf(Char));
+  end
+  else Result := Str;
+end;
+
+class function TNovusStringUtils.PadRight(const Str: string; Ch: Char; Count: Integer): string;
+begin
+  if Length(Str) < Count then
+  begin
+    Result := StringOfChar(Ch, Count);
+    Move(Str[1], Result[1], Length(Str) * SizeOf(Char));
+  end
+  else Result := Str;
 end;
 
 

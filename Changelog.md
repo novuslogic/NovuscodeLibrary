@@ -1,5 +1,9 @@
 24/04/2022
 
+* Deprecated class function _PadLeft(const s: string; iLen: Integer;  const sFillChar: Char): string; deprecated;
+* New class function TNovusStringUtils.PadLeft(const s: string; iLen: Integer;
+* New class function TNovusStringUtils._PadLeft(const s: string; iLen: Integer; const sFillChar: Char): string;
+* New class tNovusStringBuilder extension of tStringBuilder class
 * TNovusDateUtils.JSONDateToDatetime Updated to ISO8601ToDate with Delphi 10.4 or higher
 
 27/03/2022

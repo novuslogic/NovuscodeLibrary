@@ -9,4 +9,5 @@ contains
   NovusNumUtils in '..\..\Core\Utilities\NovusNumUtils.pas',
   NovusDateDiffUtil in '..\..\Core\Utilities\NovusDateDiffUtil.pas',
   NovusGUID in '..\..\Core\Utilities\NovusGUID.pas',
+  NovusStringBuilder in '..\..\Core\Utilities\NovusStringBuilder.pas',
   NovusVariants in '..\..\Core\Utilities\NovusVariants.pas';

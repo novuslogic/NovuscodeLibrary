@@ -6,7 +6,7 @@ Uses NovusPlugin, SysUtils, Classes, PluginClasses ;
 
 
 
-function GetPluginObject: INovusPlugin; stdcall;
+function GetPluginObject: TNovusPlugin; stdcall;
 
 implementation
 
@@ -14,7 +14,7 @@ var
   _TestPlugin: TTestPlugin = nil;
 
 
-function GetPluginObject: INovusPlugin;
+function GetPluginObject: TNovusPlugin;
 begin
   if (_TestPlugin = nil) then _TestPlugin := TTestPlugin.Create;
   result := _TestPlugin;
@@ -27,6 +27,6 @@ initialization
   _TestPlugin := nil;
 
 finalization
-  FreeAndNIL(_TestPlugin);
+  FreeandNIL(_TestPlugin);
 
 end.

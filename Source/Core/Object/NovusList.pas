@@ -44,7 +44,7 @@ type
 
     function Add(AItem: TObject): Integer; overload;
     function Add(aKey: string; AItem: TObject): Integer; overload;
-    function Delete(AItem: TObject): Boolean;
+    function Delete(AItem: TObject; aFreeObject: boolean = false): Boolean;
     function Equals(AList: TNovusList): Boolean;
     procedure Clear;
     function LastIndex: Integer;
@@ -54,8 +54,6 @@ type
 
     property Count: Integer read GetCount;
     property Items[Index: Integer]: TObject read Get write Put; default;
-
-
 
     property List: TObjectList read FList write FList;
 
@@ -192,7 +190,7 @@ begin
 
 end;
 
-function TNovusList.Delete(AItem: TObject): Boolean;
+function TNovusList.Delete(AItem: TObject; aFreeObject: boolean): Boolean;
 Var
   liIndex: Integer;
 begin
@@ -204,6 +202,9 @@ begin
     FList.Remove(AItem);
 
     FList.Pack;
+
+    if aFreeObject then
+      if Assigned(aItem) then aItem.Free;
 
     Result := True;
   end;

@@ -256,7 +256,7 @@ begin
       
     end;     
 
-  if not Task.RunTargets(['BuildDelphiXEPackages',
+  if not Task.RunTargets([('BuildDelphiXEPackages',
         'BuildDelphiXE2Packages', 
         'BuildDelphiXE3Packages', 
         'BuildDelphiXE4Packages',

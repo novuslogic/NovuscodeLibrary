@@ -5,23 +5,16 @@ interface
 Uses NovusPlugin, Classes, System.Generics.Defaults;
 
 Type
-   ITestPlugin = interface(INovusPlugin)
-    ['{838468EA-1750-4CB5-B6B3-E7078F59A46A}']
-    function GetTest: string; safecall;
-  end;
-
-   TTestPlugin = class( TSingletonImplementation, INovusPlugin, ITestPlugin)
+   TTestPlugin = class(TNovusPlugin)
    private
    protected
    public
-     function GetPluginName: string; safecall;
+     function GetPluginName: string; override; safecall;
 
-     procedure Initialize; safecall;
-     procedure Finalize; safecall;
+     procedure Initialize; override; safecall;
+     procedure Finalize; override; safecall;
 
      function GetTest: string;  safecall;
-
-     property PluginName: string read GetPluginName;
    end;
 
 implementation
@@ -43,7 +36,7 @@ end;
 
 procedure TTestPlugin.Finalize;
 begin
-  ReportMemoryLeaksOnShutdown := true;
+//
 end;
 
 

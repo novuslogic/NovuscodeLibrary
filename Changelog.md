@@ -1,3 +1,10 @@
+
+09/07/2022
+
+* Removed all interfaces and some refactoriing from NovusPlugin unit
+* FreeObject option to function TNovusList.Delete(AItem: TObject; aFreeObject: boolean): Boolean;
+* Replace LoadLibrary with SafeLoadLibrary in TNovusPlugin class
+
 24/04/2022
 
 * Deprecated class function _PadLeft(const s: string; iLen: Integer;  const sFillChar: Char): string; deprecated;

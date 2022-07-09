@@ -3,9 +3,7 @@ program Project1;
 uses
   Sharemem,
   Vcl.Forms,
-  Unit1 in 'Unit1.pas' {Form1},
-  NovusPlugin in '..\..\Source\Core\Plugin\NovusPlugin.pas',
-  PluginClasses in 'PluginClasses.pas';
+  Unit1 in 'Unit1.pas' {Form1};
 
 {$R *.res}
 

@@ -4,7 +4,7 @@ unit NovusDateUtils;
 
 interface
 
-Uses NovusStringUtils, NovusUtilities, SysUtils, Classes, Windows, XSBuiltIns,
+Uses NovusStringUtils, NovusUtilities, SysUtils, Classes, XSBuiltIns,
   System.DateUtils;
 
 Type
@@ -52,7 +52,7 @@ begin
   sUppStr := UpperCase(Trim(sStr));
   if TNovusStringUtils.IsNumeric(sUppStr) then
   begin
-    TNovusStringUtils.Str2LongS(sUppStr, Result);
+    Result := TNovusStringUtils.Str2Int(sUppStr);
     If (Result < 1) and (Result > 12) then
       Result := -1;
     Exit;
@@ -164,20 +164,9 @@ begin
     isLeapYear := False;
 end;
 
-class function TNovusDateUtils.UnixTimeToDateTime(const aUnixDate: Int64)
-  : TDateTime;
-var
-  UTCTime, LocalTime: TSystemTime;
+class function TNovusDateUtils.UnixTimeToDateTime(const aUnixDate: Int64): tDateTime;
 begin
-  Result := 0;
-
-  if aUnixDate <> 0 then
-  begin
-    FileTimeToSystemTime(TFileTime(Int64(aUnixDate + 11644473600000) *
-      10000), UTCTime);
-    SystemTimeToTzSpecificLocalTime(nil, UTCTime, LocalTime);
-    Result := SystemTimeToDateTime(LocalTime);
-  end
+  Result := UnixToDateTime( aUnixDate, true);
 end;
 
 class function TNovusDateUtils.JSONDateToDatetime(aJSONDate: string): TDateTime;

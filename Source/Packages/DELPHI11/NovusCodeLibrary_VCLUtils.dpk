@@ -33,6 +33,7 @@ package NovusCodeLibrary_VCLUtils;
 requires
   rtl,
   vcl,
+  NovusCodeLibrary_Windows,
   NovusCodeLibrary_Object;
 
 contains

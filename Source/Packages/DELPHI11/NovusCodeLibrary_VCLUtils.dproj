@@ -914,6 +914,7 @@
         </DelphiCompile>
         <DCCReference Include="rtl.dcp"/>
         <DCCReference Include="vcl.dcp"/>
+        <DCCReference Include="NovusCodeLibrary_Windows.dcp"/>
         <DCCReference Include="NovusCodeLibrary_Object.dcp"/>
         <DCCReference Include="..\..\Core\Utilities\NovusDialogs.pas"/>
         <DCCReference Include="..\..\Core\Forms\frmVCLNovusForm.pas"/>

@@ -4,7 +4,7 @@ unit NovusStringUtils;
 
 interface
 
-uses Windows, sysutils, NovusUtilities, Classes, variants, System.RegularExpressions,
+uses {Windows,} sysutils, NovusUtilities, Classes, variants, System.RegularExpressions,
      NovusVariants;
 
 Const
@@ -95,7 +95,6 @@ Type
     /// Boolean To String
     /// </summary>
     class function Bool2Str(aValue: Boolean): String;
-    class function GetStrRes(const Index: Integer): String;
     /// <summary>
     /// Convert a String to Integer
     /// </summary>
@@ -106,7 +105,6 @@ Type
     class function Str2Int(aStr: String): Integer;
     class function Str2Int64(aStr: String): Int64;
     class function Str2Uint16(aStr: String): UInt16;
-
     /// <summary>
     /// Format String using Variant array
     /// </summary>
@@ -142,13 +140,11 @@ Type
     class procedure String2StringList(aString: string;
       var AStringList: TStringList);
     class procedure String2Strings(aString: string; var AStrings: TStrings);
-    class function FormatMessStr(aString: String): String;
     class function VarArrayToStr(const vArray: variant): string;
     class function VarStrNull(const V: OleVariant): string;
     class function IsBoolean(const sValue: string): Boolean;
     class function StrToUInt64(const s: String): UInt64;
     class function StrToUInt8(const s: String): UInt8;
-
     /// <summary>
     ///   Clears strings and objects from tStringlist
     /// </summary>
@@ -195,18 +191,6 @@ begin
       fsStr := fsStr + s[I];
 
   result := fsStr;
-end;
-
-class function TNovusStringUtils.GetStrRes;
-var
-  buffer: array [0 .. 255] of Char;
-  ls: Integer;
-begin
-  result := '';
-  ls := LoadString(hInstance, Index, buffer, SizeOf(buffer));
-  if ls <> 0 then
-    result := buffer;
-
 end;
 
 class function TNovusStringUtils.RootDirectory;
@@ -938,24 +922,6 @@ begin
   finally
     MS.free;
   end;
-end;
-
-
-// Win32 API FormatMessage function
-// http://msdn.microsoft.com/en-us/library/windows/desktop/ms679351%28v=vs.85%29.aspx
-
-class function TNovusStringUtils.FormatMessStr(aString: String): String;
-const
-  TextBufLength = 256;
-var
-  sText: array [0 .. TextBufLength] of Char;
-begin
-  ZeroMemory(@sText, TextBufLength);
-
-  FormatMessage(FORMAT_MESSAGE_FROM_STRING, PWideChar(aString), 0, 0, sText,
-    TextBufLength, nil);
-  result := String(sText);
-
 end;
 
 class function TNovusStringUtils.FormatMessStrOptions(aString: String;

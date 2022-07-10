@@ -204,7 +204,7 @@ begin
     FList.Pack;
 
     if aFreeObject then
-      if Assigned(aItem) then aItem.Free;
+      if Assigned(aItem) then TNovusUtilities.FreeObject(aItem);
 
     Result := True;
   end;

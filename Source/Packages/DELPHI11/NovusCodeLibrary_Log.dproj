@@ -914,6 +914,8 @@
         </DelphiCompile>
         <DCCReference Include="rtl.dcp"/>
         <DCCReference Include="vcl.dcp"/>
+        <DCCReference Include="NovusCodeLibrary_OS.dcp"/>
+        <DCCReference Include="NovusCodeLibrary_Windows.dcp"/>
         <DCCReference Include="NovusCodeLibrary_Object.dcp"/>
         <DCCReference Include="..\..\Core\Log\NovusLog.pas"/>
         <DCCReference Include="..\..\Core\Log\NovusWinEventLog.pas"/>

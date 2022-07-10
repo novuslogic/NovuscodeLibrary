@@ -46,7 +46,7 @@ begin
     fStringList.Free;
   End;
   Except
-    raise Exception.Create(TNovusUtilities.GetExceptMess);
+    raise;
   end;
 
 end;

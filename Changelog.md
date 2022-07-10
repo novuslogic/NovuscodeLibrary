@@ -1,6 +1,20 @@
+10/07/2022
+
+* Removed class function TNovusWindows.WindowsExceptMess;
+* class function TNovusDateUtils.UnixTimeToDateTime(const aUnixDate: Int64): DateTime; upgrade to use System.DateUtils.UnixToDateTime by default using UTC
+* Moved class function TNovusStringUtils.FormatMessStr(aString: String): String to tNovusWindows class
+* Move class function TNovusStringUtils.GetStrRes(const Index: Integer): String to tNovusWindows class
+* Rename TNovusVersionUtils class to TNovusWinVersionUtils and move to NovusCodeLibrary_Windows Package
+* Moved NovusFileUtils unit from NovusCodeLibrary_Utils Package to NovusCodeLibrary_OS Package
+* New Unit NovusOS
+* Renamed NovusCodeLibrary_Env Package to NovusCodeLibrary_OS Package
+* Removed NovusWindow from NovusCodeLibrary_Utils Package
+* Move Windows constants from NovusUtilities Unit to NovusWindows Unit (WM_CLOSEWINDOW, WM_USER, WM_UPDATE);
+* New NovusCodeLibrary_Windows Package 
 
 09/07/2022
 
+* Update Sample for NovusPlugin
 * Removed all interfaces and some refactoriing from NovusPlugin unit
 * FreeObject option to function TNovusList.Delete(AItem: TObject; aFreeObject: boolean): Boolean;
 * Replace LoadLibrary with SafeLoadLibrary in TNovusPlugin class

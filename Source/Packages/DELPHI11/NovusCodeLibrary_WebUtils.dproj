@@ -920,7 +920,7 @@
         </DelphiCompile>
         <DCCReference Include="rtl.dcp"/>
         <DCCReference Include="NovusCodeLibrary_Object.dcp"/>
-        <DCCReference Include="NovusCodeLibrary_Env.dcp"/>
+        <DCCReference Include="NovusCodeLibrary_OS.dcp"/>
         <DCCReference Include="vclie.dcp"/>
         <DCCReference Include="vcledge.dcp"/>
         <DCCReference Include="..\..\Core\Utilities\NovusWebUtils.pas"/>

@@ -915,7 +915,7 @@
         <DCCReference Include="rtl.dcp"/>
         <DCCReference Include="NovusCodeLibrary_Object.dcp"/>
         <DCCReference Include="NovusCodeLibrary_WebUtils.dcp"/>
-        <DCCReference Include="NovusCodeLibrary_Env.dcp"/>
+        <DCCReference Include="NovusCodeLibrary_OS.dcp"/>
         <DCCReference Include="..\..\Core\Utilities\cURL\NovuscURLUtils.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>

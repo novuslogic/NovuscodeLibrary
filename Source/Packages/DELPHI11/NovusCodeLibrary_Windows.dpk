@@ -1,5 +1,5 @@
 {$I ..\..\core\NovusCodeLibrary.inc}
-package NovusCodeLibrary_cURLUtils;
+package NovusCodeLibrary_Windows;
 
 {$R *.res}
 {$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
@@ -25,18 +25,18 @@ package NovusCodeLibrary_cURLUtils;
 {$MINENUMSIZE 1}
 {$IMAGEBASE $400000}
 {$ENDIF IMPLICITBUILDING}
-{$DESCRIPTION 'NovusCodeLibrary Runtime - cURLUtils'}
+{$DESCRIPTION 'NovusCodeLibrary Runtime - Utilities'}
 {$LIBSUFFIX '280'}
 {$RUNONLY}
 {$IMPLICITBUILD OFF}
 
 requires
   rtl,
-  NovusCodeLibrary_Object,
-  NovusCodeLibrary_WebUtils,
-  NovusCodeLibrary_OS;
+  vcl,
+  NovusCodeLibrary_Utils;
 
 contains
-  NovuscURLUtils in '..\..\Core\Utilities\cURL\NovuscURLUtils.pas';
+  NovusWindows in '..\..\Core\Utilities\NovusWindows.pas',
+  NovusWinVersionUtils in '..\..\Core\Utilities\NovusWinVersionUtils.pas';
 
 end.

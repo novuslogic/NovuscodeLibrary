@@ -3,8 +3,8 @@ unit NovusNumUtils;
 
 interface
 
-uses Windows, sysutils, NovusUtilities, System.StrUtils,
-     System.Classes;
+uses sysutils, NovusUtilities, System.StrUtils,
+     System.Classes, System.Types;
 
 Type
   TNovusNumUtils = class(TNovusUtilities)
@@ -39,7 +39,7 @@ begin
 
   case NumBits of
     32:
-      IValue := dword(IValue);
+      IValue := System.Types.DWORD(IValue);
     16:
       IValue := word(IValue);
     8:

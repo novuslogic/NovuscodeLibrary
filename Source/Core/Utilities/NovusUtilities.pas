@@ -3,24 +3,24 @@ unit NovusUtilities;
 
 interface
 
-uses SysUtils, Classes, Windows, Messages, typinfo, System.RegularExpressions;
+uses System.SysUtils, Classes, typinfo, System.RegularExpressions;
 
 Const
   CR = #13#10;
   DosDelimSet: set of Char = ['\', ':', #0];
   StMaxFileLen = 260;
 
-  WM_CLOSEWINDOW = WM_USER + 1;
-  WM_UPDATE = WM_USER + 1;
-
 Type
   TNovusUtilities = class(TObject)
   public
+    /// <summary>
+    /// Return current exception
+    /// </summary>
+    class function GetExceptMess: String;
     class function GetLastSysErrorMess: string;
     class function CopyObject(Src, Dest: TObject;
       Related: Boolean = FALSE): Boolean;
     class function AppRootDirectory: String;
-    class function GetExceptMess: String;
     class procedure FreeObject(q: TObject);
     class function FindStringListValue(const Strings: tstringlist;
       Name: String): String;
@@ -39,24 +39,19 @@ Type
 
 implementation
 
-Uses NovusWindows;
-
 class function TNovusUtilities.AppRootDirectory;
 begin
   Result := ExtractFilePath(ParamStr(0));
 end;
 
-class function TNovusUtilities.GetExceptMess;
-begin
-  Result := TNovusWindows.WindowsExceptMess;
-end;
+
 
 class procedure TNovusUtilities.FreeObject(q: TObject);
 begin
   if Not Assigned(q) then
     Exit;
 
-  SysUtils.FreeandNil(q);
+  System.SysUtils.FreeandNil(q);
 end;
 
 class function TNovusUtilities.FindStringListValue(const Strings: tstringlist;
@@ -86,7 +81,7 @@ begin
   if R = 0 then
     Result := SR.Size;
 
-  SysUtils.FindClose(SR);
+  System.SysUtils.FindClose(SR);
 end;
 
 class function TNovusUtilities.CopyObject(Src, Dest: TObject;
@@ -222,8 +217,8 @@ var
   fMatch: tMatch;
   fGroup: tGroup;
 begin
-  ZeroMemory(@Result, Sizeof(Result));
-
+  //ZeroMemory(@Result, Sizeof(Result));
+  Result := '';
 
   if aIgnoreCase then
     begin
@@ -269,9 +264,37 @@ begin
       end;
 
   Finally
-    ZeroMemory(@fMatch, Sizeof(fMatch));
+    //ZeroMemory(@fMatch, Sizeof(fMatch));
   End;
 
+end;
+
+class function TNovusUtilities.GetExceptMess: string;
+Var
+  ValSize: Integer;
+  P: Pointer;
+  S: String;
+begin
+  result := '';
+
+  If ExceptObject = NIL then
+    Exit;
+
+  ValSize := 255;
+
+  P := AllocMem(ValSize);
+
+  ExceptionErrorMessage(ExceptObject, ExceptAddr, P, ValSize);
+
+{$IFDEF DELPHI2009_UP}
+  S := StrPas(PWideChar(P));
+{$ELSE}
+  S := StrPas(P);
+{$ENDIF}
+  FreeMem(P);
+
+  S := Copy(S, (Pos('.', S) + 1), Length(S) - Pos('.', S));
+  result := Copy(S, (Pos('.', S) + 1), Length(S) - Pos('.', S));
 end;
 
 end.

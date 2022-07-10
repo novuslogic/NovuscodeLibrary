@@ -921,7 +921,7 @@
         <DCCReference Include="rtl.dcp"/>
         <DCCReference Include="vcl.dcp"/>
         <DCCReference Include="NovusCodeLibrary_Object.dcp"/>
-        <DCCReference Include="NovusCodeLibrary_Env.dcp"/>
+        <DCCReference Include="NovusCodeLibrary_OS.dcp"/>
         <DCCReference Include="NovusCodeLibrary_WebUtils.dcp"/>
         <DCCReference Include="IndyCore.dcp"/>
         <DCCReference Include="IndySystem.dcp"/>

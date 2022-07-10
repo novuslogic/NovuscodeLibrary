@@ -11,7 +11,6 @@ type
   protected
   private
   public
-
     /// <summary>
     ///   Parse enciroment variables in string
     /// </summary>

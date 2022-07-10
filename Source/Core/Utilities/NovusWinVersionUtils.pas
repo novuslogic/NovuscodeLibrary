@@ -1,16 +1,16 @@
 {$I ..\..\core\NovusCodeLibrary.inc}
-unit NovusVersionUtils;
+unit NovusWinVersionUtils;
 
 interface
 
-uses Windows, sysutils, Forms, NovusUtilities;
+uses sysutils, Windows, Forms, NovusUtilities;
 
 type
   TTranslation = record
     Language, CharSet: Word;
   end;
 
-  TNovusVersionUtils = class(TNovusUtilities)
+  TNovusWinVersionUtils = class(TNovusUtilities)
     class function GetFixedFileInfo(FileInfo: Pointer): PVSFixedFileInfo;
     class function GetFullVersionNumber(aFileName: String = ''): string;
     class function GetReleaseNumber(aFileName: String = ''): String;
@@ -31,7 +31,7 @@ type
 
 implementation
 
-class function TNovusVersionUtils.GetFixedFileInfo(FileInfo: Pointer)
+class function TNovusWinVersionUtils.GetFixedFileInfo(FileInfo: Pointer)
   : PVSFixedFileInfo;
 var
   Len: UINT;
@@ -40,7 +40,7 @@ begin
     raise Exception.Create('Fixed file info not available');
 end;
 
-class function TNovusVersionUtils.GetBuildNumber(aFilename: string = ''): String;
+class function TNovusWinVersionUtils.GetBuildNumber(aFilename: string = ''): String;
 var
   FileInfo: Pointer;
 begin
@@ -55,7 +55,7 @@ begin
   FreeFileInfo(FileInfo);
 end;
 
-class function TNovusVersionUtils.GetFullVersionNumber(aFileName: String = ''): string;
+class function TNovusWinVersionUtils.GetFullVersionNumber(aFileName: String = ''): string;
 var
   FileInfo: Pointer;
 begin
@@ -74,7 +74,7 @@ begin
       FreeFileInfo(FileInfo);
 end;
 
-class function TNovusVersionUtils.GetReleaseNumber(aFilename: string=''): string;
+class function TNovusWinVersionUtils.GetReleaseNumber(aFilename: string=''): string;
 var
   FileInfo: Pointer;
 begin
@@ -89,7 +89,7 @@ begin
   FreeFileInfo(FileInfo);
 end;
 
-class function TNovusVersionUtils.GetMagMinVersionNumber(aFilename: string=''): string;
+class function TNovusWinVersionUtils.GetMagMinVersionNumber(aFilename: string=''): string;
 var
   FileInfo: Pointer;
 begin
@@ -108,7 +108,7 @@ begin
   FreeFileInfo(FileInfo);
 end;
 
-class function TNovusVersionUtils.CreateFileInfo(aFileName: String): Pointer;
+class function TNovusWinVersionUtils.CreateFileInfo(aFileName: String): Pointer;
 var
   lpVerInfo: Pointer;
   rVerValue: PVSFixedFileInfo;
@@ -138,13 +138,13 @@ begin
   Result := lpVerInfo;
 end;
 
-class procedure TNovusVersionUtils.FreeFileInfo(FileInfo: Pointer);
+class procedure TNovusWinVersionUtils.FreeFileInfo(FileInfo: Pointer);
 begin
   if FileInfo <> nil then
     FreeMem(FileInfo);
 end;
 
-class function TNovusVersionUtils.GetLegalCopyright(aFileName: String = ''): string;
+class function TNovusWinVersionUtils.GetLegalCopyright(aFileName: String = ''): string;
 var
   FileInfo: Pointer;
   Translation: TTranslation;
@@ -164,7 +164,7 @@ begin
   FreeFileInfo(FileInfo);
 end;
 
-class function TNovusVersionUtils.GetProductName(aFileName: String = ''): string;
+class function TNovusWinVersionUtils.GetProductName(aFileName: String = ''): string;
 var
   FileInfo: Pointer;
   Translation: TTranslation;
@@ -184,7 +184,7 @@ begin
   FreeFileInfo(FileInfo);
 end;
 
-class function TNovusVersionUtils.GetTranslationCount(FileInfo: Pointer): UINT;
+class function TNovusWinVersionUtils.GetTranslationCount(FileInfo: Pointer): UINT;
 var
   P: PTranslations;
   Len: UINT;
@@ -195,7 +195,7 @@ begin
   Result := Len div 4;
 end;
 
-class function TNovusVersionUtils.GetTranslation(FileInfo: Pointer; i: UINT)
+class function TNovusWinVersionUtils.GetTranslation(FileInfo: Pointer; i: UINT)
   : TTranslation;
 var
   P: PTranslations;
@@ -209,7 +209,7 @@ begin
   Result := P[i];
 end;
 
-class function TNovusVersionUtils.GetFileInfoString(FileInfo: Pointer;
+class function TNovusWinVersionUtils.GetFileInfoString(FileInfo: Pointer;
   Translation: TTranslation; StringName: string): string;
 var
   P: pchar;

@@ -23,11 +23,23 @@ Const
   IS_TEXT_UNICODE_NOT_UNICODE_MASK = $F00;
   IS_TEXT_UNICODE_NOT_ASCII_MASK = $F000;
 
+  WM_CLOSEWINDOW = WM_USER + 1;
+  WM_UPDATE = WM_USER + 1;
+
 
 Type
   TNovusWindows = class(TNovusUtilities)
   protected
   public
+    /// <summary>
+    /// Win32 API FormatMessage function
+    /// http://msdn.microsoft.com/en-us/library/windows/desktop/ms679351%28v=vs.85%29.aspx
+    /// </summary>
+    class function FormatMessStr(aString: String): String;
+    /// <summary>
+    /// Get String from a ResFile
+    /// </summary>
+    class function GetStrRes(const Index: Integer): String;
     /// <summary>
     /// Is Win64 running
     /// </summary>
@@ -48,10 +60,6 @@ Type
     /// Returns the path of the directory for windows temporary files
     /// </summary>
     class function WindowsTempPath: String;
-    /// <summary>
-    /// Return current windows exception
-    /// </summary>
-    class function WindowsExceptMess: String;
     /// <summary>
     /// Returns NetBIOS name of the local computer
     /// </summary>
@@ -139,34 +147,6 @@ class function TNovusWindows.WindowsTempPath: String;
 begin
   SetLength(result, Max_path);
   SetLength(result, GetTempPath(Max_path, pChar(result)));
-end;
-
-class function TNovusWindows.WindowsExceptMess;
-Var
-  ValSize: Integer;
-  P: Pointer;
-  S: String;
-begin
-  result := '';
-
-  If ExceptObject = NIL then
-    Exit;
-
-  ValSize := 255;
-
-  P := AllocMem(ValSize);
-
-  ExceptionErrorMessage(ExceptObject, ExceptAddr, P, ValSize);
-
-{$IFDEF DELPHI2009_UP}
-  S := StrPas(PWideChar(P));
-{$ELSE}
-  S := StrPas(P);
-{$ENDIF}
-  FreeMem(P);
-
-  S := Copy(S, (Pos('.', S) + 1), Length(S) - Pos('.', S));
-  result := Copy(S, (Pos('.', S) + 1), Length(S) - Pos('.', S));
 end;
 
 class function TNovusWindows.GetLocalComputerName;
@@ -322,6 +302,32 @@ begin
   SetLength(result, 255);
   Windows.GetModuleFileName(hInstance, pChar(result), 255);
   SetLength(result, StrLen(pChar(result)));
+end;
+
+class function TNovusWindows.GetStrRes;
+var
+  buffer: array [0 .. 255] of Char;
+  ls: Integer;
+begin
+  result := '';
+  ls := LoadString(hInstance, Index, buffer, SizeOf(buffer));
+  if ls <> 0 then
+    result := buffer;
+
+end;
+
+class function TNovusWindows.FormatMessStr(aString: String): String;
+const
+  TextBufLength = 256;
+var
+  sText: array [0 .. TextBufLength] of Char;
+begin
+  ZeroMemory(@sText, TextBufLength);
+
+  FormatMessage(FORMAT_MESSAGE_FROM_STRING, PWideChar(aString), 0, 0, sText,
+    TextBufLength, nil);
+  result := String(sText);
+
 end;
 
 

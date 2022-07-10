@@ -33,6 +33,8 @@ package NovusCodeLibrary_Log;
 requires
   rtl,
   vcl,
+  NovusCodeLibrary_OS,
+  NovusCodeLibrary_Windows,
   NovusCodeLibrary_Object;
 
 contains

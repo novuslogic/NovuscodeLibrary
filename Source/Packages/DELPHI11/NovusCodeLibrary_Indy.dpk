@@ -34,7 +34,7 @@ requires
   rtl,
   vcl,
   NovusCodeLibrary_Object,
-  NovusCodeLibrary_Env,
+  NovusCodeLibrary_OS,
   NovusCodeLibrary_WebUtils,
   IndyCore,
   IndySystem,

@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, NovusUtilities, StdCtrls;
+  Dialogs, NovusUtilities, StdCtrls, NovusWindows;
 
 type
   ThiVCLNovusForm = class(TForm)

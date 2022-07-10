@@ -1,5 +1,5 @@
 {$I ..\..\core\NovusCodeLibrary.inc}
-package NovusCodeLibrary_Env;
+package NovusCodeLibrary_OS;
 
 {$R *.res}
 {$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
@@ -25,7 +25,7 @@ package NovusCodeLibrary_Env;
 {$MINENUMSIZE 1}
 {$IMAGEBASE $400000}
 {$ENDIF IMPLICITBUILDING}
-{$DESCRIPTION 'NovusCodeLibrary Runtime - Env'}
+{$DESCRIPTION 'NovusCodeLibrary Runtime - OS'}
 {$LIBSUFFIX '280'}
 {$RUNONLY}
 {$IMPLICITBUILD OFF}
@@ -33,10 +33,13 @@ package NovusCodeLibrary_Env;
 requires
   rtl,
   NovusCodeLibrary_Object,
+  NovusCodeLibrary_Windows,
   NovusCodeLibrary_Parser;
 
 contains
   NovusEnvironment in '..\..\Core\Utilities\NovusEnvironment.pas',
-  NovusShell in '..\..\Core\Utilities\NovusShell.pas';
+  NovusShell in '..\..\Core\Utilities\NovusShell.pas',
+  NovusOS in '..\..\Core\Utilities\NovusOS.pas',
+  NovusFileUtils in '..\..\Core\Utilities\NovusFileUtils.pas';
 
 end.

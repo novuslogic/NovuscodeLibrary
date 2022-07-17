@@ -119,7 +119,8 @@ end;
 function tNovusShell.WindowsCaptureExecute(aCommandline: String;
   var aOutput: String): Integer;
 const
-  CReadBuffer = 124000;
+ //  CReadBuffer = 124000;
+  CReadBuffer = 500;
 var
   FSecurityAttributes: TSecurityAttributes;
   hRead: THandle;
@@ -140,7 +141,6 @@ var
   ConnSessID: Cardinal;
   Token: THandle;
   hProcess: THandle;
- // pEnv: Pointer;
 begin
   liExitCode := -1;
 
@@ -221,6 +221,9 @@ begin
       CloseHandle(hRead);
       CloseHandle(hWrite);
     end;
+
+  FillChar(pBuffer, SizeOf(pBuffer), #0);
+  FillChar(dBuffer, SizeOf(dBuffer), #0);
 
   result := liExitCode;
 end;

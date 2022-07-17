@@ -1,0 +1,24 @@
+Basic Example of GetVersion from Adnroid OS
+
+uses
+  ...
+  Androidapi.Helpers,
+  Androidapi.JNI.App,
+  Androidapi.JNI.GraphicsContentViewText,
+  Androidapi.NativeActivity;
+
+function GetPackageInfo: JPackageInfo;
+var
+  Activity: JActivity;
+begin
+  Activity := TJNativeActivity.Wrap(PANativeActivity(System.DelphiActivity)^.clazz);
+  Result := Activity.getPackageManager.getPackageInfo(Activity.getPackageName, 0);
+end;
+
+procedure TPForm.FormCreate(Sender: TObject);
+var
+  Info: JPackageInfo;
+begin
+  Info := GetPackageInfo;
+  Label1.Text := Format('versionName: "%s", versionCode: %d', [JStringToString(Info.versionName), Info.versionCode]);
+end;

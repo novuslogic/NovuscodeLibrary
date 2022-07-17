@@ -114,6 +114,9 @@ begin
   try
     Try
       FPluginInfo.Plugin.Finalize;
+
+      if FPluginInfo.Handle <> 0 then
+        FreeLibrary(FPluginInfo.Handle);
     Except
       raise Exception.Create('Unloaded error:' + TNovusUtilities.GetExceptMess);
     End;

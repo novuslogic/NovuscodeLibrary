@@ -1,3 +1,7 @@
+17/07/2022
+
+* Fix memory leak in TNovysPlugin caused by refactoring 
+
 10/07/2022
 
 * Removed class function TNovusWindows.WindowsExceptMess;

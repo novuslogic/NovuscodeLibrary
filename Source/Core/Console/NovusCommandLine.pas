@@ -4,7 +4,7 @@ interface
 
 uses
   NovusConsole, SysUtils, Classes, NovusList, System.StrUtils,
-  System.RegularExpressions,
+  System.RegularExpressions,  NovusStringUtils,
   System.Generics.Defaults;
 
 type
@@ -17,16 +17,27 @@ type
     CommandLineExitCode: Integer;
   end;
 
+
+  INovusCommandLineResultOptionValue = interface
+  ['{A5605351-2F14-499D-A09F-474E94F519C8}']
+    function GetString: String;
+    procedure SetString(value: String);
+    function GetBoolean: Boolean;
+
+    property AsString: string read GetString write SetString;
+    property AsBoolean: Boolean read GetBoolean;
+  end;
+
   INovusCommandLineResultOption = interface
     ['{6C2D2989-5016-4FE2-A7BF-85CA3F6754AA}']
     function GetOptionName: string;
     procedure SetOptionName(Value: string);
-    function GetValue: string;
-    procedure SetValue(Value: string);
+    function GetValue: INovusCommandLineResultOptionValue;
 
     property OptionName: string read GetOptionName write SetOptionName;
-    property Value: string read GetValue write SetValue;
 
+    property Value: INovusCommandLineResultOptionValue
+        read GetValue;
   end;
 
   INovusCommandLineResultOptions = interface
@@ -126,19 +137,36 @@ type
       write SetCommands;
   end;
 
+
+  TNovusCommandLineResultOptionValue = class(TSingletonImplementation,
+    INovusCommandLineResultOptionValue)
+  private
+    fsValue: string;
+  protected
+    procedure SetString(value: string);
+    function GetString: string;
+    function GetBoolean: Boolean;
+  public
+    property AsString: string read GetString write SetString;
+    property AsBoolean: boolean read GetBoolean;
+  end;
+
+
   TNovusCommandLineResultOption = class(TSingletonImplementation,
     INovusCommandLineResultOption)
   private
     fsOptionName: String;
-    fsValue: String;
+    fValue: INovusCommandLineResultOptionValue;
   protected
     function GetOptionName: string;
     procedure SetOptionName(Value: string);
-    function GetValue: string;
-    procedure SetValue(Value: string);
+    function GetValue: INovusCommandLineResultOptionValue;
   public
+    constructor Create;
+    destructor Destroy;
+
     property OptionName: string read GetOptionName write SetOptionName;
-    property Value: string read GetValue write SetValue;
+    property Value: INovusCommandLineResultOptionValue read GetValue;
   end;
 
   TNovusCommandLineResultCommand = class(TSingletonImplementation,
@@ -714,7 +742,7 @@ begin
             fResultOption := TNovusCommandLineResultOption.Create;
 
             fResultOption.OptionName := lOption.OptionName;
-            fResultOption.Value := lOption.Value;
+            fResultOption.Value.AsString := lOption.Value;
 
             fTempResultOptions.Add(fResultOption);
           end;
@@ -1326,6 +1354,7 @@ function TNovusCommandLineResult.FindFirstCommandwithOption
   (aCommandName: String): INovusCommandLineResultOption;
 Var
   fNovusCommandLineResultCommand: INovusCommandLineResultCommand;
+  fResultOption:INovusCommandLineResultOption;
 begin
   Result := NIL;
 
@@ -1333,7 +1362,24 @@ begin
   if Assigned(fNovusCommandLineResultCommand) then
   begin
     if not fNovusCommandLineResultCommand.IsCommandOnly then
-      Result := fNovusCommandLineResultCommand.Options.FirstOption;
+      Result := fNovusCommandLineResultCommand.Options.FirstOption
+    else
+      begin
+        fResultOption := fNovusCommandLineResultCommand.Options.FindOptionByName(fNovusCommandLineResultCommand.CommandName);
+
+        if not Assigned(fResultOption) then
+          begin
+            fResultOption:= TNovusCommandLineResultOption.Create;
+
+            fResultOption.OptionName := fNovusCommandLineResultCommand.CommandName;
+            fResultOption.Value.AsString := 'Y';
+
+            fNovusCommandLineResultCommand.Options.Add(fResultOption);
+
+            Result := fResultOption;
+          end
+        else Result := fResultOption;
+      end;
   end;
 end;
 
@@ -1580,7 +1626,33 @@ begin
   Result := TNovusCommandLineResultCommand(Items[fiIndex]);
 end;
 
+// TNovusCommandLineResultOptionValue
+procedure TNovusCommandLineResultOptionValue.SetString(value: string);
+begin
+  fsValue := Value;
+end;
+
+function TNovusCommandLineResultOptionValue.GetString: string;
+begin
+  Result := fsValue;
+end;
+
+function TNovusCommandLineResultOptionValue.GetBoolean: Boolean;
+begin
+  Result := TNovusStringUtils.StrToBoolean(fsValue);
+end;
+
+
 // TNovusCommandLineResultOption
+constructor TNovusCommandLineResultOption.Create;
+begin
+  fValue := TNovusCommandLineResultOptionValue.Create;
+end;
+
+destructor TNovusCommandLineResultOption.Destroy;
+begin
+  fValue := NIL;
+end;
 
 function TNovusCommandLineResultOption.GetOptionName: string;
 begin
@@ -1592,14 +1664,9 @@ begin
   fsOptionName := Value;
 end;
 
-function TNovusCommandLineResultOption.GetValue: string;
+function TNovusCommandLineResultOption.GetValue: INovusCommandLineResultOptionValue;
 begin
-  Result := fsValue;
-end;
-
-procedure TNovusCommandLineResultOption.SetValue(Value: string);
-begin
-  fsValue := Value;
+  Result := fValue;
 end;
 
 // TNovusCommandLineResultOptions

@@ -1,6 +1,14 @@
+28/08/2022  
+
+* Started a new class tNovusInterpreter - basic and sample
+
+28/07/2022
+
+* New TNovusCommandLineResultOptionValue class in 
+
 17/07/2022
 
-* Fix memory leak in TNovysPlugin caused by refactoring 
+* Fix memory leak in TNovusPlugin caused by refactoring 
 
 10/07/2022
 

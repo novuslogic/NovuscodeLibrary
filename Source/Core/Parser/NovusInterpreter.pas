@@ -10,7 +10,7 @@ type
 
   tNovusInterpreter = class;
 
-  tParserCell = class;
+  tNovusParserCell = class;
 
   tTokenType = (ttOperator, ttKeyword, ttIdentifier);
 
@@ -18,7 +18,7 @@ type
   private
     fTokenType: tTokenType;
     fsRawToken: string;
-    foParserCell: tParserCell;
+    foParserCell: tNovusParserCell;
     fiStartTokenPos: Integer;
     fiEndTokenPos: Integer;
     fiStartSourceLineNo: Integer;
@@ -27,14 +27,14 @@ type
     fiEndColumnPos: Integer;
   protected
   public
-    constructor Create(aParserCell: tParserCell);
+    constructor Create(aParserCell: tNovusParserCell);
     destructor Destroy; override;
 
     property RawToken: string
       read fsRawToken
       write fsRawToken;
 
-    property oParserCell: tParserCell
+    property oParserCell: tNovusParserCell
       read foParserCell
       write foParserCell;
 
@@ -67,14 +67,14 @@ type
        write fTokenType;
   end;
 
-  tParserCell = class(tobject)
+  tNovusParserCell = class(tobject)
   private
   protected
     foInterpreter: tNovusInterpreter;
   public
     constructor Create(aInterpreter: tNovusInterpreter);
 
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; virtual;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; virtual;
 
     function ParseNextToken: Char; virtual;
 
@@ -93,10 +93,10 @@ type
       write fsOperatorName;
   end;
 
-  tKeyword = class(tobject)
+  tNovusKeyword = class(tobject)
   private
   protected
-    foParserCell: tParserCell;
+    foParserCell: tNovusParserCell;
     fiIndex: Integer;
     fsKeyName: String;
   public
@@ -108,12 +108,12 @@ type
       read fsKeyName
       write fsKeyName;
 
-    constructor Create(aParserCell: tParserCell);
+    constructor Create(aParserCell: tNovusParserCell);
     destructor Destroy; override;
 
-    class function Init(aParserCell: tParserCell): tKeyword; virtual;
+    class function Init(aParserCell: tNovusParserCell): tNovusKeyword; virtual;
 
-    property oParserCell: tParserCell
+    property oParserCell: tNovusParserCell
       read foParserCell
       write foParserCell;
 
@@ -129,15 +129,15 @@ type
     foTokenList: tTokenList;
     foKeywordslist: tNovuslist;
     foOperatorslist: tNovuslist;
-    function InternalAddKeyword(aKeyName: String;aKeyword: tkeyword): tkeyword;
+    function InternalAddKeyword(aKeyName: String;aKeyword: tNovusKeyword): tNovusKeyword;
   public
     constructor Create; virtual;
     destructor Destroy; override;
     procedure AddOperators; virtual;
     procedure AddKeywords; virtual;
-    function AddKeyword(aKeyName: String;aKeyword: tkeyword): tkeyword; overload;
-    function AddKeyword(aKeyword: tkeyword): tkeyword; overload;
-    function FindKeyword(aKeyName: String): tkeyword;
+    function AddKeyword(aKeyName: String;aKeyword: tNovusKeyword): tNovusKeyword; overload;
+    function AddKeyword(aKeyword: tNovusKeyword): tNovusKeyword; overload;
+    function FindKeyword(aKeyName: String): tNovusKeyword;
 
     function AddOperator(aOperatorName: string): tOperator; overload;
     function AddOperator(aOperatorName: string; aOperator: tOperator): tOperator; Overload;
@@ -173,7 +173,7 @@ implementation
 
 constructor tNovusInterpreter.Create;
 begin
-  foKeywordslist := tNovuslist.Create(tKeyword);
+  foKeywordslist := tNovuslist.Create(tNovusKeyword);
 
   foKeywordslist.InSensitiveKey := True;
 
@@ -222,12 +222,12 @@ begin
    AddOperator('*');
 end;
 
-function tNovusInterpreter.AddKeyword(aKeyName: String;aKeyword: tkeyword): tkeyword;
+function tNovusInterpreter.AddKeyword(aKeyName: String;aKeyword: tNovusKeyword): tNovusKeyword;
 begin
   Result := InternalAddKeyword(aKeyName,aKeyword);
 end;
 
-function tNovusInterpreter.AddKeyword(aKeyword: tkeyword): tkeyword;
+function tNovusInterpreter.AddKeyword(aKeyword: tNovusKeyword): tNovusKeyword;
 begin
   Result := InternalAddKeyword(aKeyword.ClassName,aKeyword);
 end;
@@ -240,17 +240,17 @@ begin
   Result := aToken;
 end;
 
-function tNovusInterpreter.FindKeyword(aKeyName: String): tkeyword;
+function tNovusInterpreter.FindKeyword(aKeyName: String): tNovusKeyword;
 var
-  lokeyword: tkeyword;
+  lokeyword: tNovusKeyword;
 begin
   Result := NIL;
 
-  lokeyword := foKeyWordslist.FindItem(aKeyname)  as tkeyword ;
+  lokeyword := foKeyWordslist.FindItem(aKeyname)  as tNovusKeyword ;
   if Assigned(lokeyword) then Result := lokeyword;
 end;
 
-function tNovusInterpreter.InternalAddKeyword(aKeyName: String;aKeyword: tkeyword): tkeyword;
+function tNovusInterpreter.InternalAddKeyword(aKeyName: String;aKeyword: tNovusKeyword): tNovusKeyword;
 Var
   liIndex: Integer;
 begin
@@ -322,7 +322,7 @@ procedure tNovusInterpreter.GetKeyword;
 var
   lch: char;
   lsKeyName: String;
-  lokeyword: tkeyword;
+  lokeyword: tNovusKeyword;
   loOperator: tOperator;
   loToken: tToken;
 begin
@@ -433,34 +433,34 @@ end;
 
 
 // tParserCell
-constructor tParserCell.Create(aInterpreter: tNovusInterpreter);
+constructor tNovusParserCell.Create(aInterpreter: tNovusInterpreter);
 begin
   foInterpreter := aInterpreter;
 end;
 
 
-class function tParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tNovusParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := NIL;
 end;
 
-function tParserCell.ParseNextToken: Char;
+function tNovusParserCell.ParseNextToken: Char;
 begin
   result := #0;
 end;
 
 // tKeyword
-class function tKeyword.Init(aParserCell: tParserCell): tKeyword;
+class function tNovusKeyword.Init(aParserCell: tNovusParserCell): tNovusKeyword;
 begin
   Result := NIL;
 end;
 
-constructor tKeyword.Create(aParserCell: tParserCell);
+constructor tNovusKeyword.Create(aParserCell: tNovusParserCell);
 begin
   foParserCell := aParserCell;
 end;
 
-destructor tKeyword.Destroy;
+destructor tNovusKeyword.Destroy;
 begin
   if Assigned(foParserCell) then foParserCell.Free;
 
@@ -468,7 +468,7 @@ begin
 end;
 
 // tToken
-constructor tToken.Create(aParserCell: tParserCell);
+constructor tToken.Create(aParserCell: tNovusParserCell);
 begin
   foParserCell := aParserCell;
 end;

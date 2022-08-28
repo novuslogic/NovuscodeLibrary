@@ -3,7 +3,7 @@ unit NovusLog;
 interface
 
 Uses Classes, NovusStringUtils, NovusList, NovusUtilities, SysUtils,
-  NovusBO, NovusWinEventLog, NovusFileUtils, System.IOUtils;
+  NovusBO, NovusWinEventLog, NovusFileUtils, System.IOUtils, System.Threading;
 
 Type
   TLogType = (ltFile, ltWinEventType);
@@ -226,6 +226,7 @@ function TNovusLogFile.WriteLine(ATimeStr, ALogDesc: string;
 Var
   lsLine: String;
   FStreamWriter: tStreamWriter;
+  FTask: ITask;
 begin
   If Separator = #0 then
     lsLine := ATimeStr + ALogDesc

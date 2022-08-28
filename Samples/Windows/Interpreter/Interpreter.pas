@@ -2,369 +2,357 @@ unit Interpreter;
 
 interface
 
-Uses NovusInterpreter, NovusParser, System.Classes, System.SysUtils;
+Uses NovusInterpreter, NovusParser, System.Classes, System.SysUtils, NovusCommentsParserCell;
 
 type
-  tEndofStreamParserCell = class(tParserCell)
+  tEndofStreamParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tCommentsParserCell = class(tParserCell)
+  tIdentifierParserCell = class(tNovusParserCell)
   protected
   private
-    fbIsMultiLineComment: boolean;
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
-    function ParseNextToken: Char; override;
-
-    property IsMultiLineComment: boolean
-      read fbIsMultiLineComment;
-  end;
-
-  tIdentifierParserCell = class(tParserCell)
-  protected
-  private
-  public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tFloatParserCell = class(tParserCell)
+  tFloatParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tIntegerParserCell = class(tParserCell)
+  tIntegerParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tStringParserCell = class(tParserCell)
+  tStringParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tPlusParserCell = class(tParserCell)
+  tPlusParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tMinusParserCell = class(tParserCell)
+  tMinusParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tMulParserCell = class(tParserCell)
+  tMulParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tDivideParserCell = class(tParserCell)
+  tDivideParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tPowerParserCell = class(tParserCell)
+  tPowerParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tDivParserCell = class(tParserCell)
+  tDivParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tModParserCell = class(tParserCell)
+  tModParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tLessThanParserCell = class(tParserCell)
+  tLessThanParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tLessThanOrEqualParserCell = class(tParserCell)
+  tLessThanOrEqualParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tMoreThanParserCell = class(tParserCell)
+  tMoreThanParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tMoreThanOrEqualParserCell = class(tParserCell)
+  tMoreThanOrEqualParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tNotEqualParserCell = class(tParserCell)
+  tNotEqualParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tRightParenthesisParserCell = class(tParserCell)
+  tRightParenthesisParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tLeftParenthesisParserCell = class(tParserCell)
+  tLeftParenthesisParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tLeftBrackeParserCell = class(tParserCell)
+  tLeftBrackeParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tRightBrackeParserCell = class(tParserCell)
+  tRightBrackeParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tLeftCurleyBrackeParserCell = class(tParserCell)
+  tLeftCurleyBrackeParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tRightCurleyBrackeParserCell = class(tParserCell)
+  tRightCurleyBrackeParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tEqualsParserCell = class(tParserCell)
+  tEqualsParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tEquivalenceParserCell = class(tParserCell)
+  tEquivalenceParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tApostrophyParserCell = class(tParserCell)
+  tApostrophyParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tDollarParserCell = class(tParserCell)
+  tDollarParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tSemicolonParserCell = class(tParserCell)
+  tSemicolonParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tColonParserCell = class(tParserCell)
+  tColonParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tCommaParserCell = class(tParserCell)
+  tCommaParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tAndParserCell = class(tParserCell)
+  tAndParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tOrParserCell = class(tParserCell)
+  tOrParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tNoParserCell = class(tParserCell)
+  tNoParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tXorParserCell = class(tParserCell)
+  tXorParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tEndParserCell = class(tParserCell)
+  tEndParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tIfParserCell = class(tParserCell)
+  tIfParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tThenParserCell = class(tParserCell)
+  tThenParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tElseParserCell = class(tParserCell)
+  tElseParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tFalseParserCell = class(tParserCell)
+  tFalseParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tTrueParserCell = class(tParserCell)
+  tTrueParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tForParserCell = class(tParserCell)
+  tForParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tDoParserCell = class(tParserCell)
+  tDoParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tToParserCell = class(tParserCell)
+  tToParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tDownToParserCell = class(tParserCell)
+  tDownToParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tWhileParserCell = class(tParserCell)
+  tWhileParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tRepeaParserCell = class(tParserCell)
+  tRepeaParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tUntilParserCell = class(tParserCell)
+  tUntilParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tOfParserCell = class(tParserCell)
+  tOfParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tBreakParserCell = class(tParserCell)
+  tBreakParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
-  tFunctionParserCell = class(tParserCell)
+  tFunctionParserCell = class(tNovusParserCell)
   protected
   private
   public
-    class function Init(aInterpreter: tNovusInterpreter): tParserCell; override;
+    class function Init(aInterpreter: tNovusInterpreter): tNovusParserCell; override;
   end;
 
 
@@ -372,169 +360,158 @@ type
 
 
 
-  tIfKeyword = class(tKeyword)
+  tIfKeyword = class(tNovusKeyword)
   private
   protected
   public
-    class function Init(aParserCell: tParserCell): tKeyword; override;
-  end;
-
-  tCommentsKeyword =  class(tKeyword)
-  private
-  protected
-    function GetIsMultiLineComment: boolean;
-  public
-    class function Init(aParserCell: tParserCell): tKeyword; override;
-
-    property IsMultiLineComment: boolean
-      read GetIsMultiLineComment;
+    class function Init(aParserCell: tNovusParserCell): tNovusKeyword; override;
   end;
 
-  tDoKeyword =  class(tKeyword)
+  tDoKeyword =  class(tNovusKeyword)
   private
   protected
   public
-    class function Init(aParserCell: tParserCell): tKeyword; override;
+    class function Init(aParserCell: tNovusParserCell): tNovusKeyword; override;
   end;
 
-  tTokeyword = class(tKeyword)
+  tTokeyword = class(tNovusKeyword)
   private
   protected
   public
-    class function Init(aParserCell: tParserCell): tKeyword; override;
+    class function Init(aParserCell: tNovusParserCell): tNovusKeyword; override;
   end;
 
-  tOrKeyword = class(tKeyword)
+  tOrKeyword = class(tNovusKeyword)
   private
   protected
   public
-    class function Init(aParserCell: tParserCell): tKeyword; override;
+    class function Init(aParserCell: tNovusParserCell): tNovusKeyword; override;
   end;
 
-  tOfKeyword = class(tKeyword)
+  tOfKeyword = class(tNovusKeyword)
   private
   protected
   public
-    class function Init(aParserCell: tParserCell): tKeyword; override;
+    class function Init(aParserCell: tNovusParserCell): tNovusKeyword; override;
   end;
 
-  tEndKeyword  = class(tKeyword)
+  tEndKeyword  = class(tNovusKeyword)
   private
   protected
   public
-    class function Init(aParserCell: tParserCell): tKeyword; override;
+    class function Init(aParserCell: tNovusParserCell): tNovusKeyword; override;
   end;
 
-  tForKeyword = class(tKeyword)
+  tForKeyword = class(tNovusKeyword)
   private
   protected
   public
-    class function Init(aParserCell: tParserCell): tKeyword; override;
+    class function Init(aParserCell: tNovusParserCell): tNovusKeyword; override;
   end;
 
-  tAndKeyword = class(tKeyword)
+  tAndKeyword = class(tNovusKeyword)
   private
   protected
   public
-    class function Init(aParserCell: tParserCell): tKeyword; override;
+    class function Init(aParserCell: tNovusParserCell): tNovusKeyword; override;
   end;
 
-  tXorKeyword = class(tKeyword)
+  tXorKeyword = class(tNovusKeyword)
   private
   protected
   public
-    class function Init(aParserCell: tParserCell): tKeyword; override;
+    class function Init(aParserCell: tNovusParserCell): tNovusKeyword; override;
   end;
 
-  tNotKeyword = class(tKeyword)
+  tNotKeyword = class(tNovusKeyword)
   private
   protected
   public
-    class function Init(aParserCell: tParserCell): tKeyword; override;
+    class function Init(aParserCell: tNovusParserCell): tNovusKeyword; override;
   end;
 
-  tDivKeyword = class(tKeyword)
+  tDivKeyword = class(tNovusKeyword)
   private
   protected
   public
-    class function Init(aParserCell: tParserCell): tKeyword; override;
+    class function Init(aParserCell: tNovusParserCell): tNovusKeyword; override;
   end;
 
-  tModKeyword = class(tKeyword)
+  tModKeyword = class(tNovusKeyword)
   private
   protected
   public
-    class function Init(aParserCell: tParserCell): tKeyword; override;
+    class function Init(aParserCell: tNovusParserCell): tNovusKeyword; override;
   end;
 
-  tThenKeyword = class(tKeyword)
+  tThenKeyword = class(tNovusKeyword)
   private
   protected
   public
-    class function Init(aParserCell: tParserCell): tKeyword; override;
+    class function Init(aParserCell: tNovusParserCell): tNovusKeyword; override;
   end;
 
-  tElseKeyword = class(tKeyword)
+  tElseKeyword = class(tNovusKeyword)
   private
   protected
   public
-    class function Init(aParserCell: tParserCell): tKeyword; override;
+    class function Init(aParserCell: tNovusParserCell): tNovusKeyword; override;
   end;
 
-  tTrueKeyword = class(tKeyword)
+  tTrueKeyword = class(tNovusKeyword)
   private
   protected
   public
-    class function Init(aParserCell: tParserCell): tKeyword; override;
+    class function Init(aParserCell: tNovusParserCell): tNovusKeyword; override;
   end;
 
-  tFalseKeyword = class(tKeyword)
+  tFalseKeyword = class(tNovusKeyword)
   private
   protected
   public
-    class function Init(aParserCell: tParserCell): tKeyword; override;
+    class function Init(aParserCell: tNovusParserCell): tNovusKeyword; override;
   end;
 
-  tWhileKeyword = class(tKeyword)
+  tWhileKeyword = class(tNovusKeyword)
   private
   protected
   public
-    class function Init(aParserCell: tParserCell): tKeyword; override;
+    class function Init(aParserCell: tNovusParserCell): tNovusKeyword; override;
   end;
 
-  tUntilKeyword = class(tKeyword)
+  tUntilKeyword = class(tNovusKeyword)
   private
   protected
   public
-    class function Init(aParserCell: tParserCell): tKeyword; override;
+    class function Init(aParserCell: tNovusParserCell): tNovusKeyword; override;
   end;
 
-  tBreakKeyword = class(tKeyword)
+  tBreakKeyword = class(tNovusKeyword)
   private
   protected
   public
-    class function Init(aParserCell: tParserCell): tKeyword; override;
+    class function Init(aParserCell: tNovusParserCell): tNovusKeyword; override;
   end;
 
-  tRepeatKeyword = class(tKeyword)
+  tRepeatKeyword = class(tNovusKeyword)
   private
   protected
   public
-    class function Init(aParserCell: tParserCell): tKeyword; override;
+    class function Init(aParserCell: tNovusParserCell): tNovusKeyword; override;
   end;
 
-  TDowntoKeyword = class(tKeyword)
+  TDowntoKeyword = class(tNovusKeyword)
   private
   protected
   public
-    class function Init(aParserCell: tParserCell): tKeyword; override;
+    class function Init(aParserCell: tNovusParserCell): tNovusKeyword; override;
   end;
 
-  tFunctionKeyword = class(tKeyword)
+  tFunctionKeyword = class(tNovusKeyword)
   private
   protected
   public
-    class function Init(aParserCell: tParserCell): tKeyword; override;
+    class function Init(aParserCell: tNovusParserCell): tNovusKeyword; override;
   end;
 
   tInterpreter = class(tNovusInterpreter)
@@ -559,151 +536,142 @@ type
 implementation
 
 //tIfKeyword
-class function tIfKeyword.Init(aParserCell: tParserCell): tKeyword;
+class function tIfKeyword.Init(aParserCell: tNovusParserCell): tNovusKeyword;
 begin
   Result := tIfKeyword.Create(aParserCell);
 end;
 
 //tDoKeyword
-class function tDoKeyword.Init(aParserCell: tParserCell): tKeyword;
+class function tDoKeyword.Init(aParserCell: tNovusParserCell): tNovusKeyword;
 begin
   Result := tDoKeyword.Create(aParserCell);
 end;
 
-//tCommentskeyword
-class function tCommentskeyword.Init(aParserCell: tParserCell): tKeyword;
-begin
-  Result := tCommentskeyword.Create(aParserCell);
-end;
-
-function tCommentskeyword.GetIsMultiLineComment: boolean;
-begin
-  Result :=  (foParserCell as tCommentsParserCell).IsMultiLineComment;
-end;
 
 //tTokeyword
-class function tTokeyword.Init(aParserCell: tParserCell): tKeyword;
+class function tTokeyword.Init(aParserCell: tNovusParserCell): tNovusKeyword;
 begin
   Result := tTokeyword.Create(aParserCell);
 end;
 
 //tOrKeyword
-class function tOrKeyword.Init(aParserCell: tParserCell): tKeyword;
+class function tOrKeyword.Init(aParserCell: tNovusParserCell): tNovusKeyword;
 begin
   Result := tOrKeyword.Create(aParserCell);
 end;
 
 //tOfKeyword
-class function tOfKeyword.Init(aParserCell: tParserCell): tKeyword;
+class function tOfKeyword.Init(aParserCell: tNovusParserCell): tNovusKeyword;
 begin
   Result := tOfKeyword.Create(aParserCell);
 end;
 
 //tEndKeyword
-class function tEndKeyword.Init(aParserCell: tParserCell): tKeyword;
+class function tEndKeyword.Init(aParserCell: tNovusParserCell): tNovusKeyword;
 begin
   Result := tEndKeyword.Create(aParserCell);
 end;
 //tForKeyword
-class function tForKeyword.Init(aParserCell: tParserCell): tKeyword;
+class function tForKeyword.Init(aParserCell: tNovusParserCell): tNovusKeyword;
 begin
   Result := tForKeyword.Create(aParserCell);
 end;
 
 //tAndKeyword
-class function tAndKeyword.Init(aParserCell: tParserCell): tKeyword;
+class function tAndKeyword.Init(aParserCell: tNovusParserCell): tNovusKeyword;
 begin
   Result := tAndKeyword.Create(aParserCell);
 end;
 
 // tXorKeyword
-class function tXorKeyword.Init(aParserCell: tParserCell): tKeyword;
+class function tXorKeyword.Init(aParserCell: tNovusParserCell): tNovusKeyword;
 begin
   Result := tXorKeyword.Create(aParserCell);
 end;
 //tNotKeyword
-class function tNotKeyword.Init(aParserCell: tParserCell): tKeyword;
+class function tNotKeyword.Init(aParserCell: tNovusParserCell): tNovusKeyword;
 begin
   Result := tNotKeyword.Create(aParserCell);
 end;
 
 //tDivKeyword
-class function tDivKeyword.Init(aParserCell: tParserCell): tKeyword;
+class function tDivKeyword.Init(aParserCell: tNovusParserCell): tNovusKeyword;
 begin
   Result := tDivKeyword.Create(aParserCell);
 end;
 //tModKeyword
-class function tModKeyword.Init(aParserCell: tParserCell): tKeyword;
+class function tModKeyword.Init(aParserCell: tNovusParserCell): tNovusKeyword;
 begin
   Result := tModKeyword.Create(aParserCell);
 end;
 
 //tThenKeyword
-class function tThenKeyword.Init(aParserCell: tParserCell): tKeyword;
+class function tThenKeyword.Init(aParserCell: tNovusParserCell): tNovusKeyword;
 begin
   Result := tModKeyword.Create(aParserCell);
 end;
 
 //tElseKeyword
-class function tElseKeyword.Init(aParserCell: tParserCell): tKeyword;
+class function tElseKeyword.Init(aParserCell: tNovusParserCell): tNovusKeyword;
 begin
   Result := tElseKeyword.Create(aParserCell);
 end;
 
 //tTrueKeyword
-class function tTrueKeyword.Init(aParserCell: tParserCell): tKeyword;
+class function tTrueKeyword.Init(aParserCell: tNovusParserCell): tNovusKeyword;
 begin
   Result := tTrueKeyword.Create(aParserCell);
 end;
 //tFalseKeyword
-class function tFalseKeyword.Init(aParserCell: tParserCell): tKeyword;
+class function tFalseKeyword.Init(aParserCell: tNovusParserCell): tNovusKeyword;
 begin
   Result := tTrueKeyword.Create(aParserCell);
 end;
 
 //tWhileKeyword
-class function tWhileKeyword.Init(aParserCell: tParserCell): tKeyword;
+class function tWhileKeyword.Init(aParserCell: tNovusParserCell): tNovusKeyword;
 begin
   Result := tWhileKeyword.Create(aParserCell);
 end;
 //tUntilKeyword
-class function tUntilKeyword.Init(aParserCell: tParserCell): tKeyword;
+class function tUntilKeyword.Init(aParserCell: tNovusParserCell): tNovusKeyword;
 begin
   Result := tUntilKeyword.Create(aParserCell);
 end;
 
 //tBreakKeyword
-class function tBreakKeyword.Init(aParserCell: tParserCell): tKeyword;
+class function tBreakKeyword.Init(aParserCell: tNovusParserCell): tNovusKeyword;
 begin
   Result := tBreakKeyword.Create(aParserCell);
 end;
 
 //tRepeatKeyword
-class function tRepeatKeyword.Init(aParserCell: tParserCell): tKeyword;
+class function tRepeatKeyword.Init(aParserCell: tNovusParserCell): tNovusKeyword;
 begin
   Result := tRepeatKeyword.Create(aParserCell);
 end;
 
 //TDowntoKeyword
-class function TDowntoKeyword.Init(aParserCell: tParserCell): tKeyword;
+class function TDowntoKeyword.Init(aParserCell: tNovusParserCell): tNovusKeyword;
 begin
   Result := TDowntoKeyword.Create(aParserCell);
 end;
 
 //tFunctionKeyword
-class function tFunctionKeyword.Init(aParserCell: tParserCell): tKeyword;
+class function tFunctionKeyword.Init(aParserCell: tNovusParserCell): tNovusKeyword;
 begin
   Result := tFunctionKeyword.Create(aParserCell);
 end;
 
 // tEndofStreamParserCell
-class function tEndofStreamParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tEndofStreamParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tEndofStreamParserCell.Create(aInterpreter);
 end;
 
 // tCommentsParserCell
-class function tCommentsParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+(*
+class function tCommentsParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tCommentsParserCell.Create(aInterpreter);
 end;
@@ -787,314 +755,315 @@ begin
         end;
     end;
 end;
+*)
 
 // tFloatParserCell
-class function tFloatParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tFloatParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tFloatParserCell.Create(aInterpreter);
 end;
 
 // tIntegerParserCell
-class function tIntegerParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tIntegerParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tIntegerParserCell.Create(aInterpreter);
 end;
 
 // tStringParserCell
-class function tStringParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tStringParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tStringParserCell.Create(aInterpreter);
 end;
 
 // tPlusParserCell
-class function tPlusParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tPlusParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tPlusParserCell.Create(aInterpreter);
 end;
 
 // tMinusParserCell
-class function tMinusParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tMinusParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tMinusParserCell.Create(aInterpreter);
 end;
 
 // tMulParserCell
-class function tMulParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tMulParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tMulParserCell.Create(aInterpreter);
 end;
 
 // tDivideParserCell
-class function tDivideParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tDivideParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tDivideParserCell.Create(aInterpreter);
 end;
 
 // tPowerParserCell
-class function tPowerParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tPowerParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tPowerParserCell.Create(aInterpreter);
 end;
 
 // tDivParserCell
-class function tDivParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tDivParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tDivParserCell.Create(aInterpreter);
 end;
 
 // tModParserCell
-class function tModParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tModParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tModParserCell.Create(aInterpreter);
 end;
 
 // tLessThanParserCell
-class function tLessThanParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tLessThanParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tLessThanParserCell.Create(aInterpreter);
 end;
 
 
 // tLessThanOrEqualParserCell
-class function tLessThanOrEqualParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tLessThanOrEqualParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tLessThanOrEqualParserCell.Create(aInterpreter);
 end;
 
 // tMoreThanParserCell
-class function tMoreThanParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tMoreThanParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tMoreThanParserCell.Create(aInterpreter);
 end;
 
 // tMoreThanOrEqualParserCell
-class function tMoreThanOrEqualParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tMoreThanOrEqualParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tMoreThanOrEqualParserCell.Create(aInterpreter);
 end;
 
 // tNotEqualParserCell
-class function tNotEqualParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tNotEqualParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tMoreThanOrEqualParserCell.Create(aInterpreter);
 end;
 
 // tRightParenthesisParserCell
-class function tRightParenthesisParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tRightParenthesisParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tRightParenthesisParserCell.Create(aInterpreter);
 end;
 
 // tLeftParenthesisParserCell
-class function tLeftParenthesisParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tLeftParenthesisParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tLeftParenthesisParserCell.Create(aInterpreter);
 end;
 
 // tLeftBrackeParserCell
-class function tLeftBrackeParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tLeftBrackeParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tLeftBrackeParserCell.Create(aInterpreter);
 end;
 
 // tRightBrackeParserCell
-class function tRightBrackeParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tRightBrackeParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tRightBrackeParserCell.Create(aInterpreter);
 end;
 
 // tLeftCurleyBrackeParserCell
-class function tLeftCurleyBrackeParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tLeftCurleyBrackeParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tRightBrackeParserCell.Create(aInterpreter);
 end;
 
 // tRightCurleyBrackeParserCell
-class function tRightCurleyBrackeParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tRightCurleyBrackeParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tRightCurleyBrackeParserCell.Create(aInterpreter);
 end;
 
 // tEqualsParserCell
-class function tEqualsParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tEqualsParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tEqualsParserCell.Create(aInterpreter);
 end;
 
 // tEquivalenceParserCell
-class function tEquivalenceParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tEquivalenceParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tEquivalenceParserCell.Create(aInterpreter);
 end;
 
 // tApostrophyParserCell
-class function tApostrophyParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tApostrophyParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tApostrophyParserCell.Create(aInterpreter);
 end;
 
 // tDollarParserCell
-class function tDollarParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tDollarParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tDollarParserCell.Create(aInterpreter);
 end;
 
 // tSemicolonParserCell
-class function tSemicolonParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tSemicolonParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tSemicolonParserCell.Create(aInterpreter);
 end;
 
 // tColonParserCell
-class function tColonParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tColonParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tColonParserCell.Create(aInterpreter);
 end;
 
 // tCommaParserCell
-class function tCommaParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tCommaParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tCommaParserCell.Create(aInterpreter);
 end;
 
 // tAndParserCell
-class function tAndParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tAndParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tAndParserCell.Create(aInterpreter);
 end;
 
 // tOrParserCell
-class function tOrParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tOrParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tOrParserCell.Create(aInterpreter);
 end;
 
 // tNoParserCell
-class function tNoParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tNoParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tNoParserCell.Create(aInterpreter);
 end;
 
 // tXorParserCell
-class function tXorParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tXorParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tXorParserCell.Create(aInterpreter);
 end;
 
 // tEndParserCell
-class function tEndParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tEndParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tEndParserCell.Create(aInterpreter);
 end;
 
 // tIfParserCell
-class function tIfParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tIfParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tIfParserCell.Create(aInterpreter);
 end;
 
 // tThenParserCell
-class function tThenParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tThenParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tThenParserCell.Create(aInterpreter);
 end;
 
 // tElseParserCell
-class function tElseParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tElseParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tElseParserCell.Create(aInterpreter);
 end;
 
 // tFalseParserCell
-class function tFalseParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tFalseParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tFalseParserCell.Create(aInterpreter);
 end;
 
 // tTrueParserCell
-class function tTrueParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tTrueParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tTrueParserCell.Create(aInterpreter);
 end;
 
 // tForParserCell
-class function tForParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tForParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tForParserCell.Create(aInterpreter);
 end;
 
 // tDoParserCell
-class function tDoParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tDoParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tDoParserCell.Create(aInterpreter);
 end;
 
 // tToParserCell
-class function tToParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tToParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tToParserCell.Create(aInterpreter);
 end;
 
 // tDownToParserCell
-class function tDownToParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tDownToParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tDownToParserCell.Create(aInterpreter);
 end;
 
 // tWhileParserCell
-class function tWhileParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tWhileParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tWhileParserCell.Create(aInterpreter);
 end;
 
 // tRepeaParserCell
-class function tRepeaParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tRepeaParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tRepeaParserCell.Create(aInterpreter);
 end;
 
 // tUntilParserCell
-class function tUntilParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tUntilParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tUntilParserCell.Create(aInterpreter);
 end;
 
 
 // tOfParserCell
-class function tOfParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tOfParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tOfParserCell.Create(aInterpreter);
 end;
 
 // tBreakParserCell
-class function tBreakParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tBreakParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tBreakParserCell.Create(aInterpreter);
 end;
 
 
 // tFunctionParserCell
-class function tFunctionParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tFunctionParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tFunctionParserCell.Create(aInterpreter);
 end;
 
 // tIdentifierParserCell
-class function tIdentifierParserCell.Init(aInterpreter: tNovusInterpreter): tParserCell;
+class function tIdentifierParserCell.Init(aInterpreter: tNovusInterpreter): tNovusParserCell;
 begin
   Result := tIdentifierParserCell.Create(aInterpreter);
 end;
 
 function tInterpreter.SkipCommentsToken: Char;
 Var
-  foCommentsKeyword: tKeyword;
+  foCommentsKeyword: tNovusKeyword;
   lch: Char;
 begin
-  foCommentsKeyword := FindKeyword(tCommentsKeyword.classname);
+  foCommentsKeyword := FindKeyword(tNovusCommentsKeyword.classname);
   if Assigned(foCommentsKeyword) then
    lch := foCommentsKeyword.oParserCell.ParseNextToken;
 
-  fbIsMultiLineComment := tCommentsKeyword(foCommentsKeyword as tCommentsKeyword).IsMultiLineComment;
+  fbIsMultiLineComment := tNovusCommentsKeyword(foCommentsKeyword as tNovusCommentsKeyword).IsMultiLineComment;
 
   Result := Token;
 end;
@@ -1144,7 +1113,7 @@ end;
 
 procedure tInterpreter.AddKeywords;
 begin
-   AddKeyword(tCommentsKeyword.Init(tCommentsParserCell.Init(Self)));
+   AddKeyword(tNovusCommentsKeyword.Init(tNovusCommentsParserCell.Init(Self,tncPascal)));
    AddKeyword('if', tIfKeyword.Init(tIfParserCell.Init(Self)));
    AddKeyword('do', tDoKeyword.Init(tDoParserCell.Init(Self)));
    AddKeyword('to', TToKeyword.Init(tToParserCell.Init(Self)));

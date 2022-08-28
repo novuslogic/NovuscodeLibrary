@@ -61,6 +61,8 @@ var
   FInputRecord: TInputRecord;
   FNumRead: Cardinal;
 begin
+  Result := #0;
+
   repeat
     ReadConsoleInput(aHandle, FInputRecord, 1, FNumRead);
 

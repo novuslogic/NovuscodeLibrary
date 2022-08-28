@@ -8,7 +8,8 @@ uses
   NovusParser in '..\..\..\Source\Core\Parser\NovusParser.pas',
   NovusList in '..\..\..\Source\Core\Object\NovusList.pas',
   NovusObject in '..\..\..\Source\Core\Object\NovusObject.pas',
-  NovusBO in '..\..\..\Source\Core\Object\NovusBO.pas';
+  NovusBO in '..\..\..\Source\Core\Object\NovusBO.pas',
+  NovusCommentsParserCell in '..\..\..\Source\Core\Parser\ParserCells\NovusCommentsParserCell.pas';
 
 {$R *.res}
 

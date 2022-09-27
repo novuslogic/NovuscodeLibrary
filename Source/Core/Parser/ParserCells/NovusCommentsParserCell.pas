@@ -48,12 +48,13 @@ end;
 function tNovusCommentsParserCell.ParseNextToken: Char;
 Var
   lch: char;
-  lsRawToken: String;
   loToken: tToken;
   liStartTokenPos,
   liStartSourceLineNo,
   liStartColumnPos:integer;
 begin
+  Result := #0;
+
   With foInterpreter do
     begin
       if (Token = '/') or (Token = '(') and (fCommentsTypes = tncPascal) then
@@ -62,7 +63,7 @@ begin
             begin
               loToken := tToken.Create(Self);
 
-              loToken.StartTokenPos := TokenPos -1;
+              loToken.StartTokenPos := TokenPos-1;
 
               loToken.StartSourceLineNo := SourceLineNo;
               loToken.StartColumnPos := ColumnPos;
@@ -74,7 +75,7 @@ begin
 
               if Result = toEOL then ColumnPos := 1;
 
-              loToken.EndTokenPos := TokenPos;
+              loToken.EndTokenPos := TokenPos + 2;
 
               loToken.RawToken := CopyParseString(loToken.StartTokenPos, TokenPos);
 
@@ -87,7 +88,7 @@ begin
             begin
               fbIsMultiLineComment := true;
 
-              liStartTokenPos := TokenPos -1 ;
+              liStartTokenPos := TokenPos -2;
               liStartSourceLineNo := SourceLineNo;
               liStartColumnPos := ColumnPos;
 
@@ -95,9 +96,11 @@ begin
               while True do
                  begin
                  while (lch <> '*') and (lch <> toEOF) do
-                    lch := NextToken;
-                 if lch = toEOF then
-                    exit;
+                   begin
+                     lch := NextToken;
+                     if lch = toEOF then  exit;
+                   end;
+
                  lch := NextToken;
                  if ((lch = '/') and (fCommentsTypes = tncCLang)) or
                     ((lch = ')') and (fCommentsTypes = tncPascal)) then
@@ -112,6 +115,7 @@ begin
 
                     loToken.EndSourceLineNo := SourceLineNo;
                     loToken.EndColumnPos := ColumnPos;
+                    loToken.EndTokenPos := TokenPos + 2;
 
                     loToken.RawToken := CopyParseString(loToken.StartTokenPos, TokenPos);
 

@@ -2,8 +2,8 @@
 
 * Documentation Wiki using CodeImatic.codegen
   https://github.com/novuslogic/NovuscodeLibrary/issues/11
-* Support for The Delphi Package Manager.
-  https://github.com/DelphiPackageManager/
+* Look at support for Getit 
+  https://getitnow.embarcadero.com/submit/
 * MacOS support.
   https://github.com/novuslogic/NovuscodeLibrary/issues/8
 * Lazarus and fpc support.

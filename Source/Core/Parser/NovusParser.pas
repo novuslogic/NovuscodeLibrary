@@ -258,7 +258,11 @@ begin
           Exit;
         end;
       toEOF:
-        Exit;
+        begin
+          result := toEOF;
+
+          Exit;
+        end;
     end;
 
   Inc(FiTokenPos);
@@ -269,7 +273,7 @@ end;
 
 function TNovusParser.CopyParseString(aStartTokenPos, aEndTokenPos: Integer): String;
 begin
-  Result := Copy(fsParseString, aStartTokenPos,aEndTokenPos - aStartTokenPos);
+  Result := TNovusStringUtils.CopyString(fsParseString, aStartTokenPos,aEndTokenPos);
 end;
 
 

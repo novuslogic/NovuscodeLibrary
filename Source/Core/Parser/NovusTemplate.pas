@@ -99,15 +99,15 @@ type
     FParserStream: TMemoryStream;
     fsLastMessage: String;
 
-    function InternalParseTemplate : Boolean;
+    function InternalParseTemplate(aLoadParserStream: boolean = true) : Boolean;
   public
     constructor Create;
     destructor Destroy; override;
 
     procedure LoadParserStream;
 
-    function ParseTemplate : Boolean; deprecated;
-    function Execute: Boolean;
+    function ParseTemplate(aLoadParserStream: boolean = true): Boolean;
+//    function Execute: Boolean;
 
     procedure InsertAllTagValues;
     procedure Add(aLine: String);
@@ -196,14 +196,16 @@ begin
     Result := True;
 end;
 
+(*
 function TNovusTemplate.Execute: Boolean;
 begin
   Result := InternalParseTemplate;
 end;
+*)
 
-function TNovusTemplate.ParseTemplate: Boolean;
+function TNovusTemplate.ParseTemplate(aLoadParserStream: boolean = true): Boolean;
 begin
-  Result := InternalParseTemplate;
+  Result := InternalParseTemplate(aLoadParserStream);
 end;
 
 procedure TNovusTemplate.Add(aLine: String);
@@ -235,12 +237,13 @@ begin
   end;
 end;
 
-function TNovusTemplate.InternalParseTemplate: boolean;
+function TNovusTemplate.InternalParseTemplate(aLoadParserStream: boolean = true): boolean;
 begin
   Try
     TemplateTags.Clear;
 
-    LoadParserStream;
+    if aLoadParserStream then
+      LoadParserStream;
 
     Reset;
 

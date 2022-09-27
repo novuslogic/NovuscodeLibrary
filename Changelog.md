@@ -1,3 +1,14 @@
+
+27/09/2022
+
+* Fixed function TNovusParser.NextToken: Char; not returning toEOF
+* renamed tNovusInterpreter.execute to Interpreter.ParseInterpreter
+
+08/09/2022
+
+* TNovusParser.CopyParseString refactored with TNovusStringUtils.CopyString
+* New function class function TNovusStringUtils.CopyString(const aStr: string;aStartPos, aEndPos: Integer): String;
+
 28/08/2022  
 
 * Started a new class tNovusInterpreter - basic and sample

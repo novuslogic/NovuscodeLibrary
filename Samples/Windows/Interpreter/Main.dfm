@@ -2,8 +2,8 @@ object MainForm: TMainForm
   Left = 0
   Top = 0
   Caption = 'InterpreterTest1'
-  ClientHeight = 548
-  ClientWidth = 1226
+  ClientHeight = 582
+  ClientWidth = 1316
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -12,14 +12,14 @@ object MainForm: TMainForm
   Font.Style = []
   OnShow = FormShow
   DesignSize = (
-    1226
-    548)
+    1316
+    582)
   TextHeight = 13
   object Memo: TMemo
     Left = 32
     Top = 30
     Width = 281
-    Height = 479
+    Height = 513
     Anchors = [akLeft, akTop, akBottom]
     Lines.Strings = (
       '//A comment'
@@ -47,7 +47,7 @@ object MainForm: TMainForm
       'b = "abcdefg 1234'
       'xyz"')
     TabOrder = 0
-    ExplicitHeight = 401
+    ExplicitHeight = 479
   end
   object ParseButton: TButton
     Left = 328
@@ -61,8 +61,8 @@ object MainForm: TMainForm
   object LexStringGrid: TStringGrid
     Left = 417
     Top = 30
-    Width = 774
-    Height = 479
+    Width = 864
+    Height = 513
     Anchors = [akLeft, akTop, akRight, akBottom]
     ColCount = 4
     DefaultColWidth = 142
@@ -70,7 +70,7 @@ object MainForm: TMainForm
     FixedCols = 0
     RowCount = 20
     TabOrder = 2
-    ExplicitWidth = 592
-    ExplicitHeight = 401
+    ExplicitWidth = 774
+    ExplicitHeight = 479
   end
 end

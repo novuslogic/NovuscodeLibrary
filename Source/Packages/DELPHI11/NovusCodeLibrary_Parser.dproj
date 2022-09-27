@@ -924,6 +924,8 @@
         <DCCReference Include="..\..\Core\Parser\NovusParser.pas"/>
         <DCCReference Include="..\..\Core\Parser\NovusTokenProcessor.pas"/>
         <DCCReference Include="..\..\Core\Parser\NovusStringParser.pas"/>
+        <DCCReference Include="..\..\Core\Parser\NovusInterpreter.pas"/>
+        <DCCReference Include="..\..\Core\Parser\ParserCells\NovusCommentsParserCell.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

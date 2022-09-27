@@ -3,7 +3,7 @@ unit NovusInterpreter;
 interface
 
 uses Novuslist, NovusObject, NovusParser, System.Classes, NovusStringUtils,
-     System.AnsiStrings;
+     System.AnsiStrings, NovusTemplate;
 
 type
   tTokenList = class(tNovusList);
@@ -120,7 +120,7 @@ type
   end;
 
 
-  tNovusInterpreter = class(tNovusParser)
+  tNovusInterpreter = class(TNovusParser )
   private
   protected
     fiStartTokenPos: Integer;
@@ -150,7 +150,7 @@ type
 
     function ParseNextToken: Char; virtual;
 
-    procedure Execute; virtual;
+    function ParseInterpreter: boolean; virtual;
 
     property oTokenList: tTokenList
       read foTokenList;
@@ -173,6 +173,8 @@ implementation
 
 constructor tNovusInterpreter.Create;
 begin
+  inherited Create;
+
   foKeywordslist := tNovuslist.Create(tNovusKeyword);
 
   foKeywordslist.InSensitiveKey := True;
@@ -189,6 +191,8 @@ end;
 
 destructor tNovusInterpreter.Destroy;
 begin
+  inherited Destroy;
+
   foOperatorslist.Free;
   foKeyWordslist.Free;
   foTokenList.Free;
@@ -272,8 +276,10 @@ begin
   Result := NextToken;
 end;
 
-procedure tNovusInterpreter.Execute;
+function tNovusInterpreter.ParseInterpreter: boolean;
 begin
+  Result := true;
+
   Reset;
 
   while True do

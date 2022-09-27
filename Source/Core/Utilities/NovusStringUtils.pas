@@ -85,6 +85,10 @@ Type
     /// </summary>
     class function ReplaceChar(s: String; aFromCh, aToCh: Char): String;
     /// <summary>
+    ///   Replace ReplaceBetween Strings by start position and end position
+    /// </summary>
+    class function ReplaceBetweenPositions(const aSource, aReplaceWith: string; aStartPos: Integer; aEndPos: Integer): String;
+    /// <summary>
     ///   Simple token string parser
     /// </summary>
     class function GetStrToken(const s: string; sTokens: array of string;
@@ -123,7 +127,10 @@ Type
     class function UpLowerA(AName: String; FirstOnly: Boolean): String;
     class function BooleanToStr(bValue: Boolean): string;
     class function StrToBoolean(const sValue: string): Boolean;
-
+    /// <summary>
+    /// Copy String from a position and length
+    /// <summary>
+    class function CopyString(const aStr: string;aStartPos, aEndPos: Integer): String;
     /// <summary>
     /// Replace Old to new string
     /// </summary>
@@ -154,7 +161,7 @@ Type
     class procedure ClearStringlist(aStringlist: tStringlist);
     /// <summary>
     ///   Pad Left String by a ch set count length
-    /// </summary>
+     /// </summary>
     class function PadLeft(const Str: string; Ch: Char; Count: Integer): string;
     /// <summary>
     ///   Pad Right String by a ch set count length
@@ -312,11 +319,8 @@ var
   Temp: string;
 begin
   SetLength(Temp, 1);
-  // {$IFNDEF VER200}
-  // Temp[1] := C;
-  // {$ELSE}
+
   Temp := c;
-  // {$ENDIF}
 
   result := s;
   System.Insert(Temp, result, Pos);
@@ -332,15 +336,11 @@ begin
   begin
     lOC := #0;
 
-    // {$IFNDEF VER200}
-    // if P[step] = OC then
-    // P[step] := NC;
-    // {$ELSE}
     lOC := ANSIChar(P[step]);
     if (lOC = OC) then
       P[step] := Char(NC);
-    // {$ENDIF}
-  end;
+   end;
+
   result := P;
 end;
 
@@ -556,6 +556,7 @@ var
          Inc(i);
          if I > Length(sTokens) then break
        end;
+
 
     Result := liEndPos;
   end;
@@ -1125,6 +1126,15 @@ begin
   else Result := Str;
 end;
 
+class function TNovusStringUtils.CopyString(const aStr: string;aStartPos, aEndPos: Integer): String;
+begin
+  Result := Copy(aStr, aStartPos,aEndPos - aStartPos);
+end;
+
+class function TNovusStringUtils.ReplaceBetweenPositions(const aSource, aReplaceWith: string; aStartPos: Integer; aEndPos: Integer): String;
+begin
+  Result := aSource.Substring(0, aStartPos) + aReplaceWith + aSource.Substring(aEndPos);
+end;
 
 end.
 

@@ -3,7 +3,7 @@ unit NovusTemplate;
 interface
 
 Uses NovusParser, Novuslist, Classes, SysUtils, NovusStringUtils,
-   NovusStringParser;
+  NovusStringParser;
 
 type
   TOnGetTagValueEvent = procedure(Sender: TObject; Var ATagValue: String)
@@ -14,14 +14,14 @@ type
   protected
   public
     /// <summary>
-    ///   Find Tagname from TTemplateTags class
+    /// Find Tagname from TTemplateTags class
     /// </summary>
     function FindTagNameIndexOf(ATagName: String; AIndex: Integer = 0): Integer;
   End;
 
   TTag = class(TCollectionItem)
   private
-    fiTagIndex: INteger;
+    fiTagIndex: Integer;
     FsRawTagEx: String;
     FsRawTag: String;
     FValues: tStringList;
@@ -51,7 +51,7 @@ type
     property OnGetTagValueEvent: TOnGetTagValueEvent read FOnGetTagValueEvent
       write FOnGetTagValueEvent;
 
-    property TagIndex: INteger read fiTagIndex write fiTagIndex;
+    property TagIndex: Integer read fiTagIndex write fiTagIndex;
   end;
 
   TTemplateTag = class(TTag)
@@ -60,27 +60,27 @@ type
     FiSourcePos: Integer;
   protected
   public
-    property SourceLineNo: INteger read FiSourceLineNo write FiSourceLineNo;
+    property SourceLineNo: Integer read FiSourceLineNo write FiSourceLineNo;
 
-    property SourcePos: INteger read FiSourcePos write FiSourcePos;
+    property SourcePos: Integer read FiSourcePos write FiSourcePos;
   end;
 
   TTagClass = class of TTag;
 
   TTags = class(TCollection)
   private
-    fiIndexPos: INteger;
+    fiIndexPos: Integer;
     FOwner: TComponent;
-    function GetItem(Index: INteger): TTag;
-    procedure SetItem(Index: INteger; Value: TTag);
+    function GetItem(Index: Integer): TTag;
+    procedure SetItem(Index: Integer; Value: TTag);
   protected
     function GetOwner: TPersistent; override;
   public
     constructor Create(AOwner: TComponent);
     function Add: TTag;
-    function AddItem(Item: TTag; Index: INteger): TTag;
-    function Insert(Index: INteger): TTag;
-    property Items[Index: INteger]: TTag read GetItem write SetItem; default;
+    function AddItem(Item: TTag; Index: Integer): TTag;
+    function Insert(Index: Integer): TTag;
+    property Items[Index: Integer]: TTag read GetItem write SetItem; default;
 
     function CreateTag: TTag;
     function GetTagClass: TTagClass;
@@ -99,30 +99,29 @@ type
     FParserStream: TMemoryStream;
     fsLastMessage: String;
 
-    function InternalParseTemplate(aLoadParserStream: boolean = true) : Boolean;
+    function InternalParseTemplate(aLoadParserStream: boolean = true): boolean;
   public
     constructor Create;
     destructor Destroy; override;
 
     procedure LoadParserStream;
 
-    function ParseTemplate(aLoadParserStream: boolean = true): Boolean;
-//    function Execute: Boolean;
+    function ParseTemplate(aLoadParserStream: boolean = true): boolean; virtual;
 
     procedure InsertAllTagValues;
     procedure Add(aLine: String);
 
-    function InsertOutputDoc(ATemplateTag: TTemplateTag): Boolean;
-    function TagValuesAllExists: Boolean;
+    function InsertOutputDoc(ATemplateTag: TTemplateTag): boolean;
+    function TagValuesAllExists: boolean;
 
-    function FindTagNameIndexOf(ATagName: String; AIndex: INteger = 0): Integer;
-    function FindNextTagNameIndexOf(ATagName: String; AIndex: INteger): Integer;
+    function FindTagNameIndexOf(ATagName: String; AIndex: Integer = 0): Integer;
+    function FindNextTagNameIndexOf(ATagName: String; AIndex: Integer): Integer;
 
     procedure CreateTemplateTag;
-    function AddTemplateTag(ATemplateTag: TTemplateTag): INteger;
+    function AddTemplateTag(ATemplateTag: TTemplateTag): Integer;
 
     procedure InsertTemplateTag(ATemplateTag: TTemplateTag);
-    procedure InsertLineNo(ALineNo: INteger; AValue: String);
+    procedure InsertLineNo(ALineNo: Integer; AValue: String);
 
     procedure ParseTagValues;
     procedure ParseTags;
@@ -139,7 +138,8 @@ type
 
     property SecondToken: Char read FSecondToken write FSecondToken;
 
-    property SwapTagNameBlankValue: Boolean read fbSwapTagNameBlankValue write fbSwapTagNameBlankValue;
+    property SwapTagNameBlankValue: boolean read fbSwapTagNameBlankValue
+      write fbSwapTagNameBlankValue;
 
     property LastMessage: String read fsLastMessage write fsLastMessage;
   end;
@@ -175,11 +175,11 @@ begin
   FTemplateTags.Free;
 end;
 
-function TNovusTemplate.TagValuesAllExists: Boolean;
+function TNovusTemplate.TagValuesAllExists: boolean;
 Var
-  I: INteger;
+  I: Integer;
   FTemplateTag: TTemplateTag;
-  Count: INteger;
+  Count: Integer;
 begin
   Result := False;
 
@@ -193,17 +193,18 @@ begin
   end;
 
   if (Count = TemplateTags.Count) then
-    Result := True;
+    Result := true;
 end;
 
 (*
-function TNovusTemplate.Execute: Boolean;
-begin
+  function TNovusTemplate.Execute: Boolean;
+  begin
   Result := InternalParseTemplate;
-end;
+  end;
 *)
 
-function TNovusTemplate.ParseTemplate(aLoadParserStream: boolean = true): Boolean;
+function TNovusTemplate.ParseTemplate(aLoadParserStream
+  : boolean = true): boolean;
 begin
   Result := InternalParseTemplate(aLoadParserStream);
 end;
@@ -215,15 +216,15 @@ end;
 
 procedure TNovusTemplate.InsertAllTagValues;
 Var
-  I: INteger;
+  I: Integer;
   FTemplateTag: TTemplateTag;
 begin
   if TemplateTags.Count = 0 then
-    begin
-      FOutputDoc.Text := FTemplateDoc.Text;
+  begin
+    FOutputDoc.Text := FTemplateDoc.Text;
 
-      Exit;
-    end;
+    Exit;
+  end;
 
   for I := 0 to TemplateTags.Count - 1 do
   begin
@@ -237,7 +238,8 @@ begin
   end;
 end;
 
-function TNovusTemplate.InternalParseTemplate(aLoadParserStream: boolean = true): boolean;
+function TNovusTemplate.InternalParseTemplate(aLoadParserStream
+  : boolean = true): boolean;
 begin
   Try
     TemplateTags.Clear;
@@ -247,7 +249,7 @@ begin
 
     Reset;
 
-    while True do
+    while true do
     begin
       while not(Token in [toEOF, FStartToken, FSecondToken]) do
         SkipToken(FStartToken, FSecondToken);
@@ -265,7 +267,7 @@ begin
 
     FOutputDoc.Assign(FTemplateDoc);
 
-    Result := True;
+    Result := true;
   Except
     fsLastMessage := TNovusUtilities.GetExceptMess;
     Result := False;
@@ -284,11 +286,11 @@ begin
   LoadFromStream(FParserStream);
 end;
 
-function TNovusTemplate.InsertOutputDoc(ATemplateTag: TTemplateTag): Boolean;
+function TNovusTemplate.InsertOutputDoc(ATemplateTag: TTemplateTag): boolean;
 Var
-  liDiffPos: INteger;
+  liDiffPos: Integer;
   FsInput: String;
-  I, LiIndex: INteger;
+  I, LiIndex: Integer;
   FTemplateTag: TTemplateTag;
   FNextTemplateTag: TTemplateTag;
   lsTagName: String;
@@ -311,17 +313,17 @@ begin
   if FTemplateTag.TagValue <> '' then
     FOutputDoc.Strings[FTemplateTag.SourceLineNo - 1] :=
       TNovusStringUtils.ReplaceStrPos(FsInput, lsTagName, FTemplateTag.TagValue,
-      FTemplateTag.SourcePos - 1, True)
+      FTemplateTag.SourcePos - 1, true)
   else
   begin
-    if (SwapTagNameBlankValue = True) and (FTemplateTag.TagValue = '') then
-      begin
-        System.Delete(FsInput, (FTemplateTag.SourcePos), Length(lsTagName));
+    if (SwapTagNameBlankValue = true) and (FTemplateTag.TagValue = '') then
+    begin
+      System.Delete(FsInput, (FTemplateTag.SourcePos), Length(lsTagName));
 
-        FOutputDoc.Strings[FTemplateTag.SourceLineNo - 1] := FsInput;
-      end
-     else
-        FOutputDoc.Strings[FTemplateTag.SourceLineNo - 1] := '';
+      FOutputDoc.Strings[FTemplateTag.SourceLineNo - 1] := FsInput;
+    end
+    else
+      FOutputDoc.Strings[FTemplateTag.SourceLineNo - 1] := '';
   end;
 
   if Length(FTemplateTag.TagValue) > Length(lsTagName) then
@@ -360,10 +362,10 @@ begin
   TemplateTags.Insert(ATemplateTag, ATemplateTag.TagIndex);
 end;
 
-procedure TNovusTemplate.InsertLineNo(ALineNo: INteger; AValue: String);
+procedure TNovusTemplate.InsertLineNo(ALineNo: Integer; AValue: String);
 Var
   LTemplateTag: TTemplateTag;
-  I: INteger;
+  I: Integer;
   lsRawTag: String;
 begin
   FTemplateDoc.Insert(ALineNo, AValue);
@@ -420,7 +422,7 @@ end;
 
 procedure TNovusTemplate.ParseTagValues;
 Var
-  I, X: INteger;
+  I, X: Integer;
   FTemplateTag: TTemplateTag;
   FsTagName: String;
   FStrParser: tNovusStringParser;
@@ -443,7 +445,7 @@ end;
 procedure TNovusTemplate.ParseTags;
 Var
   FTemplateTag: TTemplateTag;
-  I: INteger;
+  I: Integer;
   FsInput: String;
 begin
   For I := 0 to TemplateTags.Count - 1 do
@@ -453,21 +455,21 @@ begin
     FsInput := FOutputDoc.Strings[FTemplateTag.SourceLineNo - 1];
 
     FOutputDoc.Strings[FTemplateTag.SourceLineNo - 1] :=
-      TNovusStringUtils.ReplaceStrPos(FsInput, '{' + FTemplateTag.TagName + '}',
-      FTemplateTag.TagValue, FTemplateTag.SourcePos - 1);
+      TNovusStringUtils.ReplaceStrPos(FsInput, StartToken + FTemplateTag.TagName
+      + EndToken, FTemplateTag.TagValue, FTemplateTag.SourcePos - 1);
   end;
 end;
 
 function TNovusTemplate.FindNextTagNameIndexOf(ATagName: String;
-  AIndex: INteger): INteger;
+  AIndex: Integer): Integer;
 begin
   Result := FindTagNameIndexOf(ATagName, AIndex);
 end;
 
 function TNovusTemplate.FindTagNameIndexOf(ATagName: String;
-  AIndex: integer = 0): INteger;
+  AIndex: Integer = 0): Integer;
 Var
-  I: INteger;
+  I: Integer;
 begin
   Result := -1;
 
@@ -550,12 +552,12 @@ begin
 
 end;
 
-function TTags.GetItem(Index: INteger): TTag;
+function TTags.GetItem(Index: Integer): TTag;
 begin
   Result := TTag(inherited GetItem(Index));
 end;
 
-procedure TTags.SetItem(Index: INteger; Value: TTag);
+procedure TTags.SetItem(Index: Integer; Value: TTag);
 begin
   inherited SetItem(Index, Value);
 end;
@@ -565,7 +567,7 @@ begin
   Result := TTag(inherited Add);
 end;
 
-function TTags.AddItem(Item: TTag; Index: INteger): TTag;
+function TTags.AddItem(Item: TTag; Index: Integer): TTag;
 begin
   if Item = nil then
     Result := CreateTag
@@ -580,7 +582,7 @@ begin
   end;
 end;
 
-function TTags.Insert(Index: INteger): TTag;
+function TTags.Insert(Index: Integer): TTag;
 begin
   Result := AddItem(nil, Index);
 end;
@@ -602,11 +604,10 @@ begin
   Result := FOwner;
 end;
 
-
 function TTemplateTags.FindTagNameIndexOf(ATagName: String;
-  AIndex: integer = 0): INteger;
+  AIndex: Integer = 0): Integer;
 Var
-  I: INteger;
+  I: Integer;
 begin
   Result := -1;
 

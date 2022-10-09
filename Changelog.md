@@ -1,8 +1,11 @@
+9/10/2022
+
+* Fixed procedure ParseTags; in TNovusTemplate with Start Token and EndToken
 
 27/09/2022
 
 * Fixed function TNovusParser.NextToken: Char; not returning toEOF
-* renamed tNovusInterpreter.execute to Interpreter.ParseInterpreter
+* Renamed tNovusInterpreter.execute to Interpreter.ParseInterpreter
 
 08/09/2022
 

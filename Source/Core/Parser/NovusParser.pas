@@ -14,7 +14,7 @@ type
 
   TNovusParser = class(TNovusObject)
   private
-    FsParseString: string;
+    fParseStringList: tStringlist;
     FiSourceLineNo: Integer;
     FiSourcePos: Integer;
     FiTokenPos: Integer;
@@ -43,6 +43,8 @@ type
     function SkipToEOF: string;
     function SkipToEOLAsString: string; overload;
     function SkipToEOL(aRestColumnPos: boolean = True): Char; overload;
+
+    procedure AddString(aString: String);
 
     function CopyParseString(aStartTokenPos, aEndTokenPos: Integer): String;
 
@@ -75,21 +77,35 @@ type
     function PeekJustNextToken: Char;
 
     property ParseString: string read GetParseString;
+
+    property ParseStringList: tStringlist
+      read fParseStringList
+      write fParseStringList;
   end;
 
 implementation
 
 constructor TNovusParser.create;
 begin
+  fParseStringList:= tStringlist.Create;
+
   Reset;
 end;
 
 destructor TNovusParser.destroy;
 begin
-  //FParseLines.Free;
+  fParseStringList.Free;
 
   inherited destroy;
 end;
+
+procedure TNovusParser.AddString(aString: String);
+begin
+  fParseStringList.Add(aString);
+
+  FToken := toBOF;
+end;
+
 
 function TNovusParser.GetToken(const s, sDelim: string; var iPos: integer): string;
 var
@@ -114,7 +130,8 @@ end;
 
 function TNovusParser.LoadFromString(const aInput: string): Boolean;
 begin
-  fsParseString := aInput;
+//  fsParseString := aInput;
+  fParseStringList.Text := aInput;
 
   FToken := toBOF;
   Result := True;
@@ -128,6 +145,10 @@ begin
   Result := False;
   if not FileExists(aFileName) then  Exit;
 
+  fParseStringList.LoadFromFile(aFilename);
+
+
+  (*
   Try
     LParseLines:= tStringList.Create;
 
@@ -137,6 +158,7 @@ begin
   Finally
     LParseLines.Free;
   End;
+  *)
 
   FToken := toBOF;
   Result := True;
@@ -149,7 +171,13 @@ begin
  Result := False;
   if not(assigned(aStream)) then Exit;
 
+
   aStream.Seek(0, soFromBeginning);
+
+  fParseStringList.LoadFromStream(aStream);
+
+
+  (*
   Try
     LParseLines := tStringList.Create;
 
@@ -159,7 +187,7 @@ begin
   Finally
     LParseLines.Free;
   End;
-
+  *)
 
   FToken := toBOF;
   Result := True;
@@ -273,7 +301,8 @@ end;
 
 function TNovusParser.CopyParseString(aStartTokenPos, aEndTokenPos: Integer): String;
 begin
-  Result := TNovusStringUtils.CopyString(fsParseString, aStartTokenPos,aEndTokenPos);
+  //Result := TNovusStringUtils.CopyString(fsParseString, aStartTokenPos,aEndTokenPos);
+  Result := TNovusStringUtils.CopyString(ParseString, aStartTokenPos,aEndTokenPos);
 end;
 
 
@@ -522,7 +551,9 @@ end;
 
 function tNovusParser.GetParseString: string;
 begin
-  Result := Copy(fsParseString, 1, Length(fsParseString) - 1);
+  Result := Copy(fParseStringList.Text, 1, Length(fParseStringList.Text) - 1);
+
+  //Result := Copy(fsParseString, 1, Length(fsParseString) - 1);
 end;
 
 function tNovusParser.PeekJustNextToken: Char;

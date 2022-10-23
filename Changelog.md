@@ -1,3 +1,16 @@
+# Changelog
+
+## Release branch v0.1.0
+
+23/10/2022
+
+* New function procedure procedure TNovusParser.AddString(aString: String); 
+* Moved TNovusUtilities class function AppRootDirectory: String; to
+* Renamed LoadParserStream to LoadTemplateDoc
+* Merged TTag to TTemplateTag
+* Removed TTag = class(TCollectionItem)
+* Removed TTags from TNovusTemplate
+
 9/10/2022
 
 * Fixed procedure ParseTags; in TNovusTemplate with Start Token and EndToken

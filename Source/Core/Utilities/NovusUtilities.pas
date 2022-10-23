@@ -3,7 +3,8 @@ unit NovusUtilities;
 
 interface
 
-uses System.SysUtils, Classes, typinfo, System.RegularExpressions;
+uses System.SysUtils, Classes, typinfo, System.RegularExpressions, REST.JsonReflect,
+     System.JSON, Data.DBXJSONReflect;
 
 Const
   CR = #13#10;
@@ -18,10 +19,14 @@ Type
     /// </summary>
     class function GetExceptMess: String;
     class function GetLastSysErrorMess: string;
-    class function CopyObject(Src, Dest: TObject;
-      Related: Boolean = FALSE): Boolean;
-    class function AppRootDirectory: String;
+
+    class function CopyObject(Src, Dest: TObject; Related: Boolean = FALSE): Boolean;
+
+
     class procedure FreeObject(q: TObject);
+
+    class function CloneObject(aObject: tObject): tObject;
+
     class function FindStringListValue(const Strings: tstringlist;
       Name: String): String;
     class function FindFileSize(Afile: String): Integer;
@@ -31,6 +36,9 @@ Type
     class function GetParamValue(const aParamKey: string;
       var aValue: string): Boolean;
 
+    class procedure ClearStringList(aStringList: TStringList);
+    class procedure CloneStringList(aSource, aDestination: TStringList);
+
     class function RegExMatchEx(aInput: string; aPattern: string;
       aInversed: Boolean; aMatchValue: Boolean; aIgnoreCase: boolean = true): String;
     class function RegExMatch(aInput: string; aPattern: string;
@@ -39,12 +47,31 @@ Type
 
 implementation
 
-class function TNovusUtilities.AppRootDirectory;
+class procedure TNovusUtilities.CloneStringList(aSource, aDestination: TStringList);
+Var
+  I: integer;
 begin
-  Result := ExtractFilePath(ParamStr(0));
+  ClearStringList(aDestination);
+
+  For i :=0 To Pred(aSource.Count) do
+     aDestination.AddObject(aSource.Strings[I],CloneObject(aSource.Objects[I]));
 end;
 
+class procedure TNovusUtilities.ClearStringList(aStringList: TStringList);
+var
+  i: Integer;
+begin
+  for i := 0 to pred(aStringList.Count) do
+   begin
+     if Assigned(aStringList.Objects[i]) then
+       begin
+         aStringList.Objects[i].Free;
+         aStringList.Objects[i] := Nil;
+       end;
+   end;
 
+  aStringList.Clear;
+end;
 
 class procedure TNovusUtilities.FreeObject(q: TObject);
 begin
@@ -269,6 +296,32 @@ begin
 
 end;
 
+class function TNovusUtilities.CloneObject(aObject: TObject): TObject;
+var
+  MarshalObj: TJSONMarshal;
+  UnMarshalObj: TJSONUnMarshal;
+  JSONValue: TJSONValue;
+begin
+  Result := nil;
+  if not Assigned(AObject)  then Exit;
+
+  MarshalObj := TJSONMarshal.Create;
+  UnMarshalObj := TJSONUnMarshal.Create;
+  try
+    JSONValue := MarshalObj.Marshal(aObject);
+    try
+      if Assigned(JSONValue) then
+        Result := UnMarshalObj.Unmarshal(JSONValue);
+    finally
+      JSONValue.Free;
+    end;
+  finally
+    MarshalObj.Free;
+    UnMarshalObj.Free;
+  end;
+end;
+
+
 class function TNovusUtilities.GetExceptMess: string;
 Var
   ValSize: Integer;
@@ -296,5 +349,6 @@ begin
   S := Copy(S, (Pos('.', S) + 1), Length(S) - Pos('.', S));
   result := Copy(S, (Pos('.', S) + 1), Length(S) - Pos('.', S));
 end;
+
 
 end.

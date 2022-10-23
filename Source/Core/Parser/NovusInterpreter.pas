@@ -196,8 +196,6 @@ begin
   foOperatorslist.Free;
   foKeyWordslist.Free;
   foTokenList.Free;
-
-  inherited Destroy;
 end;
 
 procedure tNovusInterpreter.AddKeywords;

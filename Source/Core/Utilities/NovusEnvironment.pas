@@ -44,25 +44,24 @@ begin
   Try
     loTemplate := tNovusTemplate.Create;
 
-    if True then
-
-      case aEnvironmentTokenType of
-        ETTToken1:
-        begin
-          loTemplate.StartToken := '%';
-          loTemplate.EndToken := '%';
-          loTemplate.SecondToken :=#0;
-        end;
-        ETTToken2:
-        begin
-          loTemplate.StartToken := '{';
-          loTemplate.EndToken := '}';
-           loTemplate.SecondToken := '%';
-        end;
+    case aEnvironmentTokenType of
+      ETTToken1:
+      begin
+        loTemplate.StartToken := '%';
+        loTemplate.EndToken := '%';
+        loTemplate.SecondToken :=#0;
       end;
+      ETTToken2:
+      begin
+        loTemplate.StartToken := '{';
+        loTemplate.EndToken := '}';
+         loTemplate.SecondToken := '%';
+      end;
+    end;
 
 
-    loTemplate.TemplateDoc.Text := Trim(aInput);
+    //loTemplate.TemplateDoc.Text := Trim(aInput);
+    loTemplate.LoadFromString(Trim(aInput));
 
     loTemplate.ParseTemplate;
 

@@ -920,7 +920,6 @@
         </DelphiCompile>
         <DCCReference Include="rtl.dcp"/>
         <DCCReference Include="NovusCodeLibrary_Utils.dcp"/>
-        <DCCReference Include="DbxCommonDriver.dcp"/>
         <DCCReference Include="..\..\Core\Object\NovusObject.pas"/>
         <DCCReference Include="..\..\Core\Object\NovusBO.pas"/>
         <DCCReference Include="..\..\Core\Object\NovusBOField.pas"/>

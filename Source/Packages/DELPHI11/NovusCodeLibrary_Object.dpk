@@ -32,8 +32,7 @@ package NovusCodeLibrary_Object;
 
 requires
   rtl,
-  NovusCodeLibrary_Utils,
-  DbxCommonDriver;
+  NovusCodeLibrary_Utils;
 
 contains
   NovusObject in '..\..\Core\Object\NovusObject.pas',

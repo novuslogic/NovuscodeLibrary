@@ -11,6 +11,10 @@ Type
   TNovusFileUtils = class(tNovusUtilities)
   public
     /// <summary>
+    /// Current App Root directory
+    /// </summary>
+    class function AppRootDirectory: String;
+    /// <summary>
     /// Check if file is being used or locked.
     /// </summary>
     class function IsFileInUse(fName: string): boolean;
@@ -128,6 +132,12 @@ begin // IsFileInUse
 
   Result := CheckAttributes(fName, 'R');
 end;
+
+class function TNovusFileUtils.AppRootDirectory;
+begin
+  Result := ExtractFilePath(ParamStr(0));
+end;
+
 
 class function TNovusFileUtils.IsFileInUse(fName: string): boolean;
 var

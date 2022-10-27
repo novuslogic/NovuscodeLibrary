@@ -41,7 +41,7 @@ requires
 contains
   NovusUtilities in '..\..\core\Utilities\NovusUtilities.pas',
   NovusWindows in '..\..\Core\Utilities\NovusWindows.pas',
-  NovusVersionUtils in '..\..\Core\Utilities\NovusVersionUtils.pas',
+  NovusWinVersionUtils in '..\..\Core\Utilities\NovusWinVersionUtils.pas',
   NovusDateStringUtils in '..\..\Core\Utilities\NovusDateStringUtils.pas',
   NovusDateUtils in '..\..\Core\Utilities\NovusDateUtils.pas',
   NovusStringUtils in '..\..\Core\Utilities\NovusStringUtils.pas',

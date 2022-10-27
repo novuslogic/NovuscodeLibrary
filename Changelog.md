@@ -1,3 +1,7 @@
+28/10/2022
+
+* Fixed Delphi 10.4 Packages missing units
+
 9/10/2022
 
 * Fixed procedure ParseTags; in TNovusTemplate with Start Token and EndToken

@@ -782,3 +782,9 @@ units/22.0/OSX64/Debug/NovusStringUtils.o
 units/22.0/OSX64/Debug/NovusUtilities.o
 units/22.0/OSX64/Debug/NovusVariants.o
 Source/Packages/DELPHI11/NovusCodeLibrary_Utils.otares
+Source/Packages/DELPHI11/NovusCodeLibrary_Object_nonshared.a
+units/22.0/OSX64/Debug/NovusBO.o
+units/22.0/OSX64/Debug/NovusBOField.o
+units/22.0/OSX64/Debug/NovusBOMap.o
+units/22.0/OSX64/Debug/NovusCodeLibrary_Object.o
+units/22.0/OSX64/Debug/NovusList.o

@@ -3,12 +3,12 @@ unit NovusBO;
 
 interface
 
-Uses NovusObject, Activex, ComObj, Classes, SysUtils,
+Uses NovusObject, (*Activex, ComObj,*) Classes, SysUtils,
   NovusBOField, NovusBOMap, NovusUtilities, DBXJson, DB, NovusDateUtils,
 {$IFDEF DELPHIXE6_UP}
   JSON, System.Variants,
 {$ENDIF}
-  NovusStringUtils, NovusDateStringUtils;
+  NovusStringUtils, NovusDateStringUtils, NovusGUID;
 
 Type
 
@@ -121,7 +121,9 @@ begin
 
   inherited Create;
 
-  CoCreateGuid(fGUID);
+//  CoCreateGuid(fGUID);
+
+  fGUID := TNovusGuid.NewGuid;
 
   fsGUIDString := GUIDToString(fGUID);
 

@@ -4,6 +4,7 @@
 
 12/11/2022
 
+* Removed Activx Unit from NovusBO class 
 * NovuscodeLibrary_Utils and NovuscodeLibrary_Objects Packages for Delphi 11 now supports MacOS
 
 23/10/2022

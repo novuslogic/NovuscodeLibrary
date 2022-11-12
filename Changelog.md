@@ -2,6 +2,10 @@
 
 ## Release branch v0.1.0
 
+12/11/2022
+
+* Novuscode:ibrary_Utils and Novuscode:ibrary_Objects for Delphi 11 now supports MacOS
+
 23/10/2022
 
 * New function procedure procedure TNovusParser.AddString(aString: String); 

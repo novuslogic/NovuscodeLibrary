@@ -4,6 +4,7 @@
 
 12/11/2022
 
+* NovusCodeLibrary_Parser Package for Delphi 11 now supports MacOS
 * Removed Activx Unit from NovusBO class 
 * NovuscodeLibrary_Utils and NovuscodeLibrary_Objects Packages for Delphi 11 now supports MacOS
 

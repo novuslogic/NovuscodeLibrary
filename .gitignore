@@ -788,3 +788,12 @@ units/22.0/OSX64/Debug/NovusBOField.o
 units/22.0/OSX64/Debug/NovusBOMap.o
 units/22.0/OSX64/Debug/NovusCodeLibrary_Object.o
 units/22.0/OSX64/Debug/NovusList.o
+Source/Packages/DELPHI11/__history/NovusCodeLibrary_Parser.dpk.~5~
+Source/Packages/DELPHI11/NovusCodeLibrary_Parser_nonshared.a
+units/22.0/OSX64/Debug/NovusCodeLibrary_Parser.o
+units/22.0/OSX64/Debug/NovusCommentsParserCell.o
+units/22.0/OSX64/Debug/NovusInterpreter.o
+units/22.0/OSX64/Debug/NovusParser.o
+units/22.0/OSX64/Debug/NovusStringParser.o
+units/22.0/OSX64/Debug/NovusTemplate.o
+units/22.0/OSX64/Debug/NovusTokenProcessor.o

@@ -32,7 +32,6 @@ package NovusCodeLibrary_Object;
 {$IMPLICITBUILD OFF}
 
 requires
-  rtl,
   NovusCodeLibrary_Utils;
 
 contains

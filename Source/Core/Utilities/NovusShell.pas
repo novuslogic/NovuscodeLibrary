@@ -3,13 +3,19 @@ unit NovusShell;
 
 interface
 
-Uses NovusUtilities, ShellAPI, Windows, Forms, AnsiStrings, Classes, comobj,
+Uses NovusUtilities,  AnsiStrings, Classes,
   variants,
-  SysUtils, NovusWindows;
 
+{$IFDEF MSWINDOWS}
+  ShellAPI,
+  Vcl.Forms, Windows, NovusWindows,
+{$ENDIF}
+
+  SysUtils;
+
+{$IFDEF MSWINDOWS}
 const
-  SECURITY_WORLD_SID_AUTHORITY: TSidIdentifierAuthority =
-    (Value: (0, 0, 0, 0, 0, 1));
+  SECURITY_WORLD_SID_AUTHORITY: TSidIdentifierAuthority = (Value: (0, 0, 0, 0, 0, 1));
   HEAP_ZERO_MEMORY = $00000008;
   ACL_REVISION = 2;
   SECURITY_WORLD_RID = $00000000;
@@ -35,11 +41,13 @@ const
     Windows.SYNCHRONIZE);
   FILE_GENERIC_EXECUTE = (STANDARD_RIGHTS_EXECUTE or FILE_READ_ATTRIBUTES or
     FILE_EXECUTE or Windows.SYNCHRONIZE);
+{$ENDIF}
 
 type
   TEventRunCaptureCommandOutput = procedure(var aOutput: string) of Object;
 
 
+{$IFDEF MSWINDOWS}
   TAceHeader = packed record
     AceType: Byte;
     AceFlags: Byte;
@@ -51,15 +59,19 @@ type
     Mask: ACCESS_MASK;
     SidStart: DWORD;
   end;
+{$ENDIF}
 
   tNovusShell = class(tNovusUtilities)
   protected
+{$IFDEF MSWINDOWS}
     function WindowsCaptureExecute(aCommandline: String;
       var aOutput: String): Integer;
 
     function WindowsShellExecute(const aOperation: String;
       const aCommandline: string; const aDirectory: string;
       const aParameters: String; const aShow: Integer): Integer;
+{$ENDIF}
+
   public
     constructor Create; virtual;
     destructor Destroy; override;
@@ -78,8 +90,10 @@ type
 
   end;
 
+{$IFDEF MSWINDOWS}
 function WTSQueryUserToken(SessionId: DWORD; phToken: THandle): bool; stdcall;
   external 'wtsapi32.dll';
+{$ENDIF}
 
 implementation
 
@@ -96,26 +110,36 @@ end;
 function tNovusShell.RunCommandCapture(const aCommandline: string;
   var aOutput: String): Integer;
 begin
+{$IFDEF MSWINDOWS}
   result := WindowsCaptureExecute(aCommandline, aOutput);
-
+{$ELSE}
+  result := -1;
+{$ENDIF}
 end;
 
 function tNovusShell.RunCommandSilent(const aCommandline: string;
   const aDirectory: string; const aParameters: String): Integer;
 begin
+{$IFDEF MSWINDOWS}
   result := WindowsShellExecute('open', aCommandline, aDirectory,
     aParameters, SW_HIDE);
-
+{$ELSE}
+  result := -1;
+{$ENDIF}
 end;
 
 function tNovusShell.RunCommand(const aCommandline: String;
   const aDirectory: string; const aParameters: String): Integer;
 begin
+{$IFDEF MSWINDOWS}
   result := WindowsShellExecute('open', aCommandline, aDirectory, aParameters,
     SW_SHOWNORMAL);
-
+{$ELSE}
+  result := -1;
+{$ENDIF}
 end;
 
+{$IFDEF MSWINDOWS}
 function tNovusShell.WindowsCaptureExecute(aCommandline: String;
   var aOutput: String): Integer;
 const
@@ -278,5 +302,6 @@ begin
 
   result := liExitCode;
 end;
+{$ENDIF}
 
 end.

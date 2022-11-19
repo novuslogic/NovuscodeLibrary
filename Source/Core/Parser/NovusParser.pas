@@ -26,8 +26,8 @@ type
     procedure SetSourceLineNo(Value: Integer);
 
     function GetParseString: string;
-
     function GetTokenString: string;
+    procedure AddEOF;
   protected
   public
     constructor Create;
@@ -130,35 +130,28 @@ end;
 
 function TNovusParser.LoadFromString(const aInput: string): Boolean;
 begin
-//  fsParseString := aInput;
-  fParseStringList.Text := aInput;
+  fParseStringList.Text := aInput + toEOF;
 
   FToken := toBOF;
   Result := True;
 end;
 
 
+procedure TNovusParser.AddEOF;
+begin
+  fParseStringList.Text := fParseStringList.Text + toEOF;
+end;
+
 function TNovusParser.LoadFromFile(const aFileName: string): Boolean;
 var
   LParseLines: tStringList;
 begin
   Result := False;
-  if not FileExists(aFileName) then  Exit;
+  if not FileExists(aFileName) then Exit;
 
   fParseStringList.LoadFromFile(aFilename);
 
-
-  (*
-  Try
-    LParseLines:= tStringList.Create;
-
-    LParseLines.LoadFromFile(aFileName);
-
-    fsParseString := LParseLines.Text;
-  Finally
-    LParseLines.Free;
-  End;
-  *)
+  AddEOF;
 
   FToken := toBOF;
   Result := True;
@@ -176,18 +169,7 @@ begin
 
   fParseStringList.LoadFromStream(aStream);
 
-
-  (*
-  Try
-    LParseLines := tStringList.Create;
-
-    LParseLines.LoadFromStream(aStream);
-
-    fsParseString := LParseLines.Text;
-  Finally
-    LParseLines.Free;
-  End;
-  *)
+  AddEOF;
 
   FToken := toBOF;
   Result := True;
@@ -199,6 +181,10 @@ begin
 
   while True do
   begin
+    if True then
+
+    if aTokenPos > length(ParseString) then Exit;
+
     Result := ParseString[aTokenPos];
     case Result of
       #10:
@@ -216,24 +202,6 @@ end;
 procedure TNovusParser.SkipBlanks;
 begin
   FToken := SkipBlanksEx(FiTokenPos, FiSourceLineNo);
-  (*
-  if Trim(ParseString) = '' then Exit;
-
-  while True do
-  begin
-    FToken := ParseString[FiTokenPos];
-    case FToken of
-      #10:
-        begin
-          Inc(FiSourceLineNo);
-         // FLineTokens := FiTokenPos;
-        end;
-      toEOF, #33..#255:
-        Exit;
-    end;
-    Inc(FiTokenPos);
-  end;
-  *)
 end;
 
 function TNovusParser.GetSourcePos: Integer;

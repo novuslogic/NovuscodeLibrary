@@ -374,7 +374,6 @@ function TNovusBO.ToJSONObject: TJSONObject;
 var
   loJSONObject: TJSONObject;
   I: Integer;
-  LJValue: TJSONValue;
   loBOField: tNovusBOField;
 begin
   loJSONObject := TJSONObject.Create;

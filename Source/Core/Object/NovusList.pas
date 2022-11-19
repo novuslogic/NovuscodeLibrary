@@ -255,8 +255,6 @@ begin
 end;
 
 procedure TNovusList.Clear;
-Var
-  I: Integer;
 begin
   While(FList.Count <>0) do
      Delete(FList[0]);

@@ -2,9 +2,13 @@
 
 ## Release v0.1.0
 
+20/11/2022
+
+* Update NovusParser by default will now set toEOF when loading into template buffer
+
 12/11/2022
 
-* NovusCodeLibrary_Parser Package for Delphi 11 now supports MacOS
+* NovusCodeLibrary_Parser and NovusCodeLibrary_OS Packages for Delphi 11 now supports MacOS
 * Removed Activx Unit from NovusBO class 
 * NovuscodeLibrary_Utils and NovuscodeLibrary_Objects Packages for Delphi 11 now supports MacOS
 

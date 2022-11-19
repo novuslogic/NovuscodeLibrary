@@ -2,7 +2,7 @@ unit NovusOS;
 
 interface
 
-uses NovusUtilities, NovusWindows;
+uses NovusUtilities;
 
 type
   tNovusOS = class(tNovusUtilities)

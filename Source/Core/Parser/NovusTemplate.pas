@@ -89,7 +89,6 @@ type
     procedure LoadTemplateDoc;
 
     procedure InsertAllTagValues;
-//    procedure Add(aLine: String);
 
     function InsertOutputDoc(ATemplateTag: TTemplateTag): boolean;
     function TagValuesAllExists: boolean;
@@ -276,16 +275,6 @@ begin
 
       TemplateDoc.AddObject(ParseStringList.Strings[liLineNo], lTemplateLineInfo);
     end;
-
-  (*
-  FParserStream.Clear;
-
-  FParserStream.Position := 0;
-
-  FTemplateDoc.SaveToStream(FParserStream, TEncoding.Unicode);
-
-  LoadFromStream(FParserStream);
-  *)
 end;
 
 function TNovusTemplate.InsertOutputDoc(ATemplateTag: TTemplateTag): boolean;

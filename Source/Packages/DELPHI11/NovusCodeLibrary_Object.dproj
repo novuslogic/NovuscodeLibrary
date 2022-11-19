@@ -8,7 +8,7 @@
         <AppType>Package</AppType>
         <FrameworkType>None</FrameworkType>
         <ProjectVersion>19.4</ProjectVersion>
-        <Platform Condition="'$(Platform)'==''">OSX64</Platform>
+        <Platform Condition="'$(Platform)'==''">Win64</Platform>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
         <Base>true</Base>
@@ -152,7 +152,6 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="rtl.dcp"/>
         <DCCReference Include="NovusCodeLibrary_Utils.dcp"/>
         <DCCReference Include="..\..\Core\Object\NovusObject.pas"/>
         <DCCReference Include="..\..\Core\Object\NovusBO.pas"/>

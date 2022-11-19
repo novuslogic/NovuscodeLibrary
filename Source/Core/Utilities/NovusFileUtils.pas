@@ -3,8 +3,14 @@ unit NovusFileUtils;
 
 interface
 
-uses StrUtils, NovusUtilities, Windows, SysUtils, SHFolder, ShellApi, ShlObj,
-  Classes, NovusWindows, ComObj, WinInet, ShLwApi, System.IOUtils;
+uses StrUtils, NovusUtilities,
+
+{$IFDEF MSWINDOWS}
+  Windows,  NovusWindows, ComObj, WinInet,  ShLwApi,
+  SHFolder, ShellApi, ShlObj,
+{$ENDIF}
+  SysUtils,
+  Classes,  System.IOUtils;
 
 Type
 
@@ -17,13 +23,24 @@ Type
     /// <summary>
     /// Check if file is being used or locked.
     /// </summary>
+{$IFDEF MSWINDOWS}
     class function IsFileInUse(fName: string): boolean;
+{$ENDIF}
     /// <summary>
     /// Converts File path to a canonicalized URL.
     /// </summary>
+{$IFDEF MSWINDOWS}
     class function FilePathToURL(const aFilePath: string): string;
+{$ENDIF}
+
+{$IFDEF MSWINDOWS}
     class function IsFileReadonly(fName: string): boolean;
+{$ENDIF}
+
+{$IFDEF MSWINDOWS}
     class function MoveDir(aFromDirectory, aToDirectory: String): boolean;
+{$ENDIF}
+
     class function CopyDir(aFromDirectory, aToDirectory: String): boolean;
     class function ExtractName(aFullFileName: String): String;
     /// <summary>
@@ -36,12 +53,19 @@ Type
     /// </summary>
     class function IsJustFilenameOnly(aFilename: String): Boolean;
 
+{$IFDEF MSWINDOWS}
     class function AbsoluteFilePath(aFilename: String): String;
+{$ENDIF}
+
     /// <summary>
     /// Uses IncludeTrailingPathDelimiter, if filename is blank returns blank.
     /// </summary>
     class function TrailingBackSlash(const aFilename: string): string;
+
+{$IFDEF MSWINDOWS}
     class function GetSpecialFolder(const CSIDL: integer): string;
+{$ENDIF}
+
     class function IsOnlyFolder(aFolder: string): boolean;
     /// <summary>
     ///  Is Valid folder
@@ -71,6 +95,7 @@ function PathCombine(lpszDest: PChar; const lpszDir, lpszFile: PChar): PChar;
 
 implementation
 
+{$IFDEF MSWINDOWS}
 class function TNovusFileUtils.IsFileReadonly(fName: string): boolean;
 var
   HFileRes: HFILE;
@@ -132,6 +157,7 @@ begin // IsFileInUse
 
   Result := CheckAttributes(fName, 'R');
 end;
+{$ENDIF}
 
 class function TNovusFileUtils.AppRootDirectory;
 begin
@@ -139,6 +165,7 @@ begin
 end;
 
 
+{$IFDEF MSWINDOWS}
 class function TNovusFileUtils.IsFileInUse(fName: string): boolean;
 var
   HFileRes: HFILE;
@@ -159,7 +186,10 @@ begin
     CloseHandle(HFileRes);
   end;
 end;
+{$ENDIF}
 
+
+{$IFDEF MSWINDOWS}
 class function TNovusFileUtils.MoveDir(aFromDirectory,
   aToDirectory: String): boolean;
 var
@@ -175,14 +205,17 @@ begin
   end;
   Result := (0 = ShFileOperation(fos));
 end;
+{$ENDIF}
+
 
 class function TNovusFileUtils.CopyDir(aFromDirectory,
   aToDirectory: String): boolean;
 var
   s: TSearchRec;
-//  fos: TSHFileOpStruct;
   lsInDir , lsOutDir: string;
 begin
+  result := False;
+
   if FindFirst(IncludeTrailingPathDelimiter(aFromDirectory) + '*',faDirectory, s) = 0 then
   begin
     repeat
@@ -193,30 +226,14 @@ begin
         // Create new subdirectory in outDir
         mkdir(lsOutDir);
         // Recurse into subdirectory in inDir
-        TNovusFileUtils.CopyDir(lsInDir,lsOutDir);
+        if not TNovusFileUtils.CopyDir(lsInDir,lsOutDir) then break;
       end;
     until FindNext(s) <> 0;
   end;
   FindClose(s);
-
-
-
-  (*
-  ZeroMemory(@fos, SizeOf(fos));
-  with fos do
-  begin
-    wFunc := FO_COPY;
-    fFlags := FOF_FILESONLY;
-    pFrom := PChar(aFromDirectory + #0);
-    pTo := PChar(aToDirectory)
-  end;
-  Result := (0 = ShFileOperation(fos));
-  *)
-
-
-
 end;
 
+{$IFDEF MSWINDOWS}
 class function TNovusFileUtils.AbsoluteFilePath(aFilename: String): String;
 var
   lpFileName: PChar;
@@ -229,6 +246,7 @@ begin
   cResult := GetFullPathName(lpFileName, MAX_PATH, lpBuffer, lpFileName);
   Result := ExtractFilePath(lpBuffer);
 end;
+{$ENDIF}
 
 class function TNovusFileUtils.ExtractFileExtA(aFileExt: String): String;
 begin
@@ -247,6 +265,7 @@ begin
     Result := IncludeTrailingPathDelimiter(aFilename);
 end;
 
+{$IFDEF MSWINDOWS}
 class function TNovusFileUtils.GetSpecialFolder(const CSIDL: integer): string;
 var
   RecPath: PWideChar;
@@ -262,6 +281,7 @@ begin
     StrDispose(RecPath);
   end;
 end;
+{$ENDIF}
 
 class function TNovusFileUtils.IsValidFolder(aFolder: String): boolean;
 var
@@ -312,6 +332,7 @@ begin
 end;
 {$ENDIF}
 
+{$IFDEF MSWINDOWS}
 class function TNovusFileUtils.FilePathToURL(const aFilePath: string): string;
 var
   BufferLen: DWORD;
@@ -325,6 +346,7 @@ begin
     raise Exception.Create(tNovusUtilities.GetExceptMess);
   End;
 end;
+{$ENDIF}
 
 class function TNovusFileUtils.IsOnlyFolder(aFolder: string): boolean;
 var

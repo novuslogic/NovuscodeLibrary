@@ -4,7 +4,7 @@
 
 20/11/2022
 
-* Update NovusParser by default will now set toEOF when loading into template buffer
+* Updated NovusParser by default will now set toEOF when loading into template buffer
 
 12/11/2022
 

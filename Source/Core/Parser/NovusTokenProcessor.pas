@@ -27,6 +27,7 @@ type
      function IsNextToken(aToken: String): boolean;
      function FindToken(aToken: string): Boolean;
      function CurrentToken: String;
+     function CurrentTokenObject: tObject;
 
      function EOF: Boolean;
      function BOF: boolean;
@@ -160,6 +161,18 @@ begin
   if EOF then Exit;
 
   Result := Strings[fiTokenIndex];
+end;
+
+function tNovusTokenProcessor.CurrentTokenObject: tObject;
+begin
+  Result := NIL;
+  if EOF then Exit;
+
+  Try
+    Result := Objects[fiTokenIndex];
+  Except
+    Result := NIL;
+  End;
 end;
 
 

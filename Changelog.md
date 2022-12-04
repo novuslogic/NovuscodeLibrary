@@ -2,6 +2,10 @@
 
 ## Release v0.1.0
 
+4/12/2022
+
+* New function function tNovusTokenProcessor.CurrentTokenObject: tObject;
+
 20/11/2022
 
 * Updated NovusParser by default will now set toEOF when loading into template buffer

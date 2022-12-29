@@ -77,8 +77,6 @@ type
     FOutputDoc: tStringList;
     fsLastMessage: String;
 
-
-
     function InternalParseTemplate(aLoadParserStream: boolean = true): boolean;
   public
     constructor Create;
@@ -86,9 +84,13 @@ type
 
     function ParseTemplate(aLoadParserStream: boolean = true): boolean; virtual;
 
+    function LoadTemplateDocFile(afilename: String): boolean;
+
     procedure LoadTemplateDoc;
 
     procedure InsertAllTagValues;
+
+    procedure AddLine(aString: string);
 
     function InsertOutputDoc(ATemplateTag: TTemplateTag): boolean;
     function TagValuesAllExists: boolean;
@@ -190,12 +192,26 @@ begin
   Result := InternalParseTemplate(aLoadParserStream);
 end;
 
-(*
-procedure TNovusTemplate.Add(aLine: String);
+
+function TNovusTemplate.LoadTemplateDocFile(afilename: String): boolean;
 begin
-  TemplateDoc.Add(aLine)
+  Result := LoadFromFile(afilename);
+
+  if Result then LoadTemplateDoc;
 end;
-*)
+
+
+procedure TNovusTemplate.AddLine(aString: string);
+begin
+  Add(aString);
+
+  var lTemplateLineInfo := TTemplateLineInfo.Create;
+
+  lTemplateLineInfo.LineNo :=ParseStringList.Count-1;
+
+  TemplateDoc.AddObject(aString, lTemplateLineInfo);
+end;
+
 
 procedure TNovusTemplate.InsertAllTagValues;
 Var

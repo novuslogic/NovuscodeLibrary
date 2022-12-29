@@ -2,6 +2,13 @@
 
 ## Release v0.1.0
 
+29/23/2022
+
+* New procedure AddLine(aString: string); in NovusTemplate class
+* new function LoadTemplateDocFile(afilename: String): boolean; in NovusTemplate class
+* New procedure Add(aString: string); virtual; in NovusParser class
+
+
 4/12/2022
 
 * New function function tNovusTokenProcessor.CurrentTokenObject: tObject;

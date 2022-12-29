@@ -27,7 +27,6 @@ type
 
     function GetParseString: string;
     function GetTokenString: string;
-    procedure AddEOF;
   protected
   public
     constructor Create;
@@ -36,6 +35,8 @@ type
     procedure Reset;
 
     procedure SkipBlanks;
+
+    procedure AddEOF;
 
     function LoadFromString(const aInput: string): boolean;
     function LoadFromFile(const aFileName: string): Boolean;
@@ -49,6 +50,8 @@ type
     function CopyParseString(aStartTokenPos, aEndTokenPos: Integer): String;
 
     function NextToken: Char;
+
+    procedure Add(aString: string); virtual;
 
     function SkipToken(AStartToken: char = #0; ASecondToken : Char  = #0): Char;
     function SkipTokenString: string;
@@ -134,6 +137,13 @@ begin
 
   FToken := toBOF;
   Result := True;
+end;
+
+procedure TNovusParser.Add(aString: string);
+begin
+  fParseStringList.add(aString);
+
+  FToken := toBOF;
 end;
 
 

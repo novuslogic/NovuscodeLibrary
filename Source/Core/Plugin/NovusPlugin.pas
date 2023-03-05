@@ -2,7 +2,11 @@ unit NovusPlugin;
 
 interface
 
-Uses Windows, SysUtils, Classes, NovusUtilities, NovusList;
+Uses System.SysUtils, Classes,
+     {$IFDEF MSWINDOWS}
+     Windows,
+     {$ENDIF}
+     NovusUtilities, NovusList;
 
 const
   func_GetPluginObject = 'GetPluginObject';

@@ -25,7 +25,10 @@ type
      function IsNextTokenSemicolon: boolean;
      function IsNextTokenColon: boolean;
      function IsNextToken(aToken: String): boolean;
+
      function FindToken(aToken: string): Boolean;
+     function FindNextToken(aToken: string): Boolean;
+
      function CurrentToken: String;
      function CurrentTokenObject: tObject;
 
@@ -122,6 +125,12 @@ function tNovusTokenProcessor.FindToken(aToken: string): boolean;
 begin
   fiTokenIndex := (Self.IndexOf(aToken));
   Result := Not BOF;
+end;
+
+function tNovusTokenProcessor.FindNextToken(aToken: string): Boolean;
+begin
+  Result := FindToken(aToken);
+  if Result then NextToken;
 end;
 
 function tNovusTokenProcessor.IsEqualsToken: Boolean;

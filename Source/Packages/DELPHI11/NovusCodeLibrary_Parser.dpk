@@ -2,7 +2,6 @@
 package NovusCodeLibrary_Parser;
 
 {$R *.res}
-{$R *.otares}
 {$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
 {$ALIGN 8}
 {$ASSERTIONS ON}
@@ -37,11 +36,13 @@ requires
   NovusCodeLibrary_Object;
 
 contains
-  NovusTemplate in '..\..\Core\Parser\NovusTemplate.pas',
+  NovusTemplate2 in '..\..\Core\Parser\NovusTemplate2.pas',
   NovusParser in '..\..\Core\Parser\NovusParser.pas',
   NovusTokenProcessor in '..\..\Core\Parser\NovusTokenProcessor.pas',
   NovusStringParser in '..\..\Core\Parser\NovusStringParser.pas',
   NovusInterpreter in '..\..\Core\Parser\NovusInterpreter.pas',
-  NovusCommentsParserCell in '..\..\Core\Parser\ParserCells\NovusCommentsParserCell.pas';
+  NovusCommentsParserCell in '..\..\Core\Parser\ParserCells\NovusCommentsParserCell.pas',
+  NovusParser.Common in '..\..\Core\Parser\NovusParser.Common.pas',
+  NovusTemplate in '..\..\Core\Parser\NovusTemplate.pas';
 
 end.

@@ -2,6 +2,7 @@
 package NovusCodeLibrary_Indy;
 
 {$R *.res}
+{$R *.otares}
 {$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
 {$ALIGN 8}
 {$ASSERTIONS ON}
@@ -13,17 +14,18 @@ package NovusCodeLibrary_Indy;
 {$LOCALSYMBOLS ON}
 {$LONGSTRINGS ON}
 {$OPENSTRINGS ON}
-{$OPTIMIZATION ON}
-{$OVERFLOWCHECKS OFF}
-{$RANGECHECKS OFF}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS ON}
+{$RANGECHECKS ON}
 {$REFERENCEINFO ON}
 {$SAFEDIVIDE OFF}
-{$STACKFRAMES OFF}
+{$STACKFRAMES ON}
 {$TYPEDADDRESS OFF}
 {$VARSTRINGCHECKS ON}
 {$WRITEABLECONST OFF}
 {$MINENUMSIZE 1}
 {$IMAGEBASE $400000}
+{$DEFINE DEBUG}
 {$ENDIF IMPLICITBUILDING}
 {$DESCRIPTION 'NovusCodeLibrary Runtime - Indy'}
 {$LIBSUFFIX '280'}
@@ -32,7 +34,6 @@ package NovusCodeLibrary_Indy;
 
 requires
   rtl,
-  vcl,
   NovusCodeLibrary_Object,
   NovusCodeLibrary_OS,
   NovusCodeLibrary_WebUtils,

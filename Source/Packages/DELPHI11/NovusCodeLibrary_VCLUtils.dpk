@@ -25,7 +25,7 @@ package NovusCodeLibrary_VCLUtils;
 {$MINENUMSIZE 1}
 {$IMAGEBASE $400000}
 {$ENDIF IMPLICITBUILDING}
-{$DESCRIPTION 'NovusCodeLibrary Runtime - VCLUtils'}
+{$DESCRIPTION 'NovusCodeLibrary Runtime - Core'}
 {$LIBSUFFIX '280'}
 {$RUNONLY}
 {$IMPLICITBUILD OFF}

@@ -33,7 +33,7 @@ package NovusCodeLibrary_OS;
 
 requires
   NovusCodeLibrary_Object,
-{$IFDEF MSWINDOWS}
+{$IFDEF WINDOWS}
   NovusCodeLibrary_Windows,
 {$ENDIF}
   NovusCodeLibrary_Parser;

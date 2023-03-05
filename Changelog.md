@@ -1,6 +1,24 @@
 # Changelog
 
+<!-- TOC -->
+
+- [Changelog](#changelog)
+    - [Release v0.1.0](#release-v010)
+
+<!-- /TOC -->
+
 ## Release v0.1.0
+
+5/3/2023
+
+* Rename OTA folder to ToolAPI
+* class NovusTokenProcessor back ported to v0.0.9
+* Renamed class function TNovusFileUtils.GetSpecialFolder(const CSIDL: integer): string; to TNovusFileUtils.GetWindowsSpecialFolder(const CSIDL: integer): string;
+* Moved class TNovusTemplateTag(s) and TNovusTemplateLineInfo to new unit NovusParser.Common
+* Renamed class TTemplateTag(s) to TNovusTemplateTag(s) and TTemplateLineInfo to TNovusTemplateLineInfo
+* New class function SwapFilenameExtenion(aFilename, aNewExtenion: String): String; in unit NovusFileUtils
+* Restored NovusTemplate from Master branch and merged it back into v0.1.0 branch
+* Renamed class and unit NovusTemplate to NovusTemplate2 next gen tag template 
 
 29/23/2022
 
@@ -8,24 +26,23 @@
 * new function LoadTemplateDocFile(afilename: String): boolean; in NovusTemplate class
 * New procedure Add(aString: string); virtual; in NovusParser class
 
-
 4/12/2022
 
 * New function function tNovusTokenProcessor.CurrentTokenObject: tObject;
 
 20/11/2022
 
-* Updated NovusParser by default will now set toEOF when loading into template buffer
+* Updated NovusParser by default will now set toEOF when loading into the template buffer
 
 12/11/2022
 
-* NovusCodeLibrary_Parser and NovusCodeLibrary_OS Packages for Delphi 11 now supports MacOS
+* NovusCodeLibrary_Parser and NovusCodeLibrary_OS Packages for Delphi 11 now support MacOS
 * Removed Activx Unit from NovusBO class 
-* NovuscodeLibrary_Utils and NovuscodeLibrary_Objects Packages for Delphi 11 now supports MacOS
+* NovuscodeLibrary_Utils and NovuscodeLibrary_Objects Packages for Delphi 11 now support MacOS
 
 23/10/2022
 
-* New function procedure procedure TNovusParser.AddString(aString: String); 
+* New function procedure TNovusParser.AddString(aString: String); 
 * Moved TNovusUtilities class function AppRootDirectory: String; to
 * Renamed LoadParserStream to LoadTemplateDoc
 * Merged TTag to TTemplateTag

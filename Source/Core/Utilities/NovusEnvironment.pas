@@ -2,7 +2,7 @@ unit NovusEnvironment;
 
 interface
 
-Uses NovusUtilities, NovusParser, NovusTemplate, SysUtils;
+Uses NovusUtilities, NovusParser, NovusTemplate2, SysUtils, NovusParser.Common;
 
 type
   tEnvironmentTokenType = (ETTToken1, ETTToken2);
@@ -32,9 +32,9 @@ implementation
 class function tNovusEnvironment.ParseGetEnvironmentVar(aInput: String;
   aEnvironmentTokenType: tEnvironmentTokenType): String;
 Var
-  loTemplate: tNovusTemplate;
+  loTemplate: tNovusTemplate2;
   I: Integer;
-  FTemplateTag: TTemplateTag;
+  FTemplateTag: TNovusTemplateTag;
 begin
   result := aInput;
 
@@ -42,7 +42,7 @@ begin
     Exit;
 
   Try
-    loTemplate := tNovusTemplate.Create;
+    loTemplate := tNovusTemplate2.Create;
 
     case aEnvironmentTokenType of
       ETTToken1:
@@ -67,7 +67,7 @@ begin
 
     For I := 0 to loTemplate.TemplateTags.Count - 1 do
     begin
-      FTemplateTag := TTemplateTag(loTemplate.TemplateTags.items[I]);
+      FTemplateTag := TNovusTemplateTag(loTemplate.TemplateTags.items[I]);
 
       FTemplateTag.TagValue := GetEnvironmentVariable(FTemplateTag.TagName);
     end;

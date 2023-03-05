@@ -2,12 +2,8 @@ unit NovusParser;
 
 interface
 
-Uses NovusStringUtils, Classes, SysUtils, NovusBO, NovusObject;
+Uses NovusStringUtils, Classes, SysUtils, NovusBO, NovusObject, NovusParser.Common;
 
-const
-  toEOL = char(6);
-  toBOF = char(7);
-  TAB = #09;
 
 type
   TSysCharSet = set of Char;

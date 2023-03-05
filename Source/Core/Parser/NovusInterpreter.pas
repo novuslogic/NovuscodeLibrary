@@ -3,7 +3,7 @@ unit NovusInterpreter;
 interface
 
 uses Novuslist, NovusObject, NovusParser, System.Classes, NovusStringUtils,
-     System.AnsiStrings, NovusTemplate;
+     System.AnsiStrings, NovusTemplate2;
 
 type
   tTokenList = class(tNovusList);
@@ -196,8 +196,6 @@ begin
   foOperatorslist.Free;
   foKeyWordslist.Free;
   foTokenList.Free;
-
-  inherited Destroy;
 end;
 
 procedure tNovusInterpreter.AddKeywords;

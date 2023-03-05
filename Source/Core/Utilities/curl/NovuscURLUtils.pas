@@ -8,8 +8,6 @@ Uses
 
 /// https://github.com/Mercury13/curl4delphi
 
-
-
 type
   tNovuscURLUtils = class(TNovusUtilities)
   private

@@ -3,7 +3,7 @@ unit NovusIndyUtils;
 
 interface
 
-uses SysUtils, NovusNumUtils, Winsock, IdTCPClient, NovusUtilities,
+uses SysUtils, NovusNumUtils, IdTCPClient, NovusUtilities,
   IdSSLOpenSSL,
   IdHttp, IdStack, IdGlobal, classes, NovusWebUtils, System.IOUtils,
   NovusFileUtils;

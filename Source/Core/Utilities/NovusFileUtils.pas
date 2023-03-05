@@ -3,13 +3,27 @@ unit NovusFileUtils;
 
 interface
 
-uses StrUtils, NovusUtilities, Windows, SysUtils, SHFolder, ShellApi, ShlObj,
-  Classes, NovusWindows, ComObj, WinInet, ShLwApi, System.IOUtils;
+uses StrUtils, NovusUtilities,
+
+{$IFDEF MSWINDOWS}
+  Windows,  NovusWindows, ComObj, WinInet,  ShLwApi,
+  SHFolder, ShellApi, ShlObj,
+{$ENDIF}
+  SysUtils,
+  Classes,  System.IOUtils;
 
 Type
 
   TNovusFileUtils = class(tNovusUtilities)
   public
+    /// <summary>
+    /// Swap Filename extenion
+    /// </summary>
+    class function SwapFilenameExtenion(aFilename, aNewExtenion: String): String;
+    /// <summary>
+    /// Current App Root directory
+    /// </summary>
+    class function AppRootDirectory: String;
     /// <summary>
     /// Check if file is being used or locked.
     /// </summary>
@@ -26,18 +40,26 @@ Type
     /// Extracts the extension part of a full file name without "."
     /// </summary>
     class function ExtractFileExtA(aFileExt: String): String;
-
     /// <summary>
     /// Is just filename only
     /// </summary>
     class function IsJustFilenameOnly(aFilename: String): Boolean;
-
     class function AbsoluteFilePath(aFilename: String): String;
     /// <summary>
     /// Uses IncludeTrailingPathDelimiter, if filename is blank returns blank.
     /// </summary>
     class function TrailingBackSlash(const aFilename: string): string;
-    class function GetSpecialFolder(const CSIDL: integer): string;
+
+    {$IFDEF WINDOWS}
+    /// <summary>
+    ///  Get Windows Special Folders
+    /// </summary>
+    /// <para>
+    /// CSIDL = Windows Special Folder type
+    /// https://learn.microsoft.com/en-us/windows/win32/shell/csidl
+    /// </para>
+    class function GetWindowsSpecialFolder(const CSIDL: integer): string;
+    {$ENDIF}
     class function IsOnlyFolder(aFolder: string): boolean;
     /// <summary>
     ///  Is Valid folder
@@ -62,17 +84,22 @@ Type
 {$ENDIF}
   end;
 
-function PathCombine(lpszDest: PChar; const lpszDir, lpszFile: PChar): PChar;
-  stdcall; external 'shlwapi.dll' name 'PathCombineA';
+{$IFDEF MSWINDOWS}
+    function PathCombine(lpszDest: PChar; const lpszDir, lpszFile: PChar): PChar;
+           stdcall; external 'shlwapi.dll' name 'PathCombineA';
+{$ENDIF}
 
 implementation
 
+
 class function TNovusFileUtils.IsFileReadonly(fName: string): boolean;
+{$IFDEF MSWINDOWS}
 var
   HFileRes: HFILE;
   Res: string[6];
 
   function CheckAttributes(FileNam: string; CheckAttr: string): boolean;
+
   var
     fa: integer;
   begin
@@ -119,21 +146,35 @@ var
 
     SetFileAttributes(PChar(fName), Attr);
   end; (* SetAttr *)
-
+{$ENDIF}
 begin // IsFileInUse
+  {$IFDEF MSWINDOWS}
   Result := False;
 
   if not FileExists(fName) then
     Exit;
 
   Result := CheckAttributes(fName, 'R');
+
+ {$ENDIF}
 end;
 
+
+class function TNovusFileUtils.AppRootDirectory;
+begin
+  Result := ExtractFilePath(ParamStr(0));
+end;
+
+
+
 class function TNovusFileUtils.IsFileInUse(fName: string): boolean;
+{$IFDEF MSWINDOWS}
 var
   HFileRes: HFILE;
+{$ENDIF}
 begin
   Result := False;
+  {$IFDEF MSWINDOWS}
   if not FileExists(fName) then
   begin
     Exit;
@@ -148,13 +189,20 @@ begin
   begin
     CloseHandle(HFileRes);
   end;
+  {$ENDIF}
 end;
+
+
+
 
 class function TNovusFileUtils.MoveDir(aFromDirectory,
   aToDirectory: String): boolean;
+{$IFDEF MSWINDOWS}
 var
   fos: TSHFileOpStruct;
+{$ENDIF}
 begin
+  {$IFDEF MSWINDOWS}
   ZeroMemory(@fos, SizeOf(fos));
   with fos do
   begin
@@ -164,15 +212,19 @@ begin
     pTo := PChar(aToDirectory)
   end;
   Result := (0 = ShFileOperation(fos));
+  {$ENDIF}
 end;
+
+
 
 class function TNovusFileUtils.CopyDir(aFromDirectory,
   aToDirectory: String): boolean;
 var
   s: TSearchRec;
-//  fos: TSHFileOpStruct;
   lsInDir , lsOutDir: string;
 begin
+  result := False;
+
   if FindFirst(IncludeTrailingPathDelimiter(aFromDirectory) + '*',faDirectory, s) = 0 then
   begin
     repeat
@@ -183,42 +235,31 @@ begin
         // Create new subdirectory in outDir
         mkdir(lsOutDir);
         // Recurse into subdirectory in inDir
-        TNovusFileUtils.CopyDir(lsInDir,lsOutDir);
+        if not TNovusFileUtils.CopyDir(lsInDir,lsOutDir) then break;
       end;
     until FindNext(s) <> 0;
   end;
   FindClose(s);
-
-
-
-  (*
-  ZeroMemory(@fos, SizeOf(fos));
-  with fos do
-  begin
-    wFunc := FO_COPY;
-    fFlags := FOF_FILESONLY;
-    pFrom := PChar(aFromDirectory + #0);
-    pTo := PChar(aToDirectory)
-  end;
-  Result := (0 = ShFileOperation(fos));
-  *)
-
-
-
 end;
 
+
 class function TNovusFileUtils.AbsoluteFilePath(aFilename: String): String;
+{$IFDEF MSWINDOWS}
 var
   lpFileName: PChar;
   lpBuffer: array [0 .. MAX_PATH] of char;
   cResult: Cardinal;
+{$ENDIF}
 begin
+  {$IFDEF MSWINDOWS}
   cResult := 0;
 
   lpFileName := PChar(aFilename);
   cResult := GetFullPathName(lpFileName, MAX_PATH, lpBuffer, lpFileName);
   Result := ExtractFilePath(lpBuffer);
+  {$ENDIF}
 end;
+
 
 class function TNovusFileUtils.ExtractFileExtA(aFileExt: String): String;
 begin
@@ -237,7 +278,8 @@ begin
     Result := IncludeTrailingPathDelimiter(aFilename);
 end;
 
-class function TNovusFileUtils.GetSpecialFolder(const CSIDL: integer): string;
+{$IFDEF MSWINDOWS}
+class function TNovusFileUtils.GetWindowsSpecialFolder(const CSIDL: integer): string;
 var
   RecPath: PWideChar;
 begin
@@ -252,6 +294,7 @@ begin
     StrDispose(RecPath);
   end;
 end;
+{$ENDIF}
 
 class function TNovusFileUtils.IsValidFolder(aFolder: String): boolean;
 var
@@ -302,10 +345,14 @@ begin
 end;
 {$ENDIF}
 
+
 class function TNovusFileUtils.FilePathToURL(const aFilePath: string): string;
+{$IFDEF MSWINDOWS}
 var
   BufferLen: DWORD;
+{$ENDIF}
 begin
+ {$IFDEF MSWINDOWS}
   Try
     BufferLen := INTERNET_MAX_URL_LENGTH;
     SetLength(Result, BufferLen);
@@ -314,7 +361,9 @@ begin
   Except
     raise Exception.Create(tNovusUtilities.GetExceptMess);
   End;
+ {$ENDIF}
 end;
+
 
 class function TNovusFileUtils.IsOnlyFolder(aFolder: string): boolean;
 var
@@ -342,6 +391,14 @@ end;
 class function TNovusFileUtils.IsJustFilenameOnly(aFilename: String): Boolean;
 begin
   Result := (Trim(extractfilename(aFilename)) = trim(aFilename));
+end;
+
+
+class function TNovusFileUtils.SwapFilenameExtenion(aFilename, aNewExtenion: String): String;
+begin
+  if Trim(aFilename) = '' then Exit;
+
+  result := ExtractName(aFilename) + aNewExtenion;
 end;
 
 end.

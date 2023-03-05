@@ -756,3 +756,103 @@ Source/Core/Parser/ParserCells/__history/NovusCommentsParserCell.pas.~32~
 Source/Core/Parser/ParserCells/__history/NovusCommentsParserCell.pas.~33~
 Source/Core/Parser/ParserCells/__history/NovusCommentsParserCell.pas.~34~
 *.~7~
+Source/Packages/DELPHI11/__history/NovusCodeLibrary_Object.dpk.~8~
+Source/Packages/DELPHI11 - Copy/__history/NovusCodeLibrary_Object.dpk.~5~
+Source/Packages/DELPHI11 - Copy/__history/NovusCodeLibrary_Object.dpk.~6~
+Source/Packages/DELPHI11 - Copy/__history/NovusCodeLibrary_Object.dpk.~8~
+Source/Packages/DELPHI11 - Copy/__history/NovusCodeLibrary_OS.dpk.~5~
+Source/Packages/DELPHI11 - Copy/__history/NovusCodeLibrary_OS.dpk.~6~
+Source/Packages/DELPHI11 - Copy/__history/NovusCodeLibrary_Utils.dpk.~5~
+Source/Packages/DELPHI11 - Copy/__history/NovusCodeLibrary_Utils.dpk.~6~
+Source/Packages/DELPHI11 - Copy/__history/NovusCodeLibrary_Windows.dpk.~5~
+Source/Packages/DELPHI11 - Copy/__history/NovusCodeLibrary_Windows.dpk.~6~
+Source/Packages/DELPHI11/__history/NovusCodeLibrary_Object.dpk.~11~
+Source/Packages/DELPHI11/__history/NovusCodeLibrary_Object.dpk.~9~
+Source/Packages/DELPHI11/__history/NovusCodeLibrary_Utils.dpk.~8~
+Source/Packages/DELPHI11/__history/NovusCodeLibrary_Utils.dpk.~9~
+units/22.0/OSX64/Debug/NovusCodeLibrary_Utils.o
+units/22.0/OSX64/Debug/NovusDateDiffUtil.o
+units/22.0/OSX64/Debug/NovusDateStringUtils.o
+units/22.0/OSX64/Debug/NovusDateUtils.o
+units/22.0/OSX64/Debug/NovusGUID.o
+units/22.0/OSX64/Debug/NovusNumUtils.o
+units/22.0/OSX64/Debug/NovusObject.o
+units/22.0/OSX64/Debug/NovusStringBuilder.o
+units/22.0/OSX64/Debug/NovusStringUtils.o
+units/22.0/OSX64/Debug/NovusUtilities.o
+units/22.0/OSX64/Debug/NovusVariants.o
+Source/Packages/DELPHI11/NovusCodeLibrary_Utils.otares
+Source/Packages/DELPHI11/NovusCodeLibrary_Object_nonshared.a
+units/22.0/OSX64/Debug/NovusBO.o
+units/22.0/OSX64/Debug/NovusBOField.o
+units/22.0/OSX64/Debug/NovusBOMap.o
+units/22.0/OSX64/Debug/NovusCodeLibrary_Object.o
+units/22.0/OSX64/Debug/NovusList.o
+Source/Packages/DELPHI11/__history/NovusCodeLibrary_Parser.dpk.~5~
+Source/Packages/DELPHI11/NovusCodeLibrary_Parser_nonshared.a
+units/22.0/OSX64/Debug/NovusCodeLibrary_Parser.o
+units/22.0/OSX64/Debug/NovusCommentsParserCell.o
+units/22.0/OSX64/Debug/NovusInterpreter.o
+units/22.0/OSX64/Debug/NovusParser.o
+units/22.0/OSX64/Debug/NovusStringParser.o
+units/22.0/OSX64/Debug/NovusTemplate.o
+units/22.0/OSX64/Debug/NovusTokenProcessor.o
+Source/Core/Object/__history/NovusBO.pas.~5~
+Source/Packages/DELPHI11/__history/NovusCodeLibrary_Object.dpk.~12~
+Source/Packages/DELPHI11/__history/NovusCodeLibrary_OS.dpk.~12~
+Source/Packages/DELPHI11/__history/NovusCodeLibrary_OS.dpk.~13~
+Source/Packages/DELPHI11/__history/NovusCodeLibrary_OS.dpk.~14~
+Source/Packages/DELPHI11/__history/NovusCodeLibrary_OS.dpk.~15~
+Source/Packages/DELPHI11/__history/NovusCodeLibrary_OS.dpk.~16~
+Source/Packages/DELPHI11/__history/NovusCodeLibrary_OS.dpk.~17~
+Source/Packages/DELPHI11/__history/NovusCodeLibrary_OS.dpk.~18~
+Source/Packages/DELPHI11/__history/NovusCodeLibrary_OS.dpk.~19~
+Source/Packages/DELPHI11/__history/NovusCodeLibrary_OS.dpk.~20~
+Source/Packages/DELPHI11/__history/NovusCodeLibrary_OS.dpk.~21~
+Source/Packages/DELPHI11/__history/NovusCodeLibrary_Windows.dpk.~8~
+Source/Packages/DELPHI11/__history/NovusCodeLibrary_Windows.dpk.~9~
+units/22.0/OSX64/Debug/NovusCodeLibrary_OS.o
+units/22.0/OSX64/Debug/NovusEnvironment.o
+units/22.0/OSX64/Debug/NovusFileUtils.o
+units/22.0/OSX64/Debug/NovusOS.o
+units/22.0/OSX64/Debug/NovusShell.o
+Source/Packages/DELPHI11/NovusCodeLibrary_Utils_nonshared.a
+units/22.0/OSX64/Debug/NovusCodeLibrary_Indy.o
+units/22.0/OSX64/Debug/NovusCodeLibrary_Plugin.o
+units/22.0/OSX64/Debug/NovusCodeLibrary_WebUtils.o
+units/22.0/OSX64/Debug/NovusIndyUtils.o
+units/22.0/OSX64/Debug/NovusParser.Common.o
+units/22.0/OSX64/Debug/NovusPlugin.o
+units/22.0/OSX64/Debug/NovusTemplate2.o
+units/22.0/OSX64/Debug/NovusWebUtils.o
+units/22.0/OSXARM64/Debug/NovusCodeLibrary_Utils.o
+units/22.0/OSXARM64/Debug/NovusDateDiffUtil.o
+units/22.0/OSXARM64/Debug/NovusDateStringUtils.o
+units/22.0/OSXARM64/Debug/NovusDateUtils.o
+units/22.0/OSXARM64/Debug/NovusGUID.o
+units/22.0/OSXARM64/Debug/NovusNumUtils.o
+units/22.0/OSXARM64/Debug/NovusStringBuilder.o
+units/22.0/OSXARM64/Debug/NovusStringUtils.o
+units/22.0/OSXARM64/Debug/NovusUtilities.o
+units/22.0/OSXARM64/Debug/NovusVariants.o
+Source/Packages/DELPHI11/__history/NovusCodeLibrary_Indy.dpk.~5~
+Source/Packages/DELPHI11/__history/NovusCodeLibrary_Indy.dpk.~6~
+Source/Packages/DELPHI11/__history/NovusCodeLibrary_Log.dpk.~5~
+Source/Packages/DELPHI11/__history/NovusCodeLibrary_Log.dpk.~6~
+Source/Packages/DELPHI11/__history/NovusCodeLibrary_Object.dpk.~13~
+Source/Packages/DELPHI11/__history/NovusCodeLibrary_OS.dpk.~22~
+Source/Packages/DELPHI11/__history/NovusCodeLibrary_OS.dpk.~23~
+Source/Packages/DELPHI11/__history/NovusCodeLibrary_Parser.dpk.~6~
+Source/Packages/DELPHI11/__history/NovusCodeLibrary_Parser.dpk.~8~
+Source/Packages/DELPHI11/__history/NovusCodeLibrary_Parser.dpk.~9~
+Source/Packages/DELPHI11/__history/NovusCodeLibrary_Plugin.dpk.~5~
+Source/Packages/DELPHI11/__history/NovusCodeLibrary_Plugin.dpk.~6~
+Source/Packages/DELPHI11/__history/NovusCodeLibrary_WebUtils.dpk.~5~
+Source/Packages/DELPHI11/__history/NovusCodeLibrary_WebUtils.dpk.~6~
+Source/Packages/DELPHI11/NovusCodeLibrary_Indy_nonshared.a
+Source/Packages/DELPHI11/NovusCodeLibrary_Log.otares
+Source/Packages/DELPHI11/NovusCodeLibrary_OS_nonshared.a
+Source/Packages/DELPHI11/NovusCodeLibrary_Plugin_nonshared.a
+Source/Packages/DELPHI11/NovusCodeLibrary_WebUtils_project.tvsconfig
+Source/Core/Parser/ParserCells/__history/NovusCommentsParserCell.pas.~53~
+Source/Core/Parser/ParserCells/__history/NovusCommentsParserCell.pas.~54~

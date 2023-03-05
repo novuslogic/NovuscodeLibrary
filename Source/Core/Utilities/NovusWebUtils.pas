@@ -3,8 +3,16 @@ unit NovusWebUtils;
 
 interface
 
-Uses Classes, NovusUtilities, SysUtils, SHDocVw, VCL.forms, NovusShell,
-     ActiveX, NovusNumUtils, UrlMon, Windows, System.Net.URLClient;
+Uses Classes, NovusUtilities, SysUtils,   NovusShell,
+
+{$IFDEF MSWINDOWS}
+     VCL.forms,
+     SHDocVw,
+     ActiveX,
+     Windows,
+     UrlMon,
+{$ENDIF}
+     NovusNumUtils,  System.Net.URLClient;
 
 
 Type
@@ -111,7 +119,9 @@ Type
     class function OpenDefaultWebBrowser(const aURL: string): Integer;
     class function UrlEncode(const aDecodedStr: String; aPluses: Boolean  = false): String;
     class function UrlDecode(const aEncodedStr: String): String;
+{$IFDEF MSWINDOWS}
     class procedure WebBrowserLoadFromHTML(aWebBrowser: TWebBrowser; aHTML: tStringlist);
+{$ENDIF}
      /// <summary>
     ///   Return Filename from URL path
     /// </summary>
@@ -193,6 +203,7 @@ begin
 end;
 
 
+{$IFDEF MSWINDOWS}
 class procedure TNovusWebUtils.WebBrowserLoadFromHTML(AWebBrowser: TWebBrowser; AHTML: tStringlist);
 var
    sl: TStringList;
@@ -220,6 +231,7 @@ begin
      end;
    end;
 end;
+{$ENDIF}
 
 class function TNovusWebUtils.GetURLFilename(const aURLPath:String;Const Delimiter:String='/'):String;
 var

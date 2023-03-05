@@ -2,7 +2,8 @@ unit NovusCommentsParserCell;
 
 interface
 
-uses NovusInterpreter, NovusParser, System.Classes, System.SysUtils;
+uses NovusInterpreter, NovusParser, System.Classes, System.SysUtils,
+     NovusParser.Common;
 
 type
   tNovusCommentsTypes = (tncCLang,tncPascal);

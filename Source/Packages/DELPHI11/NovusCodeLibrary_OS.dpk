@@ -13,17 +13,18 @@ package NovusCodeLibrary_OS;
 {$LOCALSYMBOLS ON}
 {$LONGSTRINGS ON}
 {$OPENSTRINGS ON}
-{$OPTIMIZATION ON}
-{$OVERFLOWCHECKS OFF}
-{$RANGECHECKS OFF}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS ON}
+{$RANGECHECKS ON}
 {$REFERENCEINFO ON}
 {$SAFEDIVIDE OFF}
-{$STACKFRAMES OFF}
+{$STACKFRAMES ON}
 {$TYPEDADDRESS OFF}
 {$VARSTRINGCHECKS ON}
 {$WRITEABLECONST OFF}
 {$MINENUMSIZE 1}
 {$IMAGEBASE $400000}
+{$DEFINE DEBUG}
 {$ENDIF IMPLICITBUILDING}
 {$DESCRIPTION 'NovusCodeLibrary Runtime - OS'}
 {$LIBSUFFIX '280'}
@@ -31,15 +32,16 @@ package NovusCodeLibrary_OS;
 {$IMPLICITBUILD OFF}
 
 requires
-  rtl,
   NovusCodeLibrary_Object,
+{$IFDEF WINDOWS}
   NovusCodeLibrary_Windows,
+{$ENDIF}
   NovusCodeLibrary_Parser;
 
 contains
   NovusEnvironment in '..\..\Core\Utilities\NovusEnvironment.pas',
   NovusShell in '..\..\Core\Utilities\NovusShell.pas',
-  NovusOS in '..\..\Core\Utilities\NovusOS.pas',
-  NovusFileUtils in '..\..\Core\Utilities\NovusFileUtils.pas';
+  NovusFileUtils in '..\..\Core\Utilities\NovusFileUtils.pas',
+  NovusOS in '..\..\Core\Utilities\NovusOS.pas';
 
 end.

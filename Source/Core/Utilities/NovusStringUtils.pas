@@ -79,6 +79,9 @@ Type
     /// Receives application root path.
     /// </summary>
     class function RootDirectory: String;
+    /// <summary>
+    /// Strip single charactor type from string
+    /// </summary>
     class function StripChar(s: String; Ch: Char): string;
     /// <summary>
     ///   Replace an character with another in a string

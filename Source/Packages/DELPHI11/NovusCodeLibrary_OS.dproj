@@ -201,6 +201,7 @@
         </DelphiCompile>
         <DCCReference Include="NovusCodeLibrary_Object.dcp"/>
         <DCCReference Include="NovusCodeLibrary_Parser.dcp"/>
+        <DCCReference Include="NovusCodeLibrary_Windows.dcp"/>
         <DCCReference Include="vcl.dcp"/>
         <DCCReference Include="..\..\Core\Utilities\NovusEnvironment.pas"/>
         <DCCReference Include="..\..\Core\Utilities\NovusShell.pas"/>

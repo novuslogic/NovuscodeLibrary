@@ -34,6 +34,9 @@ package NovusCodeLibrary_OS;
 requires
   NovusCodeLibrary_Object,
   NovusCodeLibrary_Parser,
+{$IFDEF MSWINDOWS}
+  NovusCodeLibrary_Windows,
+{$ENDIF}
   vcl;
 
 contains

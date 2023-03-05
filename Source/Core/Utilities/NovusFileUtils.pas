@@ -50,7 +50,7 @@ Type
     /// </summary>
     class function TrailingBackSlash(const aFilename: string): string;
 
-    {$IFDEF WINDOWS}
+    {$IFDEF MSWINDOWS}
     /// <summary>
     ///  Get Windows Special Folders
     /// </summary>

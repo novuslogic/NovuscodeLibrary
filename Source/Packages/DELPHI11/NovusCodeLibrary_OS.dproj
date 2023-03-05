@@ -8,7 +8,7 @@
         <AppType>Package</AppType>
         <FrameworkType>None</FrameworkType>
         <ProjectVersion>19.5</ProjectVersion>
-        <Platform Condition="'$(Platform)'==''">OSX64</Platform>
+        <Platform Condition="'$(Platform)'==''">Win64</Platform>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
         <Base>true</Base>
@@ -201,6 +201,7 @@
         </DelphiCompile>
         <DCCReference Include="NovusCodeLibrary_Object.dcp"/>
         <DCCReference Include="NovusCodeLibrary_Parser.dcp"/>
+        <DCCReference Include="vcl.dcp"/>
         <DCCReference Include="..\..\Core\Utilities\NovusEnvironment.pas"/>
         <DCCReference Include="..\..\Core\Utilities\NovusShell.pas"/>
         <DCCReference Include="..\..\Core\Utilities\NovusFileUtils.pas"/>
@@ -258,6 +259,12 @@
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\22.0\Bpl\OSX64\bplNovusCodeLibrary_OS280.dylib" Configuration="Debug" Class="ProjectOutput"/>
+                <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\22.0\Bpl\Win64\NovusCodeLibrary_OS280.bpl" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win64">
+                        <RemoteName>NovusCodeLibrary_OS.bpl</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployClass Name="AdditionalDebugSymbols">
                     <Platform Name="OSX32">
                         <Operation>1</Operation>

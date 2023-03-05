@@ -33,10 +33,8 @@ package NovusCodeLibrary_OS;
 
 requires
   NovusCodeLibrary_Object,
-{$IFDEF WINDOWS}
-  NovusCodeLibrary_Windows,
-{$ENDIF}
-  NovusCodeLibrary_Parser;
+  NovusCodeLibrary_Parser,
+  vcl;
 
 contains
   NovusEnvironment in '..\..\Core\Utilities\NovusEnvironment.pas',

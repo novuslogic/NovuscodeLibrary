@@ -9,8 +9,10 @@
 
 ## Release v0.1.0
 
+
 5/3/2023
 
+* Fixed class function GetWindowsSpecialFolder(const CSIDL: integer): string; for Windows only Define MSWINDOWS
 * Rename OTA folder to ToolAPI
 * class NovusTokenProcessor back ported to v0.0.9
 * Renamed class function TNovusFileUtils.GetSpecialFolder(const CSIDL: integer): string; to TNovusFileUtils.GetWindowsSpecialFolder(const CSIDL: integer): string;

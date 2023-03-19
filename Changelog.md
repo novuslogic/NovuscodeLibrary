@@ -9,7 +9,6 @@
 
 ## Release v0.1.0
 
-
 5/3/2023
 
 * Fixed class function GetWindowsSpecialFolder(const CSIDL: integer): string; for Windows only Define MSWINDOWS

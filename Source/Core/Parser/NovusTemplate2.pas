@@ -39,6 +39,9 @@ type
     function FindTagNameIndexOf(ATagName: String; AIndex: Integer = 0): Integer;
     function FindNextTagNameIndexOf(ATagName: String; AIndex: Integer): Integer;
 
+    function FindTagName(ATagName: String; var aIndex: integer): tNovusTemplateTag;
+    function FindNextTagName(ATagName: String; var aIndex: Integer): tNovusTemplateTag;
+
     procedure CreateTemplateTag;
     function AddTemplateTag(ATemplateTag: TNovusTemplateTag): Integer;
 
@@ -429,6 +432,24 @@ begin
 
 end;
 
+function TNovusTemplate2.FindTagName(ATagName: String; var aIndex: integer): tNovusTemplateTag;
+begin
+  Result := NIL;
 
+  var liIndex := FindTagNameIndexOf(ATagName,AIndex);
+  if liIndex = -1  then Exit;
+
+  Result := TNovusTemplateTag(TemplateTags.Items[liIndex]);
+end;
+
+function TNovusTemplate2.FindNextTagName(ATagName: String; var aIndex: Integer): tNovusTemplateTag;
+begin
+  Result := NIL;
+
+  var liIndex := FindNextTagNameIndexOf(ATagName,AIndex);
+  if liIndex = -1  then Exit;
+
+  Result := TNovusTemplateTag(TemplateTags.Items[liIndex]);
+end;
 
 end.

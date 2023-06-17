@@ -3,9 +3,17 @@
 <!-- TOC -->
 
 - [Changelog](#changelog)
+    - [Release v0.2.0](#release-v020)
     - [Release v0.1.0](#release-v010)
 
 <!-- /TOC -->
+## Release v0.2.0
+
+
+* function TNovusTemplate2.FindTagName(ATagName: String; var aIndex: integer): tNovusTemplateTag;
+* 
+
+
 
 ## Release v0.1.0
 

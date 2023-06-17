@@ -1,0 +1,17 @@
+# New TNovusLogger class
+
+## Transport Layer
+
+TNovusLogger.Console
+TNovusLogger.WindowsEvent
+
+## Functions
+
+### Level 
+
+### Log calls
+
+#### Log
+#### Warn
+#### Info
+#### Debug

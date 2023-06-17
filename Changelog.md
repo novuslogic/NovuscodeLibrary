@@ -9,6 +9,9 @@
 
 ## Release v0.1.0
 
+* TNovusLogFile now supports retrycount 
+* New property RetryCount tNovuslog class allowing retry if failed. default to 3
+
 5/3/2023
 
 * Fixed class function GetWindowsSpecialFolder(const CSIDL: integer): string; for Windows only Define MSWINDOWS

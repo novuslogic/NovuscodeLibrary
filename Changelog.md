@@ -11,7 +11,8 @@
 
 
 * function TNovusTemplate2.FindTagName(ATagName: String; var aIndex: integer): tNovusTemplateTag;
-* 
+* TNovusLogFile now supports retrycount
+* New property RetryCount tNovuslog class allowing retry if failed. default to 3
 
 
 

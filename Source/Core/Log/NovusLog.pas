@@ -31,7 +31,8 @@ Type
 
   TNovusLog = Class(TNovusBO)
   private
-    fiLastLogID: Integer;
+    fiLastLogID,
+    fiRetryCount: Integer;
     foLogDetailsList: TNovusList;
     foEventLog: tNovusWinEventLog;
     fsDateTimeMask: String;
@@ -56,6 +57,9 @@ Type
     property oEventLog: tNovusWinEventLog read foEventLog write foEventLog;
 
     property LastLogID: Integer read fiLastLogID write fiLastLogID;
+
+    property RetryCount: Integer
+      read fiRetryCount write fiRetryCount;
   end;
 
   TNovusLogFile = Class(TNovusLog)
@@ -98,6 +102,8 @@ begin
   DateTimeMask := FormatSettings.ShortDateFormat + ' hh:mm';
 
   foLogDetailsList := TNovusList.Create(TNovusLogDetails);
+
+  fiRetryCount := 3;
 
   foEventLog := tNovusWinEventLog.Create;
 end;
@@ -227,20 +233,48 @@ Var
   lsLine: String;
   FStreamWriter: tStreamWriter;
   FTask: ITask;
+  liRetryCount: Integer;
 begin
+  liRetryCount := 0;
+
   If Separator = #0 then
     lsLine := ATimeStr + ALogDesc
   else
     lsLine := ATimeStr + Separator + ALogDesc;
 
-  FStreamWriter := TStreamWriter.Create(Filename,true);
-  FStreamWriter.AutoFlush := true;
+  while liRetryCount < RetryCount do
+  begin
+    try
+      FStreamWriter := TStreamWriter.Create(Filename,true);
+      FStreamWriter.AutoFlush := true;
 
-  FStreamWriter.WriteLine(lsLine);
+      FStreamWriter.WriteLine(lsLine);
 
-  FStreamWriter.Flush;
+      FStreamWriter.Flush;
 
-  Freeandnil(FStreamWriter);
+      Freeandnil(FStreamWriter);
+
+      Exit;
+     except
+      on E: EFOpenError do
+      begin
+        // If the error is "The process cannot access the file because it is being used by another process",
+        // wait for a moment and then retry the file write
+        if Pos('The process cannot access the file because it is being used by another process', E.Message) > 0 then
+        begin
+          Inc(liRetryCount);
+          Sleep(1000); // Wait for 1 second before retrying
+          Continue; // Continue to the next iteration of the loop
+        end;
+      end;
+      on E: Exception do
+      begin
+        raise Exception.Create('An error occurred while writing to the file: ' + E.Message);
+
+        Exit;
+      end;
+    end;
+  end;
 
   Result := lsLine;
 end;

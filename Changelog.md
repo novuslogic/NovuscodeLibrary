@@ -9,6 +9,8 @@
 
 ## Release v0.1.0
 
+18/06/2023
+
 * TNovusLogFile now supports retrycount 
 * New property RetryCount tNovuslog class allowing retry if failed. default to 3
 

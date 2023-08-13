@@ -9,6 +9,10 @@
 
 ## Release v0.1.0
 
+8/12/2023
+
+* Remove {$R *.otares} from all packages 
+
 18/06/2023
 
 * TNovusLogFile now supports retrycount 

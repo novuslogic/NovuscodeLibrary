@@ -163,6 +163,7 @@
         </DelphiCompile>
         <DCCReference Include="rtl.dcp"/>
         <DCCReference Include="NovusCodeLibrary_Object.dcp"/>
+        <DCCReference Include="NovusCodeLibrary_Parser.dcp"/>
         <DCCReference Include="..\..\core\Console\NovusCommandLine.pas"/>
         <DCCReference Include="..\..\core\Console\NovusConsole.pas"/>
         <BuildConfiguration Include="Base">
@@ -193,12 +194,9 @@
             <Platforms>
                 <Platform value="Android">False</Platform>
                 <Platform value="Android64">False</Platform>
-                <Platform value="iOSDevice32">False</Platform>
                 <Platform value="iOSDevice64">False</Platform>
                 <Platform value="iOSSimARM64">False</Platform>
-                <Platform value="iOSSimulator">False</Platform>
                 <Platform value="Linux64">False</Platform>
-                <Platform value="OSX32">False</Platform>
                 <Platform value="OSX64">False</Platform>
                 <Platform value="OSXARM64">False</Platform>
                 <Platform value="Win32">True</Platform>

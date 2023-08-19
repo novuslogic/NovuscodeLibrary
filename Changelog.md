@@ -9,6 +9,7 @@
 <!-- /TOC -->
 ## Release v0.2.0
 
+18/06/2023
 
 * function TNovusTemplate2.FindTagName(ATagName: String; var aIndex: integer): tNovusTemplateTag;
 * TNovusLogFile now supports retrycount

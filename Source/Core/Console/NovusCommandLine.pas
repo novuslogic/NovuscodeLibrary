@@ -4,7 +4,7 @@ interface
 
 uses
   NovusConsole, SysUtils, Classes, NovusList, System.StrUtils,
-  System.RegularExpressions,  NovusStringUtils,
+  System.RegularExpressions,  NovusStringUtils,  NovusTokenProcessor,
   System.Generics.Defaults;
 
 type
@@ -468,6 +468,8 @@ type
     destructor Destroy;
 
     function FindCommandName(aCommandName: string): INovusCommandLineCommand;
+
+    procedure RequiredCommandLines(aCommandlines: array of tNovusCommandLineCommand);
 
     property CommandName: string read GetCommandName write SetCommandName;
     property ShortCommandName: string read GetShortCommandName
@@ -973,8 +975,8 @@ end;
 // tNovusCommandLine
 class function tNovusCommandLine.RegisterCommand(const aCommandName: string;
   const aShortCommandName: string; const aHelp: String;
-  const aRequired: boolean; aCommandLineCommand: tNovusCommandLineCommand)
-  : tNovusCommandLineCommand;
+  const aRequired: boolean;
+  aCommandLineCommand: tNovusCommandLineCommand): tNovusCommandLineCommand;
 begin
   if not Assigned(aCommandLineCommand) then
     aCommandLineCommand := tNovusCommandLineCommand.Create;
@@ -1092,6 +1094,11 @@ begin
 
   if Assigned(fNovusCommandLineOption) then
     Result := tNovusCommandLineOption(fNovusCommandLineOption);
+end;
+
+procedure tNovusCommandLineCommand.RequiredCommandLines(aCommandlines: array of tNovusCommandLineCommand);
+begin
+
 end;
 
 function tNovusCommandLineCommand.FindCommandName(aCommandName: string)
@@ -1341,7 +1348,7 @@ function TNovusCommandLineResult.FindFirstCommand(aCommandName: String)
   : INovusCommandLineResultCommand;
 Var
   FNovusCommandLineResultCommands: INovusCommandLineResultCommands;
-  fNovusCommandLineResultCommand: INovusCommandLineResultCommand;
+  //fNovusCommandLineResultCommand: INovusCommandLineResultCommand;
 begin
   Result := NIL;
 

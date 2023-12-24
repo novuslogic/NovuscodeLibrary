@@ -108,6 +108,10 @@ type
 
     function ParseTemplate(aLoadParserStream: boolean = true): boolean; virtual;
 
+    function LoadFromString(const aInput: string): boolean; override;
+    function LoadFromFile(const aFileName: string): Boolean; override;
+    function LoadFromStream(const aStream: TMemoryStream): Boolean; override;
+
     procedure InsertAllTagValues;
     procedure Add(aLine: String);
 
@@ -175,6 +179,27 @@ begin
   FTemplateTags.Free;
 end;
 
+function TNovusTemplate.LoadFromString(const aInput: string): boolean;
+begin
+  result := inherited LoadFromString(aInput);
+
+  if Result then FTemplateDoc.Text := TNovusStringUtils.StripChar(ParseStringList.Text, #0);
+end;
+
+function TNovusTemplate.LoadFromFile(const aFileName: string): Boolean;
+begin
+  result := inherited LoadFromFile(aFileName);
+
+  if Result then FTemplateDoc.Text := TNovusStringUtils.StripChar(ParseStringList.Text, #0);
+end;
+
+function TNovusTemplate.LoadFromStream(const aStream: TMemoryStream): Boolean;
+begin
+  result := inherited LoadFromStream(aStream);
+
+  if Result then FTemplateDoc.Text := TNovusStringUtils.StripChar(ParseStringList.Text, #0);
+end;
+
 function TNovusTemplate.TagValuesAllExists: boolean;
 Var
   I: Integer;
@@ -221,7 +246,7 @@ Var
 begin
   if TemplateTags.Count = 0 then
   begin
-    FOutputDoc.Text := FTemplateDoc.Text;
+    TNovusUtilities.CloneStringList(FOutputDoc, FTemplateDoc);
 
     Exit;
   end;

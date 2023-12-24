@@ -9,6 +9,17 @@
 <!-- /TOC -->
 ## Release v0.2.0
 
+
+24/12/2023
+
+Function added to Unit NovusEnvironment:
+
+* class function SetUserEnvVar(const aVariableName, aValue: string): boolean;
+* class function SetSystemWideEnvVar(const aVariableName, aValue: string): boolean;
+* class function SetCurrentProcessEnvVar(const aVariableName, aValue: string): boolean;
+* class function IsAdministrator: boolean;
+
+
 18/06/2023
 
 * function TNovusTemplate2.FindTagName(ATagName: String; var aIndex: integer): tNovusTemplateTag;

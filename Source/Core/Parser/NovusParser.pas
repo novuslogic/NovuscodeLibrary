@@ -25,8 +25,8 @@ type
     function GetTokenString: string;
   protected
   public
+    { destructor Destroy; override; }
     constructor Create;
-    destructor Destroy; override;
 
     procedure Reset;
 
@@ -34,9 +34,10 @@ type
 
     procedure AddEOF;
 
-    function LoadFromString(const aInput: string): boolean;
-    function LoadFromFile(const aFileName: string): Boolean;
-    function LoadFromStream(const aStream: TMemoryStream): Boolean;
+    function LoadFromString(const aInput: string): boolean; virtual;
+    function LoadFromFile(const aFileName: string): Boolean; virtual;
+    function LoadFromStream(const aStream: TMemoryStream): Boolean; virtual;
+
     function SkipToEOF: string;
     function SkipToEOLAsString: string; overload;
     function SkipToEOL(aRestColumnPos: boolean = True): Char; overload;

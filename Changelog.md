@@ -9,6 +9,12 @@
 <!-- /TOC -->
 ## Release v0.2.0
 
+6/5/2024
+
+* Updated DelphiVersions.inc for Delphi 12
+* Fixed NovusParser.Destory missing.
+* Removed reference NovusBO unit from NovusList unit
+* class function TNovusFileUtils.AppFilename: string;
 
 24/12/2023
 

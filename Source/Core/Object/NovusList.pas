@@ -71,8 +71,8 @@ type
 implementation
 
 uses
-  SysUtils,
-  NovusBO;
+  SysUtils;
+ // NovusBO;
 
 constructor TNovusList.Create(aClass: TClass);
 begin

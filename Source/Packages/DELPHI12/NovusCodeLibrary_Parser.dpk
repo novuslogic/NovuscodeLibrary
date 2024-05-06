@@ -1,0 +1,48 @@
+{$I ..\..\core\NovusCodeLibrary.inc}
+package NovusCodeLibrary_Parser;
+
+{$R *.res}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS ON}
+{$RANGECHECKS ON}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$ENDIF IMPLICITBUILDING}
+{$DESCRIPTION 'NovusCodeLibrary Runtime - Parser'}
+{$LIBSUFFIX '290'}
+{$RUNONLY}
+{$IMPLICITBUILD OFF}
+
+requires
+  rtl,
+  NovusCodeLibrary_Object;
+
+contains
+  NovusTemplate2 in '..\..\Core\Parser\NovusTemplate2.pas',
+  NovusParser in '..\..\Core\Parser\NovusParser.pas',
+  NovusTokenProcessor in '..\..\Core\Parser\NovusTokenProcessor.pas',
+  NovusStringParser in '..\..\Core\Parser\NovusStringParser.pas',
+  NovusInterpreter in '..\..\Core\Parser\NovusInterpreter.pas',
+  NovusCommentsParserCell in '..\..\Core\Parser\ParserCells\NovusCommentsParserCell.pas',
+  NovusParser.Common in '..\..\Core\Parser\NovusParser.Common.pas',
+  NovusTemplate in '..\..\Core\Parser\NovusTemplate.pas';
+
+end.

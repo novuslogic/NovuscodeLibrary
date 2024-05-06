@@ -27,6 +27,7 @@ type
   public
     { destructor Destroy; override; }
     constructor Create;
+    destructor Destroy; override;
 
     procedure Reset;
 

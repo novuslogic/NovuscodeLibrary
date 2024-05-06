@@ -1,7 +1,8 @@
 # New TNovusLogger class
 
-## Transport Layer
+## TNovusLogTransportLayer
 
+TNovusLogger.LogTransportLayer
 TNovusLogger.Console
 TNovusLogger.WindowsEvent
 

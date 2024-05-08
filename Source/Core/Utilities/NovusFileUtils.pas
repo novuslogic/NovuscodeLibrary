@@ -25,6 +25,10 @@ Type
     /// </summary>
     class function SwapFilenameExtenion(aFilename, aNewExtenion: String): String;
     /// <summary>
+    /// Current App Filename
+    /// </summary>
+    class function AppFilename: String;
+    /// <summary>
     /// Current App Root directory
     /// </summary>
     class function AppRootDirectory: String;
@@ -176,9 +180,14 @@ begin
     Result := '';
 end;
 
-class function TNovusFileUtils.AppRootDirectory;
+class function TNovusFileUtils.AppRootDirectory: String;
 begin
   Result := ExtractFilePath(ParamStr(0));
+end;
+
+class function TNovusFileUtils.AppFilename: String;
+begin
+  Result := ExtractFileName(ParamStr(0));
 end;
 
 

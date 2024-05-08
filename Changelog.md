@@ -9,6 +9,14 @@
 <!-- /TOC -->
 ## Release v0.2.0
 
+8/5/2024
+
+* New class tNovusLogger to replace TNovuslog class 
+* New class function TNovusConsole.SetConsoleColour(aTextColour, aBgColour: Word);
+* New class function TNovusConsole.GetCurrentConsoleColour(var aTextColour, aBgColour: Word): Boolean;
+* New Class tNovusSvcMgr to manage Windows Service without Delphi Service Class
+
+
 6/5/2024
 
 * Updated DelphiVersions.inc for Delphi 12

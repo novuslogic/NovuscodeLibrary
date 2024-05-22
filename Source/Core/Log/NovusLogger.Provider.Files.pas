@@ -25,9 +25,9 @@ type
     function OpenLog: Boolean; override;
     function CloseLog: Boolean;  override;
 
-    procedure SendLogMessage(aLogMessage: String); override;
+    procedure SendLogMessage(aLogMessage: String;aLogDateTime: tDateTime; aSeverityType: TSeverityType); override;
 
-    procedure AddLog(aLogMessage: string; aDateTime: tDateTime; aSeverityType: TSeverityType); override;
+    procedure AddLog(aLogMessage: string; aLogDateTime: tDateTime; aSeverityType: TSeverityType); override;
 
     procedure AddLogSuccess(aLogMessage: string); override;
     procedure AddLogInformation(aLogMessage : string); override;
@@ -93,9 +93,9 @@ end;
 
 
 
-procedure TNovusLogger_Provider_Files.AddLog(aLogMessage: string; aDateTime: tDateTime; aSeverityType: TSeverityType);
+procedure TNovusLogger_Provider_Files.AddLog(aLogMessage: string; aLogDateTime: tDateTime; aSeverityType: TSeverityType);
 begin
-  (Logger as TNovusLogger).PushLogMessage(FormatLogOutput(aLogMessage,aDateTime,aSeverityType), Self);
+  (Logger as TNovusLogger).PushLogMessage(FormatLogOutput(aLogMessage, aLogDateTime,aSeverityType),  aLogDateTime,aSeverityType,  Self);
 end;
 
 procedure TNovusLogger_Provider_Files.AddLogSuccess(aLogMessage: string);
@@ -181,7 +181,7 @@ begin
 end;
 
 
-procedure TNovusLogger_Provider_Files.SendLogMessage(aLogMessage: String);
+procedure TNovusLogger_Provider_Files.SendLogMessage(aLogMessage: String; aLogDateTime: tDateTime; aSeverityType: TSeverityType);
 begin
   WriteLine(aLogMessage);
 end;

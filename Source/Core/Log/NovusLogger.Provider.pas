@@ -11,6 +11,7 @@ type
   tNovusLogger_Provider = class(TObject)
   protected
   private
+    fbActive: Boolean;
     fiRetryCount: Integer;
     fLogger: TNovusObject;
     fsDateTimeMask: String;
@@ -27,11 +28,7 @@ type
     procedure SendLogMessage(aLogMessage: String;aLogDateTime: tDateTime; aSeverityType: TSeverityType); virtual;
 
     function SeverityTypeToString(aSeverityType: tSeverityType): String;
-
-
-
     function FormatLogOutput(aLogMessage: string; aDateTime: tDateTime; aSeverityType: TSeverityType): string; virtual;
-
 
     procedure AddLog(aLogMessage: string; aLogDateTime: tDateTime;  aSeverityType: TSeverityType = stNone); virtual;
     procedure AddLogSuccess(aLogMessage: string); virtual;
@@ -50,7 +47,7 @@ type
     property Logger: tNovusObject read fLogger write fLogger;
 
     property RetryCount: Integer read fiRetryCount write fiRetryCount;
-  end;
+ end;
 
 implementation
 
@@ -59,6 +56,8 @@ Uses NovusLogger;
 constructor tNovusLogger_Provider.Create;
 begin
   inherited Create;
+
+  fbActive := True;
 
   RetryCount := 5;
 

@@ -9,6 +9,7 @@
 <!-- /TOC -->
 ## Release v0.2.0
 
+* New Log provider TNovusLogger_Provider_SysLog
 * New TNovusLogTaskQueue Task Queue for TNovusLogger 
 * New Log Privder TNovusLogger_Provider_WinEventlog
 * New Sample for TNovusLogger_Provider_WinEventlog provider

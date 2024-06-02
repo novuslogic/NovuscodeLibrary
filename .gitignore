@@ -67,3 +67,4 @@ __recovery/
 
 # Boss dependency manager vendor folder https://github.com/HashLoad/boss
 modules/
+Samples/Windows/Logger/Logger2/Win32/Debug/Service.log

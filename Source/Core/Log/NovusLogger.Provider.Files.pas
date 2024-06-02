@@ -151,7 +151,7 @@ begin
       FStreamWriter := TStreamWriter.Create(fsfilename,true);
       FStreamWriter.AutoFlush := true;
 
-      FStreamWriter.WriteFile(aLogMessage);
+      FStreamWriter.Write(aLogMessage);
 
       FStreamWriter.Flush;
 

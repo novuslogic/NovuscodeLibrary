@@ -9,6 +9,10 @@
 <!-- /TOC -->
 ## Release v0.2.0
 
+3/6/2024
+
+* Removed unit Novuslog in NovusCodeLibrary_Indy.dpk Delphi 11 and Delphi 12 
+
 2/6/2024
 
 * Fixed compile issue in Privder TNovusLogger_Provider_File

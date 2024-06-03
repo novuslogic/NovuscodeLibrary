@@ -6,11 +6,12 @@ Uses NovusObject, System.SysUtils, NovusUtilities, System.Threading,
   System.Generics.Collections;
 
 type
-  TSeverityType = (atNone, stInformation, stSuccess, stWarning, stError, stCritical, stException, stDebug, stSystem);
+  TSeverityType = (stNone, stInformation, stSuccess, stWarning, stError, stCritical, stException, stDebug, stSystem);
 
-  tNovusLogger_Provider = class(TNovusObject)
+  tNovusLogger_Provider = class(TObject)
   protected
   private
+    fbActive: Boolean;
     fiRetryCount: Integer;
     fLogger: TNovusObject;
     fsDateTimeMask: String;
@@ -24,14 +25,12 @@ type
 
     procedure FlushLog; virtual;
 
-    procedure SendLogMessage(aLogMessage: String); virtual;
+    procedure SendLogMessage(aLogMessage: String;aLogDateTime: tDateTime; aSeverityType: TSeverityType); virtual;
 
     function SeverityTypeToString(aSeverityType: tSeverityType): String;
-
-    procedure AddLog(aLogMessage: string; aDateTime: tDateTime;  aSeverityType: TSeverityType); virtual;
-
     function FormatLogOutput(aLogMessage: string; aDateTime: tDateTime; aSeverityType: TSeverityType): string; virtual;
 
+    procedure AddLog(aLogMessage: string; aLogDateTime: tDateTime;  aSeverityType: TSeverityType = stNone); virtual;
     procedure AddLogSuccess(aLogMessage: string); virtual;
     procedure AddLogInformation(aLogMessage : string); virtual;
     procedure AddLogError(aLogMessage: string); overload; virtual;
@@ -48,7 +47,7 @@ type
     property Logger: tNovusObject read fLogger write fLogger;
 
     property RetryCount: Integer read fiRetryCount write fiRetryCount;
-  end;
+ end;
 
 implementation
 
@@ -57,6 +56,8 @@ Uses NovusLogger;
 constructor tNovusLogger_Provider.Create;
 begin
   inherited Create;
+
+  fbActive := True;
 
   RetryCount := 5;
 
@@ -129,7 +130,7 @@ begin
   AddLogException(aException.Message);
 end;
 
-procedure tNovusLogger_Provider.AddLog(aLogMessage: string; aDateTime: tDateTime; aSeverityType: TSeverityType);
+procedure tNovusLogger_Provider.AddLog(aLogMessage: string; aLogDateTime: tDateTime; aSeverityType: TSeverityType);
 begin
 end;
 
@@ -163,11 +164,8 @@ begin
   end;
 end;
 
-procedure tNovusLogger_Provider.SendLogMessage(aLogMessage: String);
+procedure tNovusLogger_Provider.SendLogMessage(aLogMessage: String; aLogDateTime: tDateTime; aSeverityType: TSeverityType);
 begin
-
-
-
 end;
 
 end.

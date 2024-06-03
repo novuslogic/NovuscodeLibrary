@@ -15,7 +15,7 @@ type
     fbDailyRotate: Boolean;
     fsFilename: String;
     fiLimitLogSize : Int64;
-    procedure WriteLine(aLogMessage: String);
+    procedure WriteFile(aLogMessage: String);
   Public
     constructor Create(aFilename: String;
                        aDailyRotate: Boolean = false;
@@ -25,9 +25,9 @@ type
     function OpenLog: Boolean; override;
     function CloseLog: Boolean;  override;
 
-    procedure SendLogMessage(aLogMessage: String); override;
+    procedure SendLogMessage(aLogMessage: String;aLogDateTime: tDateTime; aSeverityType: TSeverityType); override;
 
-    procedure AddLog(aLogMessage: string; aDateTime: tDateTime; aSeverityType: TSeverityType); override;
+    procedure AddLog(aLogMessage: string; aLogDateTime: tDateTime; aSeverityType: TSeverityType); override;
 
     procedure AddLogSuccess(aLogMessage: string); override;
     procedure AddLogInformation(aLogMessage : string); override;
@@ -93,9 +93,9 @@ end;
 
 
 
-procedure TNovusLogger_Provider_Files.AddLog(aLogMessage: string; aDateTime: tDateTime; aSeverityType: TSeverityType);
+procedure TNovusLogger_Provider_Files.AddLog(aLogMessage: string; aLogDateTime: tDateTime; aSeverityType: TSeverityType);
 begin
-  (Logger as TNovusLogger).PushLogMessage(FormatLogOutput(aLogMessage,aDateTime,aSeverityType), Self);
+  (Logger as TNovusLogger).PushLogMessage(FormatLogOutput(aLogMessage, aLogDateTime,aSeverityType),  aLogDateTime,aSeverityType,  Self);
 end;
 
 procedure TNovusLogger_Provider_Files.AddLogSuccess(aLogMessage: string);
@@ -138,7 +138,7 @@ begin
   AddLog(aLogMessage, Now, TSeverityType.stException);
 end;
 
-procedure TNovusLogger_Provider_Files.WriteLine(aLogMessage: String);
+procedure TNovusLogger_Provider_Files.WriteFile(aLogMessage: String);
 Var
   FStreamWriter: tStreamWriter;
   liRetryCount: Integer;
@@ -151,7 +151,7 @@ begin
       FStreamWriter := TStreamWriter.Create(fsfilename,true);
       FStreamWriter.AutoFlush := true;
 
-      FStreamWriter.WriteLine(aLogMessage);
+      FStreamWriter.Write(aLogMessage);
 
       FStreamWriter.Flush;
 
@@ -181,9 +181,9 @@ begin
 end;
 
 
-procedure TNovusLogger_Provider_Files.SendLogMessage(aLogMessage: String);
+procedure TNovusLogger_Provider_Files.SendLogMessage(aLogMessage: String; aLogDateTime: tDateTime; aSeverityType: TSeverityType);
 begin
-  WriteLine(aLogMessage);
+  WriteFile(aLogMessage);
 end;
 
 

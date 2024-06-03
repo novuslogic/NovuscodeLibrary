@@ -8,6 +8,8 @@ type
   TEventType = (etError, etWarning, etInformation, etAuditSuccess,
     etAuditFailure, etNone);
 
+  // https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-even/1ed850f9-a1fe-4567-a371-02683c6ed3cb
+
   TNovusWinEventLog = class(tNovusObject)
   private
   protected
@@ -27,7 +29,7 @@ type
     constructor Create;
     destructor Destroy; override;
 
-    procedure LogEvent(const Line: String);
+    procedure LogEvent(const aLogMessage: String);
 
     property ApplicationName: String read FsApplicationName
       write SetApplicationName;
@@ -68,7 +70,7 @@ begin
   FwEventCategory := Abs(Value);
 end;
 
-procedure TNovusWinEventLog.LogEvent(const Line: String);
+procedure TNovusWinEventLog.LogEvent(const aLogMessage: String);
 var
   LogHandle: THandle;
   OK: Boolean;
@@ -83,7 +85,11 @@ begin
     if VersionInfo.dwPlatformId < VER_PLATFORM_WIN32_NT then
       Exit;
 
-  LogHandle := OpenEventLog(NIL, PChar(ApplicationName));
+   //LogHandle := OpenEventLog(NIL, PChar(ApplicationName));
+
+  LogHandle := RegisterEventSource(NIL, PChar(ApplicationName));
+
+
   if LogHandle <> 0 then
   begin
     eType := 0;
@@ -113,13 +119,15 @@ begin
     end;
 
     If IncludeUserName then
-      eMsg := PChar(FsUserName + Line)
+      eMsg := PChar(FsUserName + aLogMessage)
     else
-      eMsg := PChar(Line);
+      eMsg := PChar(aLogMessage);
 
     ReportEvent(LogHandle, eType, EventCategory, EventID, NIL, 1, 0,
       @eMsg, NIL);
-    CloseEventLog(LogHandle);
+
+    DeregisterEventSource(LogHandle);
+   // CloseEventLog(LogHandle);
   end;
 end;
 

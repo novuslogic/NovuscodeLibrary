@@ -9,6 +9,20 @@
 <!-- /TOC -->
 ## Release v0.2.0
 
+2/6/2024
+
+* Fixed compile issue in Privder TNovusLogger_Provider_File
+* New Log provider TNovusLogger_Provider_SysLog
+* New TNovusLogTaskQueue Task Queue for TNovusLogger 
+* New Log Privder TNovusLogger_Provider_WinEventlog
+* New Sample for TNovusLogger_Provider_WinEventlog provider
+
+11/05/2024
+
+* New Log Privders TNovusLogger_Provider_Files and TNovusLogger_Provider_Console
+* New Samples for TNovusLogger Class for Files and Console providers
+
+
 8/5/2024
 
 * New class tNovusLogger to replace TNovuslog class 

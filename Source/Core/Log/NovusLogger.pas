@@ -6,37 +6,25 @@ Uses NovusObject, NovusLogger.Provider, System.SysUtils, NovusUtilities,
      System.Threading, System.Classes, System.Generics.Collections, System.Types;
 
 type
-  TNovusLoggerData = record
+  TNovusLogTaskQueue = class
   private
-    FProvider: TNovusLogger_Provider;
-    fsLogMessage: String;
+    FTaskQueue: TQueue<ITask>;
+    FLock: TObject;
+    FIsRunning: Boolean;
+    procedure ExecuteNextTask;
   public
-    property Provider: TNovusLogger_Provider
-      read FProvider
-      write FProvider;
-
-    property LogMessage: String
-      read fsLogMessage
-      write fsLogMessage;
+    constructor Create;
+    destructor Destroy;
+    procedure AddTask(const ATaskProc: TProc);
   end;
-
-  TLoggerThread = class(TThread)
-  private
-    FLogQueue: TThreadedQueue<TNovusLoggerData>;
-  protected
-    procedure Execute; override;
-  public
-    constructor Create(CreateSuspended: Boolean; LogQueue: TThreadedQueue<TNovusLoggerData>);
-  end;
-
 
   TNovusLogger = class(tNovusObject)
   private
   protected
+    FLoggerTaskQueue: TNovusLogTaskQueue;
     FProviders: array of TNovusLogger_Provider;
-    FLogThreadedQueue: TThreadedQueue<TNovusLoggerData>;
   public
-    procedure PushLogMessage(aMessage: string; aProvider: TNovusLogger_Provider); virtual;
+    procedure PushLogMessage(aLogMessage: string; aLogDateTime: tDateTime; aSeverityType: TSeverityType; aProvider: TNovusLogger_Provider); virtual;
 
     procedure AddLogSuccess(aMessage: string); virtual;
     procedure AddLogInformation(aMessage : string); virtual;
@@ -64,7 +52,7 @@ implementation
 // TNovusLogger
 constructor TNovusLogger.Create(const aProviders: array of tNovuslogger_Provider);
 begin
-  FLogThreadedQueue := TThreadedQueue<TNovusLoggerData>.Create(TThread.ProcessorCount, 1000, 100);
+  FLoggerTaskQueue:= TNovusLogTaskQueue.Create;
 
   SetLength(FProviders, Length(aProviders));
   for var I := Low(aProviders) to High(aProviders) do
@@ -78,13 +66,13 @@ destructor TNovusLogger.Destroy;
 begin
   FlushLogs;
 
+  FLoggerTaskQueue.Free;
+
   for var I := High(FProviders) downto Low(FProviders) do
     If Assigned(FProviders[I]) then
       begin
         FProviders[I].Free;
       end;
-
-  FLogThreadedQueue.Free;
 
   inherited;
 end;
@@ -115,20 +103,17 @@ begin
       end;
 end;
 
-procedure TNovusLogger.PushLogMessage(aMessage: string; aProvider: TNovusLogger_Provider);
-Var
-  LoggerThread: TLoggerThread;
-  LogData: TNovusLoggerData;
+procedure TNovusLogger.PushLogMessage(aLogMessage: string; aLogDateTime: tDateTime; aSeverityType: TSeverityType; aProvider: TNovusLogger_Provider);
 begin
-   try
-    LoggerThread := TLoggerThread.Create(True, FLogThreadedQueue);
-    LoggerThread.Start;
+   aProvider.SendLogMessage(aLogMessage, aLogDateTime, aSeverityType);
 
-    LogData.Provider := aProvider;
 
-    FLogThreadedQueue.PushItem(LogData);
-  finally
-  end;
+   (*
+    FLoggerTaskQueue.AddTask(procedure
+    begin
+      aProvider.SendLogMessage(aLogMessage, aLogDateTime, aSeverityType);
+    end);
+    *)
 end;
 
 procedure TNovusLogger.AddLogSuccess(aMessage: string);
@@ -215,39 +200,67 @@ begin
       FProviders[I].FlushLog;
 end;
 
-//TNovusThreadLog
-constructor TLoggerThread.Create(CreateSuspended: Boolean; LogQueue: TThreadedQueue<TNovusLoggerData>);
-begin
-  inherited Create(CreateSuspended);
-  FLogQueue := LogQueue;
 
-  FreeOnTerminate := true;
+
+// TNovusLogTaskQueue
+constructor TNovusLogTaskQueue.Create;
+begin
+  inherited Create;
+  FTaskQueue := TQueue<ITask>.Create;
+  FLock := TObject.Create;
+  FIsRunning := False;
 end;
 
-procedure TLoggerThread.Execute;
-var
-  LogData: TNovusLoggerData;
-  QueueResult: TWaitResult;
+destructor TNovusLogTaskQueue.Destroy;
 begin
-  while not Terminated do
-  begin
-    QueueResult := FLogQueue.PopItem(LogData);
-    if QueueResult = TWaitResult.wrSignaled then
+  FTaskQueue.Free;
+  FLock.Free;
+end;
+
+procedure TNovusLogTaskQueue.AddTask(const ATaskProc: TProc);
+var
+  NewTask: ITask;
+begin
+  NewTask := TTask.Create(procedure
     begin
-      LogData.Provider.SendLogMessage(Logdata.LogMessage);
+      ATaskProc();
+      ExecuteNextTask;
+    end);
 
-
-      LogData.Provider := NIL;
-
-
-
-    end
-    else if QueueResult = TWaitResult.wrTimeout then
-    begin
-      // Handle timeout if needed
-    end;
+  TMonitor.Enter(FLock);
+  try
+    FTaskQueue.Enqueue(NewTask);
+    if not FIsRunning then
+      ExecuteNextTask;
+  finally
+    TMonitor.Exit(FLock);
   end;
 end;
+
+procedure TNovusLogTaskQueue.ExecuteNextTask;
+var
+  NextTask: ITask;
+begin
+  TMonitor.Enter(FLock);
+  try
+    if FTaskQueue.Count > 0 then
+    begin
+      FIsRunning := True;
+      NextTask := FTaskQueue.Dequeue;
+    end
+    else
+    begin
+      FIsRunning := False;
+      Exit;
+    end;
+  finally
+    TMonitor.Exit(FLock);
+  end;
+
+  NextTask.Start;
+end;
+
+
 
 
 end.

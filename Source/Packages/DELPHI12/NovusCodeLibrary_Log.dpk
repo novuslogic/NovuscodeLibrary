@@ -37,7 +37,9 @@ requires
   NovusCodeLibrary_Object;
 
 contains
-  NovusLog in '..\..\Core\Log\NovusLog.pas',
-  NovusWinEventLog in '..\..\Core\Log\NovusWinEventLog.pas';
+  NovusLogger in '..\..\Core\Log\NovusLogger.pas',
+  NovusLogger.Provider.Console in '..\..\Core\Log\NovusLogger.Provider.Console.pas',
+  NovusLogger.Provider.Files in '..\..\Core\Log\NovusLogger.Provider.Files.pas',
+  NovusLogger.Provider in '..\..\Core\Log\NovusLogger.Provider.pas';
 
 end.

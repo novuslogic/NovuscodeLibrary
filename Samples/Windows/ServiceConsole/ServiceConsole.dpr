@@ -20,27 +20,11 @@ uses
   NovusLogger.Provider.Console in '..\..\..\Source\Core\Log\NovusLogger.Provider.Console.pas',
   NovusFileUtils in '..\..\..\Source\Core\Utilities\NovusFileUtils.pas',
   NovusStringUtils in '..\..\..\Source\Core\Utilities\NovusStringUtils.pas',
-  NovusVariants in '..\..\..\Source\Core\Utilities\NovusVariants.pas';
-
-var
-  ServiceStatus: TServiceStatus;
-  ServiceStatusHandle: THandle;
-  StopEvent: THandle;
+  NovusVariants in '..\..\..\Source\Core\Utilities\NovusVariants.pas',
+  ServiceMain in 'ServiceMain.pas';
 
 
-procedure ServiceControlHandler(Control: DWord); stdcall;
-begin
-  case Control of
-    SERVICE_CONTROL_STOP: begin
-      ServiceStatus.dwCurrentState := SERVICE_STOP_PENDING;
-      SetServiceStatus(ServiceStatusHandle, ServiceStatus);
-
-      SetEvent(StopEvent); // signal the service to stop
-    end;
-  end;
-end;
-
-procedure ServiceMain(Argc: DWord; Argv: PWideChar); stdcall;
+  procedure ServiceMain(Argc: DWord; Argv: PWideChar); stdcall;
 var
   LogFile: TextFile;
 begin
@@ -62,7 +46,7 @@ begin
     Flush(LogFile); // Ensure the message is written immediately
   end;
 
-  CloseFile(LogFile);
+
   CloseHandle(StopEvent);
 
   ServiceStatus.dwCurrentState := SERVICE_STOPPED;
@@ -70,45 +54,21 @@ begin
 end;
 
 var
-  Log: tNovusLogger;
-  ServiceTable: array[0..1] of TServiceTableEntry;
-
+  MyService: TMyService;
+  Log: TNovusLogger;
 begin
   Try
-    Log := tNovusLogger.Create([TNovusLogger_Provider_Console.Create,
-                               TNovusLogger_Provider_Files.Create('Service.log')]);
-
-    Log.OpenLog;
-
-    Log.AddLogInformation('Infomation');
-    Log.AddLogSuccess('Success');
-    Log.AddLogError('Error');
-    Log.AddLogWarning('Warning');
-    Log.AddLogDebug('Debug');
-    Log.AddLogException('Exception');
-    Log.AddLogSystem('System');
-
-    Log.CloseLog;
+    Log := tNovusLogger.Create([TNovusLogger_Provider_Files.Create('Service.log')]);
+    Log.AddLogInformation('Start Log');
+    MyService := TMyService.Create('MyService', 'Demo MyService', Log);
+    MyService.Run;
   Finally
+    MyService.Free;
+
+    Log.AddLogInformation('End Log');
+
     Log.Free;
-  End;
+  end;
+end.
 
-
-
-
-
-
-
-
-  (*
-
-
-  ServiceTable[0].lpServiceName := 'MyService';
-  ServiceTable[0].lpServiceProc := @ServiceMain;
-  ServiceTable[1].lpServiceName := nil;
-  ServiceTable[1].lpServiceProc := nil;
-
-  if not StartServiceCtrlDispatcher(ServiceTable[0]) then
-    RaiseLastOSError;
-  *)
 end.

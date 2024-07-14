@@ -1,374 +1,193 @@
-unit NovusSvcMgr;
+{$I ..\..\core\NovusCodeLibrary.inc}
+
+Unit NovusSvcMgr;
+
 
 interface
 
 uses
-  Winapi.Windows, Winapi.WinSvc, System.SysUtils, Vcl.SvcMgr, NovusFileUtils,
-  NovusUtilities;
+  NovusUtilities,
+  Windows,
+  NovusLogger,
+  WinSvc;
 
 type
-(*
-  TServiceStatus = record
-    dwServiceType: DWORD;
-    dwCurrentState: DWORD;
-    dwControlsAccepted: DWORD;
-    dwWin32ExitCode: DWORD;
-    dwServiceSpecificExitCode: DWORD;
-    dwCheckPoint: DWORD;
-    dwWaitHint: DWORD;
-  end;
-*)
-
-
-  TNovusSvcConfig = record
-    IsLocalSystem: Boolean;
-    Account: String;
-  end;
-
-  TNovusServiceStatus = (tSSInstall, tSSUninstall, tSSExists, tSSNone, tSSError);
-
-
   TNovusSvcMgr = class(TNovusUtilities)
+  protected
+    procedure ServiceMain; virtual;
   private
-    fdwLastError: DWord;
-    fsSysErrorMessage: string;
-    FsServiceName: string;
-    function GetSCManagerHandle: SC_HANDLE;
-    function GetServiceHandle: SC_HANDLE;
+    FLog: tNovusLogger;
+    FServiceName: PChar;
+    FDisplayName: PChar;
+    FStatus: TServiceStatus;
+    FStatusHandle: SERVICE_STATUS_HANDLE;
+    FStopped: Boolean;
+    FPaused: Boolean;
+
+    procedure ServiceCtrlHandler(Control: DWORD); stdcall;
+    procedure ServiceCtrlDispatcher(dwArgc: DWORD; var lpszArgv: PChar); stdcall;
   public
-    constructor Create(const aServiceName: string);
-    function IsExists: Boolean; overload;
-    function Install(const aDisplayName, aBinaryPath: string;
-      aStartType: TStartType = stAuto): Boolean;
-    function Uninstall: Boolean;
-    function Start: Boolean;
-    function Stop: Boolean;
-    function Query(var aSvcConfig: TNovusSvcConfig): Boolean;
-    function Change(const aSvcConfig: TNovusSvcConfig): Boolean;
+    constructor Create(AServiceName, ADisplayName: PChar; aLog: tNovusLogger = nil); virtual;
 
-    class function SvcMgrApplication: TServiceApplication;
+    destructor Destroy; override;
 
-    class function SvcMgrComboService(aServiceName, aDisplayName, aBinaryPath: string;
-      aStartType: TStartType = stAuto): TNovusServiceStatus;
+    procedure InstallService(FileName: string);
+    procedure UninstallService;
+    function IsServiceInstalled: Boolean;
+    procedure Run; virtual;
+
+    property Status: TServiceStatus
+      read fStatus;
+
+    property Stopped: Boolean
+      read fStopped;
+
+    property Paused: Boolean
+      read FPaused;
   end;
 
 implementation
 
-constructor TNovusSvcMgr.Create(const aServiceName: string);
+
+constructor TNovusSvcMgr.Create(aServiceName, aDisplayName: PChar; aLog: tNovusLogger);
 begin
-  inherited Create;
-  FsServiceName := StringReplace(aServiceName, ' ', '_', [rfReplaceAll]);
+  FServiceName := AServiceName;
+  FDisplayName := ADisplayName;
+  FLog := aLog
 end;
 
-function TNovusSvcMgr.GetSCManagerHandle: SC_HANDLE;
+
+
+
+destructor TNovusSvcMgr.Destroy;
 begin
-  Result := OpenSCManager(nil, nil, SC_MANAGER_ALL_ACCESS);
+  inherited;
 end;
 
-function TNovusSvcMgr.GetServiceHandle: SC_HANDLE;
-var
-  SCM: SC_HANDLE;
+procedure TNovusSvcMgr.ServiceMain;
 begin
-  Result := 0;
-  SCM := GetSCManagerHandle;
-  if SCM > 0 then
-    try
-      Result := OpenService(SCM, PChar(FsServiceName), SERVICE_ALL_ACCESS);
-    finally
-      CloseServiceHandle(SCM);
-    end;
 end;
 
-function TNovusSvcMgr.Install(const aDisplayName, aBinaryPath: string;
-  aStartType: TStartType = stAuto): Boolean;
-var
-  SCM, Service: SC_HANDLE;
-  fSvcQueryConfig: TNovusSvcConfig;
+procedure TNovusSvcMgr.ServiceCtrlHandler(Control: DWORD); stdcall;
 begin
-  SCM := GetSCManagerHandle;
-  if SCM = 0 then
-    begin
-      fdwLastError := GetLastError;
-      fsSysErrorMessage := SysErrorMessage(fdwLastError);
+  if Assigned(FLog) then FLog.AddLogInformation('ServiceCtrlHandler');
 
-      Exit(False);
-    end;
-  try
-    Service := Winapi.WinSvc.CreateService(SCM, PChar(FsServiceName),
-      PChar(aDisplayName), SERVICE_ALL_ACCESS, SERVICE_WIN32_OWN_PROCESS,
-      DWord(aStartType), SERVICE_ERROR_NORMAL, PChar(aBinaryPath), nil, nil,
-      nil, nil, nil);
-    if Service > 0 then
-    begin
-      CloseServiceHandle(Service);
 
-      Result := True;
-    end
-    else
+  case Control of
+    SERVICE_CONTROL_STOP:
       begin
-        Result := False;
-
-        fdwLastError := GetLastError;
-        fsSysErrorMessage := SysErrorMessage(fdwLastError);
+        FStopped := True;
+        FStatus.dwCurrentState := SERVICE_STOP_PENDING;
+        SetServiceStatus(FStatusHandle, FStatus);
       end;
-
-
-  finally
-    CloseServiceHandle(SCM);
+    SERVICE_CONTROL_PAUSE:
+      begin
+        FPaused := True;
+        FStatus.dwCurrentState := SERVICE_PAUSED;
+        SetServiceStatus(FStatusHandle, FStatus);
+      end;
+    SERVICE_CONTROL_CONTINUE:
+      begin
+        FPaused := False;
+        FStatus.dwCurrentState := SERVICE_RUNNING;
+        SetServiceStatus(FStatusHandle, FStatus);
+      end;
+    SERVICE_CONTROL_INTERROGATE: SetServiceStatus(FStatusHandle, FStatus);
+    SERVICE_CONTROL_SHUTDOWN: FStopped := True;
   end;
 end;
 
-function TNovusSvcMgr.Uninstall: Boolean;
+procedure TNovusSvcMgr.InstallService(FileName: string);
 var
+  SCManager: SC_HANDLE;
   Service: SC_HANDLE;
-
+  Args: pchar;
 begin
-  Result := False;
-
-  Service := GetServiceHandle;
-  if Service = 0 then
-    Exit(False);
+  SCManager := OpenSCManager(nil, nil, SC_MANAGER_ALL_ACCESS);
+  if SCManager = 0 then Exit;
   try
-    Result := DeleteService(Service);
-    if Not result then
-      begin
-        fdwLastError := GetLastError;
-        fsSysErrorMessage := SysErrorMessage(fdwLastError);
-      end;
+    Service := CreateService(SCManager, FServiceName, FDisplayName, SERVICE_ALL_ACCESS,
+      SERVICE_WIN32_OWN_PROCESS or SERVICE_INTERACTIVE_PROCESS, SERVICE_AUTO_START,
+      SERVICE_ERROR_IGNORE, PChar(FileName), nil, nil, nil, nil, nil);
 
+    Args := NIL;
 
-  finally
+    StartService(Service, 0, Args);
     CloseServiceHandle(Service);
-  end;
-end;
-
-function TNovusSvcMgr.Start: Boolean;
-var
-  Service: SC_HANDLE;
-  pArgs: PWideChar;
-begin
-  Service := GetServiceHandle;
-  if Service > 0 then
-    try
-      Result := Winapi.WinSvc.StartService(Service, 0, pArgs);
-    finally
-      CloseServiceHandle(Service);
-    end
-  else
-    begin
-      Result := False;
-
-      fdwLastError := GetLastError;
-      fsSysErrorMessage := SysErrorMessage(fdwLastError);
-    end;
-end;
-
-function TNovusSvcMgr.Stop: Boolean;
-var
-  Service: SC_HANDLE;
-  ServiceStatus: TServiceStatus;
-begin
-  Service := GetServiceHandle;
-  if Service > 0 then
-    try
-      Result := ControlService(Service, SERVICE_CONTROL_STOP, ServiceStatus);
-    finally
-      CloseServiceHandle(Service);
-    end
-  else
-    begin
-      Result := False;
-
-      fdwLastError := GetLastError;
-      fsSysErrorMessage := SysErrorMessage(fdwLastError);
-    end;
-end;
-
-function TNovusSvcMgr.IsExists: Boolean;
-var
-  ServiceHandle: SC_HANDLE;
-begin
-  ServiceHandle := GetServiceHandle;
-  if ServiceHandle > 0 then
-  begin
-    CloseServiceHandle(ServiceHandle);
-    Result := True;
-  end
-  else
-    Result := False;
-end;
-
-function TNovusSvcMgr.Query(var aSvcConfig: TNovusSvcConfig): Boolean;
-var
-  SCManager, SvcHandle: SC_HANDLE;
-  ServiceConfig: PQueryServiceConfig;
-  BytesNeeded: DWORD;
-begin
-  Result := False;
-
-  SCManager := OpenSCManager(nil, nil, SC_MANAGER_CONNECT);
-  if SCManager = 0 then
-    begin
-      fdwLastError := GetLastError;
-      fsSysErrorMessage := SysErrorMessage(fdwLastError);
-
-      Exit;
-    end;
-
-  try
-    SvcHandle := OpenService(SCManager,PChar(FsServiceName), SERVICE_QUERY_CONFIG);
-    if SvcHandle = 0 then
-      begin
-        fdwLastError := GetLastError;
-        fsSysErrorMessage := SysErrorMessage(fdwLastError);
-
-        Exit;
-      end;
-
-    try
-      if not QueryServiceConfig(SvcHandle, nil, 0, BytesNeeded) and
-         (GetLastError = ERROR_INSUFFICIENT_BUFFER) then
-      begin
-        GetMem(ServiceConfig, BytesNeeded);
-        try
-          if not QueryServiceConfig(SvcHandle, ServiceConfig, BytesNeeded, BytesNeeded) then
-            begin
-              fdwLastError := GetLastError;
-              fsSysErrorMessage := SysErrorMessage(fdwLastError);
-
-              Exit;
-            end;
-
-
-          // Now you can access ServiceConfig^ fields
-          // For example, to check if the service runs under LocalSystem account:
-          if ServiceConfig^.lpServiceStartName = 'LocalSystem' then
-            begin
-              aSvcConfig.IsLocalSystem := True;
-              aSvcConfig.Account := 'LocalSystem';
-
-
-            end
-          else
-            begin
-              aSvcConfig.Account := ServiceConfig^.lpServiceStartName;
-            end;
-        finally
-          FreeMem(ServiceConfig);
-        end;
-      end;
-    finally
-      CloseServiceHandle(SvcHandle);
-    end;
   finally
     CloseServiceHandle(SCManager);
   end;
 end;
 
-
-class function TNovusSvcMgr.SvcMgrApplication: TServiceApplication;
+procedure TNovusSvcMgr.UninstallService;
+var
+  SCManager: SC_HANDLE;
+  Service: SC_HANDLE;
 begin
-  Result := Vcl.SvcMgr.Application;
+  SCManager := OpenSCManager(nil, nil, SC_MANAGER_ALL_ACCESS);
+  if SCManager = 0 then Exit;
+  try
+    Service := OpenService(SCManager, FServiceName, SERVICE_ALL_ACCESS);
+    ControlService(Service, SERVICE_CONTROL_STOP, FStatus);
+    DeleteService(Service);
+    CloseServiceHandle(Service);
+  finally
+    CloseServiceHandle(SCManager);
+  end;
 end;
 
-class function TNovusSvcMgr.SvcMgrComboService(aServiceName, aDisplayName,
-  aBinaryPath: string; aStartType: TStartType = stAuto): TNovusServiceStatus;
+procedure TNovusSvcMgr.Run;
 var
-  FSvcMgr: TNovusSvcMgr;
-  fbIsService, fbinstallService, fbuninstallService, fbexistsService: Boolean;
+  ServiceTable: array [0..1] of TServiceTableEntry;
 begin
-  Result := tSSNone;
+  if Assigned(FLog) then FLog.AddLogInformation('Start Run');
 
-  FSvcMgr := NIl;
+  ServiceTable[0].lpServiceName := FServiceName;
+  ServiceTable[0].lpServiceProc := @TNovusSvcMgr.ServiceCtrlDispatcher;
+  ServiceTable[1].lpServiceName := nil;
+  ServiceTable[1].lpServiceProc := nil;
 
-  Try
-    FSvcMgr := TNovusSvcMgr.Create(aServiceName);
 
-    if aDisplayName = '' then
-      aDisplayName := FSvcMgr.FsServiceName;
+  StartServiceCtrlDispatcher(ServiceTable[0]);
 
-    if aBinaryPath = '' then
-      aBinaryPath := TNovusFileUtils.TrailingBackSlash(TNovusFileUtils.AppRootDirectory) + TNovusFileUtils.AppFilename;
-
-    fbexistsService := FSvcMgr.IsExists;
-    fbinstallService := FindCmdLineSwitch('install', ['-', '\', '/'], True);
-    fbuninstallService := FindCmdLineSwitch('uninstall', ['-', '\', '/'], True);
-
-    fbIsService := (fbexistsService or fbinstallService or fbuninstallService);
-
-    if fbIsService then
-    begin
-      if fbinstallService then
-        begin
-           if FSvcMgr.Install(aDisplayName, aBinaryPath) then Result := TNovusServiceStatus.tSSInstall
-           else
-              Result := TNovusServiceStatus.tSSError;
-        end
-      else
-      if fbuninstallService then
-        begin
-          If FSvcMgr.unInstall then Result := TNovusServiceStatus.tSSUninstall
-          else Result := TNovusServiceStatus.tSSError;
-        end
-      else Result := TNovusServiceStatus.tSSExists;
-    end;
-  Finally
-    if Assigned(FSvcMgr) then FSvcMgr.Free;
-  End;
+  if Assigned(FLog) then FLog.AddLogInformation('End Run');
 end;
 
-function TNovusSvcMgr.Change(const aSvcConfig: TNovusSvcConfig): Boolean;
+procedure TNovusSvcMgr.ServiceCtrlDispatcher(dwArgc: DWORD; var lpszArgv: PChar); stdcall;
+begin
+  FStatusHandle := RegisterServiceCtrlHandler(FServiceName, @TNovusSvcMgr.ServiceCtrlHandler);
+  if FStatusHandle <> 0 then
+  begin
+    ZeroMemory(@FStatus, SizeOf(FStatus));
+    FStatus.dwServiceType := SERVICE_WIN32_OWN_PROCESS or SERVICE_INTERACTIVE_PROCESS;
+    FStatus.dwCurrentState := SERVICE_START_PENDING;
+    FStatus.dwControlsAccepted := SERVICE_ACCEPT_STOP or SERVICE_ACCEPT_PAUSE_CONTINUE;
+    FStatus.dwWaitHint := 1000;
+    SetServiceStatus(FStatusHandle, FStatus);
+    FStopped := False;
+    FPaused := False;
+    FStatus.dwCurrentState := SERVICE_RUNNING;
+    SetServiceStatus(FStatusHandle, FStatus);
+    ServiceMain;
+    FStatus.dwCurrentState := SERVICE_STOPPED;
+    SetServiceStatus(FStatusHandle, FStatus);
+  end;
+end;
+
+function TNovusSvcMgr.IsServiceInstalled: Boolean;
 var
-  SCManager, SvcHandle: SC_HANDLE;
+  SCManager: SC_HANDLE;
+  Service: SC_HANDLE;
 begin
   Result := False;
-
-  // Open the Service Control Manager
-  SCManager := OpenSCManager(nil, nil, SC_MANAGER_ALL_ACCESS);
-  if SCManager = 0 then
-    begin
-      fdwLastError := GetLastError;
-      fsSysErrorMessage := SysErrorMessage(fdwLastError);
-
-
-      Exit;
-    end;
-
+  SCManager := OpenSCManager(nil, nil, SC_MANAGER_CONNECT);
+  if SCManager = 0 then Exit;
   try
-    // Open the specific service
-    SvcHandle := OpenService(SCManager, PChar(FsServiceName), SERVICE_CHANGE_CONFIG);
-    if SvcHandle = 0 then
-      begin
-        fdwLastError := GetLastError;
-        fsSysErrorMessage := SysErrorMessage(fdwLastError);
-
-        Exit;
-      end;
-    try
-      // Change the service configuration
-      if not ChangeServiceConfig(
-        SvcHandle,                // service handle
-        SERVICE_NO_CHANGE,        // service type: no change
-        SERVICE_NO_CHANGE,        // start type: no change
-        SERVICE_NO_CHANGE,        // error control: no change
-        nil,                      // binary path: no change
-        nil,                      // load order group: no change
-        nil,                      // tag ID: no change
-        nil,                      // dependencies: no change
-        'NT AUTHORITY\NetworkService', // account name
-        nil,                      // password: no change
-        nil                       // display name: no change
-      ) then
-        begin
-          fdwLastError := GetLastError;
-          fsSysErrorMessage := SysErrorMessage(fdwLastError);
-
-          Exit;
-        end;
-
+    Service := OpenService(SCManager, FServiceName, SERVICE_QUERY_STATUS);
+    if Service <> 0 then
+    begin
       Result := True;
-    finally
-      CloseServiceHandle(SvcHandle);
+      CloseServiceHandle(Service);
     end;
   finally
     CloseServiceHandle(SCManager);
@@ -376,3 +195,4 @@ begin
 end;
 
 end.
+

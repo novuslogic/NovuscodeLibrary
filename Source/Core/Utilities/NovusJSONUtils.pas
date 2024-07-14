@@ -12,6 +12,9 @@ Type
   private
   protected
   public
+    class function GetJSONArrayValue(AJSONArray: TJSONArray; const key: string): TJSONArray;
+    class function GetJSONObjectValue(AJSONObject: TJSONObject; const key: string): TJSONObject;
+    class function GetJSONStringValue(jsonObj: TJSONObject; const key: string): string;
     class function InJSONArray(const aElement: string;
       const aJSONArray: TJSONArray): TJSONPair;
     class function IsNullorBlank(const aValue: String): Boolean;
@@ -136,6 +139,40 @@ begin
       .JsonValue.Value);
 end;
 
+class function tNovusJSONUtils.GetJSONStringValue(jsonObj: TJSONObject; const key: string): string;
+begin
+  Result := '';
+  if Not Assigned(jsonObj) then Exit;
+
+  try
+    Result := jsonObj.GetValue<string>(key);
+  except
+    Result := '';
+  end;
+end;
+
+class function tNovusJSONUtils.GetJSONObjectValue(AJSONObject: TJSONObject; const key: string): TJSONObject;
+begin
+  Result := Nil;
+  if Not Assigned(AJSONObject) then Exit;
+  try
+    Result := AJSONObject.GetValue<TJSONObject>(key);
+  except
+    Result := Nil;
+  end;
+end;
+
+
+class function tNovusJSONUtils.GetJSONArrayValue(AJSONArray: TJSONArray; const key: string): TJSONArray;
+begin
+  Result := Nil;
+  if Not Assigned(AJSONArray) then Exit;
+  try
+    Result := AJSONArray.GetValue<TJSONArray>(key);
+  except
+    Result := Nil;
+  end;
+end;
 
 
 end.

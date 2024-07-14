@@ -9,6 +9,11 @@
 <!-- /TOC -->
 ## Release v0.2.0
 
+* New class unit tNovusOpenAPIParser based on OpenAPI 3.0
+* New class function GetJSONArrayValue(AJSONArray: TJSONArray; const key: string): TJSONArray; in unit NovusJSONUtils
+* New class function GetJSONObjectValue(AJSONObject: TJSONObject; const key: string): TJSONObject; in unit NovusJSONUtils
+* New class function GetJSONStringValue(jsonObj: TJSONObject; const key: string): string; in unit NovusJSONUtils
+
 3/6/2024
 
 * Removed unit Novuslog in NovusCodeLibrary_Indy.dpk Delphi 11 and Delphi 12 

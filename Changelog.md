@@ -9,10 +9,15 @@
 <!-- /TOC -->
 ## Release v0.2.0
 
+20/07/2024
+
+* Update NovusOpenAPIParser class to finished TOpenAPI3Operation
+* Remove Novsuconsole Unit from NovusLogger.Provider.Files unit
+* New class function GetJSONBooleanValue(AJSONObject: TJSONObject; const AKey: string): Boolean; in unit NovusJSONUtils
 * New class unit tNovusOpenAPIParser based on OpenAPI 3.0
-* New class function GetJSONArrayValue(AJSONArray: TJSONArray; const key: string): TJSONArray; in unit NovusJSONUtils
+* New class function GetJSONArrayValue(AJSONObject: TJSONObject; const key: string): TJSONArray; in unit NovusJSONUtils
 * New class function GetJSONObjectValue(AJSONObject: TJSONObject; const key: string): TJSONObject; in unit NovusJSONUtils
-* New class function GetJSONStringValue(jsonObj: TJSONObject; const key: string): string; in unit NovusJSONUtils
+* New class function GetJSONStringValue(AJSONObject: TJSONObject; const key: string): string; in unit NovusJSONUtils
 
 3/6/2024
 

@@ -12,9 +12,10 @@ Type
   private
   protected
   public
-    class function GetJSONArrayValue(AJSONArray: TJSONArray; const key: string): TJSONArray;
+    class function GetJSONBooleanValue(AJSONObject: TJSONObject; const AKey: string): Boolean;
+    class function GetJSONArrayValue(AJSONArray: TJSONObject; const key: string): TJSONArray;
     class function GetJSONObjectValue(AJSONObject: TJSONObject; const key: string): TJSONObject;
-    class function GetJSONStringValue(jsonObj: TJSONObject; const key: string): string;
+    class function GetJSONStringValue(AJSONObject: TJSONObject; const key: string): string;
     class function InJSONArray(const aElement: string;
       const aJSONArray: TJSONArray): TJSONPair;
     class function IsNullorBlank(const aValue: String): Boolean;
@@ -139,13 +140,13 @@ begin
       .JsonValue.Value);
 end;
 
-class function tNovusJSONUtils.GetJSONStringValue(jsonObj: TJSONObject; const key: string): string;
+class function tNovusJSONUtils.GetJSONStringValue(AJSONObject: TJSONObject; const key: string): string;
 begin
   Result := '';
-  if Not Assigned(jsonObj) then Exit;
+  if Not Assigned(AJSONObject) then Exit;
 
   try
-    Result := jsonObj.GetValue<string>(key);
+    Result := AJSONObject.GetValue<string>(key);
   except
     Result := '';
   end;
@@ -163,7 +164,7 @@ begin
 end;
 
 
-class function tNovusJSONUtils.GetJSONArrayValue(AJSONArray: TJSONArray; const key: string): TJSONArray;
+class function tNovusJSONUtils.GetJSONArrayValue(AJSONArray: TJSONObject; const key: string): TJSONArray;
 begin
   Result := Nil;
   if Not Assigned(AJSONArray) then Exit;
@@ -171,6 +172,22 @@ begin
     Result := AJSONArray.GetValue<TJSONArray>(key);
   except
     Result := Nil;
+  end;
+end;
+
+class function tNovusJSONUtils.GetJSONBooleanValue(AJSONObject: TJSONObject; const AKey: string): Boolean;
+var
+  JSONValue: TJSONValue;
+begin
+  Result := False; // Default value if the key is not found or value is not a boolean
+
+  if Assigned(AJSONObject) then
+  begin
+    JSONValue := AJSONObject.GetValue(AKey);
+    if Assigned(JSONValue) and (JSONValue is TJSONBool) then
+    begin
+      Result := TJSONBool(JSONValue).AsBoolean;
+    end;
   end;
 end;
 

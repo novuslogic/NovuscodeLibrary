@@ -2,7 +2,7 @@ unit NovusLogger.Provider.Files;
 
 interface
 
-Uses NovusLogger.Provider, NovusConsole, System.SysUtils, Winapi.Windows,
+Uses NovusLogger.Provider,  System.SysUtils, Winapi.Windows,
      System.Threading, System.Classes, NovusObject, NovusStringUtils,
      NovusFileUtils, System.IOUtils;
 

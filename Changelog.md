@@ -9,6 +9,10 @@
 <!-- /TOC -->
 ## Release v0.2.0
 
+* New Property Fullpath and PathList in class TOpenAPI3Path in unit NovusNovusOpenAPIParser
+* New class function LoadEnvFile(const aFileName: string): boolean; in unit NovusEnvironment
+* New class procedure SplitStringToList(const aStr: string; const aDelimiter: string; aStringList: TStrings); in unit NovusStringUtil
+
 20/07/2024
 
 * Update NovusOpenAPIParser class to finished TOpenAPI3Operation

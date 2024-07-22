@@ -5,7 +5,7 @@ unit NovusStringUtils;
 interface
 
 uses {Windows,} sysutils, NovusUtilities, Classes, variants, System.RegularExpressions,
-     NovusVariants;
+     NovusVariants, System.StrUtils;
 
 Const
   Cr = #13;
@@ -50,6 +50,7 @@ Type
 Type
   TNovusStringUtils = class(TNovusUtilities)
   public
+    class procedure SplitStringToList(const aStr: string; const aDelimiter: string; aStringList: TStrings);
     class function IsAlphaNumeric(aStr: string): boolean;
     class function RightTrim(aStr: String): String;
     class function LeftTrim(aStr: String): String;
@@ -1138,6 +1139,21 @@ class function TNovusStringUtils.ReplaceBetweenPositions(const aSource, aReplace
 begin
   Result := aSource.Substring(0, aStartPos) + aReplaceWith + aSource.Substring(aEndPos);
 end;
+
+class procedure TNovusStringUtils.SplitStringToList(const aStr: string; const aDelimiter: string; aStringList: TStrings);
+var
+  SplitArray: TArray<string>;
+  I: Integer;
+begin
+  SplitArray := SplitString(AStr, ADelimiter);
+  aStringList.Clear;
+  for I := 0 to Length(SplitArray) - 1 do
+  begin
+    if Trim(SplitArray[I]) <> '' then
+      aStringList.Add(SplitArray[I]);
+  end;
+end;
+
 
 end.
 

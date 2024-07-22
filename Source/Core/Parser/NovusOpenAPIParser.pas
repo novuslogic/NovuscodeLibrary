@@ -3,7 +3,8 @@ unit NovusOpenAPIParser;
 interface
 
 uses
-  NovusObject, System.IOUtils, System.JSON, System.SysUtils, System.Generics.Collections;
+  NovusObject, System.IOUtils, System.JSON, System.SysUtils, System.Generics.Collections,
+  System.Classes, NovusStringUtils;
 
 type
   TOpenAPI3SecurityRequirement = class(TObject)
@@ -167,7 +168,7 @@ type
     property Parameters: TObjectList<TObject> read fParameters write fParameters;
     property Responses: TOpenAPI3Responses read fResponses write fResponses;
     property Callbacks: TOpenAPI3Callbacks read fCallbacks write fCallbacks;
-    property Deprecated: Boolean read fDeprecated write fDeprecated;
+    property _Deprecated: Boolean read fDeprecated write fDeprecated;
     property RequestBody: TOpenAPI3RequestBody read fRequestBody write fRequestBody;
     property Security: TObjectList<TOpenAPI3SecurityRequirement> read fSecurity write fSecurity;
     property Servers: TObjectList<TOpenAPI3Server> read fServers write fServers;
@@ -179,15 +180,22 @@ type
     fDescription: string;
     fOperations: TObjectDictionary<string, TOpenAPI3Operation>;
     fRef: string;
+    fFullPath: String;
+    fPathList: TStringList;
   public
     constructor Create;
     destructor Destroy; override;
+
+    function FindOperation(aOperation: string): TOpenAPI3Operation;
     procedure ParseOperations(AJSONObject: TJSONObject);
+
     property Operations: TObjectDictionary<string, TOpenAPI3Operation> read fOperations write fOperations;
     property Summary: string read fSummary write fSummary;
     property Description: string read fDescription write fDescription;
     property Ref: string read fRef write fRef;
-    function FindOperation(aOperation: string): TOpenAPI3Operation;
+
+    property FullPath: String read fFullPath write fFullPath;
+    property PathList: TStringList read fPathList write fPathList;
   end;
 
   TOpenAPI3Components = class(TObject)
@@ -400,10 +408,13 @@ constructor TOpenAPI3Path.Create;
 begin
   inherited Create;
   fOperations := TObjectDictionary<string, TOpenAPI3Operation>.Create([doOwnsValues]);
+
+  fPathList := TStringList.Create;
 end;
 
 destructor TOpenAPI3Path.Destroy;
 begin
+  fPathList.Free;
   fOperations.Free;
   inherited Destroy;
 end;
@@ -433,6 +444,9 @@ var
 begin
   if Assigned(AJSONObject) then
   begin
+    // Parse FullPath to List
+   // TNovusStringUtils.SplitStringToList(fFullPath, '/', fPathList);
+
     // Parse $ref
     fRef := tNovusJSONUtils.GetJSONStringValue(AJSONObject, '$ref');
     if fRef <> '' then Exit;
@@ -453,7 +467,7 @@ begin
       Operation.Summary := tNovusJSONUtils.GetJSONStringValue(OperationPair.JsonValue as TJSONObject, 'summary');
       Operation.Description := tNovusJSONUtils.GetJSONStringValue(OperationPair.JsonValue as TJSONObject, 'description');
       Operation.OperationId := tNovusJSONUtils.GetJSONStringValue(OperationPair.JsonValue as TJSONObject, 'operationId');
-      Operation.Deprecated := tNovusJSONUtils.GetJSONBooleanValue(OperationPair.JsonValue as TJSONObject, 'deprecated');
+      Operation._Deprecated := tNovusJSONUtils.GetJSONBooleanValue(OperationPair.JsonValue as TJSONObject, 'deprecated');
 
       // Parse tags
       TagsArray := tNovusJSONUtils.GetJSONArrayValue(OperationPair.JsonValue as TJSONObject, 'tags');
@@ -569,15 +583,15 @@ end;
 
 destructor TOpenAPI3Components.Destroy;
 begin
-  fSchemas.Free;
-  fResponses.Free;
-  fParameters.Free;
-  fExamples.Free;
-  fRequestBodies.Free;
-  fHeaders.Free;
-  fSecuritySchemes.Free;
-  fLinks.Free;
-  fCallbacks.Free;
+  fSchemas := Nil;
+  fResponses := nil;
+  fParameters := nil;
+  fExamples := nil;
+  fRequestBodies := Nil;
+  fHeaders := Nil;
+  fSecuritySchemes := NIl;
+  fLinks := Nil;
+  fCallbacks := Nil;
   inherited Destroy;
 end;
 
@@ -657,7 +671,7 @@ end;
 destructor TOpenAPI3Schema.Destroy;
 begin
   fInfo.Free;
-  fInfoObj.Free;
+  fInfoObj := NIl;
   fPaths.Free;
   fComponents.Free;
   fServers.Free;
@@ -677,6 +691,9 @@ begin
     for PathPair in AJSONObject do
     begin
       Path := TOpenAPI3Path.Create;
+
+      Path.FullPath := PathPair.JsonString.Value;
+
       Path.ParseOperations(PathPair.JsonValue as TJSONObject);
       fPaths.Add(PathPair.JsonString.Value, Path);
     end;
@@ -782,8 +799,10 @@ end;
 
 destructor TNovusOpenAPIParser.Destroy;
 begin
-  FSchema.Free;
   fJSON.Free;
+
+  FSchema.Free;
+
   inherited Destroy;
 end;
 

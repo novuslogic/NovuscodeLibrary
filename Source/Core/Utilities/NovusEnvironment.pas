@@ -4,7 +4,7 @@ unit NovusEnvironment;
 interface
 
 Uses NovusUtilities, NovusParser, NovusTemplate2, SysUtils, NovusParser.Common,
-  Winapi.Windows, System.Win.Registry, Winapi.Messages;
+  Winapi.Windows, System.Win.Registry, Winapi.Messages, System.Classes;
 
 type
   tEnvironmentTokenType = (ETTToken1, ETTToken2);
@@ -13,6 +13,10 @@ type
   protected
   private
   public
+     /// <summary>
+    /// Load .env file and set
+    /// </summary>
+    class function LoadEnvFile(const aFileName: string): boolean;
     /// <summary>
     /// Set it as an environment variable at the user level
     /// </summary>
@@ -202,6 +206,35 @@ begin
   // Set the environment variable for the current process
   if not SetEnvironmentVariable(PChar(aVariableName), PChar(aValue)) then
     RaiseLastOSError;
+end;
+
+class function tNovusEnvironment.LoadEnvFile(const aFileName: string): boolean;
+var
+  EnvFile: TStringList;
+  Line: string;
+  Name, Value: string;
+  SeparatorPos: Integer;
+begin
+  Result := False;
+
+  if Not FileExists(aFilename) then Exit;
+
+  EnvFile := TStringList.Create;
+  try
+    EnvFile.LoadFromFile(aFileName);
+    for Line in EnvFile do
+    begin
+      SeparatorPos := Pos('=', Line);
+      if SeparatorPos > 0 then
+      begin
+        Name := Trim(Copy(Line, 1, SeparatorPos - 1));
+        Value := Trim(Copy(Line, SeparatorPos + 1, MaxInt));
+        SetEnvironmentVariable(PChar(Name), PChar(Value));
+      end;
+    end;
+  finally
+    EnvFile.Free;
+  end;
 end;
 
 end.

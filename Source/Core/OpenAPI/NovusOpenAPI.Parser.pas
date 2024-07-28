@@ -15,7 +15,7 @@ type
     constructor Create;
     destructor Destroy; override;
     procedure ParseFromJSON(AJSONArray: TJSONArray);
-    property Requirements: TObjectDictionary < string, TArray < string >>
+    property Requirements: TObjectDictionary<string, TArray<string>>
       read fRequirements write fRequirements;
   end;
 
@@ -212,7 +212,10 @@ type
     property PathList: TStringList read fPathList write fPathList;
   end;
 
-   // Class representing OpenAPI 3 Components
+  // Declare TOpenAPI3Schema before TOpenAPI3Components
+  TOpenAPI3Schema = class;
+
+  // Class representing OpenAPI 3 Components
   TOpenAPI3Components = class(TObject)
   private
     fSchemas: TObjectDictionary<string, TOpenAPI3Schema>;
@@ -289,8 +292,8 @@ type
   public
     constructor Create;
     destructor Destroy; override;
-
-    function FindPath(aPath: String): TOpenAPI3Path;
+    procedure ParseFromJSON(AJSONObject: TJSONObject); // Add this method
+    //function FindPath(aPath: String): TOpenAPI3Path;
 
     property Openapi: string read fOpenapi write fOpenapi;
     property JsonSchemaDialect: string read fJsonSchemaDialect write fJsonSchemaDialect;
@@ -303,7 +306,6 @@ type
     property Security: TObjectList<TOpenAPI3SecurityRequirement> read fSecurity write fSecurity;
     property Tags: TObjectList<TOpenAPI3Tag> read fTags write fTags;
   end;
-
 
   TNovusOpenAPIParser = class(TNovusObject)
   private
@@ -658,7 +660,7 @@ begin
     begin
       FSchema := TOpenAPI3Schema.Create;
       FSchema.ParseFromJSON(SchemaPair.JsonValue as TJSONObject);
-      fSchema.Add(SchemaPair.JsonString.Value, FSchema);
+      //fSchema.Add(SchemaPair.JsonString.Value, FSchema);
     end;
 
     fResponsesObj := tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'responses');
@@ -671,12 +673,13 @@ begin
     fCallbacksObj := tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'callbacks');
   end;
 end;
+
 // TOpenAPI3SecurityRequirement
 
 constructor TOpenAPI3SecurityRequirement.Create;
 begin
   inherited Create;
-  fRequirements := TObjectDictionary < string, TArray < string >>.Create;
+  fRequirements := TObjectDictionary<string, TArray<string>>.Create;
 end;
 
 destructor TOpenAPI3SecurityRequirement.Destroy;
@@ -732,7 +735,7 @@ end;
 destructor TOpenAPI3Schema.Destroy;
 begin
   fInfo.Free;
-  fInfoObj := NIl;
+  fInfoObj := nil;
   fPaths.Free;
   fComponents.Free;
   fServers.Free;
@@ -848,10 +851,57 @@ begin
   end;
 end;
 
-function TOpenAPI3Schema.FindPath(aPath: String): TOpenAPI3Path;
+procedure TOpenAPI3Schema.ParseFromJSON(AJSONObject: TJSONObject);
+var
+  PathsObj, WebhooksObj, ComponentsObj: TJSONObject;
+  ServersArray, SecurityArray, TagsArray: TJSONArray;
 begin
-  if not fPaths.TryGetValue(aPath, Result) then
-    Result := nil;
+  if Assigned(AJSONObject) then
+  begin
+    fOpenapi := tNovusJSONUtils.GetJSONStringValue(AJSONObject, 'openapi');
+    fJsonSchemaDialect := tNovusJSONUtils.GetJSONStringValue(AJSONObject, 'jsonSchemaDialect');
+    fInfoObj := tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'info');
+    if Assigned(fInfoObj) then
+    begin
+      fInfo.ParseFromJSON(fInfoObj);
+    end;
+
+    PathsObj := tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'paths');
+    if Assigned(PathsObj) then
+    begin
+      ParsePaths(PathsObj);
+    end;
+
+    ServersArray := tNovusJSONUtils.GetJSONArrayValue(AJSONObject, 'servers');
+    if Assigned(ServersArray) then
+    begin
+      ParseServers(ServersArray);
+    end;
+
+    WebhooksObj := tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'webhooks');
+    if Assigned(WebhooksObj) then
+    begin
+      ParseWebhooks(WebhooksObj);
+    end;
+
+    ComponentsObj := tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'components');
+    if Assigned(ComponentsObj) then
+    begin
+      fComponents.ParseFromJSON(ComponentsObj);
+    end;
+
+    SecurityArray := tNovusJSONUtils.GetJSONArrayValue(AJSONObject, 'security');
+    if Assigned(SecurityArray) then
+    begin
+      ParseSecurity(SecurityArray);
+    end;
+
+    TagsArray := tNovusJSONUtils.GetJSONArrayValue(AJSONObject, 'tags');
+    if Assigned(TagsArray) then
+    begin
+      ParseTags(TagsArray);
+    end;
+  end;
 end;
 
 // TNovusOpenAPIParser
@@ -866,9 +916,7 @@ end;
 destructor TNovusOpenAPIParser.Destroy;
 begin
   fJSON.Free;
-
   FSchema.Free;
-
   inherited Destroy;
 end;
 
@@ -1197,16 +1245,5 @@ begin
   end;
 end;
 
-// TOpenAPI3SchemaObject implementation
-
-procedure TOpenAPI3SchemaObject.ParseFromJSON(AJSONObject: TJSONObject);
-begin
-  if Assigned(AJSONObject) then
-  begin
-    fTitle := tNovusJSONUtils.GetJSONStringValue(AJSONObject, 'title');
-    fType := tNovusJSONUtils.GetJSONStringValue(AJSONObject, 'type');
-    // Parse other properties as needed
-  end;
-end;
-
 end.
+

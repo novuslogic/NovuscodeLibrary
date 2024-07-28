@@ -219,8 +219,8 @@ type
   TOpenAPI3Components = class(TObject)
   private
     fSchemas: TObjectDictionary<string, TOpenAPI3Schema>;
-    fResponsesObj: TJSONObject;
-    fParametersObj: TJSONObject;
+    fResponses: TObjectDictionary<string, TOpenAPI3Response>;
+    fParameters: TObjectDictionary<string, TOpenAPI3Parameter>; // Changed from TJSONObject to TObjectDictionary
     fExamplesObj: TJSONObject;
     fRequestBodiesObj: TJSONObject;
     fHeadersObj: TJSONObject;
@@ -232,8 +232,8 @@ type
     destructor Destroy; override;
     procedure ParseFromJSON(AJSONObject: TJSONObject);
     property Schemas: TObjectDictionary<string, TOpenAPI3Schema> read fSchemas write fSchemas;
-    property Responses: TJSONObject read fResponsesObj write fResponsesObj;
-    property Parameters: TJSONObject read fParametersObj write fParametersObj;
+    property Responses: TObjectDictionary<string, TOpenAPI3Response> read fResponses write fResponses;
+    property Parameters: TObjectDictionary<string, TOpenAPI3Parameter> read fParameters write fParameters; // Changed from TJSONObject to TObjectDictionary
     property Examples: TJSONObject read fExamplesObj write fExamplesObj;
     property RequestBodies: TJSONObject read fRequestBodiesObj write fRequestBodiesObj;
     property Headers: TJSONObject read fHeadersObj write fHeadersObj;
@@ -241,6 +241,7 @@ type
     property Links: TJSONObject read fLinksObj write fLinksObj;
     property Callbacks: TJSONObject read fCallbacksObj write fCallbacksObj;
   end;
+
 
   TOpenAPI3Tag = class(TObject)
   private
@@ -293,7 +294,6 @@ type
     constructor Create;
     destructor Destroy; override;
     procedure ParseFromJSON(AJSONObject: TJSONObject); // Add this method
-    //function FindPath(aPath: String): TOpenAPI3Path;
 
     property Openapi: string read fOpenapi write fOpenapi;
     property JsonSchemaDialect: string read fJsonSchemaDialect write fJsonSchemaDialect;
@@ -619,13 +619,12 @@ begin
 end;
 
 // TOpenAPI3Components implementation
-
 constructor TOpenAPI3Components.Create;
 begin
   inherited Create;
   fSchemas := TObjectDictionary<string, TOpenAPI3Schema>.Create([doOwnsValues]);
-  fResponsesObj := TJSONObject.Create;
-  fParametersObj := TJSONObject.Create;
+  fResponses := TObjectDictionary<string, TOpenAPI3Response>.Create([doOwnsValues]);
+  fParameters := TObjectDictionary<string, TOpenAPI3Parameter>.Create([doOwnsValues]); // Initialize as TObjectDictionary
   fExamplesObj := TJSONObject.Create;
   fRequestBodiesObj := TJSONObject.Create;
   fHeadersObj := TJSONObject.Create;
@@ -637,8 +636,8 @@ end;
 destructor TOpenAPI3Components.Destroy;
 begin
   fSchemas.Free;
-  fResponsesObj := nil;
-  fParametersObj := nil;
+  fResponses.Free;
+  fParameters.Free; // Free the TObjectDictionary
   fExamplesObj := nil;
   fRequestBodiesObj := nil;
   fHeadersObj := nil;
@@ -651,7 +650,11 @@ end;
 procedure TOpenAPI3Components.ParseFromJSON(AJSONObject: TJSONObject);
 var
   SchemaPair: TJSONPair;
+  ResponsePair: TJSONPair; // Variable to iterate over responses
+  ParameterPair: TJSONPair; // Variable to iterate over parameters
   FSchema: TOpenAPI3Schema;
+  Response: TOpenAPI3Response; // Variable to hold response
+  Parameter: TOpenAPI3Parameter; // Variable to hold parameter
 begin
   if Assigned(AJSONObject) then
   begin
@@ -660,11 +663,31 @@ begin
     begin
       FSchema := TOpenAPI3Schema.Create;
       FSchema.ParseFromJSON(SchemaPair.JsonValue as TJSONObject);
-      //fSchema.Add(SchemaPair.JsonString.Value, FSchema);
+      fSchemas.Add(SchemaPair.JsonString.Value, FSchema);
     end;
 
-    fResponsesObj := tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'responses');
-    fParametersObj := tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'parameters');
+    // Parse responses
+    for ResponsePair in tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'responses') do
+    begin
+      Response := TOpenAPI3Response.Create;
+      Response.Description := tNovusJSONUtils.GetJSONStringValue(ResponsePair.JsonValue as TJSONObject, 'description');
+      Response.Content := tNovusJSONUtils.GetJSONObjectValue(ResponsePair.JsonValue as TJSONObject, 'content');
+      fResponses.Add(ResponsePair.JsonString.Value, Response);
+    end;
+
+    // Parse parameters
+    for ParameterPair in tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'parameters') do
+    begin
+      Parameter := TOpenAPI3Parameter.Create;
+      Parameter.Name := tNovusJSONUtils.GetJSONStringValue(ParameterPair.JsonValue as TJSONObject, 'name');
+      Parameter.InLocation := tNovusJSONUtils.GetJSONStringValue(ParameterPair.JsonValue as TJSONObject, 'in');
+      Parameter.Description := tNovusJSONUtils.GetJSONStringValue(ParameterPair.JsonValue as TJSONObject, 'description');
+      Parameter.Required := tNovusJSONUtils.GetJSONBooleanValue(ParameterPair.JsonValue as TJSONObject, 'required');
+      Parameter.Deprecated := tNovusJSONUtils.GetJSONBooleanValue(ParameterPair.JsonValue as TJSONObject, 'deprecated');
+      Parameter.AllowEmptyValue := tNovusJSONUtils.GetJSONBooleanValue(ParameterPair.JsonValue as TJSONObject, 'allowEmptyValue');
+      fParameters.Add(ParameterPair.JsonString.Value, Parameter);
+    end;
+
     fExamplesObj := tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'examples');
     fRequestBodiesObj := tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'requestBodies');
     fHeadersObj := tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'headers');
@@ -673,7 +696,6 @@ begin
     fCallbacksObj := tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'callbacks');
   end;
 end;
-
 // TOpenAPI3SecurityRequirement
 
 constructor TOpenAPI3SecurityRequirement.Create;
@@ -998,117 +1020,6 @@ begin
     begin
       FSchema.ParseTags(TagsArray);
     end;
-
-    (*
-      // Example: Output the title and version from the info object
-      if Assigned(FSchema.Info) then
-      begin
-      WriteLn('Title: ' + FSchema.Info.Title);
-      WriteLn('Version: ' + FSchema.Info.Version);
-      if Assigned(FSchema.Info.Contact) then
-      begin
-      WriteLn('Contact Name: ' + FSchema.Info.Contact.Name);
-      WriteLn('Contact URL: ' + FSchema.Info.Contact.Url);
-      WriteLn('Contact Email: ' + FSchema.Info.Contact.Email);
-      end;
-      if Assigned(FSchema.Info.License) then
-      begin
-      WriteLn('License Name: ' + FSchema.Info.License.Name);
-      WriteLn('License URL: ' + FSchema.Info.License.Url);
-      end;
-      end;
-
-      // Example: Output jsonSchemaDialect
-      WriteLn('jsonSchemaDialect: ' + FSchema.JsonSchemaDialect);
-
-      // Example: Output paths
-      for var PathPair in FSchema.Paths do
-      begin
-      WriteLn('Path: ' + PathPair.Key);
-      for var OperationPair in PathPair.Value.Operations do
-      begin
-      WriteLn('  Operation: ' + OperationPair.Key);
-      WriteLn('    Summary: ' + OperationPair.Value.Summary);
-      WriteLn('    Description: ' + OperationPair.Value.Description);
-      end;
-      end;
-
-      // Example: Output servers
-      for var Server in FSchema.Servers do
-      begin
-      WriteLn('Server URL: ' + Server.Url);
-      WriteLn('Server Description: ' + Server.Description);
-      for var Variable in Server.Variables do
-      begin
-      WriteLn('Variable Name: ' + Variable.Key);
-      WriteLn('Variable Default: ' + Variable.Value.Default);
-      WriteLn('Variable Description: ' + Variable.Value.Description);
-      if Length(Variable.Value.Enum) > 0 then
-      begin
-      WriteLn('Variable Enum: ' + string.Join(', ', Variable.Value.Enum));
-      end;
-      end;
-      end;
-
-      // Example: Output webhooks
-      for var WebhookPair in FSchema.Webhooks do
-      begin
-      WriteLn('Webhook: ' + WebhookPair.Key);
-      if WebhookPair.Value is TOpenAPI3Reference then
-      begin
-      WriteLn('  Reference: ' + TOpenAPI3Reference(WebhookPair.Value).Ref);
-      end
-      else if WebhookPair.Value is TOpenAPI3Path then
-      begin
-      WriteLn('  Path Item:');
-      for var OperationPair in TOpenAPI3Path(WebhookPair.Value).Operations do
-      begin
-      WriteLn('    Operation: ' + OperationPair.Key);
-      WriteLn('      Summary: ' + OperationPair.Value.Summary);
-      WriteLn('      Description: ' + OperationPair.Value.Description);
-      end;
-      end;
-      end;
-
-      // Example: Output components
-      WriteLn('Components:');
-      if Assigned(FSchema.Components.Schemas) then
-      WriteLn('  Schemas: ' + FSchema.Components.Schemas.ToString);
-      if Assigned(FSchema.Components.Responses) then
-      WriteLn('  Responses: ' + FSchema.Components.Responses.ToString);
-      if Assigned(FSchema.Components.Parameters) then
-      WriteLn('  Parameters: ' + FSchema.Components.Parameters.ToString);
-      if Assigned(FSchema.Components.Examples) then
-      WriteLn('  Examples: ' + FSchema.Components.Examples.ToString);
-      if Assigned(FSchema.Components.RequestBodies) then
-      WriteLn('  Request Bodies: ' + FSchema.Components.RequestBodies.ToString);
-      if Assigned(FSchema.Components.Headers) then
-      WriteLn('  Headers: ' + FSchema.Components.Headers.ToString);
-      if Assigned(FSchema.Components.SecuritySchemes) then
-      WriteLn('  Security Schemes: ' + FSchema.Components.SecuritySchemes.ToString);
-      if Assigned(FSchema.Components.Links) then
-      WriteLn('  Links: ' + FSchema.Components.Links.ToString);
-      if Assigned(FSchema.Components.Callbacks) then
-      WriteLn('  Callbacks: ' + FSchema.Components.Callbacks.ToString);
-
-      // Example: Output security
-      for var SecurityRequirement in FSchema.Security do
-      begin
-      WriteLn('Security Requirement:');
-      for var RequirementPair in SecurityRequirement.Requirements do
-      begin
-      WriteLn('  Scheme: ' + RequirementPair.Key);
-      WriteLn('  Scopes: ' + string.Join(', ', RequirementPair.Value));
-      end;
-      end;
-
-      // Example: Output tags
-      for var Tag in FSchema.Tags do
-      begin
-      WriteLn('Tag: ' + Tag.Name);
-      WriteLn('  Description: ' + Tag.Description);
-      end;
-    *)
     Result := True;
   except
     on E: Exception do

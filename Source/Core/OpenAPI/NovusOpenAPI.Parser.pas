@@ -230,14 +230,13 @@ type
   TOpenAPI3Schema = class;
 
   // Class representing OpenAPI 3 Components
-  // Class representing OpenAPI 3 Components
   TOpenAPI3Components = class(TObject)
   private
     fSchemas: TObjectDictionary<string, TOpenAPI3Schema>;
     fResponses: TObjectDictionary<string, TOpenAPI3Response>;
     fParameters: TObjectDictionary<string, TOpenAPI3Parameter>;
-    fExamples: TObjectDictionary<string, TOpenAPI3Example>; // Changed from TJSONObject to TObjectDictionary
-    fRequestBodiesObj: TJSONObject;
+    fExamples: TObjectDictionary<string, TOpenAPI3Example>;
+    fRequestBodies: TObjectDictionary<string, TOpenAPI3RequestBody>; // Changed from TJSONObject to TObjectDictionary
     fHeadersObj: TJSONObject;
     fSecuritySchemesObj: TJSONObject;
     fLinksObj: TJSONObject;
@@ -249,15 +248,13 @@ type
     property Schemas: TObjectDictionary<string, TOpenAPI3Schema> read fSchemas write fSchemas;
     property Responses: TObjectDictionary<string, TOpenAPI3Response> read fResponses write fResponses;
     property Parameters: TObjectDictionary<string, TOpenAPI3Parameter> read fParameters write fParameters;
-    property Examples: TObjectDictionary<string, TOpenAPI3Example> read fExamples write fExamples; // Changed from TJSONObject to TObjectDictionary
-    property RequestBodies: TJSONObject read fRequestBodiesObj write fRequestBodiesObj;
+    property Examples: TObjectDictionary<string, TOpenAPI3Example> read fExamples write fExamples;
+    property RequestBodies: TObjectDictionary<string, TOpenAPI3RequestBody> read fRequestBodies write fRequestBodies; // Changed from TJSONObject to TObjectDictionary
     property Headers: TJSONObject read fHeadersObj write fHeadersObj;
     property SecuritySchemes: TJSONObject read fSecuritySchemesObj write fSecuritySchemesObj;
     property Links: TJSONObject read fLinksObj write fLinksObj;
     property Callbacks: TJSONObject read fCallbacksObj write fCallbacksObj;
   end;
-
-
 
   TOpenAPI3Tag = class(TObject)
   private
@@ -642,8 +639,8 @@ begin
   fSchemas := TObjectDictionary<string, TOpenAPI3Schema>.Create([doOwnsValues]);
   fResponses := TObjectDictionary<string, TOpenAPI3Response>.Create([doOwnsValues]);
   fParameters := TObjectDictionary<string, TOpenAPI3Parameter>.Create([doOwnsValues]);
-  fExamples := TObjectDictionary<string, TOpenAPI3Example>.Create([doOwnsValues]); // Initialize as TObjectDictionary
-  fRequestBodiesObj := TJSONObject.Create;
+  fExamples := TObjectDictionary<string, TOpenAPI3Example>.Create([doOwnsValues]);
+  fRequestBodies := TObjectDictionary<string, TOpenAPI3RequestBody>.Create([doOwnsValues]); // Initialize as TObjectDictionary
   fHeadersObj := TJSONObject.Create;
   fSecuritySchemesObj := TJSONObject.Create;
   fLinksObj := TJSONObject.Create;
@@ -655,8 +652,8 @@ begin
   fSchemas.Free;
   fResponses.Free;
   fParameters.Free;
-  fExamples.Free; // Free the TObjectDictionary
-  fRequestBodiesObj := nil;
+  fExamples.Free;
+  fRequestBodies.Free; // Free the TObjectDictionary
   fHeadersObj := nil;
   fSecuritySchemesObj := nil;
   fLinksObj := nil;
@@ -670,10 +667,12 @@ var
   ResponsePair: TJSONPair; // Variable to iterate over responses
   ParameterPair: TJSONPair; // Variable to iterate over parameters
   ExamplePair: TJSONPair; // Variable to iterate over examples
+  RequestBodyPair: TJSONPair; // Variable to iterate over request bodies
   FSchema: TOpenAPI3Schema;
   Response: TOpenAPI3Response; // Variable to hold response
   Parameter: TOpenAPI3Parameter; // Variable to hold parameter
   Example: TOpenAPI3Example; // Variable to hold example
+  RequestBody: TOpenAPI3RequestBody; // Variable to hold request body
 begin
   if Assigned(AJSONObject) then
   begin
@@ -713,19 +712,27 @@ begin
       Example := TOpenAPI3Example.Create;
       Example.Summary := tNovusJSONUtils.GetJSONStringValue(ExamplePair.JsonValue as TJSONObject, 'summary');
       Example.Description := tNovusJSONUtils.GetJSONStringValue(ExamplePair.JsonValue as TJSONObject, 'description');
-      Example.Value := tNovusJSONUtils.GetJSONObjectValue(ExamplePair.JsonValue as TJSONObject, 'value');
+      Example.Value :=  tNovusJSONUtils.GetJSONObjectValue(ResponsePair.JsonValue as TJSONObject, 'value');
       Example.ExternalValue := tNovusJSONUtils.GetJSONStringValue(ExamplePair.JsonValue as TJSONObject, 'externalValue');
       fExamples.Add(ExamplePair.JsonString.Value, Example);
     end;
 
-    fRequestBodiesObj := tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'requestBodies');
+    // Parse request bodies
+    for RequestBodyPair in tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'requestBodies') do
+    begin
+      RequestBody := TOpenAPI3RequestBody.Create;
+      RequestBody.Description := tNovusJSONUtils.GetJSONStringValue(RequestBodyPair.JsonValue as TJSONObject, 'description');
+      RequestBody.Content := tNovusJSONUtils.GetJSONObjectValue(RequestBodyPair.JsonValue as TJSONObject, 'content');
+      RequestBody.Required := tNovusJSONUtils.GetJSONBooleanValue(RequestBodyPair.JsonValue as TJSONObject, 'required');
+      fRequestBodies.Add(RequestBodyPair.JsonString.Value, RequestBody);
+    end;
+
     fHeadersObj := tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'headers');
     fSecuritySchemesObj := tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'securitySchemes');
     fLinksObj := tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'links');
     fCallbacksObj := tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'callbacks');
   end;
 end;
-
 
 // TOpenAPI3SecurityRequirement
 

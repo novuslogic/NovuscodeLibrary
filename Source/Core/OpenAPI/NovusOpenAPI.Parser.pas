@@ -8,6 +8,27 @@ uses
   System.Classes, NovusStringUtils;
 
 type
+  TOpenAPI3SecurityScheme = class(TObject)
+  private
+    fType: string;
+    fDescription: string;
+    fName: string;
+    fIn: string;
+    fScheme: string;
+    fBearerFormat: string;
+    fFlows: TJSONObject; // For OAuth2 flows
+    fOpenIdConnectUrl: string;
+  public
+    property Type_: string read fType write fType; // 'Type' is a reserved word in Delphi
+    property Description: string read fDescription write fDescription;
+    property Name: string read fName write fName;
+    property In_: string read fIn write fIn; // 'In' is a reserved word in Delphi
+    property Scheme: string read fScheme write fScheme;
+    property BearerFormat: string read fBearerFormat write fBearerFormat;
+    property Flows: TJSONObject read fFlows write fFlows;
+    property OpenIdConnectUrl: string read fOpenIdConnectUrl write fOpenIdConnectUrl;
+  end;
+
   TNovusOpenAPI3Header = class(TObject)
   private
     fName: string;
@@ -251,8 +272,8 @@ type
     fParameters: TObjectDictionary<string, TOpenAPI3Parameter>;
     fExamples: TObjectDictionary<string, TOpenAPI3Example>;
     fRequestBodies: TObjectDictionary<string, TOpenAPI3RequestBody>;
-    fHeaders: TObjectDictionary<string, TNovusOpenAPI3Header>; // Changed from TJSONObject to TObjectDictionary
-    fSecuritySchemesObj: TJSONObject;
+    fHeaders: TObjectDictionary<string, TNovusOpenAPI3Header>;
+    fSecuritySchemes: TObjectDictionary<string, TOpenAPI3SecurityScheme>;
     fLinksObj: TJSONObject;
     fCallbacksObj: TJSONObject;
   public
@@ -265,7 +286,7 @@ type
     property Examples: TObjectDictionary<string, TOpenAPI3Example> read fExamples write fExamples;
     property RequestBodies: TObjectDictionary<string, TOpenAPI3RequestBody> read fRequestBodies write fRequestBodies;
     property Headers: TObjectDictionary<string, TNovusOpenAPI3Header> read fHeaders write fHeaders;
-    property SecuritySchemes: TJSONObject read fSecuritySchemesObj write fSecuritySchemesObj;
+    property SecuritySchemes: TObjectDictionary<string, TOpenAPI3SecurityScheme> read fSecuritySchemes write fSecuritySchemes;
     property Links: TJSONObject read fLinksObj write fLinksObj;
     property Callbacks: TJSONObject read fCallbacksObj write fCallbacksObj;
   end;
@@ -655,11 +676,12 @@ begin
   fParameters := TObjectDictionary<string, TOpenAPI3Parameter>.Create([doOwnsValues]);
   fExamples := TObjectDictionary<string, TOpenAPI3Example>.Create([doOwnsValues]);
   fRequestBodies := TObjectDictionary<string, TOpenAPI3RequestBody>.Create([doOwnsValues]);
-  fHeaders := TObjectDictionary<string, TNovusOpenAPI3Header>.Create([doOwnsValues]); // Initialize as TObjectDictionary
-  fSecuritySchemesObj := TJSONObject.Create;
-  fLinksObj := TJSONObject.Create;
-  fCallbacksObj := TJSONObject.Create;
+  fHeaders := TObjectDictionary<string, TNovusOpenAPI3Header>.Create([doOwnsValues]);
+  fSecuritySchemes := TObjectDictionary<string, TOpenAPI3SecurityScheme>.Create([doOwnsValues]);
+  fLinksObj := NIL;
+  fCallbacksObj := Nil;
 end;
+
 destructor TOpenAPI3Components.Destroy;
 begin
   fSchemas.Free;
@@ -667,26 +689,23 @@ begin
   fParameters.Free;
   fExamples.Free;
   fRequestBodies.Free;
-  fHeaders.Free; // Free the TObjectDictionary
-  fSecuritySchemesObj := nil;
+  fHeaders.Free;
+  fSecuritySchemes.Free;
   fLinksObj := nil;
   fCallbacksObj := nil;
   inherited Destroy;
 end;
+
 procedure TOpenAPI3Components.ParseFromJSON(AJSONObject: TJSONObject);
 var
-  SchemaPair: TJSONPair;
-  ResponsePair: TJSONPair;
-  ParameterPair: TJSONPair;
-  ExamplePair: TJSONPair;
-  RequestBodyPair: TJSONPair;
-  HeaderPair: TJSONPair;
+  SchemaPair, ResponsePair, ParameterPair, ExamplePair, RequestBodyPair, HeaderPair, SecuritySchemePair: TJSONPair;
   FSchema: TOpenAPI3Schema;
   Response: TOpenAPI3Response;
   Parameter: TOpenAPI3Parameter;
   Example: TOpenAPI3Example;
   RequestBody: TOpenAPI3RequestBody;
   Header: TNovusOpenAPI3Header;
+  SecurityScheme: TOpenAPI3SecurityScheme;
 begin
   if Assigned(AJSONObject) then
   begin
@@ -719,7 +738,7 @@ begin
       Example := TOpenAPI3Example.Create;
       Example.Summary := tNovusJSONUtils.GetJSONStringValue(ExamplePair.JsonValue as TJSONObject, 'summary');
       Example.Description := tNovusJSONUtils.GetJSONStringValue(ExamplePair.JsonValue as TJSONObject, 'description');
-      Example.Value :=  tNovusJSONUtils.GetJSONObjectValue(ExamplePair.JsonValue as TJSONObject, 'value');
+      Example.Value := tNovusJSONUtils.GetJSONObjectValue(ExamplePair.JsonValue as TJSONObject, 'value');
       Example.ExternalValue := tNovusJSONUtils.GetJSONStringValue(ExamplePair.JsonValue as TJSONObject, 'externalValue');
       fExamples.Add(ExamplePair.JsonString.Value, Example);
     end;
@@ -741,11 +760,25 @@ begin
       Header.AllowEmptyValue := tNovusJSONUtils.GetJSONBooleanValue(HeaderPair.JsonValue as TJSONObject, 'allowEmptyValue');
       fHeaders.Add(HeaderPair.JsonString.Value, Header);
     end;
-    fSecuritySchemesObj := tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'securitySchemes');
+    for SecuritySchemePair in tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'securitySchemes') do
+    begin
+      SecurityScheme := TOpenAPI3SecurityScheme.Create;
+      SecurityScheme.Type_ := tNovusJSONUtils.GetJSONStringValue(SecuritySchemePair.JsonValue as TJSONObject, 'type');
+      SecurityScheme.Description := tNovusJSONUtils.GetJSONStringValue(SecuritySchemePair.JsonValue as TJSONObject, 'description');
+      SecurityScheme.Name := tNovusJSONUtils.GetJSONStringValue(SecuritySchemePair.JsonValue as TJSONObject, 'name');
+      SecurityScheme.In_ := tNovusJSONUtils.GetJSONStringValue(SecuritySchemePair.JsonValue as TJSONObject, 'in');
+      SecurityScheme.Scheme := tNovusJSONUtils.GetJSONStringValue(SecuritySchemePair.JsonValue as TJSONObject, 'scheme');
+      SecurityScheme.BearerFormat := tNovusJSONUtils.GetJSONStringValue(SecuritySchemePair.JsonValue as TJSONObject, 'bearerFormat');
+      SecurityScheme.Flows := tNovusJSONUtils.GetJSONObjectValue(SecuritySchemePair.JsonValue as TJSONObject, 'flows');
+      SecurityScheme.OpenIdConnectUrl := tNovusJSONUtils.GetJSONStringValue(SecuritySchemePair.JsonValue as TJSONObject, 'openIdConnectUrl');
+      fSecuritySchemes.Add(SecuritySchemePair.JsonString.Value, SecurityScheme);
+    end;
     fLinksObj := tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'links');
     fCallbacksObj := tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'callbacks');
   end;
 end;
+
+
 // TOpenAPI3SecurityRequirement
 
 constructor TOpenAPI3SecurityRequirement.Create;

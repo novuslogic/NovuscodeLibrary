@@ -63,6 +63,9 @@ procedure TNovusOpenAPICodegen.GenerateModelClasses;
 var
   Schema: TOpenAPI3Schema;
   ModelBuilder: TNovusStringBuilder;
+  PropertyPair: TJSONPair;
+  SchemaName, PropertyName, PropertyType: string;
+  PropertiesObject: TJSONObject;
 begin
   Schema := FParser.Schema;
   ModelBuilder := TNovusStringBuilder.Create;
@@ -70,24 +73,72 @@ begin
     // Iterate over the schemas and generate model classes
     for var Pair in Schema.Components.Schemas do
     begin
+      SchemaName := Pair.Key;
+      PropertiesObject := Pair.Value.Properties; // Accessing the new Properties property
+      
       ModelBuilder.Clear;
-      ModelBuilder.AppendLine('unit ' + GetNameSpace(Pair.Key) + ';');
+      ModelBuilder.AppendLine('unit ' + GetNameSpace(SchemaName) + ';');
       ModelBuilder.AppendLine('');
       ModelBuilder.AppendLine('interface');
       ModelBuilder.AppendLine('');
       ModelBuilder.AppendLine('type');
-      ModelBuilder.AppendLine('  T' + GetNameSpace(Pair.Key) + ' = class');
+      ModelBuilder.AppendLine('  T' + GetNameSpace(SchemaName) + ' = class');
       ModelBuilder.AppendLine('  private');
-      // Add fields based on the schema properties
+
+      // Iterate over properties and generate fields
+      if Assigned(PropertiesObject) then
+      begin
+        for PropertyPair in PropertiesObject do
+        begin
+          PropertyName := PropertyPair.JsonString.Value;
+          PropertyType := 'string'; // Default to string, adjust based on actual type
+          ModelBuilder.AppendLine('    F' + PropertyName + ': ' + PropertyType + ';');
+        end;
+      end;
+
       ModelBuilder.AppendLine('  public');
-      // Add properties based on the schema properties
+
+      // Generate getters and setters
+      if Assigned(PropertiesObject) then
+      begin
+        for PropertyPair in PropertiesObject do
+        begin
+          PropertyName := PropertyPair.JsonString.Value;
+          PropertyType := 'string'; // Default to string, adjust based on actual type
+          ModelBuilder.AppendLine('    function Get' + PropertyName + ': ' + PropertyType + ';');
+          ModelBuilder.AppendLine('    procedure Set' + PropertyName + '(const Value: ' + PropertyType + ');');
+          ModelBuilder.AppendLine('    property ' + PropertyName + ': ' + PropertyType + ' read Get' + PropertyName + ' write Set' + PropertyName + ';');
+        end;
+      end;
+
       ModelBuilder.AppendLine('  end;');
       ModelBuilder.AppendLine('');
       ModelBuilder.AppendLine('implementation');
       ModelBuilder.AppendLine('');
+
+      // Implement getters and setters
+      if Assigned(PropertiesObject) then
+      begin
+        for PropertyPair in PropertiesObject do
+        begin
+          PropertyName := PropertyPair.JsonString.Value;
+          PropertyType := 'string'; // Default to string, adjust based on actual type
+          ModelBuilder.AppendLine('function T' + GetNameSpace(SchemaName) + '.Get' + PropertyName + ': ' + PropertyType + ';');
+          ModelBuilder.AppendLine('begin');
+          ModelBuilder.AppendLine('  Result := F' + PropertyName + ';');
+          ModelBuilder.AppendLine('end;');
+          ModelBuilder.AppendLine('');
+          ModelBuilder.AppendLine('procedure T' + GetNameSpace(SchemaName) + '.Set' + PropertyName + '(const Value: ' + PropertyType + ');');
+          ModelBuilder.AppendLine('begin');
+          ModelBuilder.AppendLine('  F' + PropertyName + ' := Value;');
+          ModelBuilder.AppendLine('end;');
+          ModelBuilder.AppendLine('');
+        end;
+      end;
+
       ModelBuilder.AppendLine('end.');
 
-      WriteToFile(TNovusFileUtils.TrailingBackSlash(FOutputDir) + GetNameSpaceFilename(Pair.Key), ModelBuilder.ToString);
+      WriteToFile(TNovusFileUtils.TrailingBackSlash(FOutputDir) + GetNameSpaceFilename(SchemaName), ModelBuilder.ToString);
     end;
   finally
     ModelBuilder.Free;

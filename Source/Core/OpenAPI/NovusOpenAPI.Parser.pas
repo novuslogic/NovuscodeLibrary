@@ -353,6 +353,7 @@ type
     fWebhooks: TObjectDictionary<string, TObject>;
     fSecurity: TObjectList<TOpenAPI3SecurityRequirement>;
     fTags: TObjectList<TOpenAPI3Tag>;
+    fProperties: TJSONObject;
 
     procedure ParsePaths(AJSONObject: TJSONObject);
     procedure ParseServers(AJSONArray: TJSONArray);
@@ -374,6 +375,7 @@ type
     property Webhooks: TObjectDictionary<string, TObject> read fWebhooks write fWebhooks;
     property Security: TObjectList<TOpenAPI3SecurityRequirement> read fSecurity write fSecurity;
     property Tags: TObjectList<TOpenAPI3Tag> read fTags write fTags;
+    property Properties: TJSONObject read fProperties write fProperties;
   end;
 
   TNovusOpenAPIParser = class(TNovusObject)
@@ -1040,6 +1042,7 @@ procedure TOpenAPI3Schema.ParseFromJSON(AJSONObject: TJSONObject);
 var
   PathsObj, WebhooksObj, ComponentsObj: TJSONObject;
   ServersArray, SecurityArray, TagsArray: TJSONArray;
+  PropertiesObj: TJSONObject;
 begin
   if Assigned(AJSONObject) then
   begin
@@ -1085,6 +1088,13 @@ begin
     if Assigned(TagsArray) then
     begin
       ParseTags(TagsArray);
+    end;
+
+
+    PropertiesObj := tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'properties');
+    if Assigned(PropertiesObj) then
+    begin
+      fProperties := PropertiesObj.Clone as TJSONObject;
     end;
   end;
 end;

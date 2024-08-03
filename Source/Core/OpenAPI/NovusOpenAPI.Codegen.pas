@@ -9,8 +9,14 @@ uses
 type
   TNovusOpenAPICodegen = class(TNovusObject)
   private
+    FTitleClassname: String;
+    FUseFilenameSeparator: Boolean;
     FParser: TNovusOpenAPIParser;
     FOutputDir: string;
+
+
+    function GetNameSpaceFileName(Key: String): String;
+    function GetNameSpace(Key: String): String;
     procedure GenerateModelClasses;
     procedure GenerateAPIClasses;
     procedure WriteToFile(const AFileName, AContent: string);
@@ -19,6 +25,8 @@ type
     destructor Destroy; override;
     procedure GenerateCode;
     property OutputDir: string read FOutputDir write FOutputDir;
+    property TitleClassName: string read FTitleClassname write FTitleClassname;
+    property UseFilenameSeparator: boolean read FUseFilenameSeparator write FUseFilenameSeparator;
   end;
 
 implementation
@@ -44,7 +52,7 @@ procedure TNovusOpenAPICodegen.GenerateCode;
 begin
   try
     GenerateModelClasses;
-    GenerateAPIClasses;
+    //GenerateAPIClasses;
   except
     on E: Exception do
       WriteLn('Error generating code: ' + E.Message);
@@ -63,12 +71,12 @@ begin
     for var Pair in Schema.Components.Schemas do
     begin
       ModelBuilder.Clear;
-      ModelBuilder.AppendLine('unit ' + Pair.Key + 'Model;');
+      ModelBuilder.AppendLine('unit ' + GetNameSpace(Pair.Key) + ';');
       ModelBuilder.AppendLine('');
       ModelBuilder.AppendLine('interface');
       ModelBuilder.AppendLine('');
       ModelBuilder.AppendLine('type');
-      ModelBuilder.AppendLine('  T' + Pair.Key + ' = class');
+      ModelBuilder.AppendLine('  T' + GetNameSpace(Pair.Key) + ' = class');
       ModelBuilder.AppendLine('  private');
       // Add fields based on the schema properties
       ModelBuilder.AppendLine('  public');
@@ -79,7 +87,7 @@ begin
       ModelBuilder.AppendLine('');
       ModelBuilder.AppendLine('end.');
 
-      WriteToFile(TNovusFileUtils.TrailingBackSlash(FOutputDir) +Pair.Key + 'Model.pas', ModelBuilder.ToString);
+      WriteToFile(TNovusFileUtils.TrailingBackSlash(FOutputDir) + GetNameSpaceFilename(Pair.Key), ModelBuilder.ToString);
     end;
   finally
     ModelBuilder.Free;
@@ -129,6 +137,19 @@ begin
     on E: Exception do
       WriteLn('Error writing to file ' + AFileName + ': ' + E.Message);
   end;
+end;
+
+function TNovusOpenAPICodegen.GetNameSpace(Key: String): String;
+begin
+  Result := TitleClassName + Key;
+end;
+
+function TNovusOpenAPICodegen.GetNameSpaceFilename(Key: String): String;
+begin
+  if FUseFilenameSeparator then
+     Result := Format('%s.%s.pas', [TitleClassName, Key])
+  else
+    Result := Format('%s.%s.pas', [TitleClassName, Key]);
 end;
 
 end.

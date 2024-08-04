@@ -14,12 +14,12 @@ type
     FParser: TNovusOpenAPIParser;
     FOutputDir: string;
 
-
     function GetNameSpaceFileName(Key: String): String;
     function GetNameSpace(Key: String): String;
     procedure GenerateModelClasses;
     procedure GenerateAPIClasses;
     procedure WriteToFile(const AFileName, AContent: string);
+    function MapOpenAPITypeToDelphiType(const OpenAPIType, OpenAPIFormat: string): string;
   public
     constructor Create(aParser: TNovusOpenAPIParser; aOutputDir: string);
     destructor Destroy; override;
@@ -63,9 +63,9 @@ procedure TNovusOpenAPICodegen.GenerateModelClasses;
 var
   Schema: TOpenAPI3Schema;
   ModelBuilder: TNovusStringBuilder;
-  PropertyPair: TJSONPair;
-  SchemaName, PropertyName, PropertyType: string;
-  PropertiesObject: TJSONObject;
+  SchemaName: string;
+  PropertyPair: TPair<string, TOpenAPI3Property>;
+  PropertyName, PropertyType: string;
 begin
   Schema := FParser.Schema;
   ModelBuilder := TNovusStringBuilder.Create;
@@ -74,8 +74,6 @@ begin
     for var Pair in Schema.Components.Schemas do
     begin
       SchemaName := Pair.Key;
-      PropertiesObject := Pair.Value.Properties; // Accessing the new Properties property
-      
       ModelBuilder.Clear;
       ModelBuilder.AppendLine('unit ' + GetNameSpace(SchemaName) + ';');
       ModelBuilder.AppendLine('');
@@ -86,29 +84,23 @@ begin
       ModelBuilder.AppendLine('  private');
 
       // Iterate over properties and generate fields
-      if Assigned(PropertiesObject) then
+      for PropertyPair in Pair.Value.Properties do
       begin
-        for PropertyPair in PropertiesObject do
-        begin
-          PropertyName := PropertyPair.JsonString.Value;
-          PropertyType := 'string'; // Default to string, adjust based on actual type
-          ModelBuilder.AppendLine('    F' + PropertyName + ': ' + PropertyType + ';');
-        end;
+        PropertyName := PropertyPair.Value.Name;
+        PropertyType := MapOpenAPITypeToDelphiType(PropertyPair.Value.Type_, PropertyPair.Value.Format);
+        ModelBuilder.AppendLine('    F' + PropertyName + ': ' + PropertyType + ';');
       end;
 
       ModelBuilder.AppendLine('  public');
 
       // Generate getters and setters
-      if Assigned(PropertiesObject) then
+      for PropertyPair in Pair.Value.Properties do
       begin
-        for PropertyPair in PropertiesObject do
-        begin
-          PropertyName := PropertyPair.JsonString.Value;
-          PropertyType := 'string'; // Default to string, adjust based on actual type
-          ModelBuilder.AppendLine('    function Get' + PropertyName + ': ' + PropertyType + ';');
-          ModelBuilder.AppendLine('    procedure Set' + PropertyName + '(const Value: ' + PropertyType + ');');
-          ModelBuilder.AppendLine('    property ' + PropertyName + ': ' + PropertyType + ' read Get' + PropertyName + ' write Set' + PropertyName + ';');
-        end;
+        PropertyName := PropertyPair.Value.Name;
+        PropertyType := MapOpenAPITypeToDelphiType(PropertyPair.Value.Type_, PropertyPair.Value.Format);
+        ModelBuilder.AppendLine('    function Get' + PropertyName + ': ' + PropertyType + ';');
+        ModelBuilder.AppendLine('    procedure Set' + PropertyName + '(const Value: ' + PropertyType + ');');
+        ModelBuilder.AppendLine('    property ' + PropertyName + ': ' + PropertyType + ' read Get' + PropertyName + ' write Set' + PropertyName + ';');
       end;
 
       ModelBuilder.AppendLine('  end;');
@@ -117,23 +109,20 @@ begin
       ModelBuilder.AppendLine('');
 
       // Implement getters and setters
-      if Assigned(PropertiesObject) then
+      for PropertyPair in Pair.Value.Properties do
       begin
-        for PropertyPair in PropertiesObject do
-        begin
-          PropertyName := PropertyPair.JsonString.Value;
-          PropertyType := 'string'; // Default to string, adjust based on actual type
-          ModelBuilder.AppendLine('function T' + GetNameSpace(SchemaName) + '.Get' + PropertyName + ': ' + PropertyType + ';');
-          ModelBuilder.AppendLine('begin');
-          ModelBuilder.AppendLine('  Result := F' + PropertyName + ';');
-          ModelBuilder.AppendLine('end;');
-          ModelBuilder.AppendLine('');
-          ModelBuilder.AppendLine('procedure T' + GetNameSpace(SchemaName) + '.Set' + PropertyName + '(const Value: ' + PropertyType + ');');
-          ModelBuilder.AppendLine('begin');
-          ModelBuilder.AppendLine('  F' + PropertyName + ' := Value;');
-          ModelBuilder.AppendLine('end;');
-          ModelBuilder.AppendLine('');
-        end;
+        PropertyName := PropertyPair.Value.Name;
+        PropertyType := MapOpenAPITypeToDelphiType(PropertyPair.Value.Type_, PropertyPair.Value.Format);
+        ModelBuilder.AppendLine('function T' + GetNameSpace(SchemaName) + '.Get' + PropertyName + ': ' + PropertyType + ';');
+        ModelBuilder.AppendLine('begin');
+        ModelBuilder.AppendLine('  Result := F' + PropertyName + ';');
+        ModelBuilder.AppendLine('end;');
+        ModelBuilder.AppendLine('');
+        ModelBuilder.AppendLine('procedure T' + GetNameSpace(SchemaName) + '.Set' + PropertyName + '(const Value: ' + PropertyType + ');');
+        ModelBuilder.AppendLine('begin');
+        ModelBuilder.AppendLine('  F' + PropertyName + ' := Value;');
+        ModelBuilder.AppendLine('end;');
+        ModelBuilder.AppendLine('');
       end;
 
       ModelBuilder.AppendLine('end.');
@@ -201,6 +190,22 @@ begin
      Result := Format('%s.%s.pas', [TitleClassName, Key])
   else
     Result := Format('%s.%s.pas', [TitleClassName, Key]);
+end;
+
+function TNovusOpenAPICodegen.MapOpenAPITypeToDelphiType(const OpenAPIType, OpenAPIFormat: string): string;
+begin
+  if OpenAPIType = 'string' then
+    Result := 'string'
+  else if OpenAPIType = 'integer' then
+    Result := 'Integer'
+  else if OpenAPIType = 'boolean' then
+    Result := 'Boolean'
+  else if (OpenAPIType = 'number') and (OpenAPIFormat = 'float') then
+    Result := 'Single'
+  else if (OpenAPIType = 'number') and (OpenAPIFormat = 'double') then
+    Result := 'Double'
+  else
+    Result := 'string'; // Default to string if type is unknown
 end;
 
 end.

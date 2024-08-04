@@ -8,6 +8,32 @@ uses
   System.Classes, NovusStringUtils;
 
 type
+  TOpenAPI3Property = class(TObject)
+  private
+    fName: string;
+    fType: string;
+    fDescription: string;
+    fFormat: string;
+    fItems: TJSONObject; // For array types
+    fProperties: TObjectDictionary<string, TOpenAPI3Property>;
+    // For object types
+    fRequired: Boolean;
+  public
+    constructor Create;
+    destructor Destroy; override;
+    procedure ParseFromJSON(AJSONObject: TJSONObject);
+
+    property Name: string read fName write fName;
+    property Type_: string read fType write fType;
+    // 'Type' is a reserved word in Delphi
+    property Description: string read fDescription write fDescription;
+    property Format: string read fFormat write fFormat;
+    property Items: TJSONObject read fItems write fItems;
+    property Properties: TObjectDictionary<string, TOpenAPI3Property>
+      read fProperties write fProperties;
+    property Required: Boolean read fRequired write fRequired;
+  end;
+
   TOpenAPI3Link = class(TObject)
   private
     fOperationRef: string;
@@ -40,14 +66,17 @@ type
     fFlows: TJSONObject; // For OAuth2 flows
     fOpenIdConnectUrl: string;
   public
-    property Type_: string read fType write fType; // 'Type' is a reserved word in Delphi
+    property Type_: string read fType write fType;
+    // 'Type' is a reserved word in Delphi
     property Description: string read fDescription write fDescription;
     property Name: string read fName write fName;
-    property In_: string read fIn write fIn; // 'In' is a reserved word in Delphi
+    property In_: string read fIn write fIn;
+    // 'In' is a reserved word in Delphi
     property Scheme: string read fScheme write fScheme;
     property BearerFormat: string read fBearerFormat write fBearerFormat;
     property Flows: TJSONObject read fFlows write fFlows;
-    property OpenIdConnectUrl: string read fOpenIdConnectUrl write fOpenIdConnectUrl;
+    property OpenIdConnectUrl: string read fOpenIdConnectUrl
+      write fOpenIdConnectUrl;
   end;
 
   TNovusOpenAPI3Header = class(TObject)
@@ -62,7 +91,8 @@ type
     property Description: string read fDescription write fDescription;
     property Required: Boolean read fRequired write fRequired;
     property Deprecated: Boolean read fDeprecated write fDeprecated;
-    property AllowEmptyValue: Boolean read fAllowEmptyValue write fAllowEmptyValue;
+    property AllowEmptyValue: Boolean read fAllowEmptyValue
+      write fAllowEmptyValue;
   end;
 
   TOpenAPI3Example = class(TObject)
@@ -78,7 +108,6 @@ type
     property ExternalValue: string read fExternalValue write fExternalValue;
   end;
 
-
   TOpenAPI3SecurityRequirement = class(TObject)
   private
     fRequirements: TObjectDictionary<string, TArray<string>>;
@@ -86,7 +115,7 @@ type
     constructor Create;
     destructor Destroy; override;
     procedure ParseFromJSON(AJSONArray: TJSONArray);
-    property Requirements: TObjectDictionary<string, TArray<string>>
+    property Requirements: TObjectDictionary < string, TArray < string >>
       read fRequirements write fRequirements;
   end;
 
@@ -301,14 +330,22 @@ type
     constructor Create;
     destructor Destroy; override;
     procedure ParseFromJSON(AJSONObject: TJSONObject);
-    property Schemas: TObjectDictionary<string, TOpenAPI3Schema> read fSchemas write fSchemas;
-    property Responses: TObjectDictionary<string, TOpenAPI3Response> read fResponses write fResponses;
-    property Parameters: TObjectDictionary<string, TOpenAPI3Parameter> read fParameters write fParameters;
-    property Examples: TObjectDictionary<string, TOpenAPI3Example> read fExamples write fExamples;
-    property RequestBodies: TObjectDictionary<string, TOpenAPI3RequestBody> read fRequestBodies write fRequestBodies;
-    property Headers: TObjectDictionary<string, TNovusOpenAPI3Header> read fHeaders write fHeaders;
-    property SecuritySchemes: TObjectDictionary<string, TOpenAPI3SecurityScheme> read fSecuritySchemes write fSecuritySchemes;
-    property Links: TObjectDictionary<string, TOpenAPI3Link> read fLinks write fLinks;
+    property Schemas: TObjectDictionary<string, TOpenAPI3Schema> read fSchemas
+      write fSchemas;
+    property Responses: TObjectDictionary<string, TOpenAPI3Response>
+      read fResponses write fResponses;
+    property Parameters: TObjectDictionary<string, TOpenAPI3Parameter>
+      read fParameters write fParameters;
+    property Examples: TObjectDictionary<string, TOpenAPI3Example>
+      read fExamples write fExamples;
+    property RequestBodies: TObjectDictionary<string, TOpenAPI3RequestBody>
+      read fRequestBodies write fRequestBodies;
+    property Headers: TObjectDictionary<string, TNovusOpenAPI3Header>
+      read fHeaders write fHeaders;
+    property SecuritySchemes: TObjectDictionary<string, TOpenAPI3SecurityScheme>
+      read fSecuritySchemes write fSecuritySchemes;
+    property Links: TObjectDictionary<string, TOpenAPI3Link> read fLinks
+      write fLinks;
     property Callbacks: TOpenAPI3Callbacks read fCallbacks write fCallbacks;
   end;
 
@@ -353,29 +390,36 @@ type
     fWebhooks: TObjectDictionary<string, TObject>;
     fSecurity: TObjectList<TOpenAPI3SecurityRequirement>;
     fTags: TObjectList<TOpenAPI3Tag>;
-    fProperties: TJSONObject;
-
+    fProperties: TObjectDictionary<string, TOpenAPI3Property>;
+    // Updated to dictionary
     procedure ParsePaths(AJSONObject: TJSONObject);
     procedure ParseServers(AJSONArray: TJSONArray);
     procedure ParseWebhooks(AJSONObject: TJSONObject);
     procedure ParseSecurity(AJSONArray: TJSONArray);
     procedure ParseTags(AJSONArray: TJSONArray);
+    procedure ParseProperties(AJSONObject: TJSONObject);
+    // New method to parse properties
   public
     constructor Create;
     destructor Destroy; override;
-    procedure ParseFromJSON(AJSONObject: TJSONObject); // Add this method
+    procedure ParseFromJSON(AJSONObject: TJSONObject);
 
     property Openapi: string read fOpenapi write fOpenapi;
-    property JsonSchemaDialect: string read fJsonSchemaDialect write fJsonSchemaDialect;
+    property JsonSchemaDialect: string read fJsonSchemaDialect
+      write fJsonSchemaDialect;
     property Info: TOpenAPI3Info read fInfo write fInfo;
     property InfoObj: TJSONObject read fInfoObj write fInfoObj;
-    property Paths: TObjectDictionary<string, TOpenAPI3Path> read fPaths write fPaths;
+    property Paths: TObjectDictionary<string, TOpenAPI3Path> read fPaths
+      write fPaths;
     property Components: TOpenAPI3Components read fComponents write fComponents;
     property Servers: TObjectList<TOpenAPI3Server> read fServers write fServers;
-    property Webhooks: TObjectDictionary<string, TObject> read fWebhooks write fWebhooks;
-    property Security: TObjectList<TOpenAPI3SecurityRequirement> read fSecurity write fSecurity;
+    property Webhooks: TObjectDictionary<string, TObject> read fWebhooks
+      write fWebhooks;
+    property Security: TObjectList<TOpenAPI3SecurityRequirement> read fSecurity
+      write fSecurity;
     property Tags: TObjectList<TOpenAPI3Tag> read fTags write fTags;
-    property Properties: TJSONObject read fProperties write fProperties;
+    property Properties: TObjectDictionary<string, TOpenAPI3Property>
+      read fProperties write fProperties;
   end;
 
   TNovusOpenAPIParser = class(TNovusObject)
@@ -694,12 +738,18 @@ constructor TOpenAPI3Components.Create;
 begin
   inherited Create;
   fSchemas := TObjectDictionary<string, TOpenAPI3Schema>.Create([doOwnsValues]);
-  fResponses := TObjectDictionary<string, TOpenAPI3Response>.Create([doOwnsValues]);
-  fParameters := TObjectDictionary<string, TOpenAPI3Parameter>.Create([doOwnsValues]);
-  fExamples := TObjectDictionary<string, TOpenAPI3Example>.Create([doOwnsValues]);
-  fRequestBodies := TObjectDictionary<string, TOpenAPI3RequestBody>.Create([doOwnsValues]);
-  fHeaders := TObjectDictionary<string, TNovusOpenAPI3Header>.Create([doOwnsValues]);
-  fSecuritySchemes := TObjectDictionary<string, TOpenAPI3SecurityScheme>.Create([doOwnsValues]);
+  fResponses := TObjectDictionary<string, TOpenAPI3Response>.Create
+    ([doOwnsValues]);
+  fParameters := TObjectDictionary<string, TOpenAPI3Parameter>.Create
+    ([doOwnsValues]);
+  fExamples := TObjectDictionary<string, TOpenAPI3Example>.Create
+    ([doOwnsValues]);
+  fRequestBodies := TObjectDictionary<string, TOpenAPI3RequestBody>.Create
+    ([doOwnsValues]);
+  fHeaders := TObjectDictionary<string, TNovusOpenAPI3Header>.Create
+    ([doOwnsValues]);
+  fSecuritySchemes := TObjectDictionary<string, TOpenAPI3SecurityScheme>.Create
+    ([doOwnsValues]);
   fLinks := TObjectDictionary<string, TOpenAPI3Link>.Create([doOwnsValues]);
   fCallbacks := TOpenAPI3Callbacks.Create; // Initialize the new property
 end;
@@ -720,7 +770,8 @@ end;
 
 procedure TOpenAPI3Components.ParseFromJSON(AJSONObject: TJSONObject);
 var
-  SchemaPair, ResponsePair, ParameterPair, ExamplePair, RequestBodyPair, HeaderPair, SecuritySchemePair, LinkPair: TJSONPair;
+  SchemaPair, ResponsePair, ParameterPair, ExamplePair, RequestBodyPair,
+    HeaderPair, SecuritySchemePair, LinkPair: TJSONPair;
   FSchema: TOpenAPI3Schema;
   Response: TOpenAPI3Response;
   Parameter: TOpenAPI3Parameter;
@@ -732,131 +783,174 @@ var
 begin
   if Assigned(AJSONObject) then
   begin
-    for SchemaPair in tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'schemas') do
+    for SchemaPair in tNovusJSONUtils.GetJSONObjectValue(AJSONObject,
+      'schemas') do
     begin
       If Assigned(SchemaPair) then
-        begin
-          FSchema := TOpenAPI3Schema.Create;
-          FSchema.ParseFromJSON(SchemaPair.JsonValue as TJSONObject);
-          fSchemas.Add(SchemaPair.JsonString.Value, FSchema);
-        end;
+      begin
+        FSchema := TOpenAPI3Schema.Create;
+        FSchema.ParseFromJSON(SchemaPair.JsonValue as TJSONObject);
+        fSchemas.Add(SchemaPair.JsonString.Value, FSchema);
+      end;
     end;
 
-    if Assigned(tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'responses')) then
-      begin
-        for ResponsePair in tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'responses') do
-        begin
-          if Assigned(ResponsePair) then
-            begin
-              Response := TOpenAPI3Response.Create;
-              Response.Description := tNovusJSONUtils.GetJSONStringValue(ResponsePair.JsonValue as TJSONObject, 'description');
-              Response.Content := tNovusJSONUtils.GetJSONObjectValue(ResponsePair.JsonValue as TJSONObject, 'content');
-              fResponses.Add(ResponsePair.JsonString.Value, Response);
-            end;
-        end;
-     end;
-
-    If Assigned(tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'parameters')) then
-
-    for ParameterPair in tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'parameters') do
+    if Assigned(tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'responses'))
+    then
     begin
-      if Assigned(ParameterPair) then
+      for ResponsePair in tNovusJSONUtils.GetJSONObjectValue(AJSONObject,
+        'responses') do
+      begin
+        if Assigned(ResponsePair) then
+        begin
+          Response := TOpenAPI3Response.Create;
+          Response.Description := tNovusJSONUtils.GetJSONStringValue
+            (ResponsePair.JsonValue as TJSONObject, 'description');
+          Response.Content := tNovusJSONUtils.GetJSONObjectValue
+            (ResponsePair.JsonValue as TJSONObject, 'content');
+          fResponses.Add(ResponsePair.JsonString.Value, Response);
+        end;
+      end;
+    end;
+
+    If Assigned(tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'parameters'))
+    then
+
+      for ParameterPair in tNovusJSONUtils.GetJSONObjectValue(AJSONObject,
+        'parameters') do
+      begin
+        if Assigned(ParameterPair) then
         begin
           Parameter := TOpenAPI3Parameter.Create;
-          Parameter.Name := tNovusJSONUtils.GetJSONStringValue(ParameterPair.JsonValue as TJSONObject, 'name');
-          Parameter.InLocation := tNovusJSONUtils.GetJSONStringValue(ParameterPair.JsonValue as TJSONObject, 'in');
-          Parameter.Description := tNovusJSONUtils.GetJSONStringValue(ParameterPair.JsonValue as TJSONObject, 'description');
-          Parameter.Required := tNovusJSONUtils.GetJSONBooleanValue(ParameterPair.JsonValue as TJSONObject, 'required');
-          Parameter.Deprecated := tNovusJSONUtils.GetJSONBooleanValue(ParameterPair.JsonValue as TJSONObject, 'deprecated');
-          Parameter.AllowEmptyValue := tNovusJSONUtils.GetJSONBooleanValue(ParameterPair.JsonValue as TJSONObject, 'allowEmptyValue');
+          Parameter.Name := tNovusJSONUtils.GetJSONStringValue
+            (ParameterPair.JsonValue as TJSONObject, 'name');
+          Parameter.InLocation := tNovusJSONUtils.GetJSONStringValue
+            (ParameterPair.JsonValue as TJSONObject, 'in');
+          Parameter.Description := tNovusJSONUtils.GetJSONStringValue
+            (ParameterPair.JsonValue as TJSONObject, 'description');
+          Parameter.Required := tNovusJSONUtils.GetJSONBooleanValue
+            (ParameterPair.JsonValue as TJSONObject, 'required');
+          Parameter.Deprecated := tNovusJSONUtils.GetJSONBooleanValue
+            (ParameterPair.JsonValue as TJSONObject, 'deprecated');
+          Parameter.AllowEmptyValue := tNovusJSONUtils.GetJSONBooleanValue
+            (ParameterPair.JsonValue as TJSONObject, 'allowEmptyValue');
           fParameters.Add(ParameterPair.JsonString.Value, Parameter);
         end;
+      end;
+
+    if Assigned(tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'examples'))
+    then
+    begin
+      for ExamplePair in tNovusJSONUtils.GetJSONObjectValue(AJSONObject,
+        'examples') do
+      begin
+        if Assigned(ExamplePair) then
+        begin
+          Example := TOpenAPI3Example.Create;
+          Example.Summary := tNovusJSONUtils.GetJSONStringValue
+            (ExamplePair.JsonValue as TJSONObject, 'summary');
+          Example.Description := tNovusJSONUtils.GetJSONStringValue
+            (ExamplePair.JsonValue as TJSONObject, 'description');
+          Example.Value := tNovusJSONUtils.GetJSONObjectValue
+            (ExamplePair.JsonValue as TJSONObject, 'value');
+          Example.ExternalValue := tNovusJSONUtils.GetJSONStringValue
+            (ExamplePair.JsonValue as TJSONObject, 'externalValue');
+          fExamples.Add(ExamplePair.JsonString.Value, Example);
+        end;
+      end;
     end;
 
-    if Assigned(tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'examples')) then
-       begin
-          for ExamplePair in tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'examples') do
-          begin
-            if Assigned(ParameterPair) then
-              begin
-                Example := TOpenAPI3Example.Create;
-                Example.Summary := tNovusJSONUtils.GetJSONStringValue(ExamplePair.JsonValue as TJSONObject, 'summary');
-                Example.Description := tNovusJSONUtils.GetJSONStringValue(ExamplePair.JsonValue as TJSONObject, 'description');
-                Example.Value := tNovusJSONUtils.GetJSONObjectValue(ExamplePair.JsonValue as TJSONObject, 'value');
-                Example.ExternalValue := tNovusJSONUtils.GetJSONStringValue(ExamplePair.JsonValue as TJSONObject, 'externalValue');
-                fExamples.Add(ExamplePair.JsonString.Value, Example);
-              end;
-          end;
-       end;
-
-    if Assigned(tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'requestBodies')) then
+    if Assigned(tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'requestBodies'))
+    then
+    begin
+      for RequestBodyPair in tNovusJSONUtils.GetJSONObjectValue(AJSONObject,
+        'requestBodies') do
       begin
-        for RequestBodyPair in tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'requestBodies') do
+        if Assigned(RequestBodyPair) then
         begin
-          if Assigned(RequestBodyPair) then
-            begin
-              RequestBody := TOpenAPI3RequestBody.Create;
-              RequestBody.Description := tNovusJSONUtils.GetJSONStringValue(RequestBodyPair.JsonValue as TJSONObject, 'description');
-              RequestBody.Content := tNovusJSONUtils.GetJSONObjectValue(RequestBodyPair.JsonValue as TJSONObject, 'content');
-              RequestBody.Required := tNovusJSONUtils.GetJSONBooleanValue(RequestBodyPair.JsonValue as TJSONObject, 'required');
-              fRequestBodies.Add(RequestBodyPair.JsonString.Value, RequestBody);
-            end;
+          RequestBody := TOpenAPI3RequestBody.Create;
+          RequestBody.Description := tNovusJSONUtils.GetJSONStringValue
+            (RequestBodyPair.JsonValue as TJSONObject, 'description');
+          RequestBody.Content := tNovusJSONUtils.GetJSONObjectValue
+            (RequestBodyPair.JsonValue as TJSONObject, 'content');
+          RequestBody.Required := tNovusJSONUtils.GetJSONBooleanValue
+            (RequestBodyPair.JsonValue as TJSONObject, 'required');
+          fRequestBodies.Add(RequestBodyPair.JsonString.Value, RequestBody);
         end;
       end;
+    end;
 
     if Assigned(tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'headers')) then
-       begin
-          for HeaderPair in tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'headers') do
-          begin
-            if Assigned(HeaderPair) then
-              begin
-                Header := TNovusOpenAPI3Header.Create;
-                Header.Name := tNovusJSONUtils.GetJSONStringValue(HeaderPair.JsonValue as TJSONObject, 'name');
-                Header.Description := tNovusJSONUtils.GetJSONStringValue(HeaderPair.JsonValue as TJSONObject, 'description');
-                Header.Required := tNovusJSONUtils.GetJSONBooleanValue(HeaderPair.JsonValue as TJSONObject, 'required');
-                Header.Deprecated := tNovusJSONUtils.GetJSONBooleanValue(HeaderPair.JsonValue as TJSONObject, 'deprecated');
-                Header.AllowEmptyValue := tNovusJSONUtils.GetJSONBooleanValue(HeaderPair.JsonValue as TJSONObject, 'allowEmptyValue');
-                fHeaders.Add(HeaderPair.JsonString.Value, Header);
-              end;
-          end;
-       end;
-
-    if Assigned(tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'securitySchemes')) then
-       begin
-          for SecuritySchemePair in tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'securitySchemes') do
-          begin
-            if Assigned(SecuritySchemePair) then
-              begin
-                SecurityScheme := TOpenAPI3SecurityScheme.Create;
-                SecurityScheme.Type_ := tNovusJSONUtils.GetJSONStringValue(SecuritySchemePair.JsonValue as TJSONObject, 'type');
-                SecurityScheme.Description := tNovusJSONUtils.GetJSONStringValue(SecuritySchemePair.JsonValue as TJSONObject, 'description');
-                SecurityScheme.Name := tNovusJSONUtils.GetJSONStringValue(SecuritySchemePair.JsonValue as TJSONObject, 'name');
-                SecurityScheme.In_ := tNovusJSONUtils.GetJSONStringValue(SecuritySchemePair.JsonValue as TJSONObject, 'in');
-                SecurityScheme.Scheme := tNovusJSONUtils.GetJSONStringValue(SecuritySchemePair.JsonValue as TJSONObject, 'scheme');
-                SecurityScheme.BearerFormat := tNovusJSONUtils.GetJSONStringValue(SecuritySchemePair.JsonValue as TJSONObject, 'bearerFormat');
-                SecurityScheme.Flows := tNovusJSONUtils.GetJSONObjectValue(SecuritySchemePair.JsonValue as TJSONObject, 'flows');
-                SecurityScheme.OpenIdConnectUrl := tNovusJSONUtils.GetJSONStringValue(SecuritySchemePair.JsonValue as TJSONObject, 'openIdConnectUrl');
-                fSecuritySchemes.Add(SecuritySchemePair.JsonString.Value, SecurityScheme);
-              end;
-          end;
-       end;
-
-    if Assigned(tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'links')) then
+    begin
+      for HeaderPair in tNovusJSONUtils.GetJSONObjectValue(AJSONObject,
+        'headers') do
       begin
-        for LinkPair in tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'links') do
+        if Assigned(HeaderPair) then
         begin
-          if Assigned(LinkPair) then
-            begin
-              Link := TOpenAPI3Link.Create;
-              Link.ParseFromJSON(LinkPair.JsonValue as TJSONObject);
-              fLinks.Add(LinkPair.JsonString.Value, Link);
-            end;
+          Header := TNovusOpenAPI3Header.Create;
+          Header.Name := tNovusJSONUtils.GetJSONStringValue
+            (HeaderPair.JsonValue as TJSONObject, 'name');
+          Header.Description := tNovusJSONUtils.GetJSONStringValue
+            (HeaderPair.JsonValue as TJSONObject, 'description');
+          Header.Required := tNovusJSONUtils.GetJSONBooleanValue
+            (HeaderPair.JsonValue as TJSONObject, 'required');
+          Header.Deprecated := tNovusJSONUtils.GetJSONBooleanValue
+            (HeaderPair.JsonValue as TJSONObject, 'deprecated');
+          Header.AllowEmptyValue := tNovusJSONUtils.GetJSONBooleanValue
+            (HeaderPair.JsonValue as TJSONObject, 'allowEmptyValue');
+          fHeaders.Add(HeaderPair.JsonString.Value, Header);
         end;
       end;
+    end;
+
+    if Assigned(tNovusJSONUtils.GetJSONObjectValue(AJSONObject,
+      'securitySchemes')) then
+    begin
+      for SecuritySchemePair in tNovusJSONUtils.GetJSONObjectValue(AJSONObject,
+        'securitySchemes') do
+      begin
+        if Assigned(SecuritySchemePair) then
+        begin
+          SecurityScheme := TOpenAPI3SecurityScheme.Create;
+          SecurityScheme.Type_ := tNovusJSONUtils.GetJSONStringValue
+            (SecuritySchemePair.JsonValue as TJSONObject, 'type');
+          SecurityScheme.Description := tNovusJSONUtils.GetJSONStringValue
+            (SecuritySchemePair.JsonValue as TJSONObject, 'description');
+          SecurityScheme.Name := tNovusJSONUtils.GetJSONStringValue
+            (SecuritySchemePair.JsonValue as TJSONObject, 'name');
+          SecurityScheme.In_ := tNovusJSONUtils.GetJSONStringValue
+            (SecuritySchemePair.JsonValue as TJSONObject, 'in');
+          SecurityScheme.Scheme := tNovusJSONUtils.GetJSONStringValue
+            (SecuritySchemePair.JsonValue as TJSONObject, 'scheme');
+          SecurityScheme.BearerFormat := tNovusJSONUtils.GetJSONStringValue
+            (SecuritySchemePair.JsonValue as TJSONObject, 'bearerFormat');
+          SecurityScheme.Flows := tNovusJSONUtils.GetJSONObjectValue
+            (SecuritySchemePair.JsonValue as TJSONObject, 'flows');
+          SecurityScheme.OpenIdConnectUrl := tNovusJSONUtils.GetJSONStringValue
+            (SecuritySchemePair.JsonValue as TJSONObject, 'openIdConnectUrl');
+          fSecuritySchemes.Add(SecuritySchemePair.JsonString.Value,
+            SecurityScheme);
+        end;
+      end;
+    end;
+
+    if Assigned(tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'links')) then
+    begin
+      for LinkPair in tNovusJSONUtils.GetJSONObjectValue(AJSONObject,
+        'links') do
+      begin
+        if Assigned(LinkPair) then
+        begin
+          Link := TOpenAPI3Link.Create;
+          Link.ParseFromJSON(LinkPair.JsonValue as TJSONObject);
+          fLinks.Add(LinkPair.JsonString.Value, Link);
+        end;
+      end;
+    end;
 
     if Assigned(AJSONObject.GetValue('callbacks')) then
     begin
-      fCallbacks.ParseFromJSON(AJSONObject.GetValue('callbacks') as TJSONObject);
+      fCallbacks.ParseFromJSON(AJSONObject.GetValue('callbacks')
+        as TJSONObject);
     end;
   end;
 end;
@@ -866,7 +960,7 @@ end;
 constructor TOpenAPI3SecurityRequirement.Create;
 begin
   inherited Create;
-  fRequirements := TObjectDictionary<string, TArray<string>>.Create;
+  fRequirements := TObjectDictionary < string, TArray < string >>.Create;
 end;
 
 destructor TOpenAPI3SecurityRequirement.Destroy;
@@ -917,6 +1011,8 @@ begin
   fWebhooks := TObjectDictionary<string, TObject>.Create([doOwnsValues]);
   fSecurity := TObjectList<TOpenAPI3SecurityRequirement>.Create;
   fTags := TObjectList<TOpenAPI3Tag>.Create;
+  fProperties := TObjectDictionary<string, TOpenAPI3Property>.Create
+    ([doOwnsValues]); // Initialize properties dictionary
 end;
 
 destructor TOpenAPI3Schema.Destroy;
@@ -929,7 +1025,26 @@ begin
   fWebhooks.Free;
   fSecurity.Free;
   fTags.Free;
+  fProperties.Free; // Free properties dictionary
   inherited Destroy;
+end;
+
+procedure TOpenAPI3Schema.ParseProperties(AJSONObject: TJSONObject);
+var
+  PropertyPair: TJSONPair;
+  PropertyObj: TOpenAPI3Property;
+begin
+  if Assigned(AJSONObject) then
+  begin
+    for PropertyPair in AJSONObject do
+    begin
+      PropertyObj := TOpenAPI3Property.Create;
+      PropertyObj.Name := PropertyPair.JsonString.Value;
+
+      PropertyObj.ParseFromJSON(PropertyPair.JsonValue as TJSONObject);
+      fProperties.Add(PropertyPair.JsonString.Value, PropertyObj);
+    end;
+  end;
 end;
 
 procedure TOpenAPI3Schema.ParsePaths(AJSONObject: TJSONObject);
@@ -1040,14 +1155,14 @@ end;
 
 procedure TOpenAPI3Schema.ParseFromJSON(AJSONObject: TJSONObject);
 var
-  PathsObj, WebhooksObj, ComponentsObj: TJSONObject;
+  PathsObj, WebhooksObj, ComponentsObj, PropertiesObj: TJSONObject;
   ServersArray, SecurityArray, TagsArray: TJSONArray;
-  PropertiesObj: TJSONObject;
 begin
   if Assigned(AJSONObject) then
   begin
     fOpenapi := tNovusJSONUtils.GetJSONStringValue(AJSONObject, 'openapi');
-    fJsonSchemaDialect := tNovusJSONUtils.GetJSONStringValue(AJSONObject, 'jsonSchemaDialect');
+    fJsonSchemaDialect := tNovusJSONUtils.GetJSONStringValue(AJSONObject,
+      'jsonSchemaDialect');
     fInfoObj := tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'info');
     if Assigned(fInfoObj) then
     begin
@@ -1072,7 +1187,8 @@ begin
       ParseWebhooks(WebhooksObj);
     end;
 
-    ComponentsObj := tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'components');
+    ComponentsObj := tNovusJSONUtils.GetJSONObjectValue(AJSONObject,
+      'components');
     if Assigned(ComponentsObj) then
     begin
       fComponents.ParseFromJSON(ComponentsObj);
@@ -1090,11 +1206,11 @@ begin
       ParseTags(TagsArray);
     end;
 
-
-    PropertiesObj := tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'properties');
+    PropertiesObj := tNovusJSONUtils.GetJSONObjectValue(AJSONObject,
+      'properties');
     if Assigned(PropertiesObj) then
     begin
-      fProperties := PropertiesObj.Clone as TJSONObject;
+      ParseProperties(PropertiesObj); // Parse properties
     end;
   end;
 end;
@@ -1329,7 +1445,6 @@ begin
   end;
 end;
 
-
 // TOpenAPI3Link
 constructor TOpenAPI3Link.Create;
 begin
@@ -1353,12 +1468,71 @@ begin
   begin
     fOperationRef := AJSONObject.GetValue<string>('operationRef');
     fOperationId := AJSONObject.GetValue<string>('operationId');
-    fParameters := AJSONObject.GetValue<TJSONObject>('parameters').Clone as TJSONObject;
-    fRequestBody := AJSONObject.GetValue<TJSONValue>('requestBody').Clone as TJSONValue;
+    fParameters := AJSONObject.GetValue<TJSONObject>('parameters')
+      .Clone as TJSONObject;
+    fRequestBody := AJSONObject.GetValue<TJSONValue>('requestBody')
+      .Clone as TJSONValue;
     fDescription := AJSONObject.GetValue<string>('description');
     fServer := AJSONObject.GetValue<TJSONObject>('server').Clone as TJSONObject;
   end;
 end;
 
-end.
+// TOpenAPI3Property
 
+constructor TOpenAPI3Property.Create;
+begin
+  inherited Create;
+  fItems := TJSONObject.Create;
+  fProperties := TObjectDictionary<string, TOpenAPI3Property>.Create
+    ([doOwnsValues]);
+end;
+
+destructor TOpenAPI3Property.Destroy;
+begin
+  fItems.Free;
+  fProperties.Free;
+  inherited Destroy;
+end;
+
+procedure TOpenAPI3Property.ParseFromJSON(AJSONObject: TJSONObject);
+var
+  PropertyPair: TJSONPair;
+  SubProperty: TOpenAPI3Property;
+begin
+  if Assigned(AJSONObject) then
+  begin
+    if Name = '' then
+      fName := tNovusJSONUtils.GetJSONStringValue(AJSONObject, 'name');
+
+    fType := tNovusJSONUtils.GetJSONStringValue(AJSONObject, 'type');
+    fDescription := tNovusJSONUtils.GetJSONStringValue(AJSONObject,
+      'description');
+    fFormat := tNovusJSONUtils.GetJSONStringValue(AJSONObject, 'format');
+    if Assigned(tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'items')) then
+      fItems := AJSONObject.GetValue<TJSONObject>('items').Clone as TJSONObject;
+
+    fRequired := tNovusJSONUtils.GetJSONBooleanValue(AJSONObject, 'required');
+
+    // Parse nested properties for object types
+    if Lowercase(fType) = 'object' then
+    begin
+      if Assigned(tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'properties')) then
+      begin
+        for PropertyPair in AJSONObject.GetValue<TJSONObject>('properties') do
+        begin
+          // Check if PropertyPair is not nil
+          if Assigned(PropertyPair) then
+          begin
+            // Create a new TOpenAPI3Property object
+            SubProperty := TOpenAPI3Property.Create;
+            SubProperty.Name := PropertyPair.JsonString.Value;
+            SubProperty.ParseFromJSON(PropertyPair.JsonValue as TJSONObject);
+            fProperties.Add(PropertyPair.JsonString.Value, SubProperty);
+          end;
+        end;
+      end;
+    end;
+  end;
+end;
+
+end.

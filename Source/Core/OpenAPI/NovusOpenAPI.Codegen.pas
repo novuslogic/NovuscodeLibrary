@@ -14,6 +14,8 @@ type
     FParser: TNovusOpenAPIParser;
     FOutputDir: string;
 
+    function RemoveSlashes(const Input: string): string;
+    function ConvertToDotNotation(const Method: string): string;
     function GetNameSpaceFileName(Key: String): String;
     function GetNameSpace(Key: String): String;
     procedure GenerateModelClasses;
@@ -52,7 +54,7 @@ procedure TNovusOpenAPICodegen.GenerateCode;
 begin
   try
     GenerateModelClasses;
-    //GenerateAPIClasses;
+    GenerateAPIClasses;
   except
     on E: Exception do
       WriteLn('Error generating code: ' + E.Message);
@@ -127,7 +129,7 @@ begin
 
       ModelBuilder.AppendLine('end.');
 
-      WriteToFile(TNovusFileUtils.TrailingBackSlash(FOutputDir) + GetNameSpaceFilename(SchemaName), ModelBuilder.ToString);
+      WriteToFile(TNovusFileUtils.TrailingBackSlash(FOutputDir) + 'Model\'+ GetNameSpaceFilename(SchemaName), ModelBuilder.ToString);
     end;
   finally
     ModelBuilder.Free;
@@ -138,36 +140,65 @@ procedure TNovusOpenAPICodegen.GenerateAPIClasses;
 var
   Paths: TObjectDictionary<string, TOpenAPI3Path>;
   APIBuilder: TNovusStringBuilder;
+  Path: TOpenAPI3Path;
+  OperationPair: TPair<string, TOpenAPI3Operation>;
+  PathName, ClassName, MethodName: string;
 begin
   Paths := FParser.Schema.Paths;
   APIBuilder := TNovusStringBuilder.Create;
   try
     // Iterate over the paths and generate API classes
-    for var Pair in Paths do
+    for var PathPair in Paths do
     begin
+      Path := PathPair.Value;
+      PathName := PathPair.Key;
+      ClassName := 'T' + GetNameSpace(RemoveSlashes(PathName));
+
       APIBuilder.Clear;
-      APIBuilder.AppendLine('unit ' + Pair.Key + 'API;');
+      APIBuilder.AppendLine('unit ' + GetNameSpace(ConvertToDotNotation(PathName)) +';');
       APIBuilder.AppendLine('');
       APIBuilder.AppendLine('interface');
       APIBuilder.AppendLine('');
+      APIBuilder.AppendLine('uses');
+      APIBuilder.AppendLine('  System.SysUtils, System.Classes;');
+      APIBuilder.AppendLine('');
       APIBuilder.AppendLine('type');
-      APIBuilder.AppendLine('  T' + Pair.Key + 'API = class');
-      APIBuilder.AppendLine('  private');
-      // Add fields based on the path properties
+      APIBuilder.AppendLine('  ' + ClassName + ' = class');
       APIBuilder.AppendLine('  public');
+
       // Add methods based on the operations in the path
+      for OperationPair in Path.Operations do
+      begin
+        MethodName := OperationPair.Key;
+        APIBuilder.AppendLine('    function ' + MethodName + ': string;');  // Only function names are generated
+      end;
+
       APIBuilder.AppendLine('  end;');
       APIBuilder.AppendLine('');
       APIBuilder.AppendLine('implementation');
       APIBuilder.AppendLine('');
+
+      // Implement methods
+      for OperationPair in Path.Operations do
+      begin
+        MethodName := OperationPair.Key;
+
+        APIBuilder.AppendLine('function ' + ClassName + '.' + MethodName + ': string;');
+        APIBuilder.AppendLine('begin');
+        APIBuilder.AppendLine('  // Implement API call here');
+        APIBuilder.AppendLine('end;');
+        APIBuilder.AppendLine('');
+      end;
+
       APIBuilder.AppendLine('end.');
 
-      WriteToFile(FOutputDir + Pair.Key + 'API.pas', APIBuilder.ToString);
+      WriteToFile(TNovusFileUtils.TrailingBackSlash(FOutputDir) +'API\'+ GetNameSpaceFileName(ConvertToDotNotation(PathName)),  APIBuilder.ToString);
     end;
   finally
     APIBuilder.Free;
   end;
 end;
+
 
 procedure TNovusOpenAPICodegen.WriteToFile(const AFileName, AContent: string);
 begin
@@ -206,6 +237,29 @@ begin
     Result := 'Double'
   else
     Result := 'string'; // Default to string if type is unknown
+end;
+
+function TNovusOpenAPICodegen.ConvertToDotNotation(const Method: string): string;
+var
+  CleanMethod: string;
+begin
+  // Remove leading and trailing slashes
+  CleanMethod := Method;
+  if (Length(CleanMethod) > 0) and (CleanMethod[1] = '/') then
+    Delete(CleanMethod, 1, 1);
+  if (Length(CleanMethod) > 0) and (CleanMethod[Length(CleanMethod)] = '/') then
+    Delete(CleanMethod, Length(CleanMethod), 1);
+
+  // Replace remaining slashes with dots
+  CleanMethod := StringReplace(CleanMethod, '/', '.', [rfReplaceAll]);
+
+  Result := CleanMethod;
+end;
+
+function TNovusOpenAPICodegen.RemoveSlashes(const Input: string): string;
+begin
+  // Replace all slashes with an empty string
+  Result := StringReplace(Input, '/', '', [rfReplaceAll]);
 end;
 
 end.

@@ -8,6 +8,42 @@ uses
   System.Classes, NovusStringUtils;
 
 type
+   // Declare TOpenAPI3Schema before TOpenAPI3Components
+  TOpenAPI3Schema = class;
+
+  TOpenAPI3Example = class(TObject)
+  private
+    fSummary: string;
+    fDescription: string;
+    fValue: TJSONValue;
+    fExternalValue: string;
+  public
+    property Summary: string read fSummary write fSummary;
+    property Description: string read fDescription write fDescription;
+    property Value: TJSONValue read fValue write fValue;
+    property ExternalValue: string read fExternalValue write fExternalValue;
+
+    procedure ParseFromJSON(AJSONObject: TJSONObject);
+  end;
+
+
+  TOpenAPI3MediaType = class(TObject)
+  private
+    fSchema: TOpenAPI3Schema;
+    fExample:  String;
+    fExamples: TObjectDictionary<string, TOpenAPI3Example>;
+    fEncoding: TJSONObject; // Encoding object can be a complex object
+  public
+    constructor Create;
+    destructor Destroy; override;
+    procedure ParseFromJSON(AJSONObject: TJSONObject);
+    property Schema: TOpenAPI3Schema read fSchema write fSchema;
+    property Example: String read fExample write fExample;
+    property Examples: TObjectDictionary<string, TOpenAPI3Example> read fExamples write fExamples;
+    property Encoding: TJSONObject read fEncoding write fEncoding;
+  end;
+
+
   TOpenAPI3Property = class(TObject)
   private
     fName: string;
@@ -95,18 +131,6 @@ type
       write fAllowEmptyValue;
   end;
 
-  TOpenAPI3Example = class(TObject)
-  private
-    fSummary: string;
-    fDescription: string;
-    fValue: TJSONValue;
-    fExternalValue: string;
-  public
-    property Summary: string read fSummary write fSummary;
-    property Description: string read fDescription write fDescription;
-    property Value: TJSONValue read fValue write fValue;
-    property ExternalValue: string read fExternalValue write fExternalValue;
-  end;
 
   TOpenAPI3SecurityRequirement = class(TObject)
   private
@@ -186,16 +210,35 @@ type
     fRequired: Boolean;
     fDeprecated: Boolean;
     fAllowEmptyValue: Boolean;
+    fStyle: string;
+    fExplode: Boolean;
+    fAllowReserved: Boolean;
+    fSchema: TOpenAPI3Schema;
+    fExample: string;
+    fExamples: TObjectDictionary<string, TOpenAPI3Example>;
+    fContent: TObjectDictionary<string, TOpenAPI3MediaType>; // New private field for Content
   public
+    constructor Create;
+    destructor Destroy; override;
     property Name: string read fName write fName;
-    property InLocation: string read fIn write fIn;
-    // 'In' is a reserved word, use InLocation instead
+    property In_: string read fIn write fIn;
     property Description: string read fDescription write fDescription;
     property Required: Boolean read fRequired write fRequired;
-    property Deprecated: Boolean read fDeprecated write fDeprecated;
-    property AllowEmptyValue: Boolean read fAllowEmptyValue
-      write fAllowEmptyValue;
+    property Deprecated_: Boolean read fDeprecated write fDeprecated;
+    property AllowEmptyValue: Boolean read fAllowEmptyValue write fAllowEmptyValue;
+    property Style: string read fStyle write fStyle;
+    property Explode: Boolean read fExplode write fExplode;
+    property AllowReserved: Boolean read fAllowReserved write fAllowReserved;
+    property Schema: TOpenAPI3Schema read fSchema write fSchema;
+    property Example: string read fExample write fExample;
+    property Examples: TObjectDictionary<string, TOpenAPI3Example> read fExamples write fExamples;
+    property Content: TObjectDictionary<string, TOpenAPI3MediaType> read fContent write fContent; // New public property for Content
+    procedure ParseFromJSON(AJSONObject: TJSONObject);
   end;
+
+
+
+
 
   TOpenAPI3Reference = class(TObject)
   private
@@ -257,7 +300,7 @@ type
     fTags: TArray<string>;
     fExternalDocs: TOpenAPI3ExternalDocs;
     fOperationId: string;
-    fParameters: TObjectList<TObject>;
+    fParameters: TObjectList<TOpenAPI3Parameter>;
     fResponses: TOpenAPI3Responses;
     fCallbacks: TOpenAPI3Callbacks;
     fDeprecated: Boolean;
@@ -275,7 +318,7 @@ type
     property ExternalDocs: TOpenAPI3ExternalDocs read fExternalDocs
       write fExternalDocs;
     property OperationId: string read fOperationId write fOperationId;
-    property Parameters: TObjectList<TObject> read fParameters
+    property Parameters: TObjectList<TOpenAPI3Parameter> read fParameters
       write fParameters;
     property Responses: TOpenAPI3Responses read fResponses write fResponses;
     property Callbacks: TOpenAPI3Callbacks read fCallbacks write fCallbacks;
@@ -312,8 +355,7 @@ type
     property PathList: TStringList read fPathList write fPathList;
   end;
 
-  // Declare TOpenAPI3Schema before TOpenAPI3Components
-  TOpenAPI3Schema = class;
+
 
   TOpenAPI3Components = class(TObject)
   private
@@ -391,14 +433,14 @@ type
     fSecurity: TObjectList<TOpenAPI3SecurityRequirement>;
     fTags: TObjectList<TOpenAPI3Tag>;
     fProperties: TObjectDictionary<string, TOpenAPI3Property>;
-    // Updated to dictionary
+    ftype_: String;
+
     procedure ParsePaths(AJSONObject: TJSONObject);
     procedure ParseServers(AJSONArray: TJSONArray);
     procedure ParseWebhooks(AJSONObject: TJSONObject);
     procedure ParseSecurity(AJSONArray: TJSONArray);
     procedure ParseTags(AJSONArray: TJSONArray);
     procedure ParseProperties(AJSONObject: TJSONObject);
-    // New method to parse properties
   public
     constructor Create;
     destructor Destroy; override;
@@ -420,6 +462,7 @@ type
     property Tags: TObjectList<TOpenAPI3Tag> read fTags write fTags;
     property Properties: TObjectDictionary<string, TOpenAPI3Property>
       read fProperties write fProperties;
+    property Type_: string read fType_ write FType_;
   end;
 
   TNovusOpenAPIParser = class(TNovusObject)
@@ -649,6 +692,29 @@ begin
           if ParamItem is TJSONObject then
           begin
             ParameterObj := TJSONObject(ParamItem);
+
+            Parameter := TOpenAPI3Parameter.Create;
+            Parameter.ParseFromJSON(ParameterObj);
+
+            Operation.Parameters.Add(Parameter);
+
+            (*
+              Parameter.Name := tNovusJSONUtils.GetJSONStringValue
+                (ParameterObj, 'name');
+              Parameter.In_ := tNovusJSONUtils.GetJSONStringValue
+                (ParameterObj, 'in');
+              Parameter.Description := tNovusJSONUtils.GetJSONStringValue
+                (ParameterObj, 'description');
+              Parameter.Required := tNovusJSONUtils.GetJSONBooleanValue
+                (ParameterObj, 'required');
+              Parameter.Deprecated_ := tNovusJSONUtils.GetJSONBooleanValue
+                (ParameterObj, 'deprecated');
+              Parameter.AllowEmptyValue := tNovusJSONUtils.GetJSONBooleanValue
+                (ParameterObj, 'allowEmptyValue');
+              Operation.Parameters.Add(Parameter);
+             *)
+            (*
+            ParameterObj := TJSONObject(ParamItem);
             if ParameterObj.GetValue('$ref') <> nil then
             begin
               Reference := TOpenAPI3Reference.Create;
@@ -673,6 +739,8 @@ begin
                 (ParameterObj, 'allowEmptyValue');
               Operation.Parameters.Add(Parameter);
             end;
+
+            *)
           end;
         end;
       end;
@@ -780,6 +848,8 @@ var
   Header: TNovusOpenAPI3Header;
   SecurityScheme: TOpenAPI3SecurityScheme;
   Link: TOpenAPI3Link;
+  ParameterObj: TJSONObject;
+  ExampleObj: TJSONObject;
 begin
   if Assigned(AJSONObject) then
   begin
@@ -820,20 +890,29 @@ begin
       begin
         if Assigned(ParameterPair) then
         begin
+          ParameterObj := (ParameterPair.JsonValue as TJSONObject);
+
           Parameter := TOpenAPI3Parameter.Create;
+          Parameter.ParseFromJSON(ParameterObj);
+
+          fParameters.Add(ParameterPair.JsonString.Value, Parameter);
+
+
+          (*
           Parameter.Name := tNovusJSONUtils.GetJSONStringValue
             (ParameterPair.JsonValue as TJSONObject, 'name');
-          Parameter.InLocation := tNovusJSONUtils.GetJSONStringValue
+          Parameter.In_ := tNovusJSONUtils.GetJSONStringValue
             (ParameterPair.JsonValue as TJSONObject, 'in');
           Parameter.Description := tNovusJSONUtils.GetJSONStringValue
             (ParameterPair.JsonValue as TJSONObject, 'description');
           Parameter.Required := tNovusJSONUtils.GetJSONBooleanValue
             (ParameterPair.JsonValue as TJSONObject, 'required');
-          Parameter.Deprecated := tNovusJSONUtils.GetJSONBooleanValue
+          Parameter.Deprecated_ := tNovusJSONUtils.GetJSONBooleanValue
             (ParameterPair.JsonValue as TJSONObject, 'deprecated');
           Parameter.AllowEmptyValue := tNovusJSONUtils.GetJSONBooleanValue
             (ParameterPair.JsonValue as TJSONObject, 'allowEmptyValue');
           fParameters.Add(ParameterPair.JsonString.Value, Parameter);
+          *)
         end;
       end;
 
@@ -845,7 +924,13 @@ begin
       begin
         if Assigned(ExamplePair) then
         begin
+          ExampleObj := (ExamplePair.JsonValue as TJSONObject);
+
           Example := TOpenAPI3Example.Create;
+          Example.ParseFromJSON(ExampleObj);
+
+               (*
+
           Example.Summary := tNovusJSONUtils.GetJSONStringValue
             (ExamplePair.JsonValue as TJSONObject, 'summary');
           Example.Description := tNovusJSONUtils.GetJSONStringValue
@@ -854,7 +939,9 @@ begin
             (ExamplePair.JsonValue as TJSONObject, 'value');
           Example.ExternalValue := tNovusJSONUtils.GetJSONStringValue
             (ExamplePair.JsonValue as TJSONObject, 'externalValue');
+            *)
           fExamples.Add(ExamplePair.JsonString.Value, Example);
+
         end;
       end;
     end;
@@ -1163,6 +1250,9 @@ begin
     fOpenapi := tNovusJSONUtils.GetJSONStringValue(AJSONObject, 'openapi');
     fJsonSchemaDialect := tNovusJSONUtils.GetJSONStringValue(AJSONObject,
       'jsonSchemaDialect');
+
+    ftype_ := tNovusJSONUtils.GetJSONStringValue(AJSONObject, 'type');
+
     fInfoObj := tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'info');
     if Assigned(fInfoObj) then
     begin
@@ -1322,7 +1412,7 @@ constructor TOpenAPI3Operation.Create;
 begin
   inherited Create;
   fExternalDocs := TOpenAPI3ExternalDocs.Create;
-  fParameters := TObjectList<TObject>.Create(True); // Owns objects
+  fParameters := TObjectList<TOpenAPI3Parameter>.Create(True); // Owns objects
   fResponses := TOpenAPI3Responses.Create;
   fCallbacks := TOpenAPI3Callbacks.Create;
   fRequestBody := TOpenAPI3RequestBody.Create;
@@ -1534,5 +1624,152 @@ begin
     end;
   end;
 end;
+
+// TOpenAPI3Example
+
+procedure TOpenAPI3Example.ParseFromJSON(AJSONObject: TJSONObject);
+begin
+  if Assigned(AJSONObject) then
+  begin
+    fSummary := tNovusJSONUtils.GetJSONStringValue
+            (AJSONObject, 'summary');
+    fDescription := tNovusJSONUtils.GetJSONStringValue
+            (AJSONObject, 'description');
+    fValue := tNovusJSONUtils.GetJSONObjectValue
+            (AJSONObject, 'value');
+    fExternalValue := tNovusJSONUtils.GetJSONStringValue
+            (AJSONObject, 'externalValue');
+  end;
+end;
+
+// TOpenAPI3MediaType
+
+constructor TOpenAPI3MediaType.Create;
+begin
+  inherited Create;
+  fSchema := TOpenAPI3Schema.Create;
+  fExamples := TObjectDictionary<string, TOpenAPI3Example>.Create([doOwnsValues]);
+  fEncoding := TJSONObject.Create;
+end;
+destructor TOpenAPI3MediaType.Destroy;
+begin
+  fSchema.Free;
+  fExamples.Free;
+  fEncoding.Free;
+  inherited Destroy;
+end;
+
+procedure TOpenAPI3MediaType.ParseFromJSON(AJSONObject: TJSONObject);
+var
+  SchemaObj, ExamplesObj, EncodingObj: TJSONObject;
+  ExamplePair: TJSONPair;
+  Example: TOpenAPI3Example;
+begin
+  if Assigned(AJSONObject) then
+  begin
+    // Parse the Schema property
+    SchemaObj := tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'schema');
+    if Assigned(SchemaObj) then
+    begin
+      fSchema.ParseFromJSON(SchemaObj);
+    end;
+    // Parse the Example property
+    fExample := tNovusJSONUtils.GetJSONStringValue(AJSONObject, 'example');
+    // Parse the Examples dictionary
+    ExamplesObj := tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'examples');
+    if Assigned(ExamplesObj) then
+    begin
+      for ExamplePair in ExamplesObj do
+      begin
+        Example := TOpenAPI3Example.Create;
+        Example.ParseFromJSON(ExamplePair.JsonValue as TJSONObject);
+        fExamples.Add(ExamplePair.JsonString.Value, Example);
+      end;
+    end;
+    // Parse the Encoding object
+    EncodingObj := tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'encoding');
+    if Assigned(EncodingObj) then
+    begin
+      fEncoding := EncodingObj.Clone as TJSONObject;
+    end;
+  end;
+end;
+
+
+
+// TOpenAPI3Parameter
+
+constructor TOpenAPI3Parameter.Create;
+begin
+  inherited Create;
+  fSchema := TOpenAPI3Schema.Create;
+  fExamples := TObjectDictionary<string, TOpenAPI3Example>.Create([doOwnsValues]);
+  fContent := TObjectDictionary<string, TOpenAPI3MediaType>.Create([doOwnsValues]); // Initialize Content
+end;
+
+destructor TOpenAPI3Parameter.Destroy;
+begin
+  fSchema.Free;
+  fExamples.Free;
+  fContent.Free; // Free Content
+  inherited Destroy;
+end;
+
+procedure TOpenAPI3Parameter.ParseFromJSON(AJSONObject: TJSONObject);
+var
+  SchemaObj, ExamplesObj, ContentObj: TJSONObject;
+  ExamplePair, ContentPair: TJSONPair;
+  Example: TOpenAPI3Example;
+  MediaType: TOpenAPI3MediaType;
+begin
+  if Assigned(AJSONObject) then
+  begin
+    fName := tNovusJSONUtils.GetJSONStringValue(AJSONObject, 'name');
+    fIn := tNovusJSONUtils.GetJSONStringValue(AJSONObject, 'in');
+    fDescription := tNovusJSONUtils.GetJSONStringValue(AJSONObject, 'description');
+    fRequired := tNovusJSONUtils.GetJSONBooleanValue(AJSONObject, 'required');
+    fDeprecated := tNovusJSONUtils.GetJSONBooleanValue(AJSONObject, 'deprecated');
+    fAllowEmptyValue := tNovusJSONUtils.GetJSONBooleanValue(AJSONObject, 'allowEmptyValue');
+    fStyle := tNovusJSONUtils.GetJSONStringValue(AJSONObject, 'style');
+    fExplode := tNovusJSONUtils.GetJSONBooleanValue(AJSONObject, 'explode');
+    fAllowReserved := tNovusJSONUtils.GetJSONBooleanValue(AJSONObject, 'allowReserved');
+
+    // Parse the Schema property
+    SchemaObj := tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'schema');
+    if Assigned(SchemaObj) then
+    begin
+      fSchema.ParseFromJSON(SchemaObj);
+    end;
+
+    // Parse the Example property
+    fExample := tNovusJSONUtils.GetJSONStringValue(AJSONObject, 'example');
+
+    // Parse the Examples dictionary
+    ExamplesObj := tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'examples');
+    if Assigned(ExamplesObj) then
+    begin
+      for ExamplePair in ExamplesObj do
+      begin
+        Example := TOpenAPI3Example.Create;
+        Example.ParseFromJSON(ExamplePair.JsonValue as TJSONObject);
+        fExamples.Add(ExamplePair.JsonString.Value, Example);
+      end;
+    end;
+
+    // Parse the Content dictionary
+    ContentObj := tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'content');
+    if Assigned(ContentObj) then
+    begin
+      for ContentPair in ContentObj do
+      begin
+        MediaType := TOpenAPI3MediaType.Create;
+        MediaType.ParseFromJSON(ContentPair.JsonValue as TJSONObject);
+        fContent.Add(ContentPair.JsonString.Value, MediaType);
+      end;
+    end;
+  end;
+end;
+
+
 
 end.

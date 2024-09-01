@@ -93,7 +93,7 @@ type
 
   TOpenAPI3SecurityScheme = class(TObject)
   private
-    fType: string;
+    fType_: string;
     fDescription: string;
     fName: string;
     fIn: string;
@@ -102,7 +102,7 @@ type
     fFlows: TJSONObject; // For OAuth2 flows
     fOpenIdConnectUrl: string;
   public
-    property Type_: string read fType write fType;
+    property Type_: string read fType_ write fType_;
     // 'Type' is a reserved word in Delphi
     property Description: string read fDescription write fDescription;
     property Name: string read fName write fName;
@@ -233,6 +233,7 @@ type
     property Example: string read fExample write fExample;
     property Examples: TObjectDictionary<string, TOpenAPI3Example> read fExamples write fExamples;
     property Content: TObjectDictionary<string, TOpenAPI3MediaType> read fContent write fContent; // New public property for Content
+
     procedure ParseFromJSON(AJSONObject: TJSONObject);
   end;
 
@@ -422,6 +423,7 @@ type
 
   TOpenAPI3Schema = class(TObject)
   private
+    fallOf: TObjectDictionary<string, TObject>;
     fOpenapi: string;
     fJsonSchemaDialect: string;
     fInfo: TOpenAPI3Info;
@@ -433,10 +435,13 @@ type
     fSecurity: TObjectList<TOpenAPI3SecurityRequirement>;
     fTags: TObjectList<TOpenAPI3Tag>;
     fProperties: TObjectDictionary<string, TOpenAPI3Property>;
-    ftype_: String;
+    fType_: String;
+    fFormat_: String;
+    fpattern: string;
 
     procedure ParsePaths(AJSONObject: TJSONObject);
     procedure ParseServers(AJSONArray: TJSONArray);
+    procedure ParseAllof(AJSONArray: TJSONArray);
     procedure ParseWebhooks(AJSONObject: TJSONObject);
     procedure ParseSecurity(AJSONArray: TJSONArray);
     procedure ParseTags(AJSONArray: TJSONArray);
@@ -463,6 +468,8 @@ type
     property Properties: TObjectDictionary<string, TOpenAPI3Property>
       read fProperties write fProperties;
     property Type_: string read fType_ write FType_;
+    property Format_: string read FFormat_ write FFormat_;
+    property Pattern: string read fpattern write fpattern;
   end;
 
   TNovusOpenAPIParser = class(TNovusObject)
@@ -897,23 +904,7 @@ begin
 
           fParameters.Add(ParameterPair.JsonString.Value, Parameter);
 
-
-          (*
-          Parameter.Name := tNovusJSONUtils.GetJSONStringValue
-            (ParameterPair.JsonValue as TJSONObject, 'name');
-          Parameter.In_ := tNovusJSONUtils.GetJSONStringValue
-            (ParameterPair.JsonValue as TJSONObject, 'in');
-          Parameter.Description := tNovusJSONUtils.GetJSONStringValue
-            (ParameterPair.JsonValue as TJSONObject, 'description');
-          Parameter.Required := tNovusJSONUtils.GetJSONBooleanValue
-            (ParameterPair.JsonValue as TJSONObject, 'required');
-          Parameter.Deprecated_ := tNovusJSONUtils.GetJSONBooleanValue
-            (ParameterPair.JsonValue as TJSONObject, 'deprecated');
-          Parameter.AllowEmptyValue := tNovusJSONUtils.GetJSONBooleanValue
-            (ParameterPair.JsonValue as TJSONObject, 'allowEmptyValue');
-          fParameters.Add(ParameterPair.JsonString.Value, Parameter);
-          *)
-        end;
+      end;
       end;
 
     if Assigned(tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'examples'))
@@ -1096,6 +1087,8 @@ begin
   fComponents := TOpenAPI3Components.Create;
   fServers := TObjectList<TOpenAPI3Server>.Create;
   fWebhooks := TObjectDictionary<string, TObject>.Create([doOwnsValues]);
+  fallOf:= TObjectDictionary<string, TObject>.Create([doOwnsValues]);
+
   fSecurity := TObjectList<TOpenAPI3SecurityRequirement>.Create;
   fTags := TObjectList<TOpenAPI3Tag>.Create;
   fProperties := TObjectDictionary<string, TOpenAPI3Property>.Create
@@ -1113,6 +1106,7 @@ begin
   fSecurity.Free;
   fTags.Free;
   fProperties.Free; // Free properties dictionary
+  fallOf.Free;
   inherited Destroy;
 end;
 
@@ -1171,6 +1165,25 @@ begin
       Server.ParseVariables(tNovusJSONUtils.GetJSONObjectValue(ServerObj,
         'variables'));
       fServers.Add(Server);
+    end;
+  end;
+end;
+
+
+
+procedure TOpenAPI3Schema.ParseAllof(AJSONArray: TJSONArray);
+var
+  AllofObj: TJSONObject;
+begin
+  if Assigned(AJSONArray) then
+  begin
+    for var i := 0 to AJSONArray.Count - 1 do
+    begin
+      AllofObj := AJSONArray.Items[i] as TJSONObject;
+
+      fWebhooks.Add(AllofObj.Value, AllofObj);
+
+
     end;
   end;
 end;
@@ -1243,7 +1256,7 @@ end;
 procedure TOpenAPI3Schema.ParseFromJSON(AJSONObject: TJSONObject);
 var
   PathsObj, WebhooksObj, ComponentsObj, PropertiesObj: TJSONObject;
-  ServersArray, SecurityArray, TagsArray: TJSONArray;
+  ServersArray, SecurityArray, TagsArray, AllOfArray: TJSONArray;
 begin
   if Assigned(AJSONObject) then
   begin
@@ -1252,6 +1265,10 @@ begin
       'jsonSchemaDialect');
 
     ftype_ := tNovusJSONUtils.GetJSONStringValue(AJSONObject, 'type');
+    Fformat_ := tNovusJSONUtils.GetJSONStringValue(AJSONObject, 'format');
+    fpattern := tNovusJSONUtils.GetJSONStringValue(AJSONObject, 'pattern');
+
+
 
     fInfoObj := tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'info');
     if Assigned(fInfoObj) then
@@ -1284,10 +1301,23 @@ begin
       fComponents.ParseFromJSON(ComponentsObj);
     end;
 
+    AllofArray :=  tNovusJSONUtils.GetJSONArrayValue(AJSONObject, 'allof');
+    if Assigned(AllofArray) then
+    begin
+      ParseAllof(AllofArray);
+    end;
+
+
     SecurityArray := tNovusJSONUtils.GetJSONArrayValue(AJSONObject, 'security');
     if Assigned(SecurityArray) then
     begin
       ParseSecurity(SecurityArray);
+    end;
+
+    AllOfArray := tNovusJSONUtils.GetJSONArrayValue(AJSONObject, 'allof');
+    if Assigned(AllOfArray) then
+    begin
+      ParseSecurity(AllOfArray);
     end;
 
     TagsArray := tNovusJSONUtils.GetJSONArrayValue(AJSONObject, 'tags');

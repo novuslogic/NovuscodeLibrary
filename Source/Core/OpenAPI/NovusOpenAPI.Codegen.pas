@@ -5,18 +5,81 @@ interface
 uses
   NovusStringBuilder, NovusOpenAPI.Parser, NovusObject, System.SysUtils,
   System.Generics.Collections, System.JSON, System.IOUtils, NovusFileUtils,
-  NovusList;
+  NovusList, NovusStringUtils, NovusOpenAPI.Utils;
 
 type
   TNovusOpenAPIClassBuilderList = class(TNovusList);
+  TNovusOpenAPIClassFunctionList = class(TNovusList);
+  TNovusOpenAPIClassParameterList = class(TNovusList);
+
+
+  TNovusOpenAPIClassParameter = class(TNovusObject)
+  protected
+  private
+    fParamName: string;
+    fParamDescription: string;
+    fParamtype: string;
+    fParamRequired: Boolean;
+    fParamIn: string;
+    FParamFormat: string;
+  public
+    constructor Create(aParamName: string;
+    aParamDescription: string;
+    aParamtype: string;
+    aParamRequired: Boolean;
+    aParamIn: string;
+    aParamFormat: string);
+
+    destructor Destroy; override;
+
+    property ParamName: string read fParamName write fParamName;
+    property ParamDescription: string read fParamDescription write fParamDescription  ;
+    property Paramtype: string read fParamtype write fParamtype;
+    property ParamRequired: Boolean read fParamRequired write fParamRequired;
+    property ParamIn: string read fParamIn write fParamIn;
+    property ParamFormat: string read fParamFormat write fParamFormat;
+  end;
+
+  TNovusOpenAPIClassFunction  = class(TNovusObject)
+  protected
+  private
+    fParameterList: TNovusOpenAPIClassParameterList;
+    fEndPoint:String;
+    fMethod: string;
+    fFunctionName: string;
+  public
+    constructor Create(aFunctionName: string; aMethod: string; aEndPoint:String);
+    destructor Destroy; override;
+
+    function BuildFullFunction(aWithProc: Boolean): string;
+
+    procedure AddParameter(aParamName: string; aParamDescription: string;
+      aParamtype: string; aParamRequired: Boolean; aParamIn: String;
+      aParamFormat: string);
+
+    property FunctionName: String  read fFunctionName write fFunctionName;
+
+    property ParameterList: TNovusOpenAPIClassParameterList read fParameterList write fParameterList;
+  end;
 
 
   TNovusOpenAPIClassBuilder = class(TNovusObject)
   protected
   private
+    fPath: TOpenAPI3Path;
     fClassName: String;
+    FFunctionList: TNovusOpenAPIClassFunctionList;
   public
+    constructor Create;
+    destructor Destroy; override;
+
+    function AddFunction(aFunctionName: string; aMethod: string; aEndPoint:String): TNovusOpenAPIClassFunction;
+
     property ClassName_: String read fClassname write fClassName;
+
+    property FunctionList: TNovusOpenAPIClassFunctionList read FFunctionList write FFunctionList;
+
+    property Path: TOpenAPI3Path read fPath write fPath;
   end;
 
 
@@ -36,7 +99,6 @@ type
     procedure GenerateModelClasses;
     procedure GenerateAPIClasses;
     procedure WriteToFile(const AFileName, AContent: string);
-    function MapOpenAPITypeToDelphiType(const OpenAPIType, OpenAPIFormat: string): string;
   public
     constructor Create(aParser: TNovusOpenAPIParser; aOutputDir: string);
     destructor Destroy; override;
@@ -104,7 +166,7 @@ begin
       for PropertyPair in Pair.Value.Properties do
       begin
         PropertyName := PropertyPair.Value.Name;
-        PropertyType := MapOpenAPITypeToDelphiType(PropertyPair.Value.Type_, PropertyPair.Value.Format);
+        PropertyType := TNovusOpenAPIUtils.OpenAPITypeToDelphiType(PropertyPair.Value.Type_, PropertyPair.Value.Format);
         ModelBuilder.AppendLine('    F' + PropertyName + ': ' + PropertyType + ';');
       end;
 
@@ -114,7 +176,7 @@ begin
       for PropertyPair in Pair.Value.Properties do
       begin
         PropertyName := PropertyPair.Value.Name;
-        PropertyType := MapOpenAPITypeToDelphiType(PropertyPair.Value.Type_, PropertyPair.Value.Format);
+        PropertyType := TNovusOpenAPIUtils.OpenAPITypeToDelphiType(PropertyPair.Value.Type_, PropertyPair.Value.Format);
         ModelBuilder.AppendLine('    function Get' + PropertyName + ': ' + PropertyType + ';');
         ModelBuilder.AppendLine('    procedure Set' + PropertyName + '(const Value: ' + PropertyType + ');');
         ModelBuilder.AppendLine('    property ' + PropertyName + ': ' + PropertyType + ' read Get' + PropertyName + ' write Set' + PropertyName + ';');
@@ -129,7 +191,7 @@ begin
       for PropertyPair in Pair.Value.Properties do
       begin
         PropertyName := PropertyPair.Value.Name;
-        PropertyType := MapOpenAPITypeToDelphiType(PropertyPair.Value.Type_, PropertyPair.Value.Format);
+        PropertyType := TNovusOpenAPIUtils.OpenAPITypeToDelphiType(PropertyPair.Value.Type_, PropertyPair.Value.Format);
         ModelBuilder.AppendLine('function T' + GetNameSpace(SchemaName) + '.Get' + PropertyName + ': ' + PropertyType + ';');
         ModelBuilder.AppendLine('begin');
         ModelBuilder.AppendLine('  Result := F' + PropertyName + ';');
@@ -180,67 +242,147 @@ var
   lsClassName: String;
   Path: TOpenAPI3Path;
   OpenAPIClassBuilderList: tNovusOpenAPIClassBuilderList;
+  OpenAPIClassFunction:TNovusOpenAPIClassFunction;
   OpenAPIClassBuilder: tNovusOpenAPIClassBuilder;
   Method: string;
   FunctionName: String;
-  (*
-
-  OperationPair: TPair<string, TOpenAPI3Operation>;
-  Parameter: TObject;
-  PathName, ClassName, MethodName, MethodParams, ModelParam: string;
-  ModelTypeName: string;
-  *)
-
-
-
+  Paramtype: string;
+  ParamFormat: string;
+  ParamName: String;
+  ParamDescription: string;
+  ParamRequired: Boolean;
+  ParamIn: String;
+  FullFunction: String;
 begin
   Paths := FParser.Schema.Paths;
-  APIBuilder := TNovusStringBuilder.Create;
 
-  APIBuilder.Clear;
   try
-    OpenAPIClassBuilderList:= tNovusOpenAPIClassBuilderList.Create(tNovusOpenAPIClassBuilder);
+    OpenAPIClassBuilderList := TNovusOpenAPIClassBuilderList.Create
+      (TNovusOpenAPIClassBuilder);
 
     // Iterate over the paths and generate API classes
     for var PathPair in Paths do
     begin
       lsEndPoint := PathPair.Key;
       lsClassName := GetFirstPartAfterSlash(lsEndPoint);
-
-      APIBuilder.AppendLine('ClassName: ' + lsClassname + ' Endpoint: ' + lsEndPoint);
-
-      OpenAPIClassBuilder :=  OpenAPIClassBuilderList.FindItem(lsClassName) As TNovusOpenAPICLassBuilder;
-      if Not Assigned(OpenAPIClassBuilder) then
-         begin
-            OpenAPIClassBuilder := TNovusOpenAPICLassBuilder.Create();
-            OpenAPIClassBuilder.ClassName_ := lsClassName;
-
-            OpenAPIClassBuilderList.Add(lsClassName,OpenAPIClassBuilder);
-          end;
-
       Path := PathPair.Value;
+
+      OpenAPIClassBuilder := OpenAPIClassBuilderList.FindItem(lsClassName)
+        As TNovusOpenAPIClassBuilder;
+      if Not Assigned(OpenAPIClassBuilder) then
+      begin
+        OpenAPIClassBuilder := TNovusOpenAPIClassBuilder.Create();
+        OpenAPIClassBuilder.ClassName_ := lsClassName;
+        OpenAPIClassBuilder.Path := Path;
+
+        OpenAPIClassBuilderList.Add(lsClassName, OpenAPIClassBuilder);
+      end;
+
+
 
       for var Operation in Path.Operations do
       begin
         Method := Operation.Key;
-        FunctionName :=  Operation.Value.OperationId;
+        FunctionName := Operation.Value.OperationId;
 
+        OpenAPIClassFunction := OpenAPIClassBuilder.AddFunction(FunctionName,
+          Method, lsEndPoint);
 
-        for var Parameter in Operation.Value.Parameters do
+        If Assigned(OpenAPIClassFunction) then
+        begin
+          for var Parameter in Operation.Value.Parameters do
           begin
+            ParamName := Parameter.Name;
+            ParamDescription := Parameter.Description;
+            Paramtype := Parameter.Schema.Type_;
+            ParamRequired := Parameter.Required;
+            ParamIn := Parameter.In_;
+            ParamFormat := Parameter.Schema.Format_;
 
-
-
+            OpenAPIClassFunction.AddParameter(ParamName, ParamDescription,
+              Paramtype, ParamRequired, ParamIn, ParamFormat);
 
           end;
+        end;
+      end;
+    end;
+
+    for OpenAPIClassBuilder in OpenAPIClassBuilderList.List do
+      begin
+        lsClassName := 'T' + TitleClassName + TNovusStringUtils.UpLower(OpenAPIClassBuilder.ClassName_, true);
+
+        Try
+          APIBuilder := TNovusStringBuilder.Create;
+
+
+          APIBuilder.AppendLine('unit ' + TitleClassName + '.' + TNovusStringUtils.UpLower(OpenAPIClassBuilder.ClassName_, true) + ';');
+          APIBuilder.AppendLine('');
+          APIBuilder.AppendLine('interface');
+          APIBuilder.AppendLine('');
+          APIBuilder.AppendLine('uses');
+          APIBuilder.AppendLine('  System.SysUtils, System.Classes;');
+          APIBuilder.AppendLine('');
+          APIBuilder.AppendLine('type');
+          APIBuilder.AppendLine('  ' + lsClassName + ' = class');
+          APIBuilder.AppendLine('  public');
+
+
+          For OpenAPIClassFunction in OpenAPIClassBuilder.FunctionList do
+          begin
+            FullFunction := OpenAPIClassFunction.BuildFullFunction(True);
+            APIBuilder.AppendLine('     ' + FullFunction);
+          end;
+          APIBuilder.AppendLine('  end;');
+          APIBuilder.AppendLine('');
+
+          APIBuilder.AppendLine('implementation');
+
+          APIBuilder.AppendLine('');
+
+          For OpenAPIClassFunction in OpenAPIClassBuilder.FunctionList do
+          begin
+           APIBuilder.AppendLine('procedure ' + TitleClassName + TNovusStringUtils.UpLower(OpenAPIClassBuilder.ClassName_, true)  + '.' + OpenAPIClassFunction.BuildFullFunction(false));
+           APIBuilder.AppendLine('begin');
+           APIBuilder.AppendLine('');
+           APIBuilder.AppendLine('end;');
+           APIBuilder.AppendLine('');
+          end;
+
+          APIBuilder.AppendLine('');
+
+          APIBuilder.AppendLine('end.');
+
+        Finally
+          WriteToFile(TNovusFileUtils.TrailingBackSlash(FOutputDir) + 'API\' + TitleClassName + '.' + TNovusStringUtils.UpLower(OpenAPIClassBuilder.ClassName_, true) + '.pas', APIBuilder.ToString);
+
+          APIBuilder.Free;
+        End;
 
 
 
 
-        //Operation.Value.Parameters
+
+
+
+
+
+
+
+
+
 
 
       end;
+
+
+
+
+
+
+    //
+
+
+
 
 
     //  OpenAPIClassBuilder.AddFunction
@@ -340,11 +482,16 @@ begin
 
       WriteToFile(TNovusFileUtils.TrailingBackSlash(FOutputDir) + 'API\' + GetNameSpaceFileName(ConvertToDotNotation(PathName)), APIBuilder.ToString);
       }
-    end;
-  finally
-    WriteToFile(TNovusFileUtils.TrailingBackSlash(FOutputDir) + 'API\PathList.pas', APIBuilder.ToString);
 
-    APIBuilder.Free;
+
+
+
+
+
+  finally
+//    WriteToFile(TNovusFileUtils.TrailingBackSlash(FOutputDir) + 'API\PathList.pas', APIBuilder.ToString);
+
+//    APIBuilder.Free;
     OpenAPIClassBuilderList.Free;
   end;
 end;
@@ -372,21 +519,6 @@ begin
     Result := Format('%s.%s.pas', [TitleClassName, Key]);
 end;
 
-function TNovusOpenAPICodegen.MapOpenAPITypeToDelphiType(const OpenAPIType, OpenAPIFormat: string): string;
-begin
-  if OpenAPIType = 'string' then
-    Result := 'string'
-  else if OpenAPIType = 'integer' then
-    Result := 'Integer'
-  else if OpenAPIType = 'boolean' then
-    Result := 'Boolean'
-  else if (OpenAPIType = 'number') and (OpenAPIFormat = 'float') then
-    Result := 'Single'
-  else if (OpenAPIType = 'number') and (OpenAPIFormat = 'double') then
-    Result := 'Double'
-  else
-    Result := 'string'; // Default to string if type is unknown
-end;
 
 function TNovusOpenAPICodegen.ConvertToDotNotation(const Method: string): string;
 var
@@ -409,5 +541,124 @@ begin
   Result := StringReplace(Input, '/', '', [rfReplaceAll]);
 end;
 
-end.
+// TNovusOpenAPIClassBuilder
+constructor TNovusOpenAPIClassBuilder.Create;
+begin
+  FFunctionList:= TNovusOpenAPIClassFunctionList.Create(TNovusOpenAPIClassFunction);
 
+  inherited Create;
+end;
+
+destructor TNovusOpenAPIClassBuilder.Destroy;
+begin
+  FFunctionList.Free;
+
+  inherited Destroy;
+end;
+
+function TNovusOpenAPIClassBuilder.AddFunction(aFunctionName: string; aMethod: string; aEndPoint:String): TNovusOpenAPIClassFunction;
+begin
+  Var OpenAPIClassFunction := TNovusOpenAPIClassFunction.Create(aFunctionName, aMethod, aEndPoint);
+
+  FFunctionList.Add(OpenAPIClassFunction);
+
+  Result := OpenAPIClassFunction;
+end;
+
+
+// TNovusOpenAPIClassFunction
+constructor TNovusOpenAPIClassFunction.Create(aFunctionName: string; aMethod: string; aEndPoint:String);
+begin
+  inherited Create;
+
+  fFunctionName := aFunctionName;
+  fMethod := aMethod;
+  fEndPoint := aEndPoint;
+
+
+  fParameterList:= TNovusOpenAPIClassParameterList.Create(TNovusOpenAPIClassParameter);
+end;
+
+destructor TNovusOpenAPIClassFunction.Destroy;
+begin
+  fParameterList.Free;
+
+  inherited Destroy;
+end;
+
+procedure TNovusOpenAPIClassFunction.AddParameter(aParamName: string;
+                                                  aParamDescription: string;
+                                                  aParamtype: string;
+                                                  aParamRequired: Boolean;
+                                                  aParamIn: String;
+                                                  aParamFormat: String);
+
+begin
+  Var NovusOpenAPIClassParameter := TNovusOpenAPIClassParameter.Create(aParamName,
+                                                  aParamDescription,
+                                                  aParamtype,
+                                                  aParamRequired,
+                                                  aParamIn,
+                                                  aParamFormat);
+
+  fParameterList.Add(NovusOpenAPIClassParameter);
+end;
+
+function TNovusOpenAPIClassFunction.BuildFullFunction(aWithProc: Boolean): string;
+var
+  lParameter: TNovusOpenAPIClassParameter;
+  Params: String;
+  ParamCount: integer;
+  ParamName: String;
+begin
+  Result := '';
+
+  Params := '(';
+  ParamCount := 0;
+  For lParameter in ParameterList do
+    begin
+      ParamName := TNovusOpenAPIUtils.OpenAPIParamToDelphiFunctionType(lParameter.ParamName);
+      Params := Params + ParamName + ': ' +
+            TNovusOpenAPIUtils.OpenAPITypeToDelphiType(lParameter.ParamType, lParameter.ParamFormat);
+
+     Inc(ParamCount);
+     if ParamCount < ParameterList.Count then
+         Params := Params + '; ';
+    end;
+
+  if Params = '' then Params := '()'
+    else  Params := Params + ')';
+
+  if aWithProc then
+    Result := 'procedure ' + FunctionName +  Params + ';'
+  else
+     Result := FunctionName +  Params + ';';
+end;
+
+// TNovusOpenAPIClassParameter
+constructor TNovusOpenAPIClassParameter.Create(aParamName: string;
+    aParamDescription: string;
+    aParamtype: string;
+    aParamRequired: Boolean;
+    aParamIn: string;
+    aParamFormat: string);
+begin
+  inherited Create;
+
+  fParamName := aParamName;
+  fParamDescription := aParamDescription;
+  fParamtype := aParamtype;
+  fParamRequired := aParamRequired;
+  fParamIn := aParamIn;
+  fParamFormat := aParamFormat;
+end;
+
+destructor TNovusOpenAPIClassParameter.Destroy;
+begin
+  inherited Destroy;
+end;
+
+
+
+
+end.

@@ -253,6 +253,8 @@ var
   ParamRequired: Boolean;
   ParamIn: String;
   FullFunction: String;
+  ResponseDescription: string;
+  ResponseCode: string;
 begin
   Paths := FParser.Schema.Paths;
 
@@ -303,6 +305,15 @@ begin
               Paramtype, ParamRequired, ParamIn, ParamFormat);
 
           end;
+
+         for var Response in Operation.Value.Responses.Responses do
+           begin
+             ResponseCode := Response.Key;
+             ResponseDescription :=  Response.Value.Description ;
+
+
+
+           end;
         end;
       end;
     end;
@@ -357,20 +368,6 @@ begin
 
           APIBuilder.Free;
         End;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
       end;
 

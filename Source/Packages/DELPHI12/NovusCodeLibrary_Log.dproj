@@ -110,6 +110,7 @@
         </DelphiCompile>
         <DCCReference Include="rtl.dcp"/>
         <DCCReference Include="NovusCodeLibrary_OS.dcp"/>
+        <DCCReference Include="NovusCodeLibrary_Console.dcp"/>
         <DCCReference Include="NovusCodeLibrary_Object.dcp"/>
         <DCCReference Include="..\..\Core\Log\NovusLogger.pas"/>
         <DCCReference Include="..\..\Core\Log\NovusLogger.Provider.Console.pas"/>

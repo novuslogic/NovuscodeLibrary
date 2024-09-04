@@ -176,10 +176,15 @@ type
   TOpenAPI3Response = class(TObject)
   private
     fDescription: string;
-    fContent: TJSONObject; // Content can be a complex object
+    fContent: TObjectDictionary<string, TOpenAPI3MediaType>;
+    // Update: Now stores MediaTypes
   public
+    constructor Create;
+    destructor Destroy; override;
+    procedure ParseFromJSON(AJSONObject: TJSONObject); // Add ParseFromJSON
     property Description: string read fDescription write fDescription;
-    property Content: TJSONObject read fContent write fContent;
+    property Content: TObjectDictionary<string, TOpenAPI3MediaType>
+      read fContent write fContent;
   end;
 
   TOpenAPI3Responses = class(TObject)
@@ -880,10 +885,13 @@ begin
         if Assigned(ResponsePair) then
         begin
           Response := TOpenAPI3Response.Create;
+          Response.ParseFromJSON(ResponsePair.JsonValue as TJSONObject);
+          (*
           Response.Description := tNovusJSONUtils.GetJSONStringValue
             (ResponsePair.JsonValue as TJSONObject, 'description');
           Response.Content := tNovusJSONUtils.GetJSONObjectValue
             (ResponsePair.JsonValue as TJSONObject, 'content');
+          *)
           fResponses.Add(ResponsePair.JsonString.Value, Response);
         end;
       end;
@@ -1497,10 +1505,13 @@ begin
     for ResponsePair in AJSONObject do
     begin
       Response := TOpenAPI3Response.Create;
+      Response.ParseFromJSON(ResponsePair.JsonValue as TJSONObject);
+      (*
       Response.Description := tNovusJSONUtils.GetJSONStringValue
         (ResponsePair.JsonValue as TJSONObject, 'description');
       Response.Content := tNovusJSONUtils.GetJSONObjectValue
         (ResponsePair.JsonValue as TJSONObject, 'content');
+        *)
       fResponses.Add(ResponsePair.JsonString.Value, Response);
     end;
   end;
@@ -1795,6 +1806,45 @@ begin
         MediaType := TOpenAPI3MediaType.Create;
         MediaType.ParseFromJSON(ContentPair.JsonValue as TJSONObject);
         fContent.Add(ContentPair.JsonString.Value, MediaType);
+      end;
+    end;
+  end;
+end;
+
+//TOpenAPI3Response
+constructor TOpenAPI3Response.Create;
+begin
+  inherited Create;
+  fContent := TObjectDictionary<string, TOpenAPI3MediaType>.Create([doOwnsValues]);
+end;
+
+destructor TOpenAPI3Response.Destroy;
+begin
+  fContent.Free; // Ensure memory is freed for the dictionary
+  inherited Destroy;
+end;
+
+procedure TOpenAPI3Response.ParseFromJSON(AJSONObject: TJSONObject);
+var
+  ContentObj: TJSONObject;
+  ContentPair: TJSONPair;
+  MediaType: TOpenAPI3MediaType;
+begin
+  if Assigned(AJSONObject) then
+  begin
+    // Parse the description
+    fDescription := tNovusJSONUtils.GetJSONStringValue(AJSONObject, 'description');
+
+    // Parse the content dictionary
+    ContentObj := tNovusJSONUtils.GetJSONObjectValue(AJSONObject, 'content');
+    if Assigned(ContentObj) then
+    begin
+      for ContentPair in ContentObj do
+      begin
+        // Create a new TOpenAPI3MediaType instance for each media type
+        MediaType := TOpenAPI3MediaType.Create;
+        MediaType.ParseFromJSON(ContentPair.JsonValue as TJSONObject); // Parse the media type details
+        fContent.Add(ContentPair.JsonString.Value, MediaType); // Add to dictionary
       end;
     end;
   end;

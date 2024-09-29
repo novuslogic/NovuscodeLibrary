@@ -9,6 +9,13 @@
 <!-- /TOC -->
 ## Release v0.2.0
 
+29/09/2024
+
+* New function TNovusLogger.FindProvder(aProviderClass: TNovusLogger_ProviderClass = nil): TNovusLogger_Provider;
+* Removed function TNovusLogFile.FormatedNow(const aDate: tDateTime = 0): String;
+* TNovusLogger.AddLog functions now pass  aProviderClass: TNovusLogger_ProviderClass to select only Log Provider
+* New Pakage for the new Logger class NovusCodeLibraryLogger old NovusCodeLibraryLog reference only the new refactored class TNovusLog
+* New Novuslog now been refactored to class NovusCodeLogger for Backward compatibiillty with new TNovusLogger class
 * New Property Fullpath and PathList in class TOpenAPI3Path in unit NovusNovusOpenAPIParser
 * New class function LoadEnvFile(const aFileName: string): boolean; in unit NovusEnvironment
 * New class procedure SplitStringToList(const aStr: string; const aDelimiter: string; aStringList: TStrings); in unit NovusStringUtil

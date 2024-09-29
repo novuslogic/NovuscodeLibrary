@@ -1,7 +1,7 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
-        <ProjectGuid>{1B87FC5B-CDA9-4481-8DFB-A5EF3A29EA03}</ProjectGuid>
-        <MainSource>NovusCodeLibrary_Log.dpk</MainSource>
+        <ProjectGuid>{D21715A0-3D2C-474D-A945-224CBC2FA87D}</ProjectGuid>
+        <MainSource>NovusCodeLibrary_Logger.dpk</MainSource>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
         <TargetedPlatforms>3</TargetedPlatforms>
@@ -9,7 +9,7 @@
         <FrameworkType>VCL</FrameworkType>
         <ProjectVersion>20.1</ProjectVersion>
         <Platform Condition="'$(Platform)'==''">Win64</Platform>
-        <ProjectName Condition="'$(ProjectName)'==''">NovusCodeLibrary_Log</ProjectName>
+        <ProjectName Condition="'$(ProjectName)'==''">NovusCodeLibrary_Logger</ProjectName>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
         <Base>true</Base>
@@ -54,7 +54,7 @@
         <DCC_ImageBase>00400000</DCC_ImageBase>
         <GenDll>true</GenDll>
         <GenPackage>true</GenPackage>
-        <SanitizedProjectName>NovusCodeLibrary_Log</SanitizedProjectName>
+        <SanitizedProjectName>NovusCodeLibrary_Logger</SanitizedProjectName>
         <DCC_Description>NovusCodeLibrary Runtime - Log</DCC_Description>
         <DllSuffix>280</DllSuffix>
         <RuntimeOnlyPackage>true</RuntimeOnlyPackage>
@@ -112,7 +112,10 @@
         <DCCReference Include="NovusCodeLibrary_OS.dcp"/>
         <DCCReference Include="NovusCodeLibrary_Console.dcp"/>
         <DCCReference Include="NovusCodeLibrary_Object.dcp"/>
-        <DCCReference Include="..\..\Core\Log\NovusLog.pas"/>
+        <DCCReference Include="..\..\Core\Log\NovusLogger.pas"/>
+        <DCCReference Include="..\..\Core\Log\NovusLogger.Provider.Console.pas"/>
+        <DCCReference Include="..\..\Core\Log\NovusLogger.Provider.Files.pas"/>
+        <DCCReference Include="..\..\Core\Log\NovusLogger.Provider.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -131,7 +134,7 @@
         <BorlandProject>
             <Delphi.Personality>
                 <Source>
-                    <Source Name="MainSource">NovusCodeLibrary_Log.dpk</Source>
+                    <Source Name="MainSource">NovusCodeLibrary_Logger.dpk</Source>
                 </Source>
                 <Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dcloffice2k280.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
@@ -144,9 +147,9 @@
                 <Platform value="Win64x">False</Platform>
             </Platforms>
             <Deployment Version="4">
-                <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\23.0\Bpl\Win64\NovusCodeLibrary_Log280.bpl" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\23.0\Bpl\Win64\NovusCodeLibrary_Logger280.bpl" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win64">
-                        <RemoteName>NovusCodeLibrary_Log.bpl</RemoteName>
+                        <RemoteName>NovusCodeLibrary_Logger.bpl</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

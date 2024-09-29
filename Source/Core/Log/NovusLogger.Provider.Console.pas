@@ -19,7 +19,7 @@ type
   Public
     constructor Create; override;
 
-    procedure AddLog(aLogMessage: string; aDateTime: tDateTime; aSeverityType: TSeverityType); override;
+    function AddLog(aLogMessage: string; aDateTime: tDateTime; aSeverityType: TSeverityType): string; override;
 
     procedure AddLogSuccess(aLogMessage: string); override;
     procedure AddLogInformation(aLogMessage : string); override;
@@ -27,7 +27,7 @@ type
     procedure AddLogError(aException: Exception); overload; override;
     procedure AddLogWarning(aLogMessage: string); override;
     procedure AddLogDebug(aLogMessage: string); override;
-    procedure AddLogException(aLogMessage: string); overload; override;
+    function AddLogException(aLogMessage: string): string; overload; override;
     procedure AddLogSystem(aLogMessage: string); override;
   end;
 
@@ -65,9 +65,11 @@ begin
      fCurrBgColour);
 end;
 
-procedure TNovusLogger_Provider_Console.AddLog(aLogMessage: string; aDateTime: tDateTime; aSeverityType: TSeverityType);
+function TNovusLogger_Provider_Console.AddLog(aLogMessage: string; aDateTime: tDateTime; aSeverityType: TSeverityType): string;
 begin
-  writeln(FormatLogOutput(aLogMessage, aDateTime, aSeverityType));
+  Result := FormatLogOutput(aLogMessage, aDateTime, aSeverityType);
+
+  writeln(Result);
 
   RestoreCurrentConsoleColour;
 end;
@@ -140,13 +142,13 @@ begin
   AddLog(aLogMessage, Now, TSeverityType.stSystem);
 end;
 
-procedure TNovusLogger_Provider_Console.AddLogException(aLogMessage: string);
+function TNovusLogger_Provider_Console.AddLogException(aLogMessage: string): string;
 begin
   GetCurrentConsoleColour;
 
   SetConsoleColour(FOREGROUND_RED);
 
-  AddLog(aLogMessage, Now, TSeverityType.stException);
+  Result := AddLog(aLogMessage, Now, TSeverityType.stException);
 end;
 
 

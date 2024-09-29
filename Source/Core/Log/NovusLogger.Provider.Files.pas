@@ -27,7 +27,7 @@ type
 
     procedure SendLogMessage(aLogMessage: String;aLogDateTime: tDateTime; aSeverityType: TSeverityType); override;
 
-    procedure AddLog(aLogMessage: string; aLogDateTime: tDateTime; aSeverityType: TSeverityType); override;
+    function AddLog(aLogMessage: string; aLogDateTime: tDateTime; aSeverityType: TSeverityType): string; override;
 
     procedure AddLogSuccess(aLogMessage: string); override;
     procedure AddLogInformation(aLogMessage : string); override;
@@ -35,8 +35,11 @@ type
     procedure AddLogError(aException: Exception); overload; override;
     procedure AddLogWarning(aLogMessage: string); override;
     procedure AddLogDebug(aLogMessage: string); override;
-    procedure AddLogException(aLogMessage: string); overload; override;
+    function AddLogException(aLogMessage: string): string; overload; override;
     procedure AddLogSystem(aLogMessage: string); override;
+
+    property Filename: String  read fsFilename write fsFilename;
+
   end;
 
 implementation
@@ -93,8 +96,10 @@ end;
 
 
 
-procedure TNovusLogger_Provider_Files.AddLog(aLogMessage: string; aLogDateTime: tDateTime; aSeverityType: TSeverityType);
+function TNovusLogger_Provider_Files.AddLog(aLogMessage: string; aLogDateTime: tDateTime; aSeverityType: TSeverityType): string;
 begin
+  Result := FormatLogOutput(aLogMessage, aLogDateTime,aSeverityType);
+
   (Logger as TNovusLogger).PushLogMessage(FormatLogOutput(aLogMessage, aLogDateTime,aSeverityType),  aLogDateTime,aSeverityType,  Self);
 end;
 
@@ -133,9 +138,9 @@ begin
    AddLog(aLogMessage, Now, TSeverityType.stSystem);
 end;
 
-procedure TNovusLogger_Provider_Files.AddLogException(aLogMessage: string);
+function TNovusLogger_Provider_Files.AddLogException(aLogMessage: string): string;
 begin
-  AddLog(aLogMessage, Now, TSeverityType.stException);
+  result := AddLog(aLogMessage, Now, TSeverityType.stException);
 end;
 
 procedure TNovusLogger_Provider_Files.WriteFile(aLogMessage: String);
@@ -151,7 +156,7 @@ begin
       FStreamWriter := TStreamWriter.Create(fsfilename,true);
       FStreamWriter.AutoFlush := true;
 
-      FStreamWriter.Write(aLogMessage);
+      FStreamWriter.Write(aLogMessage+  sLineBreak);
 
       FStreamWriter.Flush;
 

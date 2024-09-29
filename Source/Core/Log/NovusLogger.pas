@@ -3,9 +3,11 @@ unit NovusLogger;
 interface
 
 Uses NovusObject, NovusLogger.Provider, System.SysUtils, NovusUtilities,
-     System.Threading, System.Classes, System.Generics.Collections, System.Types;
+  System.Threading, System.Classes, System.Generics.Collections, System.Types;
 
 type
+  TNovusLogger_ProviderClass = class of TNovusLogger_Provider;
+
   TNovusLogTaskQueue = class
   private
     FTaskQueue: TQueue<ITask>;
@@ -24,42 +26,61 @@ type
     FLoggerTaskQueue: TNovusLogTaskQueue;
     FProviders: array of TNovusLogger_Provider;
   public
-    procedure PushLogMessage(aLogMessage: string; aLogDateTime: tDateTime; aSeverityType: TSeverityType; aProvider: TNovusLogger_Provider); virtual;
+    procedure PushLogMessage(aLogMessage: string; aLogDateTime: tDateTime;
+      aSeverityType: TSeverityType; aProvider: TNovusLogger_Provider); virtual;
 
-    procedure AddLogSuccess(aMessage: string); virtual;
-    procedure AddLogInformation(aMessage : string); virtual;
-    procedure AddLogError(aMessage: string); overload; virtual;
-    procedure AddLogError(aException: Exception); overload; virtual;
-    procedure AddLogWarning(aMessage: string); virtual;
-    procedure AddLogDebug(aMessage: string); virtual;
-    procedure AddLogSystem(aMessage: string); virtual;
-    function AddLogException: String; overload; virtual;
-    procedure AddLogException(aMessage: String); overload; virtual;
-    procedure AddLogException(aException: Exception); overload; virtual;
+    function FormatLogOutput(aLogMessage: string; aDateTime: tDateTime; aSeverityType: TSeverityType;
+        aProviderClass: TNovusLogger_ProviderClass = nil): string;
+
+    function FindProvder(aProviderClass: TNovusLogger_ProviderClass = nil): TNovusLogger_Provider;
+
+    function AddLog(aLogMessage: string; aLogDateTime: tDateTime; aSeverityType: TSeverityType; aProviderClass: TNovusLogger_ProviderClass = nil): string; virtual;
+
+    procedure AddLogSuccess(aLogMessage: string;
+      aProviderClass: TNovusLogger_ProviderClass = nil); virtual;
+    procedure AddLogInformation(aLogMessage: string;
+      aProviderClass: TNovusLogger_ProviderClass = nil); virtual;
+    procedure AddLogError(aLogMessage: string;
+      aProviderClass: TNovusLogger_ProviderClass = nil); overload; virtual;
+    procedure AddLogError(aException: Exception;
+      aProviderClass: TNovusLogger_ProviderClass = nil); overload; virtual;
+    procedure AddLogWarning(aLogMessage: string;
+      aProviderClass: TNovusLogger_ProviderClass = nil); virtual;
+    procedure AddLogDebug(aLogMessage: string;
+      aProviderClass: TNovusLogger_ProviderClass = nil); virtual;
+    procedure AddLogSystem(aLogMessage: string;
+      aProviderClass: TNovusLogger_ProviderClass = nil); virtual;
+    function AddLogException(aProviderClass: TNovusLogger_ProviderClass = nil)
+      : String; overload; virtual;
+    function AddLogException(aLogMessage: string;
+      aProviderClass: TNovusLogger_ProviderClass = nil): string; overload; virtual;
+    procedure AddLogException(aException: Exception;
+      aProviderClass: TNovusLogger_ProviderClass = nil); overload; virtual;
 
     procedure FlushLogs; virtual;
 
     function OpenLog: Boolean; virtual;
-    function CloseLog: Boolean;  virtual;
+    function CloseLog: Boolean; virtual;
 
-    constructor Create(const aProviders: array of tNovuslogger_Provider); virtual;
+    constructor Create(const aProviders
+      : array of TNovusLogger_Provider); virtual;
     destructor Destroy; override;
   end;
 
 implementation
 
-
 // TNovusLogger
-constructor TNovusLogger.Create(const aProviders: array of tNovuslogger_Provider);
+constructor TNovusLogger.Create(const aProviders
+  : array of TNovusLogger_Provider);
 begin
-  FLoggerTaskQueue:= TNovusLogTaskQueue.Create;
+  FLoggerTaskQueue := TNovusLogTaskQueue.Create;
 
   SetLength(FProviders, Length(aProviders));
   for var I := Low(aProviders) to High(aProviders) do
-    begin
-      FProviders[I] := aProviders[I];
-      FProviders[I].Logger := Self;
-    end;
+  begin
+    FProviders[I] := aProviders[I];
+    FProviders[I].Logger := Self;
+  end;
 end;
 
 destructor TNovusLogger.Destroy;
@@ -70,13 +91,12 @@ begin
 
   for var I := High(FProviders) downto Low(FProviders) do
     If Assigned(FProviders[I]) then
-      begin
-        FProviders[I].Free;
-      end;
+    begin
+      FProviders[I].Free;
+    end;
 
   inherited;
 end;
-
 
 function TNovusLogger.OpenLog: Boolean;
 begin
@@ -84,113 +104,252 @@ begin
 
   for var I := High(FProviders) downto Low(FProviders) do
     If Assigned(FProviders[I]) then
-      begin
-        Result := FProviders[I].OpenLog;
-        if Not Result then Break;
-        
-      end;
+    begin
+      Result := FProviders[I].OpenLog;
+      if Not Result then
+        Break;
+
+    end;
 end;
 
 function TNovusLogger.CloseLog: Boolean;
 begin
-  result := True;
+  Result := true;
 
-   for var I := High(FProviders) downto Low(FProviders) do
+  for var I := High(FProviders) downto Low(FProviders) do
     If Assigned(FProviders[I]) then
-      begin
-        Result := FProviders[I].CloseLog;
-        if Not Result then Break;
-      end;
-end;
-
-procedure TNovusLogger.PushLogMessage(aLogMessage: string; aLogDateTime: tDateTime; aSeverityType: TSeverityType; aProvider: TNovusLogger_Provider);
-begin
-   aProvider.SendLogMessage(aLogMessage, aLogDateTime, aSeverityType);
-
-
-   (*
-    FLoggerTaskQueue.AddTask(procedure
     begin
-      aProvider.SendLogMessage(aLogMessage, aLogDateTime, aSeverityType);
-    end);
-    *)
+      Result := FProviders[I].CloseLog;
+      if Not Result then
+        Break;
+    end;
 end;
 
-procedure TNovusLogger.AddLogSuccess(aMessage: string);
+procedure TNovusLogger.PushLogMessage(aLogMessage: string;
+  aLogDateTime: tDateTime; aSeverityType: TSeverityType;
+  aProvider: TNovusLogger_Provider);
 begin
-  for var I := High(FProviders) downto Low(FProviders) do
-    If Assigned(FProviders[I]) then
-      FProviders[I].AddLogSuccess(aMessage);
+  aProvider.SendLogMessage(aLogMessage, aLogDateTime, aSeverityType);
 end;
 
-procedure TNovusLogger.AddLogInformation(aMessage : string);
+
+function TNovusLogger.FormatLogOutput(aLogMessage: string; aDateTime: tDateTime; aSeverityType: TSeverityType; aProviderClass: TNovusLogger_ProviderClass = nil): string;
 begin
-  for var I := High(FProviders) downto Low(FProviders) do
-    If Assigned(FProviders[I]) then
-       FProviders[I].AddLogInformation(aMessage);
+  if aProviderClass = nil then
+  begin
+    for var I := Low(FProviders) to High(FProviders) do
+      if Assigned(FProviders[I]) then
+        Result := FProviders[I].FormatLogOutput(aLogMessage,aDateTime,aSeverityType)
+  end
+  else
+  begin
+    for var I := Low(FProviders) to High(FProviders) do
+      if Assigned(FProviders[I]) and (FProviders[I] is aProviderClass) then
+        Result := FProviders[I].FormatLogOutput(aLogMessage,aDateTime,aSeverityType);
+  end;
 end;
 
-procedure TNovusLogger.AddLogError(aMessage: string);
+function TNovusLogger.FindProvder(aProviderClass: TNovusLogger_ProviderClass = nil): TNovusLogger_Provider;
 begin
-  for var I := High(FProviders) downto Low(FProviders) do
-    If Assigned(FProviders[I]) then
-      FProviders[I].AddLogError(aMessage);
+  Result := nil;
+
+  for var I := Low(FProviders) to High(FProviders) do
+      if Assigned(FProviders[I]) and (FProviders[I] is aProviderClass) then
+        begin
+          Result := FProviders[I];
+          break;
+        end;
 end;
 
-procedure TNovusLogger.AddLogError(aException: Exception);
+
+function TNovusLogger.AddLog(aLogMessage: string; aLogDateTime: tDateTime; aSeverityType: TSeverityType; aProviderClass: TNovusLogger_ProviderClass = nil): string;
 begin
-  for var I := High(FProviders) downto Low(FProviders) do
-    If Assigned(FProviders[I]) then
-      FProviders[I].AddLogError(aException);
+  if aProviderClass = nil then
+  begin
+    for var I := Low(FProviders) to High(FProviders) do
+      if Assigned(FProviders[I]) then
+        Result := FProviders[I].AddLog(aLogMessage,aLogDateTime,aSeverityType);
+  end
+  else
+  begin
+    for var I := Low(FProviders) to High(FProviders) do
+      if Assigned(FProviders[I]) and (FProviders[I] is aProviderClass) then
+        Result := FProviders[I].AddLog(aLogMessage,aLogDateTime,aSeverityType);
+  end;
 end;
 
-procedure TNovusLogger.AddLogWarning(aMessage: string);
+procedure TNovusLogger.AddLogSuccess(aLogMessage: string;
+  aProviderClass: TNovusLogger_ProviderClass = nil);
 begin
-  for var I := High(FProviders) downto Low(FProviders) do
-    If Assigned(FProviders[I]) then
-       FProviders[I].AddLogWarning(aMessage);
-
+  if aProviderClass = nil then
+  begin
+    for var I := Low(FProviders) to High(FProviders) do
+      if Assigned(FProviders[I]) then
+        FProviders[I].AddLogSuccess(aLogMessage);
+  end
+  else
+  begin
+    for var I := Low(FProviders) to High(FProviders) do
+      if Assigned(FProviders[I]) and (FProviders[I] is aProviderClass) then
+        FProviders[I].AddLogSuccess(aLogMessage);
+  end;
 end;
 
-function TNovusLogger.AddLogException: String;
+procedure TNovusLogger.AddLogInformation(aLogMessage: string;
+  aProviderClass: TNovusLogger_ProviderClass = nil);
 begin
-  var lsMessage := TNovusUtilities.GetExceptMess;
+  If aProviderClass = nil then
+  begin
+    for var I := High(FProviders) downto Low(FProviders) do
+      If Assigned(FProviders[I]) then
+        FProviders[I].AddLogInformation(aLogMessage);
+  end
+  else
+  begin
+    for var I := Low(FProviders) to High(FProviders) do
+      if Assigned(FProviders[I]) and (FProviders[I] is aProviderClass) then
+        FProviders[I].AddLogInformation(aLogMessage);
+  end;
+end;
+
+procedure TNovusLogger.AddLogError(aLogMessage: string;
+  aProviderClass: TNovusLogger_ProviderClass = nil);
+begin
+  If aProviderClass = nil then
+  begin
+    for var I := High(FProviders) downto Low(FProviders) do
+      If Assigned(FProviders[I]) then
+        FProviders[I].AddLogError(aLogMessage);
+  end
+  else
+  begin
+    for var I := Low(FProviders) to High(FProviders) do
+      if Assigned(FProviders[I]) and (FProviders[I] is aProviderClass) then
+        FProviders[I].AddLogError(aLogMessage);
+  end;
+end;
+
+procedure TNovusLogger.AddLogError(aException: Exception;
+  aProviderClass: TNovusLogger_ProviderClass = nil);
+begin
+  If aProviderClass = nil then
+  begin
+    for var I := High(FProviders) downto Low(FProviders) do
+      If Assigned(FProviders[I]) then
+        FProviders[I].AddLogError(aException);
+  end
+  else
+  begin
+    for var I := Low(FProviders) to High(FProviders) do
+      if Assigned(FProviders[I]) and (FProviders[I] is aProviderClass) then
+        FProviders[I].AddLogError(aException);
+  end;
+end;
+
+procedure TNovusLogger.AddLogWarning(aLogMessage: string;
+  aProviderClass: TNovusLogger_ProviderClass = nil);
+begin
+  If aProviderClass = nil then
+  begin
+    for var I := High(FProviders) downto Low(FProviders) do
+      If Assigned(FProviders[I]) then
+        FProviders[I].AddLogWarning(aLogMessage);
+  end
+  else
+  begin
+    for var I := Low(FProviders) to High(FProviders) do
+      if Assigned(FProviders[I]) and (FProviders[I] is aProviderClass) then
+        FProviders[I].AddLogWarning(aLogMessage);
+  end;
+end;
+
+function TNovusLogger.AddLogException(aProviderClass
+  : TNovusLogger_ProviderClass = nil): String;
+begin
+  var
+  lsMessage := TNovusUtilities.GetExceptMess;
   Result := lsMessage;
 
-  for var I := High(FProviders) downto Low(FProviders) do
-    If Assigned(FProviders[I]) then
-      FProviders[I].AddLogException(lsMessage);
+  If aProviderClass = nil then
+  begin
+    for var I := High(FProviders) downto Low(FProviders) do
+      If Assigned(FProviders[I]) then
+        FProviders[I].AddLogException(lsMessage);
+  end
+ else
+  begin
+    for var I := Low(FProviders) to High(FProviders) do
+      if Assigned(FProviders[I]) and (FProviders[I] is aProviderClass) then
+        FProviders[I].AddLogException(lsMessage);
+  end;
 end;
 
-procedure TNovusLogger.AddLogDebug(aMessage: string);
+procedure TNovusLogger.AddLogDebug(aLogMessage: string;
+  aProviderClass: TNovusLogger_ProviderClass = nil);
 begin
-  for var I := High(FProviders) downto Low(FProviders) do
-    If Assigned(FProviders[I]) then
-      FProviders[I].AddLogDebug(aMessage);
+  If aProviderClass = nil then
+  begin
+    for var I := High(FProviders) downto Low(FProviders) do
+      If Assigned(FProviders[I]) then
+        FProviders[I].AddLogDebug(aLogMessage);
+  end
+  else
+  begin
+    for var I := Low(FProviders) to High(FProviders) do
+      if Assigned(FProviders[I]) and (FProviders[I] is aProviderClass) then
+        FProviders[I].AddLogDebug(aLogMessage);
+  end;
 end;
 
-procedure TNovusLogger.AddLogSystem(aMessage: string);
+procedure TNovusLogger.AddLogSystem(aLogMessage: string;
+  aProviderClass: TNovusLogger_ProviderClass = nil);
 begin
-  for var I := High(FProviders) downto Low(FProviders) do
-    If Assigned(FProviders[I]) then
-      FProviders[I].AddLogSystem(aMessage);
+  If aProviderClass = nil then
+  begin
+    for var I := High(FProviders) downto Low(FProviders) do
+      If Assigned(FProviders[I]) then
+        FProviders[I].AddLogSystem(aLogMessage);
+  end
+  else
+  begin
+    for var I := Low(FProviders) to High(FProviders) do
+      if Assigned(FProviders[I]) and (FProviders[I] is aProviderClass) then
+        FProviders[I].AddLogSystem(aLogMessage);
+  end;
 end;
 
-
-
-procedure TNovusLogger.AddLogException(aMessage: String);
+function TNovusLogger.AddLogException(aLogMessage: string;
+  aProviderClass: TNovusLogger_ProviderClass = nil): string;
 begin
-  for var I := High(FProviders) downto Low(FProviders) do
-    If Assigned(FProviders[I]) then
-      FProviders[I].AddLogException(aMessage);
+  If aProviderClass = nil then
+  begin
+    for var I := High(FProviders) downto Low(FProviders) do
+      If Assigned(FProviders[I]) then
+        Result := FProviders[I].AddLogException(aLogMessage);
+  end
+  else
+  begin
+    for var I := Low(FProviders) to High(FProviders) do
+      if Assigned(FProviders[I]) and (FProviders[I] is aProviderClass) then
+        Result := FProviders[I].AddLogException(aLogMessage);
+  end;
 end;
 
-
-procedure TNovusLogger.AddLogException(aException: Exception);
+procedure TNovusLogger.AddLogException(aException: Exception;
+  aProviderClass: TNovusLogger_ProviderClass = nil);
 begin
-  for var I := High(FProviders) downto Low(FProviders) do
-    If Assigned(FProviders[I]) then
-      FProviders[I].AddLogException(aException);
+  If aProviderClass = nil then
+  begin
+    for var I := High(FProviders) downto Low(FProviders) do
+      If Assigned(FProviders[I]) then
+        FProviders[I].AddLogException(aException);
+  end
+  else
+  begin
+    for var I := Low(FProviders) to High(FProviders) do
+      if Assigned(FProviders[I]) and (FProviders[I] is aProviderClass) then
+        FProviders[I].AddLogException(aException);
+  end;
 end;
 
 procedure TNovusLogger.FlushLogs;
@@ -199,8 +358,6 @@ begin
     If Assigned(FProviders[I]) then
       FProviders[I].FlushLog;
 end;
-
-
 
 // TNovusLogTaskQueue
 constructor TNovusLogTaskQueue.Create;
@@ -221,7 +378,8 @@ procedure TNovusLogTaskQueue.AddTask(const ATaskProc: TProc);
 var
   NewTask: ITask;
 begin
-  NewTask := TTask.Create(procedure
+  NewTask := TTask.Create(
+    procedure
     begin
       ATaskProc();
       ExecuteNextTask;
@@ -245,7 +403,7 @@ begin
   try
     if FTaskQueue.Count > 0 then
     begin
-      FIsRunning := True;
+      FIsRunning := true;
       NextTask := FTaskQueue.Dequeue;
     end
     else
@@ -259,8 +417,5 @@ begin
 
   NextTask.Start;
 end;
-
-
-
 
 end.

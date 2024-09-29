@@ -3,7 +3,7 @@ unit NovusLogger.Provider;
 interface
 
 Uses NovusObject, System.SysUtils, NovusUtilities, System.Threading,
-  System.Generics.Collections;
+     System.Generics.Collections;
 
 type
   TSeverityType = (stNone, stInformation, stSuccess, stWarning, stError, stCritical, stException, stDebug, stSystem);
@@ -30,7 +30,7 @@ type
     function SeverityTypeToString(aSeverityType: tSeverityType): String;
     function FormatLogOutput(aLogMessage: string; aDateTime: tDateTime; aSeverityType: TSeverityType): string; virtual;
 
-    procedure AddLog(aLogMessage: string; aLogDateTime: tDateTime;  aSeverityType: TSeverityType = stNone); virtual;
+    function AddLog(aLogMessage: string; aLogDateTime: tDateTime;  aSeverityType: TSeverityType = stNone): string; virtual;
     procedure AddLogSuccess(aLogMessage: string); virtual;
     procedure AddLogInformation(aLogMessage : string); virtual;
     procedure AddLogError(aLogMessage: string); overload; virtual;
@@ -38,7 +38,7 @@ type
     procedure AddLogWarning(aLogMessage: string); virtual;
     procedure AddLogDebug(aLogMessage: string); virtual;
     function AddLogException: String; overload; virtual;
-    procedure AddLogException(aLogMessage: String); overload; virtual;
+    function AddLogException(aLogMessage: String): string; overload; virtual;
     procedure AddLogException(aException: Exception); overload; virtual;
     procedure AddLogSystem(aLogMessage: String); overload; virtual;
 
@@ -117,8 +117,9 @@ begin
 end;
 
 
-procedure tNovusLogger_Provider.AddLogException(aLogMessage: String);
+function tNovusLogger_Provider.AddLogException(aLogMessage: String): string;
 begin
+  Result := '';
 end;
 
 procedure tNovusLogger_Provider.AddLogSystem(aLogMessage: String);
@@ -130,8 +131,9 @@ begin
   AddLogException(aException.Message);
 end;
 
-procedure tNovusLogger_Provider.AddLog(aLogMessage: string; aLogDateTime: tDateTime; aSeverityType: TSeverityType);
+function tNovusLogger_Provider.AddLog(aLogMessage: string; aLogDateTime: tDateTime; aSeverityType: TSeverityType): string;
 begin
+  result := '';
 end;
 
 function tNovusLogger_Provider.OpenLog: Boolean;

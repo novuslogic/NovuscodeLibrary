@@ -1,5 +1,5 @@
 {$I ..\..\core\NovusCodeLibrary.inc}
-package NovusCodeLibrary_Log;
+package NovusCodeLibrary_Logger;
 
 {$R *.res}
 {$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
@@ -38,6 +38,9 @@ requires
   NovusCodeLibrary_Object;
 
 contains
-  NovusLog in '..\..\Core\Log\NovusLog.pas';
+  NovusLogger in '..\..\Core\Log\NovusLogger.pas',
+  NovusLogger.Provider.Console in '..\..\Core\Log\NovusLogger.Provider.Console.pas',
+  NovusLogger.Provider.Files in '..\..\Core\Log\NovusLogger.Provider.Files.pas',
+  NovusLogger.Provider in '..\..\Core\Log\NovusLogger.Provider.pas';
 
 end.

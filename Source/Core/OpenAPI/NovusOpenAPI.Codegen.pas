@@ -311,7 +311,13 @@ begin
              ResponseCode := Response.Key;
              ResponseDescription :=  Response.Value.Description ;
 
+              for var MediaType in Response.Value.Content do
+                begin
+                  Item
 
+
+
+                end;
 
            end;
         end;

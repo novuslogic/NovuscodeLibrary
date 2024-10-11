@@ -5,11 +5,24 @@ interface
 uses NovusUtilities, variants, SysUtils;
 
 type
+  TVarRecHelper = record
+    VRec: TVarRec;
+    VExtended: Extended;
+    VCurrency: Currency;
+    VInt64: Int64;
+    VInteger: Integer;
+    VBoolean: Boolean;
+    VString: string;
+    VAnsiString: AnsiString;
+    VUnicodeString: UnicodeString;
+    VVariant: Variant;
+  end;
+
   TNovusVariants = class(TNovusUtilities)
   protected
   private
   public
-    class function VarToVarRec(aValue: variant): TVarRec;
+    class function VarToVarRec(const V: Variant): TVarRecHelper;
     class procedure DisposeVarRec(aVarRec: TVarRec);
   end;
 
@@ -23,48 +36,89 @@ begin
   end;
 end;
 
-class function TNovusVariants.VarToVarRec(aValue: variant): TVarRec;
-Var
-  U: UnicodeString;
+class function TNovusVariants.VarToVarRec(const V: Variant): TVarRecHelper;
 begin
-  case VarType(aValue) of
-       vtInteger:       ;
-       vtBoolean:       ;
-       vtChar:          ;
-       vtExtended:      ;
-       varUString,
-       vtUnicodeString:
-         begin
-           U := aValue;
+  // Initialize the VRec
+  FillChar(Result.VRec, SizeOf(TVarRec), 0);
 
-           New(Result.VUnicodeString);
-           Result.VType := vtUnicodeString;
-           Result.VUnicodeString := Pointer(U);
-         end;
+  // Determine the Variant type
+  case VarType(V) and varTypeMask of
+    varSmallint,
+    varInteger,
+    varShortInt,
+    varByte,
+    varWord,
+    varLongWord:
+      begin
+        Result.VInteger := V;
+        Result.VRec.VType := vtInteger;
+        Result.VRec.VInteger := Result.VInteger;
+      end;
 
-       varOleStr,
-       256,
-       vtString:
-          begin
-            New(Result.VString);
-            Result.VType := vtString;
-            Result.VString^ := VarToStr(aValue);
-          end;
+    varInt64,
+    varUInt64:
+      begin
+        Result.VInt64 := V;
+        Result.VRec.VType := vtInt64;
+        Result.VRec.VInt64 := @Result.VInt64;
+      end;
 
-       vtPointer:        ;
-       vtPChar:          ;
-       vtObject:         ;
-       vtWideChar:       ;
-       vtAnsiString:     ;
-       vtCurrency:       ;
-       vtVariant:        ;
-       vtInterface:      ;
-       vtWideString:     ;
+    varSingle,
+    varDouble:
+      begin
+        Result.VExtended := V;
+        Result.VRec.VType := vtExtended;
+        Result.VRec.VExtended := @Result.VExtended;
+      end;
 
-       vtInt64:         ;
+    varCurrency:
+      begin
+        Result.VCurrency := V;
+        Result.VRec.VType := vtCurrency;
+        Result.VRec.VCurrency := @Result.VCurrency;
+      end;
 
-  else
-      Raise Exception.Create('TNovusVariants.VarToVarRec: Unrecognized variant type: '+ VarTypeAsText(VarType(aValue)) + ':' + IntToStr(VarType(aValue)));
+    varUString:
+      begin
+        Result.VUnicodeString := V;
+        Result.VRec.VType := vtUnicodeString;
+        Result.VRec.VUnicodeString := Pointer(Result.VUnicodeString);
+      end;
+
+    varOleStr:
+      begin
+        Result.VUnicodeString := UnicodeString(V);
+        Result.VRec.VType := vtUnicodeString;
+        Result.VRec.VUnicodeString := Pointer(Result.VUnicodeString);
+      end;
+
+    varString:
+      begin
+        Result.VAnsiString := AnsiString(V);
+        Result.VRec.VType := vtAnsiString;
+        Result.VRec.VAnsiString := Pointer(Result.VAnsiString);
+      end;
+
+    varBoolean:
+      begin
+        Result.VBoolean := V;
+        Result.VRec.VType := vtBoolean;
+        Result.VRec.VBoolean := Result.VBoolean;
+      end;
+
+    varDate:
+      begin
+        // Dates are stored as TDateTime (Double)
+        Result.VExtended := V;
+        Result.VRec.VType := vtExtended;
+        Result.VRec.VExtended := @Result.VExtended;
+      end;
+
+    else
+      // For other types, store the Variant itself
+      Result.VVariant := V;
+      Result.VRec.VType := vtVariant;
+      Result.VRec.VVariant := @Result.VVariant;
   end;
 end;
 

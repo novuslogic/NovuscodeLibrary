@@ -1094,20 +1094,39 @@ begin
   Result := TRegEx.IsMatch(aStr, '[0-9A-Za-z]$');
 end;
 
-class function TNovusStringUtils.FormatStrVar(Const aFormat: string; Const Args: array of Variant): string;
+class function TNovusStringUtils.FormatStrVar(const aFormat: string; const Args: array of Variant): string;
 var
   lParams: Array of TVarRec;
   I: Integer;
 begin
-  Try
-    SetLength(lParams, High(Args) + 1);
+  // Safely set the length of lParams based on the length of Args
+  if Length(Args) > 0 then
+    SetLength(lParams, Length(Args))
+  else
+    SetLength(lParams, 0);
 
+  Try
     for I := Low(Args) to High(Args) do
-      lParams[I] := TNovusVariants.VarToVarRec(Args[I]);
+      begin
+        var VarRecHelper := TNovusVariants.VarToVarRec(Args[I]);
+        lParams[I] := VarRecHelper.VRec;
+      end;
+
+    Result := Format(aFormat, lParams);
+
   Finally
-    Result := format(aFormat, lParams);
+   (* // Finalize TVarRec array to release any allocated memory
+    for I := Low(lParams) to High(lParams) do
+      case lParams[I].VType of
+        vtAnsiString:   Dispose(PAnsiString(lParams[I].VAnsiString));
+        vtString:       Dispose(lParams[I].VString);
+        vtUnicodeString: Dispose(lParams[I].VUnicodeString);
+        // Add any other necessary finalization for other types...
+      end;
+      *)
   End;
 end;
+
 
 
 class function TNovusStringUtils.PadLeft(const Str: string; Ch: Char; Count: Integer): string;

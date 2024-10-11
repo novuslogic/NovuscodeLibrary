@@ -9,6 +9,10 @@
 <!-- /TOC -->
 ## Release v0.2.0
 
+11/10/2024
+
+* Refactored class function VarToVarRec(aValue: variant): TVarRec;
+
 29/09/2024
 
 * New function TNovusLogger.FindProvder(aProviderClass: TNovusLogger_ProviderClass = nil): TNovusLogger_Provider;

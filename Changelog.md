@@ -9,6 +9,10 @@
 <!-- /TOC -->
 ## Release v0.2.0
 
+18/02/2025
+
+* OpenAPI has been moved to new project DelphiOpenAPILibrary
+
 11/10/2024
 
 * Refactored class function VarToVarRec(aValue: variant): TVarRec;

@@ -180,6 +180,8 @@
         <DCCReference Include="..\..\Core\Utilities\NovusGUID.pas"/>
         <DCCReference Include="..\..\Core\Utilities\NovusVariants.pas"/>
         <DCCReference Include="..\..\Core\Utilities\NovusStringBuilder.pas"/>
+        <DCCReference Include="..\..\Core\Utilities\NovusJSONUtils.pas"/>
+        <DCCReference Include="..\..\Core\Utilities\NovusSimpleJSON.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -231,7 +233,7 @@
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\22.0\Bpl\NovusCodeLibrary_Utils280.bpl" Configuration="Debug" Class="ProjectOutput"/>
-                <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\22.0\Bpl\Win64\NovusCodeLibrary_Utils280.bpl" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\23.0\Bpl\Win64\NovusCodeLibrary_Utils290.bpl" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win64">
                         <RemoteName>NovusCodeLibrary_Utils.bpl</RemoteName>
                         <Overwrite>true</Overwrite>

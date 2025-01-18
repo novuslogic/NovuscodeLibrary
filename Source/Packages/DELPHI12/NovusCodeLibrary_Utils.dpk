@@ -49,6 +49,8 @@ contains
   NovusDateDiffUtil in '..\..\Core\Utilities\NovusDateDiffUtil.pas',
   NovusGUID in '..\..\Core\Utilities\NovusGUID.pas',
   NovusVariants in '..\..\Core\Utilities\NovusVariants.pas',
-  NovusStringBuilder in '..\..\Core\Utilities\NovusStringBuilder.pas';
+  NovusStringBuilder in '..\..\Core\Utilities\NovusStringBuilder.pas',
+  NovusJSONUtils in '..\..\Core\Utilities\NovusJSONUtils.pas',
+  NovusSimpleJSON in '..\..\Core\Utilities\NovusSimpleJSON.pas';
 
 end.

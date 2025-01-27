@@ -116,7 +116,10 @@ Type
     /// <summary>
     /// Format String using Variant array
     /// </summary>
-    class function FormatStrVar(Const aFormat: string; Const Args: array of Variant): string;
+    class function FormatStrVar(Const aFormat: string; Const Args: array of Variant): string; overload;
+
+    class function FormatStrVar(Const aFormat: string; Const Args: array of const): string; overload;
+
 
     class function StrChInsertL(const s: AnsiString; c: ANSIChar; Pos: Cardinal)
       : AnsiString;
@@ -1115,18 +1118,39 @@ begin
     Result := Format(aFormat, lParams);
 
   Finally
-   (* // Finalize TVarRec array to release any allocated memory
-    for I := Low(lParams) to High(lParams) do
-      case lParams[I].VType of
-        vtAnsiString:   Dispose(PAnsiString(lParams[I].VAnsiString));
-        vtString:       Dispose(lParams[I].VString);
-        vtUnicodeString: Dispose(lParams[I].VUnicodeString);
-        // Add any other necessary finalization for other types...
-      end;
-      *)
   End;
 end;
 
+
+
+class function TNovusStringUtils.FormatStrVar(const aFormat: string; const Args: array of const): string;
+var
+  lsStr: string;
+begin
+  Result := aFormat;
+  if Length(Args) = 0 then Exit;
+
+  for var I := Low(Args) to High(Args) do
+  begin
+    case Args[I].VType of
+      vtInteger:
+        lsStr := IntToStr(Args[I].VInteger);
+      vtExtended:
+        lsStr := FloatToStr(Args[I].VExtended^);
+      vtString:
+        lsStr := Args[I].VString^;
+      vtAnsiString:
+        lsStr := string(Args[I].VAnsiString);
+      vtInt64:
+        lsStr := IntToStr(Args[I].VInt64^);
+
+    else
+      lsStr := '[Unknown Type]';
+    end;
+  end;
+
+  Result := Format(aFormat, [lsStr]);
+end;
 
 
 class function TNovusStringUtils.PadLeft(const Str: string; Ch: Char; Count: Integer): string;

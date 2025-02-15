@@ -9,9 +9,13 @@
 <!-- /TOC -->
 ## Release v0.2.0
 
+15/02/2025
+
+* Support for BOSS https://github.com/HashLoad/boss - Boss is an open source dependency manager
+
 27/01/2025
 
-* new overload for class function TNovusStringUtils.FormatStrVar(const aFormat: string; const Args: array of const): string; using array of const
+* New overload for class function TNovusStringUtils.FormatStrVar(const aFormat: string; const Args: array of const): string; using array of const
 
 18/02/2025
 

@@ -17,9 +17,17 @@ Type
   TNovusFileUtils = class(tNovusUtilities)
   public
     /// <summary>
+    /// Extract Filename Extenion
+    /// </summary>
+    class function ExtractFileExtenion(const aFileName: string): string;
+    /// <summary>
     /// Swap Filename extenion
     /// </summary>
     class function SwapFilenameExtenion(aFilename, aNewExtenion: String): String;
+    /// <summary>
+    /// Current App Filename
+    /// </summary>
+    class function AppFilename: String;
     /// <summary>
     /// Current App Root directory
     /// </summary>
@@ -160,9 +168,26 @@ begin // IsFileInUse
 end;
 
 
-class function TNovusFileUtils.AppRootDirectory;
+class function TNovusFileUtils.ExtractFileExtenion(const aFileName: string): string;
+var
+  FileExt: string;
+begin
+  FileExt := ExtractFileExt(aFileName);
+  // Remove the dot from the file extension if present
+  if FileExt <> '' then
+    Result := Copy(FileExt, 2, Length(FileExt) - 1)
+  else
+    Result := '';
+end;
+
+class function TNovusFileUtils.AppRootDirectory: String;
 begin
   Result := ExtractFilePath(ParamStr(0));
+end;
+
+class function TNovusFileUtils.AppFilename: String;
+begin
+  Result := ExtractFileName(ParamStr(0));
 end;
 
 

@@ -12,6 +12,10 @@ Type
   private
   protected
   public
+    class function GetJSONBooleanValue(AJSONObject: TJSONObject; const AKey: string): Boolean;
+    class function GetJSONArrayValue(AJSONArray: TJSONObject; const key: string): TJSONArray;
+    class function GetJSONObjectValue(AJSONObject: TJSONObject; const key: string): TJSONObject;
+    class function GetJSONStringValue(AJSONObject: TJSONObject; const key: string): string;
     class function InJSONArray(const aElement: string;
       const aJSONArray: TJSONArray): TJSONPair;
     class function IsNullorBlank(const aValue: String): Boolean;
@@ -136,6 +140,56 @@ begin
       .JsonValue.Value);
 end;
 
+class function tNovusJSONUtils.GetJSONStringValue(AJSONObject: TJSONObject; const key: string): string;
+begin
+  Result := '';
+  if Not Assigned(AJSONObject) then Exit;
+
+  try
+    Result := AJSONObject.GetValue<string>(key);
+  except
+    Result := '';
+  end;
+end;
+
+class function tNovusJSONUtils.GetJSONObjectValue(AJSONObject: TJSONObject; const key: string): TJSONObject;
+begin
+  Result := Nil;
+  if Not Assigned(AJSONObject) then Exit;
+  try
+    Result := AJSONObject.GetValue<TJSONObject>(key);
+  except
+    Result := Nil;
+  end;
+end;
+
+
+class function tNovusJSONUtils.GetJSONArrayValue(AJSONArray: TJSONObject; const key: string): TJSONArray;
+begin
+  Result := Nil;
+  if Not Assigned(AJSONArray) then Exit;
+  try
+    Result := AJSONArray.GetValue<TJSONArray>(key);
+  except
+    Result := Nil;
+  end;
+end;
+
+class function tNovusJSONUtils.GetJSONBooleanValue(AJSONObject: TJSONObject; const AKey: string): Boolean;
+var
+  JSONValue: TJSONValue;
+begin
+  Result := False; // Default value if the key is not found or value is not a boolean
+
+  if Assigned(AJSONObject) then
+  begin
+    JSONValue := AJSONObject.GetValue(AKey);
+    if Assigned(JSONValue) and (JSONValue is TJSONBool) then
+    begin
+      Result := TJSONBool(JSONValue).AsBoolean;
+    end;
+  end;
+end;
 
 
 end.

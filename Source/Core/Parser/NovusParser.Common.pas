@@ -5,6 +5,9 @@ interface
 Uses Novuslist, System.Classes, System.SysUtils;
 
 type
+  TNovusTemplateTag = class;
+
+
   TOnGetTagValueEvent = procedure(Sender: TObject; Var ATagValue: String)
     of object;
 
@@ -21,9 +24,14 @@ type
   protected
   public
     /// <summary>
+    /// AddTag to list
+    /// </summary>
+    function AddTag(aTagName: string; aTagValue: string = ''): TNovusTemplateTag;
+
+    /// <summary>
     /// Find Tagname from TNovusTemplateTags class
     /// </summary>
-    function FindTagNameIndexOf(ATagName: String; AIndex: Integer = 0): Integer;
+    function FindTagNameIndexOf(aTagName: String; AIndex: Integer = 0): Integer;
   End;
 
   TNovusTemplateTag = class
@@ -124,6 +132,16 @@ end;
 
 
 //TNovusTemplateTags
+
+function TNovusTemplateTags.AddTag(aTagName: string; aTagValue: string = ''): TNovusTemplateTag;
+begin
+  Result := TNovusTemplateTag.Create;
+  Result.TagName := aTagName;
+  Result.TagValue := aTagValue;
+
+  self.Add(Result);
+end;
+
 function TNovusTemplateTags.FindTagNameIndexOf(ATagName: String;
   AIndex: Integer = 0): Integer;
 Var

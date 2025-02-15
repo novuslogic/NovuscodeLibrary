@@ -3,9 +3,99 @@
 <!-- TOC -->
 
 - [Changelog](#changelog)
+    - [Release v0.2.0](#release-v020)
     - [Release v0.1.0](#release-v010)
 
 <!-- /TOC -->
+## Release v0.2.0
+
+15/02/2025
+
+* Support for BOSS https://github.com/HashLoad/boss - Boss is an open source dependency manager
+
+27/01/2025
+
+* New overload for class function TNovusStringUtils.FormatStrVar(const aFormat: string; const Args: array of const): string; using array of const
+
+18/02/2025
+
+* OpenAPI has been moved to new project DelphiOpenAPILibrary
+
+11/10/2024
+
+* Refactored class function VarToVarRec(aValue: variant): TVarRec;
+
+29/09/2024
+
+* New function TNovusLogger.FindProvder(aProviderClass: TNovusLogger_ProviderClass = nil): TNovusLogger_Provider;
+* Removed function TNovusLogFile.FormatedNow(const aDate: tDateTime = 0): String;
+* TNovusLogger.AddLog functions now pass  aProviderClass: TNovusLogger_ProviderClass to select only Log Provider
+* New Pakage for the new Logger class NovusCodeLibraryLogger old NovusCodeLibraryLog reference only the new refactored class TNovusLog
+* New Novuslog now been refactored to class NovusCodeLogger for Backward compatibiillty with new TNovusLogger class
+* New Property Fullpath and PathList in class TOpenAPI3Path in unit NovusNovusOpenAPIParser
+* New class function LoadEnvFile(const aFileName: string): boolean; in unit NovusEnvironment
+* New class procedure SplitStringToList(const aStr: string; const aDelimiter: string; aStringList: TStrings); in unit NovusStringUtil
+
+20/07/2024
+
+* Update NovusOpenAPIParser class to finished TOpenAPI3Operation
+* Remove Novsuconsole Unit from NovusLogger.Provider.Files unit
+* New class function GetJSONBooleanValue(AJSONObject: TJSONObject; const AKey: string): Boolean; in unit NovusJSONUtils
+* New class unit tNovusOpenAPIParser based on OpenAPI 3.0
+* New class function GetJSONArrayValue(AJSONObject: TJSONObject; const key: string): TJSONArray; in unit NovusJSONUtils
+* New class function GetJSONObjectValue(AJSONObject: TJSONObject; const key: string): TJSONObject; in unit NovusJSONUtils
+* New class function GetJSONStringValue(AJSONObject: TJSONObject; const key: string): string; in unit NovusJSONUtils
+
+3/6/2024
+
+* Removed unit Novuslog in NovusCodeLibrary_Indy.dpk Delphi 11 and Delphi 12 
+
+2/6/2024
+
+* Fixed compile issue in Privder TNovusLogger_Provider_File
+* New Log provider TNovusLogger_Provider_SysLog
+* New TNovusLogTaskQueue Task Queue for TNovusLogger 
+* New Log Privder TNovusLogger_Provider_WinEventlog
+* New Sample for TNovusLogger_Provider_WinEventlog provider
+
+11/05/2024
+
+* New Log Privders TNovusLogger_Provider_Files and TNovusLogger_Provider_Console
+* New Samples for TNovusLogger Class for Files and Console providers
+
+
+8/5/2024
+
+* New class tNovusLogger to replace TNovuslog class 
+* New class function TNovusConsole.SetConsoleColour(aTextColour, aBgColour: Word);
+* New class function TNovusConsole.GetCurrentConsoleColour(var aTextColour, aBgColour: Word): Boolean;
+* New Class tNovusSvcMgr to manage Windows Service without Delphi Service Class
+
+
+6/5/2024
+
+* Updated DelphiVersions.inc for Delphi 12
+* Fixed NovusParser.Destory missing.
+* Removed reference NovusBO unit from NovusList unit
+* class function TNovusFileUtils.AppFilename: string;
+
+24/12/2023
+
+Function added to Unit NovusEnvironment:
+
+* class function SetUserEnvVar(const aVariableName, aValue: string): boolean;
+* class function SetSystemWideEnvVar(const aVariableName, aValue: string): boolean;
+* class function SetCurrentProcessEnvVar(const aVariableName, aValue: string): boolean;
+* class function IsAdministrator: boolean;
+
+
+18/06/2023
+
+* function TNovusTemplate2.FindTagName(ATagName: String; var aIndex: integer): tNovusTemplateTag;
+* TNovusLogFile now supports retrycount
+* New property RetryCount tNovuslog class allowing retry if failed. default to 3
+
+
 
 ## Release v0.1.0
 

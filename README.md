@@ -3,16 +3,16 @@ NovuscodeLibrary
 
 A Delphi library of utility functions and non-visual classes.
 
-Support for Delphi XE - Delphi 11
+Support for Delphi XE - Delphi 12
 
 Library Features
---------
+----------------
 
 * Shell and Capture functions.
 * Log functions.
 * Template and Parser functions.
-* Plugin functions
-
+* Reworded Plugin functions
+* New Logger Library
 
 How to install
 --------------
@@ -21,7 +21,7 @@ How to install
 
 1. NovusCodeLibrary_Core.dpk - Common Base to all functions in the library.
 
-2. NovusCodeLibrary_Env.dpk - Environment functions library. 
+2. NovusCodeLibrary_Env.dpk - Merged with NovusCodeLibrary_OS.dpk 
 
 3. NovusCodeLibrary_Indy.dpk - Indy functions library. Requires http://indyproject.org
 
@@ -42,6 +42,18 @@ How to install
 11. NovusCodeLibrary_WebUtils.dpk - Web functions library.
 
 12. NovusCodeLibrary_cURL.dpk - cURL function library. Requires https://github.com/Mercury13/curl4delphi
+
+13. New NovusCodeLibrary_Logger.dpk - New Logger Library
+
+14. New NovusCodeLibrary_OS.dpk - OS Based functions Library
+
+BOSS Support
+------------
+
+```bash
+boss install github.com/novuslogic/NovuscodeLibrary
+```
+
 
 Changelog
 ---------

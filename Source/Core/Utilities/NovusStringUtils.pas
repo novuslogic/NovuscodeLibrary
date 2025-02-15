@@ -5,7 +5,7 @@ unit NovusStringUtils;
 interface
 
 uses {Windows,} sysutils, NovusUtilities, Classes, variants, System.RegularExpressions,
-     NovusVariants;
+     NovusVariants, System.StrUtils;
 
 Const
   Cr = #13;
@@ -50,6 +50,7 @@ Type
 Type
   TNovusStringUtils = class(TNovusUtilities)
   public
+    class procedure SplitStringToList(const aStr: string; const aDelimiter: string; aStringList: TStrings);
     class function IsAlphaNumeric(aStr: string): boolean;
     class function RightTrim(aStr: String): String;
     class function LeftTrim(aStr: String): String;
@@ -115,7 +116,10 @@ Type
     /// <summary>
     /// Format String using Variant array
     /// </summary>
-    class function FormatStrVar(Const aFormat: string; Const Args: array of Variant): string;
+    class function FormatStrVar(Const aFormat: string; Const Args: array of Variant): string; overload;
+
+    class function FormatStrVar(Const aFormat: string; Const Args: array of const): string; overload;
+
 
     class function StrChInsertL(const s: AnsiString; c: ANSIChar; Pos: Cardinal)
       : AnsiString;
@@ -1093,19 +1097,59 @@ begin
   Result := TRegEx.IsMatch(aStr, '[0-9A-Za-z]$');
 end;
 
-class function TNovusStringUtils.FormatStrVar(Const aFormat: string; Const Args: array of Variant): string;
+class function TNovusStringUtils.FormatStrVar(const aFormat: string; const Args: array of Variant): string;
 var
   lParams: Array of TVarRec;
   I: Integer;
 begin
-  Try
-    SetLength(lParams, High(Args) + 1);
+  // Safely set the length of lParams based on the length of Args
+  if Length(Args) > 0 then
+    SetLength(lParams, Length(Args))
+  else
+    SetLength(lParams, 0);
 
+  Try
     for I := Low(Args) to High(Args) do
-      lParams[I] := TNovusVariants.VarToVarRec(Args[I]);
+      begin
+        var VarRecHelper := TNovusVariants.VarToVarRec(Args[I]);
+        lParams[I] := VarRecHelper.VRec;
+      end;
+
+    Result := Format(aFormat, lParams);
+
   Finally
-    Result := format(aFormat, lParams);
   End;
+end;
+
+
+
+class function TNovusStringUtils.FormatStrVar(const aFormat: string; const Args: array of const): string;
+var
+  lsStr: string;
+begin
+  Result := aFormat;
+  if Length(Args) = 0 then Exit;
+
+  for var I := Low(Args) to High(Args) do
+  begin
+    case Args[I].VType of
+      vtInteger:
+        lsStr := IntToStr(Args[I].VInteger);
+      vtExtended:
+        lsStr := FloatToStr(Args[I].VExtended^);
+      vtString:
+        lsStr := Args[I].VString^;
+      vtAnsiString:
+        lsStr := string(Args[I].VAnsiString);
+      vtInt64:
+        lsStr := IntToStr(Args[I].VInt64^);
+
+    else
+      lsStr := '[Unknown Type]';
+    end;
+  end;
+
+  Result := Format(aFormat, [lsStr]);
 end;
 
 
@@ -1138,6 +1182,21 @@ class function TNovusStringUtils.ReplaceBetweenPositions(const aSource, aReplace
 begin
   Result := aSource.Substring(0, aStartPos) + aReplaceWith + aSource.Substring(aEndPos);
 end;
+
+class procedure TNovusStringUtils.SplitStringToList(const aStr: string; const aDelimiter: string; aStringList: TStrings);
+var
+  SplitArray: TArray<string>;
+  I: Integer;
+begin
+  SplitArray := SplitString(AStr, ADelimiter);
+  aStringList.Clear;
+  for I := 0 to Length(SplitArray) - 1 do
+  begin
+    if Trim(SplitArray[I]) <> '' then
+      aStringList.Add(SplitArray[I]);
+  end;
+end;
+
 
 end.
 

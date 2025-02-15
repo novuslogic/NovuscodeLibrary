@@ -1,0 +1,15 @@
+{
+  "name": "NovuscodeLibrary",
+  "description": "A Delphi library of utility functions and non-visual classes.",
+  "author": "Adam Craig Johnston",
+  "version": "0.2.0",
+  "homepage": "https://github.com/novuslogic/NovuscodeLibrary",
+  "license": "Apache License Version 2.0",
+  "dependencies": {},
+  "files": [
+    "src/*.pas",
+    "src/*.dcu",
+    "src/*.dfm",
+    "src/*.res"
+  ]
+}

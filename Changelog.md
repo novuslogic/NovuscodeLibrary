@@ -3,10 +3,20 @@
 <!-- TOC -->
 
 - [Changelog](#changelog)
+    - [Release v0.3.0](#release-v030)
     - [Release v0.2.0](#release-v020)
     - [Release v0.1.0](#release-v010)
 
 <!-- /TOC -->
+## Release v0.3.0
+
+06/04/2025
+
+* Added toEOF at the end of function tNovusParser.GetParseString: string;
+* Removed AddEOF from class tNovusParser.
+* New Active propoerty in class tNovusLogger_Provider
+* Renamed function TNovusLogger.FindProvder to TNovusLogger.FindProvider
+
 ## Release v0.2.0
 
 15/02/2025

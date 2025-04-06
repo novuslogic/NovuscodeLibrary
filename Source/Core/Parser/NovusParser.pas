@@ -33,7 +33,7 @@ type
 
     procedure SkipBlanks;
 
-    procedure AddEOF;
+//    procedure AddEOF;
 
     function LoadFromString(const aInput: string): boolean; virtual;
     function LoadFromFile(const aFileName: string): Boolean; virtual;
@@ -131,7 +131,7 @@ end;
 
 function TNovusParser.LoadFromString(const aInput: string): Boolean;
 begin
-  fParseStringList.Text := aInput + toEOF;
+  fParseStringList.Text := aInput (*+ toEOF*);
 
   FToken := toBOF;
   Result := True;
@@ -145,10 +145,12 @@ begin
 end;
 
 
+(*
 procedure TNovusParser.AddEOF;
 begin
   fParseStringList.Text := fParseStringList.Text + toEOF;
 end;
+*)
 
 function TNovusParser.LoadFromFile(const aFileName: string): Boolean;
 var
@@ -159,7 +161,7 @@ begin
 
   fParseStringList.LoadFromFile(aFilename);
 
-  AddEOF;
+  //AddEOF;
 
   FToken := toBOF;
   Result := True;
@@ -177,7 +179,7 @@ begin
 
   fParseStringList.LoadFromStream(aStream);
 
-  AddEOF;
+  //AddEOF;
 
   FToken := toBOF;
   Result := True;
@@ -527,9 +529,7 @@ end;
 
 function tNovusParser.GetParseString: string;
 begin
-  Result := Copy(fParseStringList.Text, 1, Length(fParseStringList.Text) - 1);
-
-  //Result := Copy(fsParseString, 1, Length(fsParseString) - 1);
+  Result := Copy(fParseStringList.Text, 1, Length(fParseStringList.Text) - 1) + toEOF;
 end;
 
 function tNovusParser.PeekJustNextToken: Char;

@@ -32,7 +32,7 @@ type
     function FormatLogOutput(aLogMessage: string; aDateTime: tDateTime; aSeverityType: TSeverityType;
         aProviderClass: TNovusLogger_ProviderClass = nil): string;
 
-    function FindProvder(aProviderClass: TNovusLogger_ProviderClass = nil): TNovusLogger_Provider;
+    function FindProvider(aProviderClass: TNovusLogger_ProviderClass = nil): TNovusLogger_Provider;
 
     function AddLog(aLogMessage: string; aLogDateTime: tDateTime; aSeverityType: TSeverityType; aProviderClass: TNovusLogger_ProviderClass = nil): string; virtual;
 
@@ -50,8 +50,7 @@ type
       aProviderClass: TNovusLogger_ProviderClass = nil); virtual;
     procedure AddLogSystem(aLogMessage: string;
       aProviderClass: TNovusLogger_ProviderClass = nil); virtual;
-    function AddLogException(aProviderClass: TNovusLogger_ProviderClass = nil)
-      : String; overload; virtual;
+    function AddLogException(aProviderClass: TNovusLogger_ProviderClass = nil): string; overload; virtual;
     function AddLogException(aLogMessage: string;
       aProviderClass: TNovusLogger_ProviderClass = nil): string; overload; virtual;
     procedure AddLogException(aException: Exception;
@@ -149,7 +148,7 @@ begin
   end;
 end;
 
-function TNovusLogger.FindProvder(aProviderClass: TNovusLogger_ProviderClass = nil): TNovusLogger_Provider;
+function TNovusLogger.FindProvider(aProviderClass: TNovusLogger_ProviderClass = nil): TNovusLogger_Provider;
 begin
   Result := nil;
 
@@ -164,17 +163,25 @@ end;
 
 function TNovusLogger.AddLog(aLogMessage: string; aLogDateTime: tDateTime; aSeverityType: TSeverityType; aProviderClass: TNovusLogger_ProviderClass = nil): string;
 begin
+  Result := '';
+
   if aProviderClass = nil then
   begin
     for var I := Low(FProviders) to High(FProviders) do
       if Assigned(FProviders[I]) then
-        Result := FProviders[I].AddLog(aLogMessage,aLogDateTime,aSeverityType);
+        begin
+          if FProviders[I].Active then
+            Result := FProviders[I].AddLog(aLogMessage,aLogDateTime,aSeverityType);
+        end;
   end
   else
   begin
     for var I := Low(FProviders) to High(FProviders) do
       if Assigned(FProviders[I]) and (FProviders[I] is aProviderClass) then
-        Result := FProviders[I].AddLog(aLogMessage,aLogDateTime,aSeverityType);
+        begin
+          if FProviders[I].Active then
+            Result := FProviders[I].AddLog(aLogMessage,aLogDateTime,aSeverityType);
+        end;
   end;
 end;
 
@@ -185,13 +192,19 @@ begin
   begin
     for var I := Low(FProviders) to High(FProviders) do
       if Assigned(FProviders[I]) then
-        FProviders[I].AddLogSuccess(aLogMessage);
+        begin
+          if FProviders[I].Active then
+            FProviders[I].AddLogSuccess(aLogMessage);
+        end;
   end
   else
   begin
     for var I := Low(FProviders) to High(FProviders) do
       if Assigned(FProviders[I]) and (FProviders[I] is aProviderClass) then
-        FProviders[I].AddLogSuccess(aLogMessage);
+        begin
+          if FProviders[I].Active then
+            FProviders[I].AddLogSuccess(aLogMessage);
+        end;
   end;
 end;
 
@@ -202,13 +215,19 @@ begin
   begin
     for var I := High(FProviders) downto Low(FProviders) do
       If Assigned(FProviders[I]) then
-        FProviders[I].AddLogInformation(aLogMessage);
+        begin
+          if FProviders[I].Active then
+            FProviders[I].AddLogInformation(aLogMessage);
+        end;
   end
   else
   begin
     for var I := Low(FProviders) to High(FProviders) do
       if Assigned(FProviders[I]) and (FProviders[I] is aProviderClass) then
-        FProviders[I].AddLogInformation(aLogMessage);
+        begin
+          if FProviders[I].Active then
+            FProviders[I].AddLogInformation(aLogMessage);
+        end;
   end;
 end;
 
@@ -219,13 +238,19 @@ begin
   begin
     for var I := High(FProviders) downto Low(FProviders) do
       If Assigned(FProviders[I]) then
-        FProviders[I].AddLogError(aLogMessage);
+        begin
+          if FProviders[I].Active then
+            FProviders[I].AddLogError(aLogMessage);
+        end;
   end
   else
   begin
     for var I := Low(FProviders) to High(FProviders) do
       if Assigned(FProviders[I]) and (FProviders[I] is aProviderClass) then
-        FProviders[I].AddLogError(aLogMessage);
+        begin
+          if FProviders[I].Active then
+            FProviders[I].AddLogError(aLogMessage);
+        end;
   end;
 end;
 
@@ -236,13 +261,19 @@ begin
   begin
     for var I := High(FProviders) downto Low(FProviders) do
       If Assigned(FProviders[I]) then
-        FProviders[I].AddLogError(aException);
+        begin
+          if FProviders[I].Active then
+            FProviders[I].AddLogError(aException);
+        end;
   end
   else
   begin
     for var I := Low(FProviders) to High(FProviders) do
       if Assigned(FProviders[I]) and (FProviders[I] is aProviderClass) then
-        FProviders[I].AddLogError(aException);
+        begin
+          if FProviders[I].Active then
+            FProviders[I].AddLogError(aException);
+        end;
   end;
 end;
 
@@ -253,13 +284,19 @@ begin
   begin
     for var I := High(FProviders) downto Low(FProviders) do
       If Assigned(FProviders[I]) then
-        FProviders[I].AddLogWarning(aLogMessage);
+        begin
+          if FProviders[I].Active then
+            FProviders[I].AddLogWarning(aLogMessage);
+        end;
   end
   else
   begin
     for var I := Low(FProviders) to High(FProviders) do
       if Assigned(FProviders[I]) and (FProviders[I] is aProviderClass) then
-        FProviders[I].AddLogWarning(aLogMessage);
+        begin
+          if FProviders[I].Active then
+             FProviders[I].AddLogWarning(aLogMessage);
+        end;
   end;
 end;
 
@@ -274,13 +311,19 @@ begin
   begin
     for var I := High(FProviders) downto Low(FProviders) do
       If Assigned(FProviders[I]) then
-        FProviders[I].AddLogException(lsMessage);
+        begin
+          if FProviders[I].Active then
+            FProviders[I].AddLogException(lsMessage);
+        end;
   end
  else
   begin
     for var I := Low(FProviders) to High(FProviders) do
       if Assigned(FProviders[I]) and (FProviders[I] is aProviderClass) then
-        FProviders[I].AddLogException(lsMessage);
+        begin
+          if FProviders[I].Active then
+            FProviders[I].AddLogException(lsMessage);
+        end;
   end;
 end;
 
@@ -291,13 +334,19 @@ begin
   begin
     for var I := High(FProviders) downto Low(FProviders) do
       If Assigned(FProviders[I]) then
-        FProviders[I].AddLogDebug(aLogMessage);
+        begin
+          if FProviders[I].Active then
+            FProviders[I].AddLogDebug(aLogMessage);
+        end;
   end
   else
   begin
     for var I := Low(FProviders) to High(FProviders) do
       if Assigned(FProviders[I]) and (FProviders[I] is aProviderClass) then
-        FProviders[I].AddLogDebug(aLogMessage);
+        begin
+          if FProviders[I].Active then
+            FProviders[I].AddLogDebug(aLogMessage);
+        end;
   end;
 end;
 
@@ -308,13 +357,19 @@ begin
   begin
     for var I := High(FProviders) downto Low(FProviders) do
       If Assigned(FProviders[I]) then
-        FProviders[I].AddLogSystem(aLogMessage);
+        begin
+          if FProviders[I].Active then
+           FProviders[I].AddLogSystem(aLogMessage);
+        end;
   end
   else
   begin
     for var I := Low(FProviders) to High(FProviders) do
       if Assigned(FProviders[I]) and (FProviders[I] is aProviderClass) then
-        FProviders[I].AddLogSystem(aLogMessage);
+        begin
+          if FProviders[I].Active then
+            FProviders[I].AddLogSystem(aLogMessage);
+        end;
   end;
 end;
 
@@ -325,13 +380,19 @@ begin
   begin
     for var I := High(FProviders) downto Low(FProviders) do
       If Assigned(FProviders[I]) then
-        Result := FProviders[I].AddLogException(aLogMessage);
+        begin
+          if FProviders[I].Active then
+            Result := FProviders[I].AddLogException(aLogMessage);
+        end;
   end
   else
   begin
     for var I := Low(FProviders) to High(FProviders) do
       if Assigned(FProviders[I]) and (FProviders[I] is aProviderClass) then
-        Result := FProviders[I].AddLogException(aLogMessage);
+        begin
+          if FProviders[I].Active then
+            Result := FProviders[I].AddLogException(aLogMessage);
+        end;
   end;
 end;
 
@@ -342,13 +403,19 @@ begin
   begin
     for var I := High(FProviders) downto Low(FProviders) do
       If Assigned(FProviders[I]) then
-        FProviders[I].AddLogException(aException);
+        begin
+          if FProviders[I].Active then
+            FProviders[I].AddLogException(aException);
+        end;
   end
   else
   begin
     for var I := Low(FProviders) to High(FProviders) do
       if Assigned(FProviders[I]) and (FProviders[I] is aProviderClass) then
-        FProviders[I].AddLogException(aException);
+        begin
+          if FProviders[I].Active then
+            FProviders[I].AddLogException(aException);
+        end;
   end;
 end;
 

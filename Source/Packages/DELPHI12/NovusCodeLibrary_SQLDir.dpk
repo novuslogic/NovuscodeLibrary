@@ -25,8 +25,8 @@ package NovusCodeLibrary_SQLDir;
 {$MINENUMSIZE 1}
 {$IMAGEBASE $400000}
 {$ENDIF IMPLICITBUILDING}
-{$DESCRIPTION 'NovusCodeLibrary Runtime - Core'}
-{$LIBSUFFIX '280'}
+{$DESCRIPTION 'NovusCodeLibrary Runtime - '}
+{$LIBSUFFIX '290'}
 {$RUNONLY}
 {$IMPLICITBUILD OFF}
 
@@ -35,7 +35,7 @@ requires
   vcl,
   NovusCodeLibrary_Object,
   vcldb,
-  SqlDir280;
+  SqlDir290;
 
 contains
   NovusSQLDirUtils in '..\..\Core\Utilities\NovusSQLDirUtils.pas';

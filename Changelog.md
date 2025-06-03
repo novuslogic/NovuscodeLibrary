@@ -9,6 +9,15 @@
 <!-- /TOC -->
 ## Release v0.2.0
 
+03/06/2025
+
+* Fixed Package Version in Delphi12 Packages  from 280 to 290 in pacakges:
+
+NovusCodeLibrary_cURLUtils
+NovusCodeLibrary_Console
+NovusCodeLibrary_Logger
+NovusCodeLibrary_SQLDir
+
 15/02/2025
 
 * Support for BOSS https://github.com/HashLoad/boss - Boss is an open source dependency manager

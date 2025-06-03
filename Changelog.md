@@ -10,6 +10,16 @@
 <!-- /TOC -->
 ## Release v0.3.0
 
+03/06/2025
+
+* Changed class tNovusTokenProcessor - constructor Create(const aRawTokens: string = ''); reintroduce;
+* Fixed Package Version in Delphi12 Packages  from 280 to 290 in pacakges:
+
+NovusCodeLibrary_cURLUtils
+NovusCodeLibrary_Console
+NovusCodeLibrary_Logger
+NovusCodeLibrary_SQLDir
+
 06/04/2025
 
 * Added toEOF at the end of function tNovusParser.GetParseString: string;

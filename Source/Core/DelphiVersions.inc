@@ -7,13 +7,18 @@
 {           License at http://www.apache.org/licenses/               }
 {                                                                    }
 {                                                                    }
-{           Copyright (c) 2017 - 2023 Novuslogic Software            }
+{           Copyright (c) 2017 - 2025 Novuslogic Software            }
 {           http://www.novuslogic.com                                }
 {                                                                    }
 {********************************************************************}
 
 
-(* https://docwiki.embarcadero.com/RADStudio/Athens/en/Compiler_Versions *)
+(* https://docwiki.embarcadero.com/RADStudio/Florence/en/Compiler_Versions *)
+
+(* Delphi 13 Florence / C++Builder 12 Florence / D30 *)
+{$IFDEF VER370}
+   {$DEFINE DELPHI13}
+{$ENDIF}
 
 (* Delphi 12 Athens / C++Builder 12 Athens / D29 *)
 {$IFDEF VER360}
@@ -106,6 +111,21 @@
 {$ENDIF}
 {$IFDEF VER185}
    {$DEFINE DELPHI2007_1}
+{$ENDIF}
+
+{$IFDEF DELPHI12}
+   {$DEFINE DELPHI13_UP}
+   {$DEFINE DELPHI12_UP}
+   {$DEFINE DELPHI11_UP}
+   {$DEFINE DELPHI10_4_UP}
+   {$DEFINE DELPHI10_3_UP}
+   {$DEFINE DELPHI10_2_UP}
+   {$DEFINE DELPHI10_1_UP}
+   {$DEFINE DELPHI10_UP}
+   {$DEFINE DELPHIXE8_UP}
+   {$DEFINE DELPHIXE7_UP}
+   {$DEFINE DELPHIXE6_UP}
+   {$DEFINE DELPHI2009_UP}
 {$ENDIF}
 
 {$IFDEF DELPHI12}

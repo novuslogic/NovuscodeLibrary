@@ -10,6 +10,10 @@
 <!-- /TOC -->
 ## Release v0.3.0
 
+25/10/2025
+
+* Updated DelphiVersion.inc support for Delphi 13
+
 03/06/2025
 
 * Changed class tNovusTokenProcessor - constructor Create(const aRawTokens: string = ''); reintroduce;

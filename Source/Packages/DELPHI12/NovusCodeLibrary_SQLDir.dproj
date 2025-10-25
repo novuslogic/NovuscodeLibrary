@@ -61,7 +61,7 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
-        <DllSuffix>280</DllSuffix>
+        <DllSuffix>290</DllSuffix>
         <DCC_DcuOutput>..\..\..\units\$(ProductVersion)\$(Platform)\$(Config)</DCC_DcuOutput>
         <DCC_UnitSearchPath>..\..\..\units\$(ProductVersion)\$(Platform)\$(Config);$(BDSCOMMONDIR)\Dcp\$(Platform);$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <SanitizedProjectName>NovusCodeLibrary_SQLDir</SanitizedProjectName>
@@ -115,6 +115,7 @@
         <VerInfo_Build>0</VerInfo_Build>
         <VerInfo_Keys>CompanyName=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
         <VerInfo_Locale>1033</VerInfo_Locale>
+        <DllSuffix>290</DllSuffix>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win64)'!=''">
         <VerInfo_Build>0</VerInfo_Build>
@@ -1043,7 +1044,7 @@
         <DCCReference Include="vcl.dcp"/>
         <DCCReference Include="NovusCodeLibrary_Object.dcp"/>
         <DCCReference Include="vcldb.dcp"/>
-        <DCCReference Include="SqlDir280.dcp"/>
+        <DCCReference Include="SqlDir290.dcp"/>
         <DCCReference Include="..\..\Core\Utilities\NovusSQLDirUtils.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>

@@ -1,0 +1,192 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{D4F2759E-BD4D-4876-B8BC-0A5413A0BCBB}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="NovusCodeLibrary_Utils.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="NovusCodeLibrary_Object.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="NovusCodeLibrary_Windows.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="NovusCodeLibrary_Parser.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="NovusCodeLibrary_OS.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="NovusCodeLibrary_WebUtils.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="NovusCodeLibrary_Plugin.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="NovusCodeLibrary_Indy.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="NovusCodeLibrary_VCLUtils.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="NovusCodeLibrary_XML.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="NovusCodeLibrary_Console.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="NovusCodeLibrary_cURLUtils.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="NovusCodeLibrary_Logger.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="NovusCodeLibrary_Log.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="NovusCodeLibrary_Utils">
+        <MSBuild Projects="NovusCodeLibrary_Utils.dproj"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_Utils:Clean">
+        <MSBuild Projects="NovusCodeLibrary_Utils.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_Utils:Make">
+        <MSBuild Projects="NovusCodeLibrary_Utils.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_Object">
+        <MSBuild Projects="NovusCodeLibrary_Object.dproj"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_Object:Clean">
+        <MSBuild Projects="NovusCodeLibrary_Object.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_Object:Make">
+        <MSBuild Projects="NovusCodeLibrary_Object.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_Windows">
+        <MSBuild Projects="NovusCodeLibrary_Windows.dproj"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_Windows:Clean">
+        <MSBuild Projects="NovusCodeLibrary_Windows.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_Windows:Make">
+        <MSBuild Projects="NovusCodeLibrary_Windows.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_Parser">
+        <MSBuild Projects="NovusCodeLibrary_Parser.dproj"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_Parser:Clean">
+        <MSBuild Projects="NovusCodeLibrary_Parser.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_Parser:Make">
+        <MSBuild Projects="NovusCodeLibrary_Parser.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_OS">
+        <MSBuild Projects="NovusCodeLibrary_OS.dproj"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_OS:Clean">
+        <MSBuild Projects="NovusCodeLibrary_OS.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_OS:Make">
+        <MSBuild Projects="NovusCodeLibrary_OS.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_WebUtils">
+        <MSBuild Projects="NovusCodeLibrary_WebUtils.dproj"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_WebUtils:Clean">
+        <MSBuild Projects="NovusCodeLibrary_WebUtils.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_WebUtils:Make">
+        <MSBuild Projects="NovusCodeLibrary_WebUtils.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_Plugin">
+        <MSBuild Projects="NovusCodeLibrary_Plugin.dproj"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_Plugin:Clean">
+        <MSBuild Projects="NovusCodeLibrary_Plugin.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_Plugin:Make">
+        <MSBuild Projects="NovusCodeLibrary_Plugin.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_Indy">
+        <MSBuild Projects="NovusCodeLibrary_Indy.dproj"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_Indy:Clean">
+        <MSBuild Projects="NovusCodeLibrary_Indy.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_Indy:Make">
+        <MSBuild Projects="NovusCodeLibrary_Indy.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_VCLUtils">
+        <MSBuild Projects="NovusCodeLibrary_VCLUtils.dproj"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_VCLUtils:Clean">
+        <MSBuild Projects="NovusCodeLibrary_VCLUtils.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_VCLUtils:Make">
+        <MSBuild Projects="NovusCodeLibrary_VCLUtils.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_XML">
+        <MSBuild Projects="NovusCodeLibrary_XML.dproj"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_XML:Clean">
+        <MSBuild Projects="NovusCodeLibrary_XML.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_XML:Make">
+        <MSBuild Projects="NovusCodeLibrary_XML.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_Console">
+        <MSBuild Projects="NovusCodeLibrary_Console.dproj"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_Console:Clean">
+        <MSBuild Projects="NovusCodeLibrary_Console.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_Console:Make">
+        <MSBuild Projects="NovusCodeLibrary_Console.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_cURLUtils">
+        <MSBuild Projects="NovusCodeLibrary_cURLUtils.dproj"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_cURLUtils:Clean">
+        <MSBuild Projects="NovusCodeLibrary_cURLUtils.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_cURLUtils:Make">
+        <MSBuild Projects="NovusCodeLibrary_cURLUtils.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_Logger">
+        <MSBuild Projects="NovusCodeLibrary_Logger.dproj"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_Logger:Clean">
+        <MSBuild Projects="NovusCodeLibrary_Logger.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_Logger:Make">
+        <MSBuild Projects="NovusCodeLibrary_Logger.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_Log">
+        <MSBuild Projects="NovusCodeLibrary_Log.dproj"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_Log:Clean">
+        <MSBuild Projects="NovusCodeLibrary_Log.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="NovusCodeLibrary_Log:Make">
+        <MSBuild Projects="NovusCodeLibrary_Log.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="NovusCodeLibrary_Utils;NovusCodeLibrary_Object;NovusCodeLibrary_Windows;NovusCodeLibrary_Parser;NovusCodeLibrary_OS;NovusCodeLibrary_WebUtils;NovusCodeLibrary_Plugin;NovusCodeLibrary_Indy;NovusCodeLibrary_VCLUtils;NovusCodeLibrary_XML;NovusCodeLibrary_Console;NovusCodeLibrary_cURLUtils;NovusCodeLibrary_Logger;NovusCodeLibrary_Log"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="NovusCodeLibrary_Utils:Clean;NovusCodeLibrary_Object:Clean;NovusCodeLibrary_Windows:Clean;NovusCodeLibrary_Parser:Clean;NovusCodeLibrary_OS:Clean;NovusCodeLibrary_WebUtils:Clean;NovusCodeLibrary_Plugin:Clean;NovusCodeLibrary_Indy:Clean;NovusCodeLibrary_VCLUtils:Clean;NovusCodeLibrary_XML:Clean;NovusCodeLibrary_Console:Clean;NovusCodeLibrary_cURLUtils:Clean;NovusCodeLibrary_Logger:Clean;NovusCodeLibrary_Log:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="NovusCodeLibrary_Utils:Make;NovusCodeLibrary_Object:Make;NovusCodeLibrary_Windows:Make;NovusCodeLibrary_Parser:Make;NovusCodeLibrary_OS:Make;NovusCodeLibrary_WebUtils:Make;NovusCodeLibrary_Plugin:Make;NovusCodeLibrary_Indy:Make;NovusCodeLibrary_VCLUtils:Make;NovusCodeLibrary_XML:Make;NovusCodeLibrary_Console:Make;NovusCodeLibrary_cURLUtils:Make;NovusCodeLibrary_Logger:Make;NovusCodeLibrary_Log:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

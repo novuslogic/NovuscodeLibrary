@@ -25,7 +25,7 @@ package NovusCodeLibrary_SQLDir;
 {$MINENUMSIZE 1}
 {$IMAGEBASE $400000}
 {$ENDIF IMPLICITBUILDING}
-{$DESCRIPTION 'NovusCodeLibrary Runtime - '}
+{$DESCRIPTION 'NovusCodeLibrary Runtime - SQLDir'}
 {$LIBSUFFIX '290'}
 {$RUNONLY}
 {$IMPLICITBUILD OFF}

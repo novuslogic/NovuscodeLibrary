@@ -47,6 +47,9 @@ type
     property Logger: tNovusObject read fLogger write fLogger;
 
     property RetryCount: Integer read fiRetryCount write fiRetryCount;
+
+    property Active: Boolean read fbActive write fbActive;
+
  end;
 
 implementation

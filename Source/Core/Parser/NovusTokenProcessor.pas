@@ -7,11 +7,11 @@ Uses SysUtils, Classes;
 type
    tNovusTokenProcessor = class(TStringList)
    private
-     fsLine: String;
+     fsRawTokens: String;
      fiTokenIndex: Integer;
    protected
    public
-     constructor Create; overload;
+     constructor Create(const aRawTokens: string = ''); reintroduce;
 
      function ToString: String; override;
      function IsEqualsToken: Boolean;
@@ -39,14 +39,18 @@ type
          read fiTokenIndex
          write fiTokenIndex;
 
+     property RawTokens: String
+       read fsRawTokens
+       write fsRawTokens;
    end;
 
 implementation
 
 // Token Processor
-constructor tNovusTokenProcessor.Create;
+constructor tNovusTokenProcessor.Create(const aRawTokens: string);
 begin
   fiTokenIndex:= 0;
+  RawTokens := aRawTokens;
 end;
 
 

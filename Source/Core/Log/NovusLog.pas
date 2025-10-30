@@ -133,50 +133,15 @@ end;
 
 procedure TNovusLogFile.SetFilename(value: String);
 begin
-  Var Provider := Logger.FindProvder(TNovusLogger_Provider_Files);
+  Var Provider := Logger.FindProvider(TNovusLogger_Provider_Files);
   If Assigned(Provider) then TNovusLogger_Provider_Files(Provider).FileName := Value;
 end;
 
 function TNovusLogFile.GetFilename: String;
 begin
   Result := '';
-  Var Provider := Logger.FindProvder(TNovusLogger_Provider_Files);
+  Var Provider := Logger.FindProvider(TNovusLogger_Provider_Files);
   If Assigned(Provider) then Result := TNovusLogger_Provider_Files(Provider).FileName;
 end;
-
-(*
-function TNovusLogFile.OpenLog(aOveride: Boolean = false): Boolean;
-begin
-  inherited;
-
-  Result := false;
-
-  if Not DirectoryExists(TNovusStringUtils.JustPathname(Filename)) then
-    Exit;
-
-  if FileExists(Filename) then
-  begin
-    if Not aOveride then
-      begin
-        if not TNovusFileUtils.IsFileInUse(Filename) then
-           TFile.Delete(Filename);
-      end;
-  end;
-
-  fbIsFileOpen := true;
-
-  Result := fbIsFileOpen;
-
-  //WriteLog('Logging started');
-end;
-
-procedure TNovusLogFile.CloseLog;
-begin
-  fbIsFileOpen := false;
-end;
-*)
-
-
-
 
 end.

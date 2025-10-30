@@ -1,0 +1,56 @@
+{$I ..\..\core\NovusCodeLibrary.inc}
+package NovusCodeLibrary_Utils;
+
+{$R *.res}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS ON}
+{$RANGECHECKS ON}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$ENDIF IMPLICITBUILDING}
+{$DESCRIPTION 'NovusCodeLibrary Runtime - Utilities'}
+{$LIBSUFFIX '370'}
+{$RUNONLY}
+{$IMPLICITBUILD OFF}
+
+requires
+  rtl,
+  xmlrtl,
+  dbrtl,
+  soaprtl,
+  inet,
+  DbxCommonDriver,
+  RESTComponents;
+
+contains
+  NovusUtilities in '..\..\core\Utilities\NovusUtilities.pas',
+  NovusDateStringUtils in '..\..\Core\Utilities\NovusDateStringUtils.pas',
+  NovusDateUtils in '..\..\Core\Utilities\NovusDateUtils.pas',
+  NovusStringUtils in '..\..\Core\Utilities\NovusStringUtils.pas',
+  NovusNumUtils in '..\..\Core\Utilities\NovusNumUtils.pas',
+  NovusDateDiffUtil in '..\..\Core\Utilities\NovusDateDiffUtil.pas',
+  NovusGUID in '..\..\Core\Utilities\NovusGUID.pas',
+  NovusVariants in '..\..\Core\Utilities\NovusVariants.pas',
+  NovusStringBuilder in '..\..\Core\Utilities\NovusStringBuilder.pas',
+  NovusJSONUtils in '..\..\Core\Utilities\NovusJSONUtils.pas',
+  NovusSimpleJSON in '..\..\Core\Utilities\NovusSimpleJSON.pas';
+
+end.

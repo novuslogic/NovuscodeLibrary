@@ -3,10 +3,35 @@
 <!-- TOC -->
 
 - [Changelog](#changelog)
+    - [Release v0.3.0](#release-v030)
     - [Release v0.2.0](#release-v020)
     - [Release v0.1.0](#release-v010)
 
 <!-- /TOC -->
+
+## Release v0.3.0
+
+25/10/2025
+
+* Updated DelphiVersion.inc support for Delphi 13
+
+03/06/2025
+
+* Changed class tNovusTokenProcessor - constructor Create(const aRawTokens: string = ''); reintroduce;
+* Fixed Package Version in Delphi12 Packages  from 280 to 290 in pacakges:
+
+NovusCodeLibrary_cURLUtils
+NovusCodeLibrary_Console
+NovusCodeLibrary_Logger
+NovusCodeLibrary_SQLDir
+
+06/04/2025
+
+* Added toEOF at the end of function tNovusParser.GetParseString: string;
+* Removed AddEOF from class tNovusParser.
+* New Active propoerty in class tNovusLogger_Provider
+* Renamed function TNovusLogger.FindProvder to TNovusLogger.FindProvider
+
 ## Release v0.2.0
 
 03/06/2025

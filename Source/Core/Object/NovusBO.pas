@@ -3,7 +3,7 @@ unit NovusBO;
 
 interface
 
-Uses NovusObject, (*Activex, ComObj,*) Classes, SysUtils,
+Uses NovusObject,  Classes, SysUtils,
   NovusBOField, NovusBOMap, NovusUtilities, DBXJson, DB, NovusDateUtils,
 {$IFDEF DELPHIXE6_UP}
   JSON, System.Variants,

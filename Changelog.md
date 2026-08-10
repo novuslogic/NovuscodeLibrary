@@ -1,13 +1,10 @@
 # Changelog
 
-<!-- TOC -->
 
-- [Changelog](#changelog)
-    - [Release v0.3.0](#release-v030)
-    - [Release v0.2.0](#release-v020)
-    - [Release v0.1.0](#release-v010)
 
-<!-- /TOC -->
+## Release v0.4.0
+
+Updated DelphiVersion.inc support for FPC
 
 ## Release v0.3.0
 
